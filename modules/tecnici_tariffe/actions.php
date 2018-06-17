@@ -57,14 +57,22 @@ switch (post('op')) {
 
         // Se la riga delle tariffe esiste, la aggiorno...
         if (!empty($rs)) {
-            $result = $dbo->query('UPDATE in_tariffe SET '
-                .' costo_ore=(SELECT costo_orario FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), '
-                .' costo_km=(SELECT costo_km FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), '
-                .' costo_dirittochiamata=(SELECT costo_diritto_chiamata FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), '
-                .' costo_ore_tecnico=(SELECT costo_orario_tecnico FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), '
-                .' costo_km_tecnico=(SELECT costo_km_tecnico FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), '
-                .' costo_dirittochiamata_tecnico=(SELECT costo_diritto_chiamata_tecnico FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).') '
-                .' WHERE idtecnico='.prepare(post('idtecnico')).' AND idtipointervento='.prepare(post('idtipointervento')));
+            $costi = $dbo->select('in_tipiintervento', '*', [
+                'id' => post('idtipointervento'),
+            ])[0];
+
+            $result = $dbo->update('in_tariffe', [
+                'costo_ore' => $costi['costo_orario'],
+                'costo_km' => $costi['costo_km'],
+                'costo_dirittochiamata' => $costi['costo_diritto_chiamata'],
+                'costo_ore_tecnico' => $costi['costo_orario_tecnico'],
+                'costo_km_tecnico' => $costi['costo_km_tecnico'],
+                'costo_dirittochiamata_tecnico' => $costi['costo_diritto_chiamata_tecnico'],
+            ], [
+                'idtecnico' => post('idtecnico'),
+                'idtipointervento' => post('idtipointervento'),
+            ]);
+
             if ($result) {
                 $_SESSION['infos'][] = tr('Informazioni salvate correttamente!');
             } else {
@@ -74,7 +82,22 @@ switch (post('op')) {
 
         // ...altrimenti la creo
         else {
-            if ($dbo->query('INSERT INTO in_tariffe( idtecnico, idtipointervento, costo_ore, costo_km, costo_dirittochiamata, costo_ore_tecnico, costo_km_tecnico, costo_dirittochiamata_tecnico ) VALUES( '.prepare(post('idtecnico')).', '.prepare(post('idtipointervento')).', (SELECT costo_orario FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), (SELECT costo_km FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), (SELECT costo_diritto_chiamata FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'),   (SELECT costo_orario_tecnico FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), (SELECT costo_km_tecnico FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), (SELECT costo_diritto_chiamata_tecnico FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).') )')) {
+            $costi = $dbo->select('in_tipiintervento', '*', [
+                'id' => post('idtipointervento'),
+            ])[0];
+
+            $result = $dbo->insert('in_tariffe', [
+                'idtecnico' => post('idtecnico'),
+                'idtipointervento' => post('idtipointervento'),
+                'costo_ore' => $costi['costo_orario'],
+                'costo_km' => $costi['costo_km'],
+                'costo_dirittochiamata' => $costi['costo_diritto_chiamata'],
+                'costo_ore_tecnico' => $costi['costo_orario_tecnico'],
+                'costo_km_tecnico' => $costi['costo_km_tecnico'],
+                'costo_dirittochiamata_tecnico' => $costi['costo_diritto_chiamata_tecnico'],
+            ]);
+
+            if ($result) {
                 $_SESSION['infos'][] = tr('Informazioni salvate correttamente!');
             } else {
                 $_SESSION['errors'][] = tr("Errore durante l'importazione tariffe!");

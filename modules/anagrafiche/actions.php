@@ -204,7 +204,22 @@ switch (post('op')) {
             $rs_tipiintervento = $dbo->fetchArray('SELECT * FROM in_tipiintervento');
 
             for ($i = 0; $i < count($rs_tipiintervento); ++$i) {
-                if ($dbo->query('INSERT INTO in_tariffe( idtecnico, idtipointervento, costo_ore, costo_km, costo_dirittochiamata, costo_ore_tecnico, costo_km_tecnico, costo_dirittochiamata_tecnico ) VALUES( '.prepare($new_id).', '.prepare($rs_tipiintervento[$i]['idtipointervento']).', (SELECT costo_orario FROM in_tipiintervento WHERE idtipointervento='.prepare($rs_tipiintervento[$i]['idtipointervento']).'), (SELECT costo_km FROM in_tipiintervento WHERE idtipointervento='.prepare($rs_tipiintervento[$i]['idtipointervento']).'), (SELECT costo_diritto_chiamata FROM in_tipiintervento WHERE idtipointervento='.prepare($rs_tipiintervento[$i]['idtipointervento']).'),   (SELECT costo_orario_tecnico FROM in_tipiintervento WHERE idtipointervento='.prepare($rs_tipiintervento[$i]['idtipointervento']).'), (SELECT costo_km_tecnico FROM in_tipiintervento WHERE idtipointervento='.prepare($rs_tipiintervento[$i]['idtipointervento']).'), (SELECT costo_diritto_chiamata_tecnico FROM in_tipiintervento WHERE idtipointervento='.prepare($rs_tipiintervento[$i]['idtipointervento']).') )')) {
+                $costi = $dbo->select('in_tipiintervento', '*', [
+                    'id' => $rs_tipiintervento[$i]['id'],
+                ])[0];
+
+                $result = $dbo->insert('in_tariffe', [
+                    'idtecnico' => $new_id,
+                    'idtipointervento' => $rs_tipiintervento[$i]['id'],
+                    'costo_ore' => $costi['costo_orario'],
+                    'costo_km' => $costi['costo_km'],
+                    'costo_dirittochiamata' => $costi['costo_diritto_chiamata'],
+                    'costo_ore_tecnico' => $costi['costo_orario_tecnico'],
+                    'costo_km_tecnico' => $costi['costo_km_tecnico'],
+                    'costo_dirittochiamata_tecnico' => $costi['costo_diritto_chiamata_tecnico'],
+                ]);
+
+                if ($result) {
                     //$_SESSION['infos'][] = tr('Informazioni salvate correttamente!');
                 } else {
                     $_SESSION['errors'][] = tr("Errore durante l'importazione tariffe!");

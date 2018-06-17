@@ -45,8 +45,8 @@ if (!empty($idcontratto) && !empty($idordineservizio)) {
     $idimpianto = $rs[0]['id'];
 
     // Seleziono "Ordine di servizio" come tipo intervento
-    $rs = $dbo->fetchArray("SELECT idtipointervento FROM in_tipiintervento WHERE descrizione='Ordine di servizio'");
-    $idtipointervento = $rs[0]['idtipointervento'];
+    $rs = $dbo->fetchArray("SELECT id FROM in_tipiintervento WHERE descrizione='Ordine di servizio'");
+    $idtipointervento = $rs[0]['id'];
 
     // Spunto il tecnico di default assegnato all'impianto
     $rs = $dbo->fetchArray('SELECT idtecnico FROM my_impianti WHERE id='.prepare($idimpianto));
@@ -55,7 +55,7 @@ if (!empty($idcontratto) && !empty($idordineservizio)) {
 
 // Se sto pianificando un contratto, leggo tutti i dati del contratto per predisporre l'aggiunta intervento
 elseif (!empty($idcontratto) && !empty($idcontratto_riga)) {
-    $rs = $dbo->fetchArray('SELECT *, (SELECT idzona FROM an_anagrafiche WHERE idanagrafica = co_contratti.idanagrafica) AS idzona, (SELECT tempo_standard FROM in_tipiintervento WHERE idtipointervento = co_contratti.idtipointervento) AS tempo_standard  FROM co_contratti WHERE id='.prepare($idcontratto));
+    $rs = $dbo->fetchArray('SELECT *, (SELECT idzona FROM an_anagrafiche WHERE idanagrafica = co_contratti.idanagrafica) AS idzona, (SELECT tempo_standard FROM in_tipiintervento WHERE id = co_contratti.idtipointervento) AS tempo_standard  FROM co_contratti WHERE id='.prepare($idcontratto));
     $idanagrafica = $rs[0]['idanagrafica'];
     $idzona = $rs[0]['idzona'];
 
@@ -65,7 +65,7 @@ elseif (!empty($idcontratto) && !empty($idcontratto_riga)) {
     }
 
     // Info riga pianificata
-    $rs = $dbo->fetchArray('SELECT *, (SELECT tempo_standard FROM in_tipiintervento WHERE idtipointervento = co_righe_contratti.idtipointervento) AS tempo_standard  FROM co_righe_contratti WHERE idcontratto='.prepare($idcontratto).' AND id='.prepare($idcontratto_riga));
+    $rs = $dbo->fetchArray('SELECT *, (SELECT tempo_standard FROM in_tipiintervento WHERE id = co_righe_contratti.idtipointervento) AS tempo_standard  FROM co_righe_contratti WHERE idcontratto='.prepare($idcontratto).' AND id='.prepare($idcontratto_riga));
     $idtipointervento = $rs[0]['idtipointervento'];
     $data = (null !== filter('data')) ? filter('data') : $rs[0]['data_richiesta'];
     $richiesta = $rs[0]['richiesta'];
@@ -195,7 +195,7 @@ if (empty($new_codice)) {
 			<!-- RIGA 4 -->
 			<div class="row">
 				<div class="col-md-4">
-					{[ "type": "select", "label": "<?php echo tr('Tipo intervento'); ?>", "name": "idtipointervento", "required": 1, "values": "query=SELECT idtipointervento AS id, descrizione FROM in_tipiintervento ORDER BY descrizione ASC", "value": "<?php echo $idtipointervento; ?>", "ajax-source": "tipiintervento" ]}
+					{[ "type": "select", "label": "<?php echo tr('Tipo intervento'); ?>", "name": "idtipointervento", "required": 1, "values": "query=SELECT id, descrizione FROM in_tipiintervento ORDER BY descrizione ASC", "value": "<?php echo $idtipointervento; ?>", "ajax-source": "tipiintervento" ]}
 				</div>
 
 				<div class="col-md-4">

@@ -10,7 +10,7 @@ switch (post('op')) {
         $nome = post('nome');
 
         $idtipointervento = post('idtipointervento');
-        $rs = $dbo->fetchArray('SELECT costo_orario, costo_diritto_chiamata FROM in_tipiintervento WHERE idtipointervento='.prepare($idtipointervento));
+        $rs = $dbo->fetchArray('SELECT costo_orario, costo_diritto_chiamata FROM in_tipiintervento WHERE id='.prepare($idtipointervento));
         $costo_orario = $rs[0]['costo_orario'];
         $costo_diritto_chiamata = $rs[0]['costo_diritto_chiamata'];
 

@@ -30,8 +30,8 @@ for ($t = 0; $t < count($rst); ++$t) {
     $rsa = $dbo->fetchArray('SELECT * FROM in_tipiintervento ORDER BY descrizione');
 
     for ($a = 0; $a < count($rsa); ++$a) {
-        //Lettura costi
-        $rsc = $dbo->fetchArray('SELECT * FROM in_tariffe WHERE idtecnico='.prepare($rst[$t]['idanagrafica']).' AND idtipointervento='.prepare($rsa[$a]['idtipointervento']));
+        // Lettura costi
+        $rsc = $dbo->fetchArray('SELECT * FROM in_tariffe WHERE idtecnico='.prepare($rst[$t]['idanagrafica']).' AND idtipointervento='.prepare($rsa[$a]['id']));
         echo '
 				<tr>
 					<td></td>

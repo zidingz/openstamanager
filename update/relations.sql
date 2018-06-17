@@ -1,15 +1,15 @@
 -- OGNI TABELLA IMPOSTA LE RELAZIONI PER LE PROPRIE PRIMARY KEYS
 
 -- Nomi differenti per idstato: co_contratti (idstato), co_preventivi (idstato), dt_ddt (idstatoddt), co_documenti (idstatodocumento), in_interventi (idstatointervento), or_ordini (idstatoordine)
--- Duplicazione: predefined - default - can_delete
+-- Duplicazione: predefined - default - can_delete - editable
 -- Riferimenti non chiari: idimpianti, idmastrino
 
 -- Cambiamenti nelle chiavi primarie:
 -- an_anagrafiche - idanagrafica -> id
 -- an_tipianagrafiche - idtipoanagrafica -> id [fatto]
 -- in_statiintervento - idstatointervento -> id [fatto]
--- in_tipiintervento - idtipointervento -> id
--- zz_settings - idimpostazione -> id
+-- in_tipiintervento - idtipointervento -> id [fatto]
+-- zz_settings - idimpostazione -> id [fatto]
 
 -- ATTENZIONE: tutti i documenti per cui l'anagrafica principale non esiste vengono rimossi
 

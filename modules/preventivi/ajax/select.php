@@ -5,7 +5,7 @@ include_once __DIR__.'/../../../core.php';
 switch ($resource) {
     case 'preventivi':
         if (isset($superselect['idanagrafica'])) {
-            $query = 'SELECT co_preventivi.id AS id, an_anagrafiche.idanagrafica, CONCAT(numero, " ", nome) AS descrizione, co_preventivi.idtipointervento, (SELECT descrizione descrizione FROM in_tipiintervento WHERE in_tipiintervento.idtipointervento = co_preventivi.idtipointervento) AS idtipointervento_descrizione FROM co_preventivi INNER JOIN an_anagrafiche ON co_preventivi.idanagrafica=an_anagrafiche.idanagrafica |where| ORDER BY id';
+            $query = 'SELECT co_preventivi.id AS id, an_anagrafiche.idanagrafica, CONCAT(numero, " ", nome) AS descrizione, co_preventivi.idtipointervento, (SELECT descrizione descrizione FROM in_tipiintervento WHERE in_tipiintervento.id = co_preventivi.idtipointervento) AS idtipointervento_descrizione FROM co_preventivi INNER JOIN an_anagrafiche ON co_preventivi.idanagrafica=an_anagrafiche.idanagrafica |where| ORDER BY id';
 
             foreach ($elements as $element) {
                 $filter[] = 'id='.prepare($element);

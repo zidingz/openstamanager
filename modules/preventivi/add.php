@@ -18,7 +18,7 @@ include_once __DIR__.'/../../core.php';
 	<div class="row">
 
 		<div class="col-md-6">
-			{[ "type": "select", "label": "<?php echo tr('Tipo di Attività'); ?>", "name": "idtipointervento", "required": 1, "values": "query=SELECT idtipointervento AS id, descrizione FROM in_tipiintervento", "value": "<?php echo $idtipointervento; ?>" ]}
+			{[ "type": "select", "label": "<?php echo tr('Tipo di Attività'); ?>", "name": "idtipointervento", "required": 1, "values": "query=SELECT id, descrizione FROM in_tipiintervento", "value": "<?php echo $idtipointervento; ?>" ]}
 		</div>
 
 	</div>

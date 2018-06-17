@@ -96,8 +96,8 @@ switch (post('op')) {
 
             $q = 'SELECT id, in_interventi.descrizione, in_interventi.codice,
                 IFNULL( (SELECT MIN(orario_inizio) FROM in_interventi_tecnici WHERE in_interventi_tecnici.idintervento=in_interventi.id), data_richiesta) AS data,
-                (SELECT costo_orario FROM in_tipiintervento WHERE idtipointervento=in_interventi.idtipointervento) AS costo_ore_unitario,
-                (SELECT costo_km FROM in_tipiintervento WHERE idtipointervento=in_interventi.idtipointervento) AS costo_km_unitario,
+                (SELECT costo_orario FROM in_tipiintervento WHERE id=in_interventi.idtipointervento) AS costo_ore_unitario,
+                (SELECT costo_km FROM in_tipiintervento WHERE id=in_interventi.idtipointervento) AS costo_km_unitario,
                 (SELECT SUM(prezzo_dirittochiamata) FROM in_interventi_tecnici GROUP BY idintervento HAVING idintervento=in_interventi.id) AS dirittochiamata,
                 (SELECT SUM(km) FROM in_interventi_tecnici GROUP BY idintervento HAVING idintervento=in_interventi.id) AS km,
                 (SELECT SUM(TIME_TO_SEC(TIMEDIFF(orario_fine, orario_inizio))) FROM in_interventi_tecnici GROUP BY idintervento HAVING idintervento=in_interventi.id) AS t1,

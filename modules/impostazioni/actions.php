@@ -5,7 +5,7 @@ include_once __DIR__.'/../../core.php';
 switch (filter('op')) {
     case 'update':
         foreach ($post as $id => $value) {
-            $results = $dbo->fetchArray('SELECT * FROM `zz_settings` WHERE `idimpostazione`='.prepare($id).' AND editable = 1');
+            $results = $dbo->fetchArray('SELECT * FROM `zz_settings` WHERE `id`='.prepare($id).' AND editable = 1');
             $result = $results[0];
 
             // integer
@@ -41,7 +41,7 @@ switch (filter('op')) {
             }
 
             if (empty($_SESSION['errors'])) {
-                $dbo->query('UPDATE `zz_settings` SET `valore`='.prepare($value).' WHERE `idimpostazione`='.prepare($id));
+                $dbo->query('UPDATE `zz_settings` SET `valore`='.prepare($value).' WHERE `id`='.prepare($id));
             }
         }
 
