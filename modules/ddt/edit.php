@@ -52,7 +52,7 @@ if ($module['name'] == 'Ddt di vendita') {
                 }
             ?>
 
-            
+
 			<div class="row">
 				<?php
                     if ($dir == 'uscita') {
@@ -73,18 +73,18 @@ if ($module['name'] == 'Ddt di vendita') {
 
 				<div class="col-md-3">
                     <?php
-                    if(get_var("Cambia automaticamente stato ddt fatturati")){
-                        if($records[0]['stato']=='Fatturato' || $records[0]['stato']=='Parzialmente fatturato'){
-                    ?>
+                    if (get_var('Cambia automaticamente stato ddt fatturati')) {
+                        if ($records[0]['stato'] == 'Fatturato' || $records[0]['stato'] == 'Parzialmente fatturato') {
+                            ?>
                             {[ "type": "select", "label": "<?php echo tr('Stato'); ?>", "name": "idstatoddt", "required": 1, "values": "query=SELECT * FROM dt_statiddt", "value": "$idstatoddt$", "extra": "readonly" ]}
-                    <?php    
-                        }else{
-                    ?>
-                            {[ "type": "select", "label": "<?php echo tr('Stato'); ?>", "name": "idstatoddt", "required": 1, "values": "query=SELECT * FROM dt_statiddt WHERE descrizione IN('Bozza', 'Evaso', 'Parzialmente evaso')", "value": "$idstatoddt$" ]}    
+                    <?php
+                        } else {
+                            ?>
+                            {[ "type": "select", "label": "<?php echo tr('Stato'); ?>", "name": "idstatoddt", "required": 1, "values": "query=SELECT * FROM dt_statiddt WHERE descrizione IN('Bozza', 'Evaso', 'Parzialmente evaso')", "value": "$idstatoddt$" ]}
                     <?php
                         }
-                    }else{
-                    ?>
+                    } else {
+                        ?>
                     {[ "type": "select", "label": "<?php echo tr('Stato'); ?>", "name": "idstatoddt", "required": 1, "values": "query=SELECT * FROM dt_statiddt", "value": "$idstatoddt$" ]}
                     <?php
                     }
@@ -142,7 +142,7 @@ if ($module['name'] == 'Ddt di vendita') {
 				</div>
 
 				<div class="col-md-3">
-					{[ "type": "select", "label": "<?php echo tr('Vettore'); ?>", "name": "idvettore", "values": "query=SELECT DISTINCT an_anagrafiche.idanagrafica AS id, an_anagrafiche.ragione_sociale AS descrizione FROM an_anagrafiche INNER JOIN an_tipianagrafiche_anagrafiche ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE an_tipianagrafiche_anagrafiche.idtipoanagrafica=(SELECT idtipoanagrafica FROM an_tipianagrafiche WHERE descrizione='Vettore') ORDER BY descrizione ASC", "value": "$idvettore$", "readonly": "<?php echo $records[0]['flag_completato']; ?>" ]}
+					{[ "type": "select", "label": "<?php echo tr('Vettore'); ?>", "name": "idvettore", "values": "query=SELECT DISTINCT an_anagrafiche.idanagrafica AS id, an_anagrafiche.ragione_sociale AS descrizione FROM an_anagrafiche INNER JOIN an_tipianagrafiche_anagrafiche ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE an_tipianagrafiche_anagrafiche.idtipoanagrafica=(SELECT id FROM an_tipianagrafiche WHERE descrizione='Vettore') ORDER BY descrizione ASC", "value": "$idvettore$", "readonly": "<?php echo $records[0]['flag_completato']; ?>" ]}
 				</div>
 			</div>
 
@@ -157,7 +157,7 @@ if ($module['name'] == 'Ddt di vendita') {
 					{[ "type": "textarea", "label": "<?php echo tr('Note'); ?>", "name": "note", "value": "$note$", "readonly": "<?php echo $records[0]['flag_completato']; ?>" ]}
 				</div>
 			</div>
-            
+
             <div class="row">
                 <div class="col-md-12">
                     {[ "type": "textarea", "label": "<?php echo tr('Note aggiuntive'); ?>", "name": "note_aggiuntive", "help": "<?php echo tr('Note interne.'); ?>", "value": "$note_aggiuntive$" ]}
@@ -178,7 +178,7 @@ if ($module['name'] == 'Ddt di vendita') {
 		<div class="pull-left">
 <?php
 
-if ($records[0]['flag_completato']==0) {
+if ($records[0]['flag_completato'] == 0) {
     ?>
             <a class="btn btn-primary" data-href="<?php echo $rootdir; ?>/modules/ddt/row-add.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>&is_articolo" data-toggle="modal" data-title="Aggiungi articolo" data-target="#bs-popup">
                 <i class="fa fa-plus"></i> <?php echo tr('Articolo'); ?>
@@ -262,8 +262,8 @@ if (!empty($fatture)) {
 
 <script>
 <?php
-if ( $records[0]['flag_completato'] ) {
-?>
+if ($records[0]['flag_completato']) {
+    ?>
     $('#tipo_sconto_generico').prop('disabled', true);
 <?php
 }

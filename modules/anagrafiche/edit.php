@@ -147,7 +147,7 @@ if (!$cliente) {
 					{[ "type": "text", "label": "<?php echo tr('Sito web'); ?>", "name": "sitoweb", "placeholder":"www.dominio.ext", "value": "$sitoweb$", "icon-before": "<i class='fa fa-globe'></i>" ]}
 				</div>
 
-				
+
 			</div>
 		</div>
 	</div>
@@ -156,8 +156,8 @@ if (!$cliente) {
 
 if ($cliente || $fornitore) {
     ?>
-	
-	
+
+
 	<!-- ACQUISTI -->
 	<div class = "row">
 	<div class="col-md-6">
@@ -184,13 +184,13 @@ if ($cliente || $fornitore) {
 				<div class="col-md-6">
 					{[ "type": "select", "label": "<?php echo tr('Listino articoli'); ?>", "name": "idlistino_acquisti", "values": "query=SELECT id, nome AS descrizione FROM mg_listini ORDER BY nome ASC", "value": "$idlistino_acquisti$", "extra": "<?php echo ($fornitore) ? '' : 'readonly'; ?>" ]}
 				</div>
-				
+
 			</div>
 
 		</div>
 	</div>
 	</div>
-	
+
 	<div class="col-md-6">
 	<!-- VENDITE -->
 	<div  class="panel panel-primary">
@@ -216,17 +216,17 @@ if ($cliente || $fornitore) {
                 <div class="col-md-6">
                     {[ "type": "select", "label": "<?php echo tr('Listino articoli'); ?>", "name": "idlistino_vendite", "values": "query=SELECT id, nome AS descrizione FROM mg_listini ORDER BY nome ASC", "value": "$idlistino_vendite$", "extra": "<?php echo ($cliente) ? '' : 'readonly'; ?>" ]}
                 </div>
-         
+
 				<div class="col-md-6">
 					{[ "type": "select", "label": "<?php echo tr('Indirizzo di fatturazione'); ?>", "name": "idsede_fatturazione", "values": "query=SELECT id, IF(citta = '', nomesede, CONCAT_WS(', ', nomesede, citta)) AS descrizione FROM an_sedi WHERE idanagrafica='<?php echo $id_record; ?>' UNION SELECT '0' AS id, 'Sede legale' AS descrizione ORDER BY descrizione", "value": "$idsede_fatturazione$" , "extra": "<?php echo ($cliente) ? '' : 'readonly'; ?>" ]}
 				</div>
-				
+
 				<div class="col-md-6">
 					{[ "type": "select", "label": "<?php echo tr('Tipo attività'); ?>", "name": "idtipointervento_default", "values": "query=SELECT idtipointervento AS id, descrizione FROM in_tipiintervento ORDER BY descrizione ASC", "value": "$idtipointervento_default$", "extra": "<?php echo ($cliente) ? '' : 'readonly'; ?>" ]}
 				</div>
 
                 <div class="col-md-6">
-                  {[ "type": "select", "label": "Agente principale", "name": "idagente", "values": "query=SELECT an_anagrafiche.idanagrafica AS id, IF(deleted=1, CONCAT(ragione_sociale, ' (Eliminato)'), ragione_sociale ) AS descrizione FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.idtipoanagrafica=an_tipianagrafiche.idtipoanagrafica) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE (descrizione='Agente' AND deleted=0)<?php echo isset($records[0]['idagente']) ? 'OR (an_anagrafiche.idanagrafica = '.prepare($records[0]['idagente']).'AND deleted=1) ' : ''; ?>ORDER BY ragione_sociale", "value": "$idagente$", "extra": "<?php echo ($cliente) ? '' : 'readonly'; ?>" ]}
+                  {[ "type": "select", "label": "Agente principale", "name": "idagente", "values": "query=SELECT an_anagrafiche.idanagrafica AS id, IF(deleted=1, CONCAT(ragione_sociale, ' (Eliminato)'), ragione_sociale ) AS descrizione FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.idtipoanagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE (descrizione='Agente' AND deleted=0)<?php echo isset($records[0]['idagente']) ? 'OR (an_anagrafiche.idanagrafica = '.prepare($records[0]['idagente']).'AND deleted=1) ' : ''; ?>ORDER BY ragione_sociale", "value": "$idagente$", "extra": "<?php echo ($cliente) ? '' : 'readonly'; ?>" ]}
               	</div>
 
 			</div>
@@ -280,11 +280,11 @@ if ($cliente || $fornitore) {
 					{[ "type": "text", "label": "<?php echo tr('Capitale sociale'); ?>", "name": "capitale_sociale", "value": "$capitale_sociale$" ]}
 				</div>
 			</div>
-			
+
 			<?php
-			//se non è l'anagrafica azienda, ma  cliente o fornitore
-			 if ((!str_contains($records[0]['idtipianagrafica'], $id_azienda)) or (($cliente or $fornitore)))  {
-			?>	
+            //se non è l'anagrafica azienda, ma  cliente o fornitore
+             if ((!str_contains($records[0]['idtipianagrafica'], $id_azienda)) or (($cliente or $fornitore))) {
+                 ?>
 			<div class="row">
 				<div class="col-md-3">
 					{[ "type": "text", "label": "<?php echo tr('Appoggio bancario'); ?>", "name": "appoggiobancario", "value": "$appoggiobancario$" ]}
@@ -303,10 +303,10 @@ if ($cliente || $fornitore) {
 				</div>
 			</div>
 			<?php
-				}
-			?>
-			
-			
+             }
+            ?>
+
+
 			<div class="row">
 				<div class="col-md-12">
 					{[ "type": "text", "label": "<?php echo tr('Dicitura fissa in fattura'); ?>", "name": "diciturafissafattura", "value": "$diciturafissafattura$" ]}
@@ -334,7 +334,7 @@ if ($cliente || $fornitore) {
 
 			<div class="row">
 				<div class="col-md-12">
-					{[ "type": "select", "multiple": "1", "label": "<?php echo tr('Tipo di anagrafica'); ?>", "name": "idtipoanagrafica[]", "values": "query=SELECT idtipoanagrafica AS id, descrizione FROM an_tipianagrafiche WHERE idtipoanagrafica NOT IN (SELECT DISTINCT(x.idtipoanagrafica) FROM an_tipianagrafiche_anagrafiche x INNER JOIN an_tipianagrafiche t ON x.idtipoanagrafica = t.idtipoanagrafica INNER JOIN an_anagrafiche ON an_anagrafiche.idanagrafica = x.idanagrafica WHERE t.descrizione = 'Azienda'  AND deleted = 0) ORDER BY descrizione", "value": "$idtipianagrafica$" ]}
+					{[ "type": "select", "multiple": "1", "label": "<?php echo tr('Tipo di anagrafica'); ?>", "name": "idtipoanagrafica[]", "values": "query=SELECT id, descrizione FROM an_tipianagrafiche WHERE id NOT IN (SELECT DISTINCT(x.idtipoanagrafica) FROM an_tipianagrafiche_anagrafiche x INNER JOIN an_tipianagrafiche t ON x.idtipoanagrafica = t.id INNER JOIN an_anagrafiche ON an_anagrafiche.idanagrafica = x.idanagrafica WHERE t.descrizione = 'Azienda'  AND deleted = 0) ORDER BY descrizione", "value": "$idtipianagrafica$" ]}
 					<?php
                     if (str_contains($records[0]['idtipianagrafica'], $id_azienda)) {
                         echo '
@@ -356,7 +356,7 @@ if ($cliente || $fornitore) {
                 if (in_array('Cliente', explode(',', $records[0]['tipianagrafica']))) {
                     ?>
 					<div class="col-md-6">
-                        {[ "type": "select", "label": "Agenti secondari", "multiple": "1", "name": "idagenti[]", "values": "query=SELECT an_anagrafiche.idanagrafica AS id,  IF(deleted=1, CONCAT(ragione_sociale, ' (Eliminato)'), ragione_sociale ) AS descrizione FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.idtipoanagrafica=an_tipianagrafiche.idtipoanagrafica) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE (descrizione='Agente' AND deleted=0 AND an_anagrafiche.idanagrafica NOT IN (SELECT idagente FROM an_anagrafiche WHERE  idanagrafica = <?php echo prepare($records[0]['idanagrafica']); ?> )) OR (an_anagrafiche.idanagrafica IN (SELECT idagente FROM an_anagrafiche_agenti WHERE idanagrafica =  <?php echo prepare($records[0]['idanagrafica']); ?> ) ) ORDER BY ragione_sociale", "value": "$idagenti$" ]}
+                        {[ "type": "select", "label": "Agenti secondari", "multiple": "1", "name": "idagenti[]", "values": "query=SELECT an_anagrafiche.idanagrafica AS id,  IF(deleted=1, CONCAT(ragione_sociale, ' (Eliminato)'), ragione_sociale ) AS descrizione FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.idtipoanagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE (descrizione='Agente' AND deleted=0 AND an_anagrafiche.idanagrafica NOT IN (SELECT idagente FROM an_anagrafiche WHERE  idanagrafica = <?php echo prepare($records[0]['idanagrafica']); ?> )) OR (an_anagrafiche.idanagrafica IN (SELECT idagente FROM an_anagrafiche_agenti WHERE idanagrafica =  <?php echo prepare($records[0]['idanagrafica']); ?> ) ) ORDER BY ragione_sociale", "value": "$idagenti$" ]}
 					</div>
 
 					<div class="col-md-3">
@@ -463,20 +463,15 @@ if (!empty($elementi)) {
         //se non è un ddt è una fattura.
         if (in_array($elemento['tipo_documento'], ['Intervento'])) {
             $modulo = 'Interventi';
-        } 
-        elseif (in_array($elemento['tipo_documento'], ['Preventivo'])) {
+        } elseif (in_array($elemento['tipo_documento'], ['Preventivo'])) {
             $modulo = 'Preventivi';
-        }
-        elseif (in_array($elemento['tipo_documento'], ['Contratto'])) {
+        } elseif (in_array($elemento['tipo_documento'], ['Contratto'])) {
             $modulo = 'Contratti';
-        }
-        elseif (in_array($elemento['tipo_documento'], ['Ordine cliente', 'Ordine fornitore'])) {
+        } elseif (in_array($elemento['tipo_documento'], ['Ordine cliente', 'Ordine fornitore'])) {
             $modulo = ($elemento['dir'] == 'entrata') ? 'Ordini cliente' : 'Ordini fornitore';
-        }
-        elseif (in_array($elemento['tipo_documento'], ['Ddt di vendita', 'Ddt di acquisto'])) {
+        } elseif (in_array($elemento['tipo_documento'], ['Ddt di vendita', 'Ddt di acquisto'])) {
             $modulo = ($elemento['dir'] == 'entrata') ? 'Ddt di vendita' : 'Ddt di acquisto';
-        }
-        else {
+        } else {
             $modulo = ($elemento['dir'] == 'entrata') ? 'Fatture di vendita' : 'Fatture di acquisto';
         }
 
@@ -492,16 +487,13 @@ if (!empty($elementi)) {
     </div>';
 }
 
-
-
 if (!str_contains($records[0]['idtipianagrafica'], $id_azienda)) {
     echo '
 <a class="btn btn-danger ask" data-backto="record-list">
     <i class="fa fa-trash"></i> '.tr('Elimina').'
 </a>';
-}else{
-
-	echo '
+} else {
+    echo '
 <div class=\'alert alert-warning\' >'.tr('Questa è l\'anagrafica "Azienda" e non è possibile eliminarla').'.</div>';
 }
 

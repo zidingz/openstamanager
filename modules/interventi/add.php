@@ -38,8 +38,6 @@ if (!empty($idcontratto) && !empty($idordineservizio)) {
     $rs = $dbo->fetchArray('SELECT *, (SELECT idzona FROM an_anagrafiche WHERE idanagrafica = co_contratti.idanagrafica) AS idzona FROM co_contratti WHERE id='.prepare($idcontratto));
     $idanagrafica = $rs[0]['idanagrafica'];
     $idzona = $rs[0]['idzona'];
-	
-
 
     // Info riga pianificata
     $rs = $dbo->fetchArray('SELECT * FROM co_ordiniservizio WHERE idcontratto='.prepare($idcontratto).' AND id='.prepare($idordineservizio));
@@ -60,11 +58,11 @@ elseif (!empty($idcontratto) && !empty($idcontratto_riga)) {
     $rs = $dbo->fetchArray('SELECT *, (SELECT idzona FROM an_anagrafiche WHERE idanagrafica = co_contratti.idanagrafica) AS idzona, (SELECT tempo_standard FROM in_tipiintervento WHERE idtipointervento = co_contratti.idtipointervento) AS tempo_standard  FROM co_contratti WHERE id='.prepare($idcontratto));
     $idanagrafica = $rs[0]['idanagrafica'];
     $idzona = $rs[0]['idzona'];
-	
-	//aumento orario inizio del tempo standard definito dalla tipologia dell'intervento (PRESO DAL CONTRATTO)
-	if (!empty($rs[0]['tempo_standard']))
-		    $orario_fine = date('H:i', strtotime($orario_inizio) + ((60 * 60 ) * $rs[0]['tempo_standard']));
 
+    //aumento orario inizio del tempo standard definito dalla tipologia dell'intervento (PRESO DAL CONTRATTO)
+    if (!empty($rs[0]['tempo_standard'])) {
+        $orario_fine = date('H:i', strtotime($orario_inizio) + ((60 * 60) * $rs[0]['tempo_standard']));
+    }
 
     // Info riga pianificata
     $rs = $dbo->fetchArray('SELECT *, (SELECT tempo_standard FROM in_tipiintervento WHERE idtipointervento = co_righe_contratti.idtipointervento) AS tempo_standard  FROM co_righe_contratti WHERE idcontratto='.prepare($idcontratto).' AND id='.prepare($idcontratto_riga));
@@ -72,24 +70,24 @@ elseif (!empty($idcontratto) && !empty($idcontratto_riga)) {
     $data = (null !== filter('data')) ? filter('data') : $rs[0]['data_richiesta'];
     $richiesta = $rs[0]['richiesta'];
     $idsede = $rs[0]['idsede'];
-	$idimpianti = $rs[0]['idimpianti'];
-	
-	//aumento orario inizio del tempo standard definito dalla tipologia dell'intervento (PRESO DAL PROMEMORIA)
-	if (!empty($rs[0]['tempo_standard']))
-		    $orario_fine = date('H:i', strtotime($orario_inizio) + ((60 * 60 ) * $rs[0]['tempo_standard']));
-		
-		
-	//se gli impianti non sono stati definiti nel promemoria, carico tutti gli impianti a contratto
-	if (empty($idimpianti)){
-		$rs = $dbo->fetchArray('SELECT idimpianto FROM my_impianti_contratti WHERE idcontratto='.prepare($idcontratto));
-		$idimpianto = implode(',', array_column($rs, 'idimpianto'));
-	}else{
-		$idimpianto = $idimpianti;
-	}
-	
+    $idimpianti = $rs[0]['idimpianti'];
+
+    //aumento orario inizio del tempo standard definito dalla tipologia dell'intervento (PRESO DAL PROMEMORIA)
+    if (!empty($rs[0]['tempo_standard'])) {
+        $orario_fine = date('H:i', strtotime($orario_inizio) + ((60 * 60) * $rs[0]['tempo_standard']));
+    }
+
+    //se gli impianti non sono stati definiti nel promemoria, carico tutti gli impianti a contratto
+    if (empty($idimpianti)) {
+        $rs = $dbo->fetchArray('SELECT idimpianto FROM my_impianti_contratti WHERE idcontratto='.prepare($idcontratto));
+        $idimpianto = implode(',', array_column($rs, 'idimpianto'));
+    } else {
+        $idimpianto = $idimpianti;
+    }
+
     // Seleziono "In programmazione" come stato
-    $rs = $dbo->fetchArray("SELECT * FROM in_statiintervento WHERE idstatointervento='WIP'");
-    $idstatointervento = $rs[0]['idstatointervento'];
+    $rs = $dbo->fetchArray("SELECT * FROM in_statiintervento WHERE id='WIP'");
+    $idstatointervento = $rs[0]['id'];
 }
 
 if (empty($data)) {
@@ -190,7 +188,7 @@ if (empty($new_codice)) {
 				</div>
 
 				<div class="col-md-4">
-					{[ "type": "select", "label": "<?php echo tr('Zona'); ?>", "name": "idzona", "values": "query=SELECT id, CONCAT_WS( ' - ', nome, descrizione) AS descrizione FROM an_zone ORDER BY nome", "value": "<?php echo $idzona; ?>", "placeholder": "<?php echo tr('Nessuna zona'); ?>", "help":"<?php echo 'La zona viene definita automaticamente in base al cliente selezionato' ?>.", "extra": "readonly" ]}
+					{[ "type": "select", "label": "<?php echo tr('Zona'); ?>", "name": "idzona", "values": "query=SELECT id, CONCAT_WS( ' - ', nome, descrizione) AS descrizione FROM an_zone ORDER BY nome", "value": "<?php echo $idzona; ?>", "placeholder": "<?php echo tr('Nessuna zona'); ?>", "help":"<?php echo 'La zona viene definita automaticamente in base al cliente selezionato'; ?>.", "extra": "readonly" ]}
 				</div>
 			</div>
 
@@ -201,7 +199,7 @@ if (empty($new_codice)) {
 				</div>
 
 				<div class="col-md-4">
-					{[ "type": "select", "label": "<?php echo tr('Stato intervento'); ?>", "name": "idstatointervento", "required": 1, "values": "query=SELECT idstatointervento AS id, descrizione, colore AS _bgcolor_ FROM in_statiintervento WHERE deleted = 0", "value": "<?php echo $idstatointervento; ?>" ]}
+					{[ "type": "select", "label": "<?php echo tr('Stato intervento'); ?>", "name": "idstatointervento", "required": 1, "values": "query=SELECT id, descrizione, colore AS _bgcolor_ FROM in_statiintervento WHERE deleted = 0", "value": "<?php echo $idstatointervento; ?>" ]}
 				</div>
 
 				<div class="col-md-2">
@@ -297,7 +295,7 @@ if (empty($new_codice)) {
 		$("#idimpianti").prop("disabled", value);
         $("#impianti").find("button").prop("disabled", value);
 		$("#idimpianti").selectReset();
-        
+
 
 		if (($(this).val())) {
 			if (($(this).selectData().idzona)){
@@ -351,29 +349,31 @@ if (empty($new_codice)) {
         $("#componenti").prop("disabled", !$(this).val() ? true : false);
         $("#componenti").selectReset();
 	});
-	
-	
+
+
 	$('#idtipointervento').change( function(){
-		
-		if ( (($(this).selectData().tempo_standard)>0) && ('<?php echo filter('orario_fine') ?>' == '')){
-			//data = moment('<?php echo $data.' '.$orario_inizio ?>').format('YYYY-MM-DD HH:mm
-			data = moment( moment().format('YYYY-MM-DD') + '<?php echo ' '.$orario_inizio ?>').format('YYYY-MM-DD HH:mm');
+
+		if ( (($(this).selectData().tempo_standard)>0) && ('<?php echo filter('orario_fine'); ?>' == '')){
+			//data = moment('<?php echo $data.' '.$orario_inizio; ?>').format('YYYY-MM-DD HH:mm
+			data = moment( moment().format('YYYY-MM-DD') + '<?php echo ' '.$orario_inizio; ?>').format('YYYY-MM-DD HH:mm');
 			tempo_standard = $(this).selectData().tempo_standard;
 			orario_fine = moment(data).add(tempo_standard, 'hours').format("HH:mm");
 			$('input[name=orario_fine]').val(orario_fine);
 		}
-		
+
 	});
-	
+
 	$('#idtecnico').change( function(){
-		<?php if (!$get['ref']){ ?>
+		<?php if (!$get['ref']) {
+    ?>
 	   var value = ($(this).val()>0) ? true : false;
 		$('#orario_inizio').prop("required", value);
 		$('#orario_fine').prop("required", value);
 		$('#data').prop("required", value);
-		<?php } ?>
-	});	
-	
+		<?php
+} ?>
+	});
+
 	var ref = "<?php echo $get['ref']; ?>";
 
 	function add_intervento(){

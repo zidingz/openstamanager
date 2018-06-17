@@ -2,10 +2,10 @@
 
 include_once __DIR__.'/../../core.php';
 
-$id_azienda = $dbo->fetchArray("SELECT idtipoanagrafica FROM an_tipianagrafiche WHERE descrizione='Azienda'")[0]['idtipoanagrafica'];
-$id_cliente = $dbo->fetchArray("SELECT idtipoanagrafica FROM an_tipianagrafiche WHERE descrizione='Cliente'")[0]['idtipoanagrafica'];
-$id_fornitore = $dbo->fetchArray("SELECT idtipoanagrafica FROM an_tipianagrafiche WHERE descrizione='Fornitore'")[0]['idtipoanagrafica'];
-$id_tecnico = $dbo->fetchArray("SELECT idtipoanagrafica FROM an_tipianagrafiche WHERE descrizione='Tecnico'")[0]['idtipoanagrafica'];
+$id_azienda = $dbo->fetchArray("SELECT id FROM an_tipianagrafiche WHERE descrizione='Azienda'")[0]['id'];
+$id_cliente = $dbo->fetchArray("SELECT id FROM an_tipianagrafiche WHERE descrizione='Cliente'")[0]['id'];
+$id_fornitore = $dbo->fetchArray("SELECT id FROM an_tipianagrafiche WHERE descrizione='Fornitore'")[0]['id'];
+$id_tecnico = $dbo->fetchArray("SELECT id FROM an_tipianagrafiche WHERE descrizione='Tecnico'")[0]['id'];
 
 switch (post('op')) {
     case 'update':
@@ -49,7 +49,7 @@ switch (post('op')) {
             'idlistino_vendite' => $post['idlistino_vendite'],
             'idiva_acquisti' => $post['idiva_acquisti'],
             'idiva_vendite' => $post['idiva_vendite'],
-		   'idbanca_acquisti' => $post['idbanca_acquisti'],
+            'idbanca_acquisti' => $post['idbanca_acquisti'],
             'idbanca_vendite' => $post['idbanca_vendite'],
             'settore' => $post['settore'],
             'marche' => $post['marche'],
@@ -160,7 +160,7 @@ switch (post('op')) {
         // Lettura tipologia dell'utente loggato
         $agente_is_logged = false;
 
-        $rs = $dbo->fetchArray('SELECT descrizione FROM an_tipianagrafiche INNER JOIN an_tipianagrafiche_anagrafiche ON an_tipianagrafiche.idtipoanagrafica = an_tipianagrafiche_anagrafiche.idtipoanagrafica WHERE idanagrafica = '.prepare($user['idanagrafica']));
+        $rs = $dbo->fetchArray('SELECT descrizione FROM an_tipianagrafiche INNER JOIN an_tipianagrafiche_anagrafiche ON an_tipianagrafiche.id = an_tipianagrafiche_anagrafiche.idtipoanagrafica WHERE idanagrafica = '.prepare($user['idanagrafica']));
 
         for ($i = 0; $i < count($rs); ++$i) {
             if ($rs[$i]['descrizione'] == 'Agente') {
@@ -246,7 +246,7 @@ switch (post('op')) {
 
         // Lettura tipologia della nuova anagrafica
         if (!empty($idtipoanagrafica)) {
-            $rs = $dbo->fetchArray('SELECT descrizione FROM an_tipianagrafiche WHERE idtipoanagrafica IN ('.implode(',', $idtipoanagrafica).')');
+            $rs = $dbo->fetchArray('SELECT descrizione FROM an_tipianagrafiche WHERE id IN ('.implode(',', $idtipoanagrafica).')');
             $tipoanagrafica_dst = implode(', ', array_column($rs, 'descrizione'));
         }
 

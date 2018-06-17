@@ -44,10 +44,10 @@ $rss = $dbo->fetchArray('SELECT idtipointervento, idstatointervento FROM in_inte
 $idtipointervento = $rss[0]['idtipointervento'];
 $idstatointervento = $rss[0]['idstatointervento'];
 
-$rss = $dbo->fetchArray('SELECT completato AS flag_completato FROM in_statiintervento WHERE idstatointervento='.prepare($idstatointervento));
+$rss = $dbo->fetchArray('SELECT completato AS flag_completato FROM in_statiintervento WHERE id='.prepare($idstatointervento));
 $flag_completato = $rss[0]['flag_completato'];
 
-$query = 'SELECT * FROM an_anagrafiche JOIN in_interventi_tecnici ON in_interventi_tecnici.idtecnico = an_anagrafiche.idanagrafica WHERE idintervento='.prepare($id_record)." AND idanagrafica IN (SELECT idanagrafica FROM an_tipianagrafiche_anagrafiche WHERE idtipoanagrafica = (SELECT idtipoanagrafica FROM an_tipianagrafiche WHERE descrizione = 'Tecnico')) ORDER BY ragione_sociale ASC, in_interventi_tecnici.orario_inizio ASC, in_interventi_tecnici.id ASC";
+$query = 'SELECT * FROM an_anagrafiche JOIN in_interventi_tecnici ON in_interventi_tecnici.idtecnico = an_anagrafiche.idanagrafica WHERE idintervento='.prepare($id_record)." AND idanagrafica IN (SELECT idanagrafica FROM an_tipianagrafiche_anagrafiche WHERE idtipoanagrafica = (SELECT id FROM an_tipianagrafiche WHERE descrizione = 'Tecnico')) ORDER BY ragione_sociale ASC, in_interventi_tecnici.orario_inizio ASC, in_interventi_tecnici.id ASC";
 $rs2 = $dbo->fetchArray($query);
 $prev_tecnico = '';
 
@@ -293,18 +293,18 @@ if (!$flag_completato) {
 <script type="text/javascript">
     $(document).ready(function(){
 
-        <?php 
-        if (count($rs2)==0) {
+        <?php
+        if (count($rs2) == 0) {
             echo '$(".btn-details").attr("disabled", true);';
             echo '$(".btn-details").addClass("disabled");';
             echo '$("#showall_dettagli").removeClass("hide");';
             echo '$("#dontshowall_dettagli").addClass("hide");';
-        }else{
+        } else {
             echo '$(".btn-details").attr("disabled", false);';
-            echo '$(".btn-details").removeClass("disabled");';      
+            echo '$(".btn-details").removeClass("disabled");';
         }
         ?>
-        
+
         $('.orari').on("dp.change", function(){
             idriga = $(this).attr('id').split('_')[1];
 

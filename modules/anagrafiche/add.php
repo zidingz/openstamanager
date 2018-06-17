@@ -3,8 +3,8 @@
 include_once __DIR__.'/../../core.php';
 
 if (get('tipoanagrafica') != '') {
-    $rs = $dbo->fetchArray('SELECT idtipoanagrafica FROM an_tipianagrafiche WHERE descrizione='.prepare(get('tipoanagrafica')));
-    $idtipoanagrafica = $rs[0]['idtipoanagrafica'];
+    $rs = $dbo->fetchArray('SELECT id FROM an_tipianagrafiche WHERE descrizione='.prepare(get('tipoanagrafica')));
+    $idtipoanagrafica = $rs[0]['id'];
 } else {
     $idtipoanagrafica = '';
 }
@@ -20,7 +20,7 @@ echo '
 		</div>
 
 		<div class="col-md-6">
-			{[ "type": "select", "label": "'.tr('Tipo di anagrafica').'", "name": "idtipoanagrafica[]", "multiple": "1", "required": 1, "values": "query=SELECT idtipoanagrafica AS id, descrizione FROM an_tipianagrafiche WHERE idtipoanagrafica NOT IN (SELECT DISTINCT(x.idtipoanagrafica) FROM an_tipianagrafiche_anagrafiche x INNER JOIN an_tipianagrafiche t ON x.idtipoanagrafica = t.idtipoanagrafica INNER JOIN an_anagrafiche ON an_anagrafiche.idanagrafica = x.idanagrafica  WHERE t.descrizione = \'Azienda\'  AND deleted = 0) ORDER BY descrizione", "value": "'.$idtipoanagrafica.'" ]}
+			{[ "type": "select", "label": "'.tr('Tipo di anagrafica').'", "name": "idtipoanagrafica[]", "multiple": "1", "required": 1, "values": "query=SELECT id, descrizione FROM an_tipianagrafiche WHERE id NOT IN (SELECT DISTINCT(x.idtipoanagrafica) FROM an_tipianagrafiche_anagrafiche x INNER JOIN an_tipianagrafiche t ON x.idtipoanagrafica = t.id INNER JOIN an_anagrafiche ON an_anagrafiche.idanagrafica = x.idanagrafica  WHERE t.descrizione = \'Azienda\'  AND deleted = 0) ORDER BY descrizione", "value": "'.$idtipoanagrafica.'" ]}
 		</div>
 	</div>';
 

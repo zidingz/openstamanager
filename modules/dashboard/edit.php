@@ -4,7 +4,7 @@ include_once __DIR__.'/../../core.php';
 
 // Impostazione filtri di default a tutte le selezioni la prima volta
 if (!isset($_SESSION['dashboard']['idtecnici'])) {
-    $rs = $dbo->fetchArray("SELECT an_anagrafiche.idanagrafica AS id FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.idtipoanagrafica=an_tipianagrafiche.idtipoanagrafica) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE deleted=0 AND descrizione='Tecnico'");
+    $rs = $dbo->fetchArray("SELECT an_anagrafiche.idanagrafica AS id FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.idtipoanagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE deleted=0 AND descrizione='Tecnico'");
 
     $_SESSION['dashboard']['idtecnici'] = ["'-1'"];
 
@@ -14,7 +14,7 @@ if (!isset($_SESSION['dashboard']['idtecnici'])) {
 }
 
 if (!isset($_SESSION['dashboard']['idstatiintervento'])) {
-    $rs = $dbo->fetchArray('SELECT idstatointervento AS id, descrizione FROM in_statiintervento WHERE deleted = 0');
+    $rs = $dbo->fetchArray('SELECT id, descrizione FROM in_statiintervento WHERE deleted = 0');
 
     $_SESSION['dashboard']['idstatiintervento'] = ["'-1'"];
 
@@ -51,7 +51,7 @@ $checks = '';
 $count = 0;
 $total = 0;
 
-$rs = $dbo->fetchArray('SELECT idstatointervento AS id, descrizione, colore FROM in_statiintervento WHERE deleted = 0 ORDER BY descrizione ASC');
+$rs = $dbo->fetchArray('SELECT id, descrizione, colore FROM in_statiintervento WHERE deleted = 0 ORDER BY descrizione ASC');
 $total = count($rs);
 
 $allchecksstati = '';
@@ -65,7 +65,7 @@ for ($i = 0; $i < count($rs); ++$i) {
         }
     }
 
-    $checks .= "<li><input type='checkbox' id='idstato_".$rs[$i]['id']."' value=\"".$rs[$i]['id'].'" '.$attr." onclick=\"$.when ( session_set_array( 'dashboard,idstatiintervento', '".$rs[$i]['id']."' ) ).promise().then(function( ){ $('#calendar').fullCalendar('refetchEvents'); });  update_counter( 'idstati_count', $('#idstati_ul').find('input:checked').length ); \"> <label for='idstato_".$rs[$i]['id']."'> <span class='badge' style=\"color:".color_inverse($rs[$i]['colore'])."; background:".$rs[$i]['colore'].";\">".$rs[$i]['descrizione']."</span></label></li>\n";
+    $checks .= "<li><input type='checkbox' id='idstato_".$rs[$i]['id']."' value=\"".$rs[$i]['id'].'" '.$attr." onclick=\"$.when ( session_set_array( 'dashboard,idstatiintervento', '".$rs[$i]['id']."' ) ).promise().then(function( ){ $('#calendar').fullCalendar('refetchEvents'); });  update_counter( 'idstati_count', $('#idstati_ul').find('input:checked').length ); \"> <label for='idstato_".$rs[$i]['id']."'> <span class='badge' style=\"color:".color_inverse($rs[$i]['colore']).'; background:'.$rs[$i]['colore'].';">'.$rs[$i]['descrizione']."</span></label></li>\n";
 
     $allchecksstati .= "session_set_array( 'dashboard,idstatiintervento', '".$rs[$i]['id']."', 0 ); ";
 }
@@ -158,7 +158,7 @@ $count = 0;
 $total = 0;
 $totale_tecnici = 0; // conteggia tecnici eliminati e non
 
-$rs = $dbo->fetchArray("SELECT an_anagrafiche.idanagrafica AS id, ragione_sociale, colore FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.idtipoanagrafica=an_tipianagrafiche.idtipoanagrafica) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica
+$rs = $dbo->fetchArray("SELECT an_anagrafiche.idanagrafica AS id, ragione_sociale, colore FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.idtipoanagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica
 LEFT OUTER JOIN in_interventi_tecnici ON  in_interventi_tecnici.idtecnico = an_anagrafiche.idanagrafica  INNER JOIN in_interventi ON in_interventi_tecnici.idintervento=in_interventi.id
 WHERE an_anagrafiche.deleted=0 AND an_tipianagrafiche.descrizione='Tecnico' ".Modules::getAdditionalsQuery('Interventi').' GROUP BY an_anagrafiche.idanagrafica ORDER BY ragione_sociale ASC');
 $total = count($rs);
@@ -176,13 +176,13 @@ for ($i = 0; $i < count($rs); ++$i) {
         }
     }
 
-    $checks .= "<li><input type='checkbox' id='tech_".$rs[$i]['id']."' value=\"".$rs[$i]['id'].'" '.$attr." onclick=\"$.when ( session_set_array( 'dashboard,idtecnici', '".$rs[$i]['id']."' ) ).promise().then(function( ){ $('#calendar').fullCalendar('refetchEvents'); }); update_counter( 'idtecnici_count', $('#idtecnici_ul').find('input:checked').length );  \"> <label for='tech_".$rs[$i]['id']."'><span class='badge' style=\"color:#000; background:transparent; border: 1px solid ".$rs[$i]['colore'].";\">".$rs[$i]['ragione_sociale']."</span></label></li>\n";
+    $checks .= "<li><input type='checkbox' id='tech_".$rs[$i]['id']."' value=\"".$rs[$i]['id'].'" '.$attr." onclick=\"$.when ( session_set_array( 'dashboard,idtecnici', '".$rs[$i]['id']."' ) ).promise().then(function( ){ $('#calendar').fullCalendar('refetchEvents'); }); update_counter( 'idtecnici_count', $('#idtecnici_ul').find('input:checked').length );  \"> <label for='tech_".$rs[$i]['id']."'><span class='badge' style=\"color:#000; background:transparent; border: 1px solid ".$rs[$i]['colore'].';">'.$rs[$i]['ragione_sociale']."</span></label></li>\n";
 
     $allchecktecnici .= "session_set_array( 'dashboard,idtecnici', '".$rs[$i]['id']."', 0 ); ";
 }
 
 // TECNICI ELIMINATI CON ALMENO 1 INTERVENTO
-$rs = $dbo->fetchArray("SELECT an_anagrafiche.idanagrafica AS id, ragione_sociale FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.idtipoanagrafica=an_tipianagrafiche.idtipoanagrafica) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica INNER JOIN in_interventi_tecnici ON in_interventi_tecnici.idtecnico = an_anagrafiche.idanagrafica WHERE deleted=1 AND descrizione='Tecnico' ORDER BY ragione_sociale ASC");
+$rs = $dbo->fetchArray("SELECT an_anagrafiche.idanagrafica AS id, ragione_sociale FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.idtipoanagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica INNER JOIN in_interventi_tecnici ON in_interventi_tecnici.idtecnico = an_anagrafiche.idanagrafica WHERE deleted=1 AND descrizione='Tecnico' ORDER BY ragione_sociale ASC");
 $total = count($rs);
 
 $totale_tecnici += $total;
@@ -304,8 +304,8 @@ if (!empty($rsp)) {
         <h4>'.tr('Promemoria contratti da pianificare').'</h4>';
 
     // Controllo pianificazioni mesi precedenti
-    $qp_old = "SELECT co_righe_contratti.id FROM co_righe_contratti INNER JOIN co_contratti ON co_righe_contratti.idcontratto=co_contratti.id WHERE idstato IN(SELECT id FROM co_staticontratti WHERE pianificabile = 1) AND idintervento IS NULL AND UNIX_TIMESTAMP(co_righe_contratti.data_richiesta)+86400<UNIX_TIMESTAMP(NOW())
-    UNION SELECT co_ordiniservizio.id FROM co_ordiniservizio INNER JOIN co_contratti ON co_ordiniservizio.idcontratto=co_contratti.id WHERE idstato IN(SELECT id FROM co_staticontratti WHERE pianificabile = 1) AND idintervento IS NULL AND UNIX_TIMESTAMP(co_ordiniservizio.data_scadenza)+86400<UNIX_TIMESTAMP(NOW())";
+    $qp_old = 'SELECT co_righe_contratti.id FROM co_righe_contratti INNER JOIN co_contratti ON co_righe_contratti.idcontratto=co_contratti.id WHERE idstato IN(SELECT id FROM co_staticontratti WHERE pianificabile = 1) AND idintervento IS NULL AND UNIX_TIMESTAMP(co_righe_contratti.data_richiesta)+86400<UNIX_TIMESTAMP(NOW())
+    UNION SELECT co_ordiniservizio.id FROM co_ordiniservizio INNER JOIN co_contratti ON co_ordiniservizio.idcontratto=co_contratti.id WHERE idstato IN(SELECT id FROM co_staticontratti WHERE pianificabile = 1) AND idintervento IS NULL AND UNIX_TIMESTAMP(co_ordiniservizio.data_scadenza)+86400<UNIX_TIMESTAMP(NOW())';
     $rsp_old = $dbo->fetchNum($qp_old);
 
     if ($rsp_old > 0) {

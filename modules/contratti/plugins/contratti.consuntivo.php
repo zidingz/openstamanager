@@ -13,8 +13,8 @@ $stati = [];
 $queryc = 'SELECT * FROM in_statiintervento';
 $rsc = $dbo->fetchArray($queryc);
 for ($i = 0; $i < sizeof($rsc); ++$i) {
-    $colori[$rsc[$i]['idstatointervento']] = $rsc[$i]['colore'];
-    $stati[$rsc[$i]['idstatointervento']] = $rsc[$i]['descrizione'];
+    $colori[$rsc[$i]['id']] = $rsc[$i]['colore'];
+    $stati[$rsc[$i]['id']] = $rsc[$i]['descrizione'];
 }
 
 $totale_costo = 0;
@@ -275,7 +275,6 @@ $rs = $dbo->fetchArray("SELECT SUM(qta) AS totale_ore FROM `co_righe2_contratti`
 $contratto_tot_ore = $rs[0]['totale_ore'];
 
 $diff = sum($budget, -$totale_addebito);
-
 
 if ($diff > 0) {
     $bilancio = '<span class="text-success"><big>'.Translator::numberToLocale($diff).' &euro;</big></span>';

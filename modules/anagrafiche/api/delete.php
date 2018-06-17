@@ -2,9 +2,9 @@
 
 switch ($resource) {
     case 'delete_anagrafica':
-        $id_azienda = $dbo->fetchArray("SELECT idtipoanagrafica FROM an_tipianagrafiche WHERE descrizione='Azienda'")[0]['idtipoanagrafica'];
+        $id_azienda = $dbo->fetchArray("SELECT id FROM an_tipianagrafiche WHERE descrizione='Azienda'")[0]['id'];
 
-        $records = $dbo->fetchArray('SELECT an_tipianagrafiche.idtipoanagrafica FROM an_tipianagrafiche INNER JOIN an_tipianagrafiche_anagrafiche ON an_tipianagrafiche.idtipoanagrafica=an_tipianagrafiche_anagrafiche.idtipoanagrafica WHERE idanagrafica='.prepare($request['id']));
+        $records = $dbo->fetchArray('SELECT an_tipianagrafiche.id AS idtipoanagrafica FROM an_tipianagrafiche INNER JOIN an_tipianagrafiche_anagrafiche ON an_tipianagrafiche.id=an_tipianagrafiche_anagrafiche.idtipoanagrafica WHERE idanagrafica='.prepare($request['id']));
         $tipi = array_column($records, 'idtipoanagrafica');
 
         // Se l'anagrafica non è l'azienda principale, la disattivo

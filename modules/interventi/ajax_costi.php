@@ -10,7 +10,7 @@ $rs_iva = $dbo->fetchArray('SELECT descrizione, percentuale, indetraibile FROM c
 if (Auth::admin() || $_SESSION['gruppo'] != 'Tecnici') {
     $costi = get_costi_intervento($id_record);
 
-    $rss = $dbo->fetchArray('SELECT in_statiintervento.completato AS flag_completato FROM in_statiintervento INNER JOIN in_interventi ON in_statiintervento.idstatointervento=in_interventi.idstatointervento WHERE in_interventi.id='.prepare($id_record));
+    $rss = $dbo->fetchArray('SELECT in_statiintervento.completato AS flag_completato FROM in_statiintervento INNER JOIN in_interventi ON in_statiintervento.id=in_interventi.idstatointervento WHERE in_interventi.id='.prepare($id_record));
 
     if ($rss[0]['flag_completato']) {
         $readonly = 'readonly';

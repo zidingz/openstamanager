@@ -6,8 +6,8 @@
 
 -- Cambiamenti nelle chiavi primarie:
 -- an_anagrafiche - idanagrafica -> id
--- an_tipianagrafiche - idtipoanagrafica -> id
--- in_statiintervento - idstatointervento -> id
+-- an_tipianagrafiche - idtipoanagrafica -> id [fatto]
+-- in_statiintervento - idstatointervento -> id [fatto]
 -- in_tipiintervento - idtipointervento -> id
 -- zz_settings - idimpostazione -> id
 
@@ -18,7 +18,7 @@ ALTER TABLE `an_tipianagrafiche_anagrafiche` DROP FOREIGN KEY `an_tipianagrafich
 ALTER TABLE `in_interventi` DROP FOREIGN KEY `in_interventi_ibfk_1`;
 ALTER TABLE `in_interventi_tecnici` DROP FOREIGN KEY `in_interventi_tecnici_ibfk_2`;
 
-ALTER TABLE `an_anagrafiche` CHANGE `idanagrafica` `id` int(11) NOT NULL;
+ALTER TABLE `an_anagrafiche` CHANGE `idanagrafica` `id` int(11) NOT NULL AUTO_INCREMENT;
 
 DELETE FROM `an_anagrafiche_agenti` WHERE `idanagrafica` NOT IN (SELECT `id` FROM `an_anagrafiche`) OR `idagente` NOT IN (SELECT `id` FROM `an_anagrafiche`);
 ALTER TABLE `an_anagrafiche_agenti` ADD FOREIGN KEY (`idanagrafica`) REFERENCES `an_anagrafiche`(`id`) ON DELETE CASCADE,
@@ -102,7 +102,7 @@ DELETE FROM `dt_automezzi_tecnici` WHERE `idtecnico` NOT IN (SELECT `id` FROM `a
 ALTER TABLE `dt_automezzi_tecnici` ADD FOREIGN KEY (`idtecnico`) REFERENCES `an_anagrafiche`(`id`) ON DELETE CASCADE;
 
 ALTER TABLE `an_anagrafiche` CHANGE `idagente` `idagente` int(11);
--- TODO: UPDATE `in_interventi_tecnici` SET `idtecnico` = NULL WHERE `idtecnico` NOT IN (SELECT `id` FROM `an_anagrafiche`);
+UPDATE `an_anagrafiche` `t1` LEFT JOIN `an_anagrafiche` `t2` ON `t1`.`idagente` = `t2`.`id` SET `t1`.`idagente` = NULL WHERE `t2`.`id` IS NULL;
 ALTER TABLE `an_anagrafiche` ADD FOREIGN KEY (`idagente`) REFERENCES `an_anagrafiche`(`id`) ON DELETE CASCADE;
 
 ALTER TABLE `or_righe_ordini` CHANGE `idagente` `idagente` int(11);
@@ -167,7 +167,7 @@ ALTER TABLE `an_anagrafiche` ADD FOREIGN KEY (`idsede_fatturazione`) REFERENCES 
 -- Foreign keys an_tipianagrafiche
 ALTER TABLE `an_tipianagrafiche_anagrafiche` DROP FOREIGN KEY `an_tipianagrafiche_anagrafiche_ibfk_1`;
 
-ALTER TABLE `an_tipianagrafiche` CHANGE `idtipoanagrafica` `id` int(11) NOT NULL;
+ALTER TABLE `an_tipianagrafiche` CHANGE `idtipoanagrafica` `id` int(11) NOT NULL AUTO_INCREMENT;
 
 DELETE FROM `an_tipianagrafiche_anagrafiche` WHERE `idtipoanagrafica` NOT IN (SELECT `id` FROM `an_tipianagrafiche`);
 ALTER TABLE `an_tipianagrafiche_anagrafiche` ADD FOREIGN KEY (`idtipoanagrafica`) REFERENCES `an_tipianagrafiche`(`id`) ON DELETE CASCADE;
@@ -192,7 +192,7 @@ ALTER TABLE `an_sedi` ADD FOREIGN KEY (`idzona`) REFERENCES `an_zone`(`id`) ON D
 -- TODO: da qui in poi individuare la necessità di NULL e la relazione ON DELETE. Bisogna anche aggiungere la maggior parte degli UPDATE/DELETE per permettere la corretta creazione delle chiavi.
 
 -- Foreign keys in_interventi
-DELETE FROM `co_righe_documenti` WHERE `idintervento` NOT IN (SELECT `id` FROM `in_interventi`);
+UPDATE `co_righe_documenti` SET `idintervento` = NULL WHERE `idintervento` NOT IN (SELECT `id` FROM `in_interventi`);
 ALTER TABLE `co_righe_documenti` ADD FOREIGN KEY (`idintervento`) REFERENCES `in_interventi`(`id`) ON DELETE CASCADE;
 
 -- Foreign keys in_statiintervento
@@ -205,13 +205,34 @@ ALTER TABLE `in_interventi` DROP FOREIGN KEY `in_interventi_ibfk_2`;
 
 ALTER TABLE `in_tipiintervento` CHANGE `idtipointervento` `id` VARCHAR(25) NOT NULL;
 
+ALTER TABLE `an_anagrafiche` CHANGE `idtipointervento_default` `idtipointervento_default` VARCHAR(25);
+UPDATE `an_anagrafiche` SET `idtipointervento_default` = NULL WHERE `idtipointervento_default` NOT IN (SELECT `id` FROM `in_tipiintervento`);
 ALTER TABLE `an_anagrafiche` ADD FOREIGN KEY (`idtipointervento_default`) REFERENCES `in_tipiintervento`(`id`) ON DELETE CASCADE;
+
+ALTER TABLE `co_contratti` CHANGE `idtipointervento` `idtipointervento` VARCHAR(25);
+UPDATE `co_contratti` SET `idtipointervento` = NULL WHERE `idtipointervento` NOT IN (SELECT `id` FROM `in_tipiintervento`);
 ALTER TABLE `co_contratti` ADD FOREIGN KEY (`idtipointervento`) REFERENCES `in_tipiintervento`(`id`) ON DELETE CASCADE;
+
+ALTER TABLE `co_preventivi` CHANGE `idtipointervento` `idtipointervento` VARCHAR(25);
+UPDATE `co_preventivi` SET `idtipointervento` = NULL WHERE `idtipointervento` NOT IN (SELECT `id` FROM `in_tipiintervento`);
 ALTER TABLE `co_preventivi` ADD FOREIGN KEY (`idtipointervento`) REFERENCES `in_tipiintervento`(`id`) ON DELETE CASCADE;
+
+ALTER TABLE `co_righe_contratti` CHANGE `idtipointervento` `idtipointervento` VARCHAR(25);
+UPDATE `co_righe_contratti` SET `idtipointervento` = NULL WHERE `idtipointervento` NOT IN (SELECT `id` FROM `in_tipiintervento`);
 ALTER TABLE `co_righe_contratti` ADD FOREIGN KEY (`idtipointervento`) REFERENCES `in_tipiintervento`(`id`) ON DELETE CASCADE;
+
+ALTER TABLE `in_interventi` CHANGE `idtipointervento` `idtipointervento` VARCHAR(25);
+UPDATE `in_interventi` SET `idtipointervento` = NULL WHERE `idtipointervento` NOT IN (SELECT `id` FROM `in_tipiintervento`);
 ALTER TABLE `in_interventi` ADD FOREIGN KEY (`idtipointervento`) REFERENCES `in_tipiintervento`(`id`) ON DELETE CASCADE;
+
+ALTER TABLE `in_interventi_tecnici` CHANGE `idtipointervento` `idtipointervento` VARCHAR(25);
+UPDATE `in_interventi_tecnici` SET `idtipointervento` = NULL WHERE `idtipointervento` NOT IN (SELECT `id` FROM `in_tipiintervento`);
 ALTER TABLE `in_interventi_tecnici` ADD FOREIGN KEY (`idtipointervento`) REFERENCES `in_tipiintervento`(`id`) ON DELETE CASCADE;
+
+DELETE FROM `in_tariffe` WHERE `idtipointervento` NOT IN (SELECT `id` FROM `in_tipiintervento`);
 ALTER TABLE `in_tariffe` ADD FOREIGN KEY (`idtipointervento`) REFERENCES `in_tipiintervento`(`id`) ON DELETE CASCADE;
+
+DELETE FROM `co_contratti_tipiintervento` WHERE `idtipointervento` NOT IN (SELECT `id` FROM `in_tipiintervento`);
 ALTER TABLE `co_contratti_tipiintervento` ADD FOREIGN KEY (`idtipointervento`) REFERENCES `in_tipiintervento`(`id`) ON DELETE CASCADE;
 
 -- Foreign keys or_ordini
@@ -233,7 +254,7 @@ ALTER TABLE `co_righe_contratti_articoli` ADD FOREIGN KEY (`idimpianto`) REFEREN
 -- TODO: da qui in poi le chiavi dovrebbero crearsi senza problemi, ma bisogna sistemare NULL e ON DELETE.
 
 -- Foreign keys dt_aspettobeni
-ALTER TABLE `dt_aspettobeni` CHANGE `id` `id` int(11) NOT NULL;
+ALTER TABLE `dt_aspettobeni` CHANGE `id` `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `co_documenti` CHANGE `idaspettobeni` `idaspettobeni` int(11);
 UPDATE `co_documenti` SET `idaspettobeni` = NULL WHERE `idaspettobeni` NOT IN (SELECT `id` FROM `dt_aspettobeni`);
@@ -273,7 +294,7 @@ UPDATE `mg_articoli_automezzi` SET `idautomezzo` = NULL WHERE `idautomezzo` NOT 
 ALTER TABLE `mg_articoli_automezzi` ADD FOREIGN KEY (`idautomezzo`) REFERENCES `dt_automezzi`(`id`) ON DELETE CASCADE;
 
 -- Foreign keys dt_causalet
-ALTER TABLE `dt_causalet` CHANGE `id` `id` int(11) NOT NULL;
+ALTER TABLE `dt_causalet` CHANGE `id` `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `dt_ddt` CHANGE `idcausalet` `idcausalet` int(11);
 UPDATE `dt_ddt` SET `idcausalet` = NULL WHERE `idcausalet` NOT IN (SELECT `id` FROM `dt_causalet`);
@@ -297,7 +318,7 @@ UPDATE `dt_righe_ddt` SET `idddt` = NULL WHERE `idddt` NOT IN (SELECT `id` FROM 
 ALTER TABLE `dt_righe_ddt` ADD FOREIGN KEY (`idddt`) REFERENCES `dt_ddt`(`id`) ON DELETE CASCADE;
 
 -- Foreign keys dt_porto
-ALTER TABLE `dt_porto` CHANGE `id` `id` int(11) NOT NULL;
+ALTER TABLE `dt_porto` CHANGE `id` `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `co_preventivi` CHANGE `idporto` `idporto` int(11);
 UPDATE `co_preventivi` SET `idporto` = NULL WHERE `idporto` NOT IN (SELECT `id` FROM `dt_porto`);
@@ -312,7 +333,7 @@ UPDATE `dt_ddt` SET `idporto` = NULL WHERE `idporto` NOT IN (SELECT `id` FROM `d
 ALTER TABLE `dt_ddt` ADD FOREIGN KEY (`idporto`) REFERENCES `dt_porto`(`id`) ON DELETE CASCADE;
 
 -- Foreign keys dt_spedizione
-ALTER TABLE `dt_spedizione` CHANGE `id` `id` int(11) NOT NULL;
+ALTER TABLE `dt_spedizione` CHANGE `id` `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `dt_ddt` CHANGE `idspedizione` `idspedizione` int(11);
 UPDATE `dt_ddt` SET `idspedizione` = NULL WHERE `idspedizione` NOT IN (SELECT `id` FROM `dt_spedizione`);
@@ -323,14 +344,14 @@ UPDATE `co_documenti` SET `idspedizione` = NULL WHERE `idspedizione` NOT IN (SEL
 ALTER TABLE `co_documenti` ADD FOREIGN KEY (`idspedizione`) REFERENCES `dt_spedizione`(`id`) ON DELETE CASCADE;
 
 -- Foreign keys dt_statiddt
-ALTER TABLE `dt_statiddt` CHANGE `id` `id` int(11) NOT NULL;
+ALTER TABLE `dt_statiddt` CHANGE `id` `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `dt_ddt` CHANGE `idstatoddt` `idstatoddt` int(11);
 UPDATE `dt_ddt` SET `idstatoddt` = NULL WHERE `idstatoddt` NOT IN (SELECT `id` FROM `dt_statiddt`);
 ALTER TABLE `dt_ddt` ADD FOREIGN KEY (`idstatoddt`) REFERENCES `dt_statiddt`(`id`) ON DELETE CASCADE;
 
 -- Foreign keys dt_tipiddt
-ALTER TABLE `dt_tipiddt` CHANGE `id` `id` int(11) NOT NULL;
+ALTER TABLE `dt_tipiddt` CHANGE `id` `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `dt_ddt` CHANGE `idtipoddt` `idtipoddt` int(11);
 UPDATE `dt_ddt` SET `idtipoddt` = NULL WHERE `idtipoddt` NOT IN (SELECT `id` FROM `dt_tipiddt`);
@@ -392,7 +413,7 @@ UPDATE `an_anagrafiche` SET `idlistino_vendite` = NULL WHERE `idlistino_vendite`
 ALTER TABLE `an_anagrafiche` ADD FOREIGN KEY (`idlistino_vendite`) REFERENCES `mg_listini`(`id`) ON DELETE CASCADE;
 
 -- Foreign keys mg_unitamisura
-ALTER TABLE `mg_unitamisura` CHANGE `id` `id` int(11) NOT NULL;
+ALTER TABLE `mg_unitamisura` CHANGE `id` `id` int(11) NOT NULL AUTO_INCREMENT;
 -- NO RELAZIONI PER ID
 
 -- Foreign keys zz_plugins
@@ -408,7 +429,7 @@ UPDATE `co_documenti` SET `id_segment` = NULL WHERE `id_segment` NOT IN (SELECT 
 ALTER TABLE `co_documenti` ADD FOREIGN KEY (`id_segment`) REFERENCES `zz_segments`(`id`) ON DELETE CASCADE;
 
 -- Foreign keys zz_settings
-ALTER TABLE `zz_settings` CHANGE `idimpostazione` `id` int(11) NOT NULL;
+ALTER TABLE `zz_settings` CHANGE `idimpostazione` `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- Foreign keys co_banche
 ALTER TABLE `co_documenti` CHANGE `idbanca` `idbanca` int(11);
@@ -454,7 +475,7 @@ UPDATE `co_righe_contratti` SET `idcontratto` = NULL WHERE `idcontratto` NOT IN 
 ALTER TABLE `co_righe_contratti` ADD FOREIGN KEY (`idcontratto`) REFERENCES `co_contratti`(`id`) ON DELETE CASCADE;
 
 ALTER TABLE `co_contratti` CHANGE `idcontratto_prev` `idcontratto_prev` int(11);
--- TODO: UPDATE `co_contratti` SET `idcontratto_prev` = NULL WHERE `idcontratto_prev` NOT IN (SELECT `id` FROM `co_contratti`);
+UPDATE `co_contratti` `t1` LEFT JOIN `co_contratti` `t2` ON `t1`.`idcontratto_prev` = `t2`.`id` SET `t1`.`idcontratto_prev` = NULL WHERE `t2`.`id` IS NULL;
 ALTER TABLE `co_contratti` ADD FOREIGN KEY (`idcontratto_prev`) REFERENCES `co_contratti`(`id`) ON DELETE CASCADE;
 
 -- Foreign keys co_righe_contratti
@@ -672,30 +693,35 @@ UPDATE `dt_ddt` SET `idrivalsainps` = NULL WHERE `idrivalsainps` NOT IN (SELECT 
 ALTER TABLE `dt_ddt` ADD FOREIGN KEY (`idrivalsainps`) REFERENCES `co_rivalsainps`(`id`) ON DELETE CASCADE;
 
 -- Foreign keys co_staticontratti
-ALTER TABLE `co_staticontratti` CHANGE `id` `id` int(11) NOT NULL;
+ALTER TABLE `co_staticontratti` CHANGE `id` `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `co_contratti` CHANGE `idstato` `idstato` int(11) NOT NULL;
 UPDATE `co_contratti` SET `idstato` = NULL WHERE `idstato` NOT IN (SELECT `id` FROM `co_staticontratti`);
 ALTER TABLE `co_contratti` ADD FOREIGN KEY (`idstato`) REFERENCES `co_staticontratti`(`id`) ON DELETE CASCADE;
 
 -- Foreign keys co_statidocumento
-ALTER TABLE `co_statidocumento` CHANGE `id` `id` int(11) NOT NULL;
+ALTER TABLE `co_statidocumento` CHANGE `id` `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `co_documenti` CHANGE `idstatodocumento` `idstatodocumento` int(11) NOT NULL;
 UPDATE `co_documenti` SET `idstatodocumento` = NULL WHERE `idstatodocumento` NOT IN (SELECT `id` FROM `co_statidocumento`);
 ALTER TABLE `co_documenti` ADD FOREIGN KEY (`idstatodocumento`) REFERENCES `co_statidocumento`(`id`) ON DELETE CASCADE;
 
 -- Foreign keys co_statipreventivi
-ALTER TABLE `co_statipreventivi` CHANGE `id` `id` int(11) NOT NULL;
+ALTER TABLE `co_statipreventivi` CHANGE `id` `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `co_preventivi` CHANGE `idstato` `idstato` int(11) NOT NULL;
 UPDATE `co_preventivi` SET `idstato` = NULL WHERE `idstato` NOT IN (SELECT `id` FROM `co_statipreventivi`);
 ALTER TABLE `co_preventivi` ADD FOREIGN KEY (`idstato`) REFERENCES `co_statipreventivi`(`id`) ON DELETE CASCADE;
 
 -- Foreign keys co_tipidocumento
-ALTER TABLE `co_tipidocumento` CHANGE `id` `id` int(11) NOT NULL;
+ALTER TABLE `co_tipidocumento` CHANGE `id` `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `co_documenti` CHANGE `idtipodocumento` `idtipodocumento` int(11) NOT NULL;
 UPDATE `co_documenti` SET `idtipodocumento` = NULL WHERE `idtipodocumento` NOT IN (SELECT `id` FROM `co_tipidocumento`);
 ALTER TABLE `co_documenti` ADD FOREIGN KEY (`idtipodocumento`) REFERENCES `co_tipidocumento`(`id`) ON DELETE CASCADE;
 
+-- TODO: correggere le 45 chiavi esterne create negli aggiornamenti precedenti
+-- Le seguenti sono state create a partire da zero:
+-- an_tipianagrafiche_anagrafiche - idanagrafica, idtipoanagrafica
+-- in_interventi - idtipointervento, idanagrafica
+-- in_interventi_tecnici - idtecnico

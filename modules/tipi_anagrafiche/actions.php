@@ -11,7 +11,7 @@ switch (post('op')) {
         // Nome accettato
 
         if (!in_array($descrizione, $block)) {
-            $dbo->query('UPDATE an_tipianagrafiche SET descrizione='.prepare($descrizione).' WHERE idtipoanagrafica='.prepare($idtipoanagrafica));
+            $dbo->query('UPDATE an_tipianagrafiche SET descrizione='.prepare($descrizione).' WHERE id='.prepare($idtipoanagrafica));
             $_SESSION['infos'][] = tr('Informazioni salvate correttamente!');
         } else {
             // Nome non consentito
@@ -40,7 +40,7 @@ switch (post('op')) {
         break;
 
     case 'delete':
-        $query = 'DELETE FROM an_tipianagrafiche WHERE idtipoanagrafica='.prepare($id_record);
+        $query = 'DELETE FROM an_tipianagrafiche WHERE id='.prepare($id_record);
         $dbo->query($query);
 
         $_SESSION['infos'][] = tr('Tipo di anagrafica eliminato!');

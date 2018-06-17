@@ -13,8 +13,8 @@ $stati = [];
 $queryc = 'SELECT * FROM in_statiintervento';
 $rsc = $dbo->fetchArray($queryc);
 for ($i = 0; $i < sizeof($rsc); ++$i) {
-    $colori[$rsc[$i]['idstatointervento']] = $rsc[$i]['colore'];
-    $stati[$rsc[$i]['idstatointervento']] = $rsc[$i]['descrizione'];
+    $colori[$rsc[$i]['id']] = $rsc[$i]['colore'];
+    $stati[$rsc[$i]['id']] = $rsc[$i]['descrizione'];
 }
 
 $budget = get_imponibile_preventivo($id_record);

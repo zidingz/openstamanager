@@ -6,7 +6,7 @@ $record = $records[0];
 
 $moduli = $dbo->fetchArray('SELECT * FROM zz_modules WHERE parent IS NULL ORDER BY `order` ASC');
 
-$utenti = $dbo->fetchArray('SELECT *, (SELECT ragione_sociale FROM an_anagrafiche INNER JOIN an_tipianagrafiche_anagrafiche ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE an_anagrafiche.idanagrafica=zz_users.idanagrafica AND an_tipianagrafiche_anagrafiche.idtipoanagrafica=zz_users.idtipoanagrafica) AS ragione_sociale, (SELECT descrizione FROM an_tipianagrafiche INNER JOIN an_tipianagrafiche_anagrafiche ON an_tipianagrafiche.idtipoanagrafica=an_tipianagrafiche_anagrafiche.idtipoanagrafica WHERE idanagrafica=zz_users.idanagrafica AND an_tipianagrafiche.idtipoanagrafica=zz_users.idtipoanagrafica) AS tipo FROM zz_users WHERE idgruppo='.prepare($record['id']));
+$utenti = $dbo->fetchArray('SELECT *, (SELECT ragione_sociale FROM an_anagrafiche INNER JOIN an_tipianagrafiche_anagrafiche ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE an_anagrafiche.idanagrafica=zz_users.idanagrafica AND an_tipianagrafiche_anagrafiche.idtipoanagrafica=zz_users.idtipoanagrafica) AS ragione_sociale, (SELECT descrizione FROM an_tipianagrafiche INNER JOIN an_tipianagrafiche_anagrafiche ON an_tipianagrafiche.id=an_tipianagrafiche_anagrafiche.idtipoanagrafica WHERE idanagrafica=zz_users.idanagrafica AND an_tipianagrafiche.id=zz_users.idtipoanagrafica) AS tipo FROM zz_users WHERE idgruppo='.prepare($record['id']));
 
 echo '
 	<div class="panel panel-primary">

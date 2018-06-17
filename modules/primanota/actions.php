@@ -87,13 +87,13 @@ switch (post('op')) {
             $rs2 = $dbo->fetchArray($query2);
 
             for ($j = 0; $j < sizeof($rs2); ++$j) {
-                $dbo->query("UPDATE in_interventi SET idstatointervento=(SELECT idstatointervento FROM in_statiintervento WHERE descrizione='Fatturato') WHERE id IN (SELECT idintervento FROM co_preventivi_interventi WHERE idpreventivo=".prepare($rs2[$j]['idpreventivo']).')');
+                $dbo->query("UPDATE in_interventi SET idstatointervento=(SELECT id FROM in_statiintervento WHERE descrizione='Fatturato') WHERE id IN (SELECT idintervento FROM co_preventivi_interventi WHERE idpreventivo=".prepare($rs2[$j]['idpreventivo']).')');
             }
         }
-        
+
         //Creo il modello di prima nota
-        
-        if(post('crea_modello')=='1'){
+
+        if (post('crea_modello') == '1') {
             $idmastrino = get_new_idmastrino('co_movimenti_modelli');
 
             for ($i = 0; $i < sizeof($post['idconto']); ++$i) {
@@ -102,7 +102,7 @@ switch (post('op')) {
                 $dbo->query($query);
             }
         }
-        
+
         break;
 
     case 'editriga':
@@ -178,7 +178,7 @@ switch (post('op')) {
                                 $dbo->query("UPDATE co_preventivi SET idstato=(SELECT id FROM co_statipreventivi WHERE descrizione='In attesa di pagamento') WHERE id=".prepare($rs3[$j]['idpreventivo']));
 
                                 // Aggiorno anche lo stato degli interventi collegati ai preventivi
-                                $dbo->query("UPDATE in_interventi SET idstatointervento=(SELECT idstatointervento FROM in_statiintervento WHERE descrizione='Completato') WHERE id IN(SELECT idintervento FROM co_preventivi_interventi WHERE idpreventivo=".prepare($rs3[$j]['idpreventivo']).')');
+                                $dbo->query("UPDATE in_interventi SET idstatointervento=(SELECT id FROM in_statiintervento WHERE descrizione='Completato') WHERE id IN(SELECT idintervento FROM co_preventivi_interventi WHERE idpreventivo=".prepare($rs3[$j]['idpreventivo']).')');
                             }
 
                             // Aggiorno lo stato degli interventi collegati alla fattura se ce ne sono
@@ -186,7 +186,7 @@ switch (post('op')) {
                             $rs3 = $dbo->fetchArray($query3);
 
                             for ($j = 0; $j < sizeof($rs3); ++$j) {
-                                $dbo->query("UPDATE in_interventi SET idstatointervento=(SELECT idstatointervento FROM in_statiintervento WHERE descrizione='Fatturato') WHERE id=".prepare($rs3[$j]['idintervento']));
+                                $dbo->query("UPDATE in_interventi SET idstatointervento=(SELECT id FROM in_statiintervento WHERE descrizione='Fatturato') WHERE id=".prepare($rs3[$j]['idintervento']));
                             }
                         }
                     }
@@ -222,7 +222,7 @@ switch (post('op')) {
                 $dbo->query("UPDATE co_preventivi SET idstato=(SELECT id FROM co_statipreventivi WHERE descrizione='Pagato') WHERE id=".prepare($rs2[$j]['idpreventivo']));
 
                 // Aggiorno anche lo stato degli interventi collegati ai preventivi
-                $dbo->query("UPDATE in_interventi SET idstatointervento=(SELECT idstatointervento FROM in_statiintervento WHERE descrizione='Fatturato') WHERE id IN (SELECT idintervento FROM co_preventivi_interventi WHERE idpreventivo=".prepare($rs2[$j]['idpreventivo']).')');
+                $dbo->query("UPDATE in_interventi SET idstatointervento=(SELECT id FROM in_statiintervento WHERE descrizione='Fatturato') WHERE id IN (SELECT idintervento FROM co_preventivi_interventi WHERE idpreventivo=".prepare($rs2[$j]['idpreventivo']).')');
             }
 
             // Aggiorno lo stato degli interventi collegati alla fattura se ce ne sono
@@ -230,7 +230,7 @@ switch (post('op')) {
             $rs2 = $dbo->fetchArray($query2);
 
             for ($j = 0; $j < sizeof($rs2); ++$j) {
-                $dbo->query("UPDATE in_interventi SET idstatointervento=(SELECT idstatointervento FROM in_statiintervento WHERE descrizione='Fatturato') WHERE id IN (SELECT idintervento FROM co_preventivi_interventi WHERE idpreventivo=".prepare($rs2[$j]['idpreventivo']).')');
+                $dbo->query("UPDATE in_interventi SET idstatointervento=(SELECT id FROM in_statiintervento WHERE descrizione='Fatturato') WHERE id IN (SELECT idintervento FROM co_preventivi_interventi WHERE idpreventivo=".prepare($rs2[$j]['idpreventivo']).')');
             }
         }
         break;
@@ -306,7 +306,7 @@ switch (post('op')) {
                 $dbo->query("UPDATE co_preventivi SET idstato=(SELECT id FROM co_statipreventivi WHERE descrizione='In attesa di pagamento') WHERE id=".prepare($rs[$i]['idpreventivo']));
 
                 // Aggiorno anche lo stato degli interventi collegati ai preventivi
-                $dbo->query("UPDATE in_interventi SET idstatointervento=(SELECT idstatointervento FROM in_statiintervento WHERE descrizione='Completato') WHERE idpreventivo=".prepare($rs[$i]['idpreventivo']));
+                $dbo->query("UPDATE in_interventi SET idstatointervento=(SELECT id FROM in_statiintervento WHERE descrizione='Completato') WHERE idpreventivo=".prepare($rs[$i]['idpreventivo']));
             }
 
             // Aggiorno lo stato degli interventi collegati alla fattura se ce ne sono
@@ -314,7 +314,7 @@ switch (post('op')) {
             $rs = $dbo->fetchArray($query);
 
             for ($i = 0; $i < sizeof($rs); ++$i) {
-                $dbo->query("UPDATE in_interventi SET idstatointervento=(SELECT idstatointervento FROM in_statiintervento WHERE descrizione='Fatturato') WHERE id=".prepare($rs[$i]['idintervento']));
+                $dbo->query("UPDATE in_interventi SET idstatointervento=(SELECT id FROM in_statiintervento WHERE descrizione='Fatturato') WHERE id=".prepare($rs[$i]['idintervento']));
             }
 
             $_SESSION['infos'][] = tr('Movimento eliminato!');

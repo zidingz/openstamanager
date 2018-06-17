@@ -9,11 +9,10 @@ $tipodoc = $rs[0]['descrizione'];
 $_SESSION['superselect']['idanagrafica'] = $records[0]['idanagrafica'];
 $_SESSION['superselect']['ddt'] = $dir;
 
-
 if ($dir == 'entrata') {
-	$conto = 'vendite';
+    $conto = 'vendite';
 } else {
-	$conto = 'acquisti';
+    $conto = 'acquisti';
 }
 
 ?>
@@ -69,10 +68,10 @@ if ($dir == 'entrata') {
                     $label = tr('Numero fattura');
                 }
                 ?>
-				
+
 				<!-- id_segment -->
 				{[ "type": "hidden", "label": "Segmento", "name": "id_segment", "class": "text-center", "value": "$id_segment$" ]}
-				
+
 				<div class="col-md-3">
 					{[ "type": "text", "label": "<?php echo $label; ?>", "name": "numero_esterno", "class": "alphanumeric-mask text-center", "value": "$numero_esterno$" ]}
 				</div>
@@ -143,7 +142,7 @@ if ($dir == 'entrata') {
 				<div class="col-md-3">
 					{[ "type": "select", "label": "<?php echo tr('Pagamento'); ?>", "name": "idpagamento", "required": 1, "values": "query=SELECT id, descrizione, (SELECT id FROM co_banche WHERE id_pianodeiconti3 = co_pagamenti.idconto_<?php echo $conto; ?> ) AS idbanca FROM co_pagamenti GROUP BY descrizione ORDER BY descrizione ASC", "value": "$idpagamento$", "extra": "onchange=\"$('#idbanca').val( $(this).find('option:selected').data('idbanca') ).change(); \" " ]}
 				</div>
-				
+
 				<div class="col-md-3">
 					{[ "type": "select", "label": "<?php echo tr('Banca'); ?>", "name": "idbanca", "required": 0, "values": "query=SELECT id, CONCAT (nome, ' - ' , iban) AS descrizione FROM co_banche WHERE deleted = 0 ORDER BY nome ASC", "value": "$idbanca$" ]}
 				</div>
@@ -153,7 +152,7 @@ if ($dir == 'entrata') {
 
 <?php
 if ($tipodoc == 'Fattura accompagnatoria di vendita') {
-                        ?>
+                    ?>
 				<div class="row">
 					<div class="col-md-3">
 						{[ "type": "select", "label": "<?php echo tr('Aspetto beni'); ?>", "name": "idaspettobeni", "placeholder": "-", "values": "query=SELECT id, descrizione FROM dt_aspettobeni ORDER BY descrizione ASC", "value": "$idaspettobeni$" ]}
@@ -178,12 +177,12 @@ if ($tipodoc == 'Fattura accompagnatoria di vendita') {
 					</div>
 
 					<div class="col-md-3">
-						{[ "type": "select", "label": "<?php echo tr('Vettore'); ?>", "name": "idvettore", "values": "query=SELECT DISTINCT an_anagrafiche.idanagrafica AS id, an_anagrafiche.ragione_sociale AS descrizione FROM an_anagrafiche INNER JOIN an_tipianagrafiche_anagrafiche ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE an_tipianagrafiche_anagrafiche.idtipoanagrafica=(SELECT idtipoanagrafica FROM an_tipianagrafiche WHERE descrizione='Vettore') ORDER BY descrizione ASC", "value": "$idvettore$" ]}
+						{[ "type": "select", "label": "<?php echo tr('Vettore'); ?>", "name": "idvettore", "values": "query=SELECT DISTINCT an_anagrafiche.idanagrafica AS id, an_anagrafiche.ragione_sociale AS descrizione FROM an_anagrafiche INNER JOIN an_tipianagrafiche_anagrafiche ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE an_tipianagrafiche_anagrafiche.idtipoanagrafica=(SELECT id FROM an_tipianagrafiche WHERE descrizione='Vettore') ORDER BY descrizione ASC", "value": "$idvettore$" ]}
 					</div>
 				</div>
 
 <?php
-                    }
+                }
 
 if ($dir == 'uscita') {
     ?>
@@ -266,13 +265,13 @@ if ($records[0]['stato'] == 'Emessa') {
 if ($records[0]['stato'] != 'Pagato' && $records[0]['stato'] != 'Emessa') {
     if ($dir == 'entrata') {
         // Lettura interventi non rifiutati, non fatturati e non collegati a preventivi o contratti
-        $int_query = 'SELECT COUNT(*) AS tot FROM in_interventi INNER JOIN in_statiintervento ON in_interventi.idstatointervento=in_statiintervento.idstatointervento WHERE idanagrafica='.prepare($records[0]['idanagrafica']).' AND in_statiintervento.completato=1 AND in_interventi.id NOT IN (SELECT idintervento FROM co_righe_documenti WHERE idintervento IS NOT NULL) AND in_interventi.id NOT IN (SELECT idintervento FROM co_preventivi_interventi WHERE idintervento IS NOT NULL) AND in_interventi.id NOT IN (SELECT idintervento FROM co_righe_contratti WHERE idintervento IS NOT NULL)';
+        $int_query = 'SELECT COUNT(*) AS tot FROM in_interventi INNER JOIN in_statiintervento ON in_interventi.idstatointervento=in_statiintervento.id WHERE idanagrafica='.prepare($records[0]['idanagrafica']).' AND in_statiintervento.completato=1 AND in_interventi.id NOT IN (SELECT idintervento FROM co_righe_documenti WHERE idintervento IS NOT NULL) AND in_interventi.id NOT IN (SELECT idintervento FROM co_preventivi_interventi WHERE idintervento IS NOT NULL) AND in_interventi.id NOT IN (SELECT idintervento FROM co_righe_contratti WHERE idintervento IS NOT NULL)';
         $interventi = $dbo->fetchArray($int_query)[0]['tot'];
 
         // Se non trovo niente provo a vedere se ce ne sono per clienti terzi
         if (empty($interventi)) {
             // Lettura interventi non rifiutati, non fatturati e non collegati a preventivi o contratti (clienti terzi)
-            $int_query = 'SELECT COUNT(*) AS tot FROM in_interventi INNER JOIN in_statiintervento ON in_interventi.idstatointervento=in_statiintervento.idstatointervento WHERE idclientefinale='.prepare($records[0]['idanagrafica']).' AND in_statiintervento.completato=1 AND in_interventi.id NOT IN (SELECT idintervento FROM co_righe_documenti WHERE idintervento IS NOT NULL) AND in_interventi.id NOT IN (SELECT idintervento FROM co_preventivi_interventi WHERE idintervento IS NOT NULL) AND in_interventi.id NOT IN (SELECT idintervento FROM co_righe_contratti WHERE idintervento IS NOT NULL)';
+            $int_query = 'SELECT COUNT(*) AS tot FROM in_interventi INNER JOIN in_statiintervento ON in_interventi.idstatointervento=in_statiintervento.id WHERE idclientefinale='.prepare($records[0]['idanagrafica']).' AND in_statiintervento.completato=1 AND in_interventi.id NOT IN (SELECT idintervento FROM co_righe_documenti WHERE idintervento IS NOT NULL) AND in_interventi.id NOT IN (SELECT idintervento FROM co_preventivi_interventi WHERE idintervento IS NOT NULL) AND in_interventi.id NOT IN (SELECT idintervento FROM co_righe_contratti WHERE idintervento IS NOT NULL)';
             $interventi = $dbo->fetchArray($int_query)[0]['tot'];
         }
 
