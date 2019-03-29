@@ -1,5 +1,9 @@
 {% extends "layouts/app.twig" %}
 
+{% block title %}
+    {{ structure.title }}
+{% endblock %}
+
 {% block top_content %}
     <!-- Widget in alto -->
     {( "name": "widgets", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}", "position": "top", "place": "controller" )}

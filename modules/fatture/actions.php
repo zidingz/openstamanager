@@ -40,9 +40,6 @@ switch (post('op')) {
             $id_stato = post('id_stato');
             $idpagamento = post('idpagamento');
 
-            $totale_imponibile = get_imponibile_fattura($id_record);
-            $totale_fattura = get_totale_fattura($id_record);
-
             $data = [];
             if ($dir == 'uscita') {
                 $data = [

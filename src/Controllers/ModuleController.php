@@ -2,6 +2,9 @@
 
 namespace Controllers;
 
+use HTMLBuilder\HTMLBuilder;
+use Slim\Exception\NotFoundException;
+
 class ModuleController extends Controller
 {
     public function module($request, $response, $args)
@@ -39,7 +42,7 @@ class ModuleController extends Controller
             WHERE id_module = '.prepare($args['module_id']).' AND id_record = '.prepare($args['record_id']).'
         ORDER BY `created_at` ASC LIMIT 200');
 
-        foreach ($operations as $operation) {
+        foreach ($operations as $key => $operation) {
             $description = $operation['op'];
             $icon = 'pencil-square-o';
             $color = null;
@@ -73,6 +76,8 @@ class ModuleController extends Controller
             $operation['color'] = $color;
             $operation['icon'] = $icon;
             $operation['description'] = $description;
+
+            $operations[$key] = $operation;
         }
 
         $args['operations'] = $operations;
@@ -92,7 +97,14 @@ class ModuleController extends Controller
 
     public function editRecord($request, $response, $args)
     {
-        $response = $this->view->render($response, 'resources\views\actions.php', $args);
+        $record_id = $this->oldActions($args);
+
+        $route = $this->router->pathFor('module-record', [
+            'module_id' => $args['module_id'],
+            'record_id' => $record_id,
+        ]);
+
+        $response = $response->withRedirect($route);
 
         return $response;
     }
@@ -107,11 +119,42 @@ class ModuleController extends Controller
 
     public function addRecord($request, $response, $args)
     {
-        $response = $this->view->render($response, 'resources\views\actions.php', $args);
+        $record_id = $this->oldActions($args);
 
-        $response = $response->withRedirect($this->router->pathFor('module-record'));
+        $route = $this->router->pathFor('module-record', [
+            'module_id' => $args['module_id'],
+            'record_id' => $record_id,
+        ]);
+
+        $response = $response->withRedirect($route);
 
         return $response;
+    }
+
+    public function recordAction($request, $response, $args)
+    {
+        $class = '\\'.$args['structure']->namespace.'\Record';
+
+        if (!class_exists($class)) {
+            throw new NotFoundException($request, $response);
+        }
+
+        $controller = new $class($this->container);
+
+        return $controller->manage($args['action_name'], $request, $response, $args);
+    }
+
+    public function moduleAction($request, $response, $args)
+    {
+        $class = '\\'.$args['structure']->namespace.'\Module';
+
+        if (!class_exists($class)) {
+            throw new NotFoundException($request, $response);
+        }
+
+        $controller = new $class($this->container);
+
+        return $controller->manage($args['action_name'], $request, $response, $args);
     }
 
     protected function oldEditor($args)
@@ -127,6 +170,9 @@ class ModuleController extends Controller
         }
 
         $args['record'] = $record;
+
+        // Registrazione del record
+        HTMLBuilder::setRecord($record);
 
         $content = $structure->filepath('edit.php');
         if (!empty($content)) {
@@ -152,6 +198,29 @@ class ModuleController extends Controller
             'bulk' => $module_bulk,
             'plugins_content' => $this->oldPlugins($args),
         ];
+    }
+
+    protected function oldActions($args)
+    {
+        extract($args);
+
+        $dbo = $database = $this->database;
+
+        // Lettura risultato query del modulo
+        $init = $structure->filepath('init.php');
+        if (!empty($init)) {
+            include $init;
+        }
+
+        $args['record'] = $record;
+
+        // Registrazione del record
+        $actions = $structure->filepath('actions.php');
+        if (!empty($actions)) {
+            include $actions;
+        }
+
+        return $id_record;
     }
 
     protected function oldPlugins($args)

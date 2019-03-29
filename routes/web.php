@@ -95,7 +95,7 @@ $app->group('/module/{module_id:[0-9]+}', function () use ($app) {
     $app->get('[/]', 'Controllers\ModuleController:module')
         ->setName('module');
 
-    $app->get('/action/{action_name}/[/]', 'Controllers\ModuleController:moduleAction')
+    $app->get('/action/{action_name}[/]', 'Controllers\ModuleController:moduleAction')
         ->setName('module-action');
 
     $app->group('/edit/{record_id:[0-9]+}', function () use ($app) {
@@ -103,7 +103,7 @@ $app->group('/module/{module_id:[0-9]+}', function () use ($app) {
             ->setName('module-record');
         $app->post('[/]', 'Controllers\ModuleController:editRecord');
 
-        $app->get('/action/{action_name}/[/]', 'Controllers\ModuleController:recordAction')
+        $app->get('/action/{action_name}[/]', 'Controllers\ModuleController:recordAction')
             ->setName('module-record-action');
     });
 
@@ -127,10 +127,10 @@ $app->group('/plugin/{plugin_id:[0-9]+}/{module_record_id}', function () use ($a
 
 // Stampe
 $app->group('/print', function () use ($app) {
-    $app->get('/{print_id:[0-9]+}/{record_id:[0-9]+}[/]', 'Controllers\PrintController:view')
+    $app->get('/{print_id:[0-9]+}[/{record_id:[0-9]+}[/]]', 'Controllers\PrintController:view')
         ->setName('print');
 
-    $app->get('/open/{print_id:[0-9]+}/{record_id:[0-9]+}[/]', 'Controllers\PrintController:open')
+    $app->get('/open/{print_id:[0-9]+}[/{record_id:[0-9]+}[/]]', 'Controllers\PrintController:open')
         ->setName('print-open');
 })->add(UserMiddleware::class);
 

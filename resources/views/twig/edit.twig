@@ -50,7 +50,7 @@
             });
 
             // Pulsanti dinamici
-            if (!isMobile.any()) {
+            if (!isMobile()) {
                 $("#pulsanti").affix({
                     offset: {
                         top: 200
@@ -133,7 +133,7 @@
         // Se l'utente ha i permessi in sola lettura per il modulo, converto tutti i campi di testo in span
         {% set read_only = structure.permission == 'r' %}
         {% set not_class = read_only ? '' : '.not(".unblockable")' %}
-        {% if read_only or block_edit is empty %}
+        {% if read_only or (block_edit is defined and block_edit == false) %}
         $(document).ready(function(){
             $("input, textarea, select", "section.content"){{ not_class|raw }}.attr("readonly", "true");
             $("select, input[type=checkbox]", "section.content"){{ not_class|raw }}.prop("disabled", true);
@@ -148,14 +148,14 @@
 
         var content_was_modified = false;
 
-        //controllo se digito qualche valore o cambio qualche select
+        // controllo se digito qualche valore o cambio qualche select
         $("input, textarea, select").bind("change paste keyup", function(event) {
             if( event.keyCode >= 32 ){
                 content_was_modified = true;
             }
         });
 
-        //tolgo il controllo se sto salvando
+        // tolgo il controllo se sto salvando
         $(".btn-success, button[type=submit]").bind("click", function() {
             content_was_modified = false;
         });

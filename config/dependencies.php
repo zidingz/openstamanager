@@ -57,23 +57,6 @@ $container['view'] = function ($container) {
         $renderer->addAttribute('debugbar', $container['debugbar']);
     }
 
-    // Inclusione dei file modutil.php
-    // TODO: sostituire * con lista module dir {aggiornamenti,anagrafiche,articoli}
-    // TODO: sostituire tutte le funzioni dei moduli con classi Eloquent relative
-    $files = glob(DOCROOT.'/{modules,plugins}/*/modutil.php', GLOB_BRACE);
-    $custom_files = glob(DOCROOT.'/{modules,plugins}/*/custom/modutil.php', GLOB_BRACE);
-    foreach ($custom_files as $key => $value) {
-        $index = array_search(str_replace('custom/', '', $value), $files);
-        if ($index !== false) {
-            unset($files[$index]);
-        }
-    }
-
-    $list = array_merge($files, $custom_files);
-    foreach ($list as $file) {
-        include_once $file;
-    }
-
     return $renderer;
 };
 
@@ -117,9 +100,10 @@ $container['twig'] = function ($container) {
     $function = new \Twig\TwigFunction('searchFieldName', 'searchFieldName');
     $twig->getEnvironment()->addFunction($function);
 
-    $function = new \Twig\TwigFunction('module_link', function ($modulo, $id_record = null, $testo = null, $alternativo = true, $extra = null, $blank = true) {
-        return \Modules::link($modulo, $id_record, $testo, $alternativo, $extra, $blank);
-    });
+    $function = new \Twig\TwigFunction('module_link', '\Modules::link');
+    $twig->getEnvironment()->addFunction($function);
+
+    $function = new \Twig\TwigFunction('module', '\Modules::get');
     $twig->getEnvironment()->addFunction($function);
 
     if (!empty($container['debugbar'])) {

@@ -1,4 +1,15 @@
-<?php
+{% extends "common/descrizione.twig" %}
+
+{% block response %}
+    {{ parent() }}
+
+    <div class="row">
+        <div class="col-md-12">
+            {[ "type": "textarea", "label": "{{ 'Descrizione'|trans  }}", "name": "descrizione", "id": "descrizione_riga", "value": {{ result.descrizione|json_encode() }}, "required": 1 ]}
+        </div>
+    </div>
+{% endblock %}
+
 
 // Descrizione
 echo App::internalLoad('descrizione.php', $result, $options);

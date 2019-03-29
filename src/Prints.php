@@ -170,19 +170,18 @@ class Prints
             return false;
         }
 
-        $link = ROOTDIR.'/pdfgen.php?';
+        $link = pathFor('print', [
+            'print_id' => $infos['id'],
+            'record_id' => $id_record,
+        ]);
 
         if (self::isOldStandard($infos['id'])) {
-            $link .= 'ptype='.$infos['directory'];
+            $get .= 'ptype='.$infos['directory'];
 
-            $link .= !empty($infos['previous']) && !empty($id_record) ? '&'.$infos['previous'].'='.$id_record : '';
-        } else {
-            $link .= 'id_print='.$infos['id'];
-
-            $link .= !empty($id_record) ? '&id_record='.$id_record : '';
+            $get .= !empty($infos['previous']) && !empty($id_record) ? '&'.$infos['previous'].'='.$id_record : '';
         }
 
-        $link .= !empty($get) ? '&'.$get : '';
+        $link .= !empty($get) ? '?'.$get : '';
 
         return $link;
     }

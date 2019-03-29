@@ -1,378 +1,7 @@
-var isMobile = {
-    Android: function () {
-        return navigator.userAgent.match(/Android/i);
-    },
-    BlackBerry: function () {
-        return navigator.userAgent.match(/BlackBerry/i);
-    },
-    iOS: function () {
-        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-    },
-    Opera: function () {
-        return navigator.userAgent.match(/Opera Mini/i);
-    },
-    Windows: function () {
-        return navigator.userAgent.match(/IEMobile/i);
-    },
-    any: function () {
-        return (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) ||
-            /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4)));
-    }
-};
-
-// Fix multi-modal
-$(document).on('hidden.bs.modal', '.modal', function () {
-    $('.modal:visible').length && $(document.body).addClass('modal-open');
-});
-
-$(document).ready(function () {
-    // Imposta la lingua per la gestione automatica delle date dei diversi plugin
-    moment.locale(globals.locale);
-    globals.timestampFormat = moment.localeData().longDateFormat('L') + ' ' + moment.localeData().longDateFormat('LT');
-
-    // Imposta lo standard per la conversione dei numeri
-    numeral.register('locale', 'it', {
-        delimiters: {
-            thousands: globals.thousands,
-            decimal: globals.decimals,
-        },
-        abbreviations: {
-            thousand: 'k',
-            million: 'm',
-            billion: 'b',
-            trillion: 't'
-        },
-        currency: {
-            symbol: '€'
-        }
-    });
-    numeral.locale('it');
-    numeral.defaultFormat('0,0.' + ('0').repeat(globals.cifre_decimali));
-
-    // Orologio
-    clock();
-
-    // Richiamo alla generazione di Datatables
-    start_datatables();
-
-    // Calendario principale
-    ranges = {};
-    ranges[globals.translations.today] = [moment(), moment()];
-    ranges[globals.translations.firstThreemester] = [moment("01", "MM"), moment("03", "MM").endOf('month')];
-    ranges[globals.translations.secondThreemester] = [moment("04", "MM"), moment("06", "MM").endOf('month')];
-    ranges[globals.translations.thirdThreemester] = [moment("07", "MM"), moment("09", "MM").endOf('month')];
-    ranges[globals.translations.fourthThreemester] = [moment("10", "MM"), moment("12", "MM").endOf('month')];
-    ranges[globals.translations.firstSemester] = [moment("01", "MM"), moment("06", "MM").endOf('month')];
-    ranges[globals.translations.secondSemester] = [moment("06", "MM"), moment("12", "MM").endOf('month')];
-    ranges[globals.translations.thisMonth] = [moment().startOf('month'), moment().endOf('month')];
-    ranges[globals.translations.lastMonth] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
-    ranges[globals.translations.thisYear] = [moment().startOf('year'), moment().endOf('year')];
-    ranges[globals.translations.lastYear] = [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')];
-
-    // Calendario principale
-    $('#daterange').daterangepicker({
-            locale: {
-                customRangeLabel: globals.translations.custom,
-                applyLabel: globals.translations.apply,
-                cancelLabel: globals.translations.cancel,
-                fromLabel: globals.translations.from,
-                toLabel: globals.translations.to,
-            },
-            ranges: ranges,
-            startDate: globals.start_date,
-            endDate: globals.end_date,
-            applyClass: 'btn btn-success btn-sm',
-            cancelClass: 'btn btn-danger btn-sm',
-            linkedCalendars: false
-        },
-        function (start, end) {
-            // Esegue il submit del periodo selezionato e ricarica la pagina
-            $.get(globals.rootdir + '/core.php?period_start=' + start.format('YYYY-MM-DD') + '&period_end=' + end.format('YYYY-MM-DD'), function (data) {
-                location.reload();
-            });
-        }
-    );
-
-    // Pulsante per visualizzare/ nascondere la password
-    $(".input-group-addon").on('click', function () {
-        if ($(this).parent().find("i").hasClass('fa-eye')) {
-            $("#password").attr("type", "text");
-            $(this).parent().find("i").removeClass('fa-eye').addClass('fa-eye-slash');
-            $(this).parent().find("i").attr('title', 'Nascondi password');
-        } else if ($(this).parent().find("i").hasClass('fa-eye-slash')) {
-            $("#password").attr("type", "password");
-            $(this).parent().find("i").removeClass('fa-eye-slash').addClass('fa-eye');
-            $(this).parent().find("i").attr('title', 'Visualizza password');
-        }
-    });
-
-    // Messaggi automatici di eliminazione
-    $(document).on('click', '.ask', function () {
-        message(this);
-    });
-
-    // Pulsanti di Datatables
-    $(".btn-csv").click(function (e) {
-        var table = $(document).find("#" + $(this).closest("[data-target]").data("target")).DataTable();
-
-        table.buttons(0).trigger();
-    });
-
-    $(".btn-excel").click(function (e) {
-        var table = $(document).find("#" + $(this).closest("[data-target]").data("target")).DataTable();
-
-        table.buttons(3).trigger();
-    });
-
-    $(".btn-pdf").click(function (e) {
-        var table = $(document).find("#" + $(this).closest("[data-target]").data("target")).DataTable();
-
-        table.buttons(4).trigger();
-    });
-
-    $(".btn-copy").click(function (e) {
-        var table = $(document).find("#" + $(this).closest("[data-target]").data("target")).DataTable();
-
-        table.buttons(1).trigger();
-    });
-
-    $(".btn-print").click(function (e) {
-        var table = $(document).find("#" + $(this).closest("[data-target]").data("target")).DataTable();
-
-        table.buttons(2).trigger();
-    });
-
-    $(".btn-select-all").click(function () {
-        var table = $(document).find("#" + $(this).parent().parent().parent().data("target")).DataTable();
-        $("#main_loading").show();
-
-        table.clear().draw();
-
-        table.page.len(-1).draw();
-    });
-
-    $(".btn-select-none").click(function () {
-        var table = $(document).find("#" + $(this).parent().parent().parent().data("target")).DataTable();
-
-        table.rows().deselect();
-
-        table.page.len(200);
-    });
-
-    $(".bulk-action").click(function () {
-        var table = $(document).find("#" + $(this).parent().parent().parent().parent().data("target"));
-
-        if (table.data('selected')) {
-            $(this).attr("data-id_records", table.data('selected'));
-            $(this).data("id_records", table.data('selected'));
-
-            message(this);
-
-            $(this).attr("data-id_records", "");
-            $(this).data("id_records", "");
-        } else {
-            swal(globals.translations.waiting, globals.translations.waiting_msg, "error");
-        }
-    });
-
-    // Sidebar
-    $('.sidebar-menu > li.treeview i.fa-angle-left').click(function (e) {
-        e.preventDefault();
-        $(this).find('ul').stop().slideDown();
-    });
-
-    $('.sidebar-menu > li.treeview i.fa-angle-down').click(function (e) {
-        e.preventDefault();
-        $(this).find('ul').stop().slideUp();
-    });
-
-    $menulist = $('.treeview-menu > li.active');
-    for (i = 0; i < $menulist.length; i++) {
-        $list = $($menulist[i]);
-        $list.parent().show().parent().addClass('active');
-        $list.parent().parent().find('i.fa-angle-left').removeClass('fa-angle-left').addClass('fa-angle-down');
-    }
-
-    // Menu ordinabile
-    $(".sidebar-menu").sortable({
-        cursor: 'move',
-
-        stop: function (event, ui) {
-            var order = $(this).sortable('toArray').toString();
-
-            $.post(globals.rootdir + "/actions.php?id_module=" + globals.aggiornamenti_id, {
-                op: 'sortmodules',
-                ids: order
-            });
-        }
-    });
-
-    if (isMobile.any()) {
-        $(".sidebar-menu").sortable("disable");
-    }
-
-    // Tabs
-    $('.nav-tabs').tabs();
-
-    // Entra nel tab indicato al caricamento della pagina
-    var hash = window.location.hash ? window.location.hash : getUrlVars().hash;
-    if (hash && hash != '#tab_0') {
-        $('ul.nav-tabs a[href="' + hash + '"]').tab('show');
-    }
-
-    // Nel caso la navigazione sia da mobile, disabilito il ritorno al punto precedente
-    if (!isMobile.any()) {
-        // Salvo lo scroll per riportare qui l'utente al reload
-        $(window).on('scroll', function () {
-            if (sessionStorage != undefined) {
-                sessionStorage.setItem('scrollTop_' + globals.id_module + '_' + globals.id_record, $(document).scrollTop());
-            }
-        });
-
-        // Riporto l'utente allo scroll precedente
-        if (sessionStorage['scrollTop_' + globals.id_module + '_' + globals.id_record] != undefined) {
-            setTimeout(function () {
-                scrollToAndFocus(sessionStorage['scrollTop_' + globals.id_module + '_' + globals.id_record]);
-            }, 1);
-        }
-    }
-
-    $('.nav-tabs a').click(function (e) {
-        $(this).tab('show');
-
-        var scrollmem = $('body').scrollTop() || $('html').scrollTop();
-
-        window.location.hash = this.hash;
-
-        $('html,body').scrollTop(scrollmem);
-    });
-
-    // Fix per la visualizzazione di Datatables all'interno dei tab Bootstrap
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
-
-        $($.fn.dataTable.tables(true)).DataTable().scroller.measure();
-    });
-
-    // Messaggio di avviso salvataggio a comparsa sulla destra solo nella versione a desktop intero
-    if ($(window).width() > 1023) {
-        var i = 0;
-
-        $('.alert-success.push').each(function () {
-            i++;
-            tops = 60 * i + 95;
-
-            $(this).css({
-                'position': 'fixed',
-                'z-index': 3,
-                'right': '10px',
-                'top': -100,
-            }).delay(1000).animate({
-                'top': tops,
-            }).delay(3000).animate({
-                'top': -100,
-            });
-        });
-    }
-
-    // Nascondo la notifica se passo sopra col mouse
-    $('.alert-success.push').on('mouseover', function () {
-        $(this).stop().animate({
-            'top': -100,
-            'opacity': 0
-        });
-    });
-
-    $('.widget').mouseover(function (e) {
-        e.preventDefault();
-        start_widgets($("#widget-top, #widget-right"));
-    });
-
-    $('#supersearch').keyup(function () {
-        $(document).ajaxStop();
-
-        if ($(this).val() == '') {
-            $(this).removeClass('wait');
-        } else {
-            $(this).addClass('wait');
-        }
-    });
-
-    $.widget("custom.supersearch", $.ui.autocomplete, {
-        _create: function () {
-            this._super();
-            this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
-        },
-        _renderMenu: function (ul, items) {
-            if (items[0].value == undefined) {
-                $('#supersearch').removeClass('wait');
-                ul.html('');
-            } else {
-                var that = this,
-                    currentCategory = "";
-
-                ul.addClass('ui-autocomplete-scrollable');
-                ul.css('z-index', '999');
-
-                $.each(items, function (index, item) {
-
-                    if (item.category != currentCategory) {
-                        ul.append("<li class='ui-autocomplete-category'>" + item.category + "</li>");
-                        currentCategory = item.category;
-                    }
-
-                    that._renderItemData(ul, item);
-                });
-            }
-        },
-        _renderItem: function (ul, item) {
-            return $("<li>")
-                .append("<a href='" + item.link + "' title='Clicca per aprire'><b>" + item.value + "</b><br/>" + item.label + "</a>")
-                .appendTo(ul);
-        }
-    });
-
-    // Configurazione supersearch
-    var $super = $('#supersearch').supersearch({
-        minLength: 3,
-        select: function (event, ui) {
-            location.href = ui.item.link;
-        },
-        source: function (request, response) {
-            $.ajax({
-                url: globals.rootdir + '/ajax_search.php',
-                dataType: "json",
-                data: {
-                    term: request.term
-                },
-
-                complete: function (jqXHR) {
-                    $('#supersearch').removeClass('wait');
-                },
-
-                success: function (data) {
-                    if (data == null) {
-                        response($.map(['a'], function (item) {
-                            return false;
-                        }));
-                    } else {
-                        response($.map(data, function (item) {
-                            labels = (item.labels).toString();
-                            labels = labels.replace('<br/>,', '<br/>');
-
-                            return {
-                                label: labels,
-                                category: item.category,
-                                link: item.link,
-                                value: item.title
-                            }
-                        }));
-                    }
-                }
-            });
-        }
-    });
-});
+function isMobile() {
+    return (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) ||
+        /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4)));
+}
 
 // Widgets ordinabili
 function start_widgets($widgets) {
@@ -530,7 +159,7 @@ function start_datatables() {
             var id_plugin = $this.data('idplugin');
             var id_parent = $this.data('idparent');
 
-            var dataload_url = id_plugin ? globals.dataload_plugin : globals.dataload_module;
+            var dataload_url = id_plugin ? globals.dataload_plugin_url : globals.dataload_module_url;
             dataload_url = dataload_url.replace('|id_module|', id_module).replace('|id_plugin|', id_plugin).replace('|id_parent|', id_parent);
 
             // Parametri di ricerca da url o sessione
@@ -565,7 +194,7 @@ function start_datatables() {
 
             var table = $this.DataTable({
                 language: {
-                    url: globals.rootdir + "/assets/js/i18n/datatables/' + globals.locale + '.min.json'
+                    url: globals.rootdir + "/assets/js/i18n/datatables/" + globals.locale + ".min.json"
                 },
                 autoWidth: true,
                 dom: "ti",
@@ -969,7 +598,7 @@ function start_superselect() {
                 return data.text;
             },
             ajax: {
-                url: globals.rootdir + "/ajax/select/?op=" + $this.data('source'),
+                url: globals.select_url + "?op=" + $this.data('source'),
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
@@ -983,7 +612,7 @@ function start_superselect() {
                     $(this).each(function () {
                         $.each(this.attributes, function () {
                             if (this.specified && this.name.startsWith('data-select-')) {
-                                name = this.name.replace('data-select-', '');
+                                var name = this.name.replace('data-select-', '');
 
                                 data.superselect[name] = this.value;
                             }
@@ -1128,7 +757,7 @@ function start_inputmask(element) {
         regex: "[A-Za-z0-9#_|\/\\-.]*",
     });
 
-    if (isMobile.any()) {
+    if (isMobile()) {
         $(element + '.inputmask-decimal, ' + element + '.date-mask, ' + element + '.timestamp-mask').each(function () {
             $(this).attr('type', 'tel');
         });

@@ -1,0 +1,25 @@
+{%  set action_url = action_url ? action_url : path_for('module-record', {module_id: module_id, record_id: record_id}) %}
+
+<form action="{{ action_url }}" method="post">
+    <input type="hidden" name="id_plugin" value="{{ plugin_id }}">
+    <input type="hidden" name="hash" value="tab_{{ plugin_id }}">
+    <input type="hidden" name="backto" value="record-edit">
+
+    <input type="hidden" name="op" value="{{ options['op'] }}">
+    <input type="hidden" name="idriga" value="{{ result['id'] }}">
+    <input type="hidden" name="dir" value="{{ options['dir'] }}">
+
+    {% block response %}{% endblock %}
+
+    {% set button = options['action'] == 'add' ? 'Aggiungi'|trans : 'Modifica'|trans %}
+    {% set icon = options['action'] == 'add' ? 'fa-plus' : 'fa-pencil' %}
+
+    <!-- PULSANTI -->
+	<div class="row">
+		<div class="col-md-12 text-right">
+			<button type="submit" class="btn btn-primary pull-right"><i class="fa {{ icon }}"></i> {{ button }}</button>
+		</div>
+    </div>
+</form>
+
+<script src="{{ base_url() }}/assets/js/init.min.js"></script>

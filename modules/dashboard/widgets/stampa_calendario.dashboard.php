@@ -45,7 +45,9 @@ echo '<link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/li
 <script>
 
 function stampa_calendario (){
-	window.open('<?php echo $rootdir; ?>/pdfgen.php?id_print=<?php echo $id_print; ?>');
+	window.open('<?php pathFor('print', [
+        'print_id' => $id_print,
+    ]); ?>'');
 	//$('button[type=submit]').removeAttr("disabled");
 	//$('button[type=submit]').prop("disabled", false);
 	return false;
