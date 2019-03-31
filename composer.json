@@ -47,7 +47,6 @@
         "monolog/monolog": "^1.22",
         "mpdf/mpdf": "^7.1",
         "mpociot/vat-calculator": "^2.3",
-        "oscarotero/psr7-middlewares": "^3.21",
         "owasp/csrf-protector-php": "^1.0",
         "phpmailer/phpmailer": "^6.0",
         "respect/validation": "^1.1",

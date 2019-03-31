@@ -4,6 +4,7 @@ namespace Middlewares;
 
 use Modules;
 use Plugins;
+use Update;
 use Util\Query;
 
 /**
@@ -16,7 +17,7 @@ class ContentMiddleware extends Middleware
     public function __invoke($request, $response, $next)
     {
         $route = $request->getAttribute('route');
-        if (!$route) {
+        if (!$route || !$this->database->isConnected() || Update::isUpdateAvailable()) {
             return $next($request, $response);
         }
 

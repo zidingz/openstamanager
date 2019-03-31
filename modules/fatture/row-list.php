@@ -76,7 +76,7 @@ foreach ($righe as $row) {
 
         $delete = 'unlink_contratto';
     }
-	// Ordini (IDDOCUMENTO,CIG,CUP)
+    // Ordini (IDDOCUMENTO,CIG,CUP)
     elseif (!empty($riga['idordine'])) {
         $ordine = $dbo->fetchOne('SELECT num_item,codice_cig,codice_cup,id_documento_fe FROM or_ordini WHERE id = '.prepare($riga['idordine']));
         $riga['num_item'] = $ordine['num_item'];

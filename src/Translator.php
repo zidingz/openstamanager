@@ -30,7 +30,6 @@ class Translator
         $this->translator = $translator;
 
         $this->locale = $default_locale;
-        self::setFormatter($default_locale, []);
     }
 
     /**
@@ -73,7 +72,7 @@ class Translator
      *
      * @param string $locale
      */
-    public function setLocale($locale, $formatter = [])
+    public function setLocale($locale)
     {
         if (!empty($locale) && $this->isLocaleAvailable($locale)) {
             $this->translator->setLocale($locale);
@@ -81,8 +80,6 @@ class Translator
 
             setlocale(LC_TIME, $locale);
             Carbon::setLocale($locale);
-
-            self::setFormatter($locale, $formatter);
         }
     }
 
@@ -134,16 +131,6 @@ class Translator
     }
 
     /**
-     * Restituisce l'oggetto responsabile della localizzazione di date e numeri.
-     *
-     * @return Intl\Formatter
-     */
-    public static function getFormatter()
-    {
-        return self::$formatter;
-    }
-
-    /**
      * Converte il numero dalla formattazione locale a quella inglese.
      *
      * @param string $string
@@ -152,7 +139,7 @@ class Translator
      */
     public static function numberToEnglish($string)
     {
-        return self::getFormatter()->parseNumber($string);
+        return formatter()->parseNumber($string);
     }
 
     /**
@@ -171,7 +158,7 @@ class Translator
             $decimals = ($decimals == 'qta') ? setting('Cifre decimali per quantità') : null;
         }
 
-        return self::getFormatter()->formatNumber($string, $decimals);
+        return formatter()->formatNumber($string, $decimals);
     }
 
     /**
@@ -183,7 +170,7 @@ class Translator
      */
     public static function dateToEnglish($string)
     {
-        return self::getFormatter()->parseDate($string);
+        return formatter()->parseDate($string);
     }
 
     /**
@@ -196,7 +183,7 @@ class Translator
      */
     public static function dateToLocale($string)
     {
-        return self::getFormatter()->formatDate($string);
+        return formatter()->formatDate($string);
     }
 
     /**
@@ -208,7 +195,7 @@ class Translator
      */
     public static function timeToEnglish($string)
     {
-        return self::getFormatter()->parseTime($string);
+        return formatter()->parseTime($string);
     }
 
     /**
@@ -221,7 +208,7 @@ class Translator
      */
     public static function timeToLocale($string)
     {
-        return self::getFormatter()->formatTime($string);
+        return formatter()->formatTime($string);
     }
 
     /**
@@ -233,7 +220,7 @@ class Translator
      */
     public static function timestampToEnglish($string)
     {
-        return self::getFormatter()->parseTimestamp($string);
+        return formatter()->parseTimestamp($string);
     }
 
     /**
@@ -246,7 +233,7 @@ class Translator
      */
     public static function timestampToLocale($string)
     {
-        return self::getFormatter()->formatTimestamp($string);
+        return formatter()->formatTimestamp($string);
     }
 
     /**
@@ -287,24 +274,5 @@ class Translator
         if (!$this->isLocaleAvailable($language)) {
             $this->locales[] = $language;
         }
-    }
-
-    /**
-     * Imposta l'oggetto responsabile della localizzazione di date e numeri.
-     */
-    protected static function setFormatter($locale, $options)
-    {
-        self::$formatter = new Intl\Formatter(
-            $locale,
-            empty($options['timestamp']) ? 'd/m/Y H:i' : $options['timestamp'],
-            empty($options['date']) ? 'd/m/Y' : $options['date'],
-            empty($options['time']) ? 'H:i' : $options['time'],
-            empty($options['number']) ? [
-                'decimals' => ',',
-                'thousands' => '.',
-            ] : $options['number']
-        );
-
-        self::$formatter->setPrecision(auth()->check() ? setting('Cifre decimali per importi') : 2);
     }
 }

@@ -16,12 +16,16 @@ class CKEditorHandler implements HandlerInterface
     <textarea |attr|>|value|</textarea>
     <script src="'.ROOTDIR.'/assets/js/ckeditor/ckeditor.js"></script>
     <script>
-        CKEDITOR.replace("'.prepareToField($values['id']).'", {
+        ClassicEditor
+        .create(document.querySelector("#'.prepareToField($values['id']).'"), {
             toolbar: globals.ckeditorToolbar,
-            language: globals.locale,
-            scayt_autoStartup: true,
-            scayt_sLang: globals.full_locale,
-            disableNativeSpellChecker: false,
+            defaultLanguage: globals.locale,
+        })
+        .then(editor => {
+            console.log( editor );
+        })
+        .catch(error => {
+            console.error( error );
         });
     </script>';
     }

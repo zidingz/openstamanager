@@ -87,10 +87,7 @@ $db_name = \'|database|\';
         $password = post('password');
 
         // Generazione di una nuova connessione al database
-        try {
-            $database = new Database($host, $username, $password, $database_name);
-        } catch (Exception $e) {
-        }
+        $database = new Database($host, $username, $password, $database_name);
 
         // Test della configurazione
         if (!empty($database) && $database->isConnected()) {

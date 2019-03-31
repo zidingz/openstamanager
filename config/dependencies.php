@@ -7,7 +7,7 @@ $container['auth'] = function ($container) {
 
 // Language manager
 $container['translator'] = function ($container) {
-    $config = $container->settings['$config'];
+    $config = $container->settings['config'];
 
     $lang = !empty($config['lang']) ? $config['lang'] : 'it';
     $formatter = !empty($config['formatter']) ? $config['formatter'] : [];
@@ -16,14 +16,30 @@ $container['translator'] = function ($container) {
     $translator->addLocalePath(DOCROOT.'/resources/locale');
     $translator->addLocalePath(DOCROOT.'/modules/*/locale');
 
-    $translator->setLocale($lang, $formatter);
+    $translator->setLocale($lang);
 
     return $translator;
 };
 
 // I18n manager
 $container['formatter'] = function ($container) {
-    return $container['translator']->getFormatter();
+    $config = $container->settings['config'];
+    $options = !empty($config['formatter']) ? $config['formatter'] : [];
+
+    $formatter = new Intl\Formatter(
+        $container['translator']->getCurrentLocale(),
+        empty($options['timestamp']) ? 'd/m/Y H:i' : $options['timestamp'],
+        empty($options['date']) ? 'd/m/Y' : $options['date'],
+        empty($options['time']) ? 'H:i' : $options['time'],
+        empty($options['number']) ? [
+            'decimals' => ',',
+            'thousands' => '.',
+        ] : $options['number']
+    );
+
+    $formatter->setPrecision(auth()->check() ? setting('Cifre decimali per importi') : 2);
+
+    return $formatter;
 };
 
 // Flash messages
@@ -78,7 +94,6 @@ $container['twig'] = function ($container) {
     $twig->offsetSet('config', $container['config']);
     $twig->offsetSet('auth', $container['auth']);
     $twig->offsetSet('flash', $container['flash']);
-    $twig->offsetSet('translator', $container['translator']);
     $twig->offsetSet('lang', $container['translator']->getCurrentLocale());
     $twig->offsetSet('router', $container['router']);
 

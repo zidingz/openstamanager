@@ -85,11 +85,7 @@ class Database
                 $this->capsule->setAsGlobal();
                 $this->capsule->bootEloquent();
             } catch (PDOException $e) {
-                if ($e->getCode() == 1049 || $e->getCode() == 1044) {
-                    $e = new PDOException(($e->getCode() == 1049) ? tr('Database non esistente!') : tr('Credenziali di accesso invalide!'));
-                }
-
-                throw $e;
+                $this->is_connected = false;
             }
         }
     }
