@@ -79,7 +79,7 @@ switch ($resource) {
 
         // TODO: rimosse le seguenti clausole
 
-        // WHERE `in_interventi`.id_stato IN(SELECT id_stato FROM in_statiintervento WHERE app_download=1)
+        // WHERE `in_interventi`.id_stato IN(SELECT id FROM in_statiintervento WHERE app_download=1)
         // nel database ufficiale manca in_statiintervento.app_download
 
         // AND `in_interventi_tecnici`.`idtecnico`='".$tecnico[0]['idanagrafica']."'
@@ -98,7 +98,7 @@ switch ($resource) {
 
         // TODO: rimosse seguenti clausole:
 
-        // WHERE `in_interventi`.id_stato IN(SELECT id_stato FROM in_statiintervento WHERE app_download=1)
+        // WHERE `in_interventi`.id_stato IN(SELECT id FROM in_statiintervento WHERE app_download=1)
         // nel database ufficiale manca in_statiintervento.app_download
 
         $parameters = [
