@@ -43,7 +43,7 @@ class ConfigurationController extends Controller
         $password = post('password');
 
         $database = new Database($host, $username, $password, $database_name);
-        if(!$database->isConnected()){
+        if (!$database->isConnected()) {
             return $this->twig->render($response, 'config\messages\error.twig', $args);
         }
 

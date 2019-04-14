@@ -2,7 +2,7 @@
 
 namespace Modules\Fatture\Controllers;
 
-use Controllers\ControllerManager;
+use Controllers\Managers\ControllerManager;
 
 class Record extends ControllerManager
 {

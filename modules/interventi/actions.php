@@ -28,9 +28,9 @@ switch (post('op')) {
         $intervento->idanagrafica = post('idanagrafica');
         $intervento->idclientefinale = post('idclientefinale');
         $intervento->idreferente = post('idreferente');
-        $intervento->idtipointervento = post('idtipointervento');
+        $intervento->id_tipo_intervento = post('idtipointervento');
 
-        $intervento->idstatointervento = post('idstatointervento');
+        $intervento->id_stato = post('idstatointervento');
         $intervento->idsede = post('idsede');
         $intervento->idautomezzo = post('idautomezzo');
         $intervento->id_preventivo = post('idpreventivo');
@@ -43,8 +43,8 @@ switch (post('op')) {
         $intervento->save();
 
         // Notifica chiusura intervento
-        $stato = $dbo->selectOne('in_statiintervento', '*', ['idstatointervento' => post('idstatointervento')]);
-        if (!empty($stato['notifica']) && !empty($stato['destinatari']) && $stato['idstatointervento'] != $record['idstatointervento']) {
+        $stato = $dbo->selectOne('in_statiintervento', '*', ['id' => post('idstatointervento')]);
+        if (!empty($stato['notifica']) && !empty($stato['destinatari']) && $stato['id'] != $record['id_stato']) {
             $n = new Notifications\EmailNotification();
 
             $n->setTemplate($stato['id_email'], $id_record);

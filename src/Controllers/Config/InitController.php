@@ -26,7 +26,7 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
 
             $settings = [
             'Regime Fiscale' => true,
-            'Tipo Cassa' => true,
+            'Tipo Cassa Previdenziale' => false,
             'Conto predefinito fatture di vendita' => true,
             'Conto predefinito fatture di acquisto' => true,
             "Percentuale ritenuta d'acconto" => false,

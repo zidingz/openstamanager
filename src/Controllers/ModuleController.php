@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use HTMLBuilder\HTMLBuilder;
+use Controllers\Managers\RetroController;
 use Slim\Exception\NotFoundException;
 
 class ModuleController extends Controller
@@ -13,11 +13,16 @@ class ModuleController extends Controller
         $plugins = $args['module']->plugins()->where('position', 'tab_main')->get()->sortBy('order');
         $args['plugins'] = $plugins;
 
-        $result = $this->oldController($args);
-        $args = array_merge($args, $result);
-        $args['custom_content'] = $args['content'];
+        if ($this->isRetro($args)) {
+            $controller = new RetroController($this->container);
 
-        $response = $this->twig->render($response, 'old/controller.twig', $args);
+            $response = $controller->controller($request, $response, $args);
+        } else {
+            $class = $this->getModuleManager($request, $response, $args);
+            $controller = new $class($this->container);
+
+            $response = $controller->page($request, $response, $args);
+        }
 
         return $response;
     }
@@ -87,17 +92,32 @@ class ModuleController extends Controller
         $plugins = $args['module']->plugins()->where('position', 'tab')->get()->sortBy('order');
         $args['plugins'] = $plugins;
 
-        $result = $this->oldEditor($args);
-        $args = array_merge($args, $result);
+        if ($this->isRetro($args)) {
+            $controller = new RetroController($this->container);
 
-        $response = $this->twig->render($response, 'old/editor.twig', $args);
+            $response = $controller->editor($request, $response, $args);
+        } else {
+            $class = $this->getRecordManager($request, $response, $args);
+            $controller = new $class($this->container);
+
+            $response = $controller->page($request, $response, $args);
+        }
 
         return $response;
     }
 
     public function editRecord($request, $response, $args)
     {
-        $record_id = $this->oldActions($args);
+        if ($this->isRetro($args)) {
+            $controller = new RetroController($this->container);
+
+            $record_id = $controller->actions($request, $response, $args);
+        } else {
+            $class = $this->getRecordManager($request, $response, $args);
+            $controller = new $class($this->container);
+
+            $record_id = $controller->update($request, $response, $args);
+        }
 
         $route = $this->router->pathFor('module-record', [
             'module_id' => $args['module_id'],
@@ -111,23 +131,38 @@ class ModuleController extends Controller
 
     public function add($request, $response, $args)
     {
-        $result = $this->oldAdd($args);
-        $args = array_merge($args, $result);
-
         $args['query_params'] = [];
         $query = $request->getQueryParams();
         foreach ($query as $key => $value) {
             $args['query'][$key] = get($value);
         }
 
-        $response = $this->twig->render($response, 'old/add.twig', $args);
+        if ($this->isRetro($args)) {
+            $controller = new RetroController($this->container);
+
+            $response = $controller->add($request, $response, $args);
+        } else {
+            $class = $this->getRecordManager($request, $response, $args);
+            $controller = new $class($this->container);
+
+            $response = $controller->add($request, $response, $args);
+        }
 
         return $response;
     }
 
     public function addRecord($request, $response, $args)
     {
-        $record_id = $this->oldActions($args);
+        if ($this->isRetro($args)) {
+            $controller = new RetroController($this->container);
+
+            $record_id = $controller->actions($request, $response, $args);
+        } else {
+            $class = $th;
+            $controller = new $class($this->container);
+
+            $record_id = $controller->create($request, $response, $args);
+        }
 
         $route = $this->router->pathFor('module-record', [
             'module_id' => $args['module_id'],
@@ -141,12 +176,7 @@ class ModuleController extends Controller
 
     public function recordAction($request, $response, $args)
     {
-        $class = '\\'.$args['structure']->namespace.'\Record';
-
-        if (!class_exists($class)) {
-            throw new NotFoundException($request, $response);
-        }
-
+        $class = $this->getRecordManager($request, $response, $args);
         $controller = new $class($this->container);
 
         return $controller->manage($args['action_name'], $request, $response, $args);
@@ -154,171 +184,36 @@ class ModuleController extends Controller
 
     public function moduleAction($request, $response, $args)
     {
-        $class = '\\'.$args['structure']->namespace.'\Module';
-
-        if (!class_exists($class)) {
-            throw new NotFoundException($request, $response);
-        }
-
+        $class = $this->getModuleManager($request, $response, $args);
         $controller = new $class($this->container);
 
         return $controller->manage($args['action_name'], $request, $response, $args);
     }
 
-    protected function oldEditor($args)
+    protected function getRecordManager($request, $response, $args)
     {
-        extract($args);
+        $class = $args['structure']->namespace.'\Record';
 
-        $dbo = $database = $this->database;
-
-        // Lettura risultato query del modulo
-        $init = $structure->filepath('init.php');
-        if (!empty($init)) {
-            include $init;
+        if (!class_exists($class)) {
+            throw new NotFoundException($request, $response);
         }
 
-        $args['record'] = $record;
-
-        // Registrazione del record
-        HTMLBuilder::setRecord($record);
-
-        $content = $structure->filepath('edit.php');
-        if (!empty($content)) {
-            ob_start();
-            include $content;
-            $content = ob_get_clean();
-        }
-
-        $buttons = $structure->filepath('buttons.php');
-        if (!empty($buttons)) {
-            ob_start();
-            include $buttons;
-            $buttons = ob_get_clean();
-        }
-
-        $module_bulk = $structure->filepath('bulk.php');
-        $module_bulk = empty($module_bulk) ? [] : include $module_bulk;
-        $module_bulk = empty($module_bulk) ? [] : $module_bulk;
-
-        return [
-            'buttons' => $buttons,
-            'editor_content' => $content,
-            'bulk' => $module_bulk,
-            'plugins_content' => $this->oldPlugins($args),
-        ];
+        return $class;
     }
 
-    protected function oldActions($args)
+    protected function getModuleManager($request, $response, $args)
     {
-        extract($args);
+        $class = $args['structure']->namespace.'\Module';
 
-        $dbo = $database = $this->database;
-
-        // Lettura risultato query del modulo
-        $init = $structure->filepath('init.php');
-        if (!empty($init)) {
-            include $init;
+        if (!class_exists($class)) {
+            throw new NotFoundException($request, $response);
         }
 
-        $args['record'] = $record;
-
-        // Registrazione del record
-        $actions = $structure->filepath('actions.php');
-        if (!empty($actions)) {
-            include $actions;
-        }
-
-        return $id_record;
+        return $class;
     }
 
-    protected function oldPlugins($args)
+    protected function isRetro($args)
     {
-        extract($args);
-
-        $dbo = $database = $this->database;
-
-        // Plugins
-        $plugins_content = [];
-
-        $module_record = $record;
-        foreach ($args['plugins'] as $plugin) {
-            $record = $module_record;
-            $id_plugin = $plugin['id'];
-
-            $bulk = null;
-            $content = null;
-
-            // Inclusione di eventuale plugin personalizzato
-            if (!empty($plugin['script']) || $plugin->option == 'custom') {
-                ob_start();
-                include $plugin->getEditFile();
-                $content = ob_get_clean();
-            } else {
-                $bulk = $args['structure']->filepath('bulk.php');
-                $bulk = empty($bulk) ? [] : include $bulk;
-                $bulk = empty($bulk) ? [] : $bulk;
-            }
-
-            $plugins_content[$id_plugin] = [
-                'content' => $content,
-                'bulk' => $bulk,
-            ];
-        }
-
-        return $plugins_content;
-    }
-
-    protected function oldController($args)
-    {
-        extract($args);
-
-        $dbo = $database = $this->database;
-
-        if ($args['structure']->option == 'custom') {
-            // Lettura risultato query del modulo
-            $init = $args['structure']->filepath('init.php');
-            if (!empty($init)) {
-                include $init;
-            }
-
-            $args['record'] = $record;
-
-            $content = $args['structure']->filepath('edit.php');
-            if (!empty($content)) {
-                ob_start();
-                include $content;
-                $content = ob_get_clean();
-            }
-        }
-
-        return [
-            'content' => $content,
-            'plugins_content' => $this->oldPlugins($args),
-        ];
-    }
-
-    protected function oldAdd($args)
-    {
-        extract($args);
-
-        $dbo = $database = $this->database;
-
-        // Lettura risultato query del modulo
-        $init = $args['structure']->filepath('init.php');
-        if (!empty($init)) {
-            include $init;
-        }
-
-        $content = $args['structure']->getAddFile();
-        if (!empty($content)) {
-            ob_start();
-            include $content;
-            $content = ob_get_clean();
-        }
-
-
-        return [
-            'content' => $content,
-        ];
+        return empty($args['structure']->namespace);
     }
 }

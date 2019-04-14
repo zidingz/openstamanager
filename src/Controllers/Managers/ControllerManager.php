@@ -1,7 +1,8 @@
 <?php
 
-namespace Controllers;
+namespace Controllers\Managers;
 
+use Controllers\Controller;
 use Slim\Exception\NotFoundException;
 
 abstract class ControllerManager extends Controller

@@ -70,7 +70,7 @@
             Calcolo totale per chiudere la fattura
         */
         // Lettura importo da scadenzario (seleziono l'importo di questo mese)
-        $query = 'SELECT *, scadenza, ABS(da_pagare-pagato) AS rata FROM co_scadenziario WHERE iddocumento='.prepare($iddocumento)." AND ABS(da_pagare) > ABS(pagato) ORDER BY YEAR(scadenza) ASC, MONTH(scadenza) ASC";
+        $query = 'SELECT *, scadenza, ABS(da_pagare-pagato) AS rata FROM co_scadenziario WHERE iddocumento='.prepare($iddocumento).' AND ABS(da_pagare) > ABS(pagato) ORDER BY YEAR(scadenza) ASC, MONTH(scadenza) ASC';
         $rs = $dbo->fetchArray($query);
         $importo_conto_aziendale = $rs[0]['rata'];
 

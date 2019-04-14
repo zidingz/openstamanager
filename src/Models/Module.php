@@ -50,6 +50,11 @@ class Module extends Model
         return $views;
     }
 
+    public function getNamespaceAttribute()
+    {
+        return $this->attributes['namespace'] ? '\\'.$this->attributes['namespace'] : null;
+    }
+
     public function getOptionAttribute()
     {
         return !empty($this->options2) ? $this->options2 : $this->options;
