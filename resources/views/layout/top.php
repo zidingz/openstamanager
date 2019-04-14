@@ -79,6 +79,7 @@ if (Auth::check()) {
 
                 decimals: "'.formatter()->getNumberSeparators()['decimals'].'",
                 thousands: "'.formatter()->getNumberSeparators()['thousands'].'",
+                currency: "'.currency().'",
 
                 search: search,
                 translations: translations,

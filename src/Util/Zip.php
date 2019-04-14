@@ -31,10 +31,11 @@ class Zip
      * Estrae i contenuti di un file ZIP in una cartella temporanea.
      *
      * @param string $path
+     * @param string $destination
      *
      * @return string
      */
-    public static function extract($path)
+    public static function extract($path, $destination = null)
     {
         // Lettura dell'archivio
         $zip = new ZipArchive();
@@ -45,7 +46,7 @@ class Zip
         }
 
         // Percorso di estrazione
-        $extraction_dir = self::getExtractionDirectory();
+        $extraction_dir = !empty($destination) ? $destination : self::getExtractionDirectory();
         directory($extraction_dir);
 
         // Estrazione dell'archivio

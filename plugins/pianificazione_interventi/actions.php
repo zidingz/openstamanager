@@ -1,7 +1,9 @@
 <?php
 
+$operazione = filter('op');
+
 // Pianificazione intervento
-switch (filter('op')) {
+switch ($operazione) {
     case 'add-promemoria':
         $dbo->insert('co_promemoria', [
             'idcontratto' => $id_parent,

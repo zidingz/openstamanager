@@ -78,13 +78,9 @@ if (!empty($rs)) {
         echo '
         <td class="text-center">';
         if (empty($r['is_descrizione'])) {
-            if (empty($r['sconto_globale'])) {
-                echo '
-                <big>'.Translator::numberToLocale($r['qta'] - $r['qta_evasa'], 'qta').'</big>
-                <br><small>('.tr('Q.tà iniziale').': '.Translator::numberToLocale($r['qta'], 'qta').')</small>';
-            } else {
-                echo '1';
-            }
+            echo '
+            <big>'.Translator::numberToLocale($r['qta'] - $r['qta_evasa'], 'qta').'</big>
+            <br><small>('.tr('Q.tà iniziale').': '.Translator::numberToLocale($r['qta'], 'qta').')</small>';
         }
         echo '
         </td>';
@@ -104,13 +100,13 @@ if (!empty($rs)) {
         <td class="text-right">';
         if (empty($r['is_descrizione'])) {
             echo '
-            '.Translator::numberToLocale($r['subtotale'] / $r['qta']).' &euro;';
+            '.moneyFormat($r['subtotale'] / $r['qta']);
 
             if ($r['sconto_unitario'] > 0) {
                 echo '
             <br><small class="label label-danger">'.tr('sconto _TOT_ _TYPE_', [
                 '_TOT_' => Translator::numberToLocale($r['sconto_unitario']),
-                '_TYPE_' => ($r['tipo_sconto'] == 'PRC' ? '%' : '&euro;'),
+                '_TYPE_' => ($r['tipo_sconto'] == 'PRC' ? '%' : currency()),
             ]).'</small>';
             }
         }
@@ -122,7 +118,7 @@ if (!empty($rs)) {
         <td class="text-right">';
         if (empty($r['is_descrizione'])) {
             echo '
-            '.Translator::numberToLocale($r['iva']).' &euro;
+            '.moneyFormat($r['iva']).'
             <br><small class="help-block">'.$r['desc_iva'].'</small>';
         }
         echo '
@@ -133,7 +129,7 @@ if (!empty($rs)) {
         <td class="text-right">';
         if (empty($r['is_descrizione'])) {
             echo '
-            '.Translator::numberToLocale($r['subtotale'] - $r['sconto']).' &euro;';
+            '.moneyFormat($r['subtotale'] - $r['sconto']);
         }
         echo '
         </td>';
@@ -142,7 +138,7 @@ if (!empty($rs)) {
         echo '
         <td class="text-center">';
 
-        if ($record['flag_completato'] == 0 && empty($r['sconto_globale'])) {
+        if ($record['flag_completato'] == 0) {
             echo "
             <form action='".$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record."' method='post' id='delete-form-".$r['id']."' role='form'>
                 <input type='hidden' name='backto' value='record-edit'>
@@ -171,13 +167,6 @@ if (!empty($rs)) {
                     <a class='btn btn-xs btn-danger' title='Rimuovi questa riga...' onclick=\"if( confirm('Rimuovere questa riga dall\\'ordine?') ){ $('#delete-form-".$r['id']."').submit(); }\"><i class='fa fa-trash'></i></a>
                 </div>
             </form>";
-        }
-
-        if (empty($r['sconto_globale'])) {
-            echo '
-            <div class="handle clickable" style="padding:10px">
-                <i class="fa fa-sort"></i>
-            </div>';
         }
 
         echo '
@@ -217,7 +206,7 @@ echo '
             <b>'.tr('Imponibile', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($imponibile).' &euro;
+            '.moneyFormat($imponibile).'
         </td>
         <td></td>
     </tr>';
@@ -230,7 +219,7 @@ if (abs($sconto) > 0) {
             <b>'.tr('Sconto', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($sconto).' &euro;
+            '.moneyFormat($sconto).'
         </td>
         <td></td>
     </tr>';
@@ -242,7 +231,7 @@ if (abs($sconto) > 0) {
             <b>'.tr('Imponibile scontato', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($imponibile_scontato).' &euro;
+            '.moneyFormat($imponibile_scontato).'
         </td>
         <td></td>
     </tr>';
@@ -258,7 +247,7 @@ if (abs($record['rivalsainps']) > 0) {
             <b>'.tr('Rivalsa', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($record['rivalsainps']).' &euro;
+            '.moneyFormat($record['rivalsainps']).'
         </td>
         <td></td>
     </tr>';
@@ -272,7 +261,7 @@ if (abs($totale_iva) > 0) {
             <b>'.tr('Iva', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($totale_iva).' &euro;
+            '.moneyFormat($totale_iva).'
         </td>
         <td></td>
     </tr>';
@@ -285,7 +274,7 @@ echo '
             <b>'.tr('Totale', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($totale).' &euro;
+            '.moneyFormat($totale).'
         </td>
         <td></td>
     </tr>';
@@ -298,7 +287,7 @@ if (abs($record['bollo']) > 0) {
             <b>'.tr('Marca da bollo', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($record['bollo']).' &euro;
+            '.moneyFormat($record['bollo']).'
         </td>
         <td></td>
     </tr>';
@@ -312,7 +301,7 @@ if (abs($record['ritenutaacconto']) > 0) {
             <b>'.tr("Ritenuta d'acconto", [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($record['ritenutaacconto']).' &euro;
+            '.moneyFormat($record['ritenutaacconto']).'
         </td>
         <td></td>
     </tr>';
@@ -326,7 +315,7 @@ if ($totale != $netto_a_pagare) {
             <b>'.tr('Netto a pagare', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($netto_a_pagare).' &euro;
+            '.moneyFormat($netto_a_pagare).'
         </td>
         <td></td>
     </tr>';

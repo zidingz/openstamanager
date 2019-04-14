@@ -26,7 +26,7 @@ foreach ($righe as $row) {
     // Valori assoluti
     $riga['qta'] = abs($riga['qta']);
     $riga['prezzo_unitario_acquisto'] = abs($riga['prezzo_unitario_acquisto']);
-    $riga['imponibile_scontato'] = abs($row->imponibile_scontato);
+    $riga['imponibile_scontato'] = ($fattura->isNotaDiAccredito() ? abs($row->imponibile_scontato) : $row->imponibile_scontato);
     $riga['sconto_unitario'] = abs($riga['sconto_unitario']);
     $riga['sconto'] = abs($riga['sconto']);
     $riga['iva'] = abs($riga['iva']);
@@ -184,12 +184,12 @@ foreach ($righe as $row) {
 
     if (!$row->isDescrizione()) {
         echo '
-            '.Translator::numberToLocale($row->prezzo_unitario_vendita).' &euro;';
+            '.moneyFormat($row->prezzo_unitario_vendita);
 
         if ($dir == 'entrata') {
             echo '
             <br><small>
-                '.tr('Acquisto').': '.Translator::numberToLocale($row->prezzo_unitario_acquisto).' &euro;
+                '.tr('Acquisto').': '.moneyFormat($row->prezzo_unitario_acquisto).'
             </small>';
         }
 
@@ -197,7 +197,7 @@ foreach ($righe as $row) {
             echo '
             <br><small class="label label-danger">'.tr('sconto _TOT_ _TYPE_', [
                 '_TOT_' => Translator::numberToLocale($row->sconto_unitario),
-                '_TYPE_' => ($row->tipo_sconto == 'PRC' ? '%' : '&euro;'),
+                '_TYPE_' => ($row->tipo_sconto == 'PRC' ? '%' : currency()),
             ]).'</small>';
         }
     }
@@ -211,8 +211,8 @@ foreach ($righe as $row) {
 
     if (!$row->isDescrizione()) {
         echo '
-            '.Translator::numberToLocale($riga['iva']).' &euro;
-            <br><small class="'.(($row->aliquota->deleted_at) ? 'text-red' : '').' help-block">'.$row->desc_iva.(($row->aliquota->esente) ? ' ('.$row->aliquota->codice_natura_fe.')' : null).'</small>';
+            '.moneyFormat($riga['iva']).'
+            <br><small class="'.(($row->aliquota->deleted_at) ? 'text-red' : '').' help-block">'.$row->aliquota->descrizione.(($row->aliquota->esente) ? ' ('.$row->aliquota->codice_natura_fe.')' : null).'</small>';
     }
 
     echo '
@@ -223,10 +223,10 @@ foreach ($righe as $row) {
         <td class="text-right">';
     if (!$row->isDescrizione()) {
         echo '
-            '.Translator::numberToLocale($riga['imponibile_scontato']).' &euro;';
+            '.moneyFormat($riga['imponibile_scontato']);
         /*
         <br><small class="text-'.($row->guadagno > 0 ? 'success' : 'danger').'">
-            '.tr('Guadagno').': '.Translator::numberToLocale($row->guadagno).' &euro;
+            '.tr('Guadagno').': '.moneyFormat($row->guadagno).'
         </small>';
         */
     }
@@ -254,11 +254,11 @@ foreach ($righe as $row) {
 
         if (!$fattura->isNotaDiAccredito() && $row->isArticolo() && $riga['abilita_serial'] && (empty($riga['idddt']) || empty($riga['idintervento']))) {
             echo "
-                    <a class='btn btn-primary btn-xs'data-toggle='tooltip' title='Aggiorna SN...' onclick=\"launch_modal( 'Aggiorna SN', '".$rootdir.'/modules/fatture/add_serial.php?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$riga['id'].'&idarticolo='.$riga['idarticolo']."', 1 );\"><i class='fa fa-barcode' aria-hidden='true'></i></a>";
+                    <a class='btn btn-primary btn-xs'data-toggle='tooltip' title='Aggiorna SN...' onclick=\"launch_modal( 'Aggiorna SN', '".$structure->fileurl('add_serial.php').'?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$riga['id'].'&idarticolo='.$riga['idarticolo']."', 1 );\"><i class='fa fa-barcode' aria-hidden='true'></i></a>";
         }
 
         echo "
-                    <a class='btn btn-xs btn-warning' title='Modifica questa riga...' onclick=\"launch_modal( 'Modifica riga', '".$rootdir.'/modules/fatture/row-edit.php?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$riga['id']."', 1 );\"><i class='fa fa-edit'></i></a>
+                    <a class='btn btn-xs btn-warning' title='Modifica questa riga...' onclick=\"launch_modal( 'Modifica riga', '".$structure->fileurl('row-edit.php').'?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$riga['id']."', 1 );\"><i class='fa fa-edit'></i></a>
 
                     <a class='btn btn-xs btn-danger' title='Rimuovi questa riga...' onclick=\"if( confirm('Rimuovere questa riga dalla fattura?') ){ $('#delete-form-".$riga['id']."').submit(); }\"><i class='fa fa-trash'></i></a>
                 </div>
@@ -273,19 +273,6 @@ foreach ($righe as $row) {
     echo '
         </td>
 
-    </tr>';
-}
-
-$sconto_globale = $fattura->scontoGlobale;
-if (!empty($sconto_globale)) {
-    echo '
-    <tr>
-        <td>'.$sconto_globale->descrizione.'</td>
-        <td class="text-center">'.Translator::numberToLocale(1, 'qta').'</td>
-        <td></td>
-        <td class="text-right">'.Translator::numberToLocale($sconto_globale->totale).' &euro;</td>
-        <td class="text-right">'.Translator::numberToLocale($sconto_globale->iva).' &euro;</td>
-        <td class="text-right">'.Translator::numberToLocale($sconto_globale->totale).' &euro;</td>
     </tr>';
 }
 
@@ -307,7 +294,7 @@ echo '
             <b>'.tr('Imponibile', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($imponibile).' &euro;
+            '.moneyFormat($imponibile).'
         </td>
         <td></td>
     </tr>';
@@ -320,7 +307,7 @@ if (!empty($sconto)) {
             <b>'.tr('Sconto', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($sconto).' &euro;
+            '.moneyFormat($sconto).'
         </td>
         <td></td>
     </tr>';
@@ -332,7 +319,7 @@ if (!empty($sconto)) {
             <b>'.tr('Imponibile scontato', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($imponibile_scontato).' &euro;
+            '.moneyFormat($imponibile_scontato).'
         </td>
         <td></td>
     </tr>';
@@ -353,7 +340,7 @@ if (!empty($fattura->rivalsa_inps)) {
 			<b>'.tr('Rivalsa', [], ['upper' => true]).' :</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($fattura->rivalsa_inps).' &euro;
+            '.moneyFormat($fattura->rivalsa_inps).'
         </td>
         <td></td>
     </tr>';
@@ -373,7 +360,7 @@ if (!empty($iva)) {
     echo '
         </td>
         <td align="right">
-            '.Translator::numberToLocale($iva).' &euro;
+            '.moneyFormat($iva).'
         </td>
         <td></td>
     </tr>';
@@ -386,7 +373,7 @@ echo '
             <b>'.tr('Totale', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($totale).' &euro;
+            '.moneyFormat($totale).'
         </td>
         <td></td>
     </tr>';
@@ -402,7 +389,7 @@ if (!empty($fattura->bollo)) {
             <b>'.tr('Marca da bollo', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($fattura->bollo).' &euro;
+            '.moneyFormat($fattura->bollo).'
         </td>
         <td></td>
     </tr>';
@@ -416,7 +403,7 @@ if (!empty($fattura->ritenuta_acconto)) {
             <b>'.tr("Ritenuta d'acconto", [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($fattura->ritenuta_acconto).' &euro;
+            '.moneyFormat($fattura->ritenuta_acconto).'
         </td>
         <td></td>
     </tr>';
@@ -430,7 +417,7 @@ if (!empty($fattura->totale_ritenuta_contributi)) {
             <b>'.tr('Ritenuta contributi', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($fattura->totale_ritenuta_contributi).' &euro;
+            '.moneyFormat($fattura->totale_ritenuta_contributi).'
         </td>
         <td></td>
     </tr>';
@@ -444,7 +431,7 @@ if ($totale != $netto_a_pagare) {
             <b>'.tr('Netto a pagare', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.Translator::numberToLocale($netto_a_pagare).' &euro;
+            '.moneyFormat($netto_a_pagare).'
         </td>
         <td></td>
     </tr>';
@@ -461,7 +448,7 @@ if ($dir == 'entrata') {
             <b>'.tr('Guadagno', [], ['upper' => true]).':</b>
         </td>
         <td align="right" style="'.$guadagno_style.'">
-            '.Translator::numberToLocale($guadagno).' &euro;
+            '.moneyFormat($guadagno).'
         </td>
         <td></td>
     </tr>';

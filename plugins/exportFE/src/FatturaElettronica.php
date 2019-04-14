@@ -291,7 +291,7 @@ class FatturaElettronica
             $anagrafica = static::getAzienda();
         }
 
-        $prefix = 'IT'.(!empty($anagrafica['codice_fiscale']) ? $anagrafica['codice_fiscale'] : str_replace($anagrafica->nazione->iso2, '', $anagrafica['piva']));
+        $prefix = 'IT'.(!empty($anagrafica['codice_fiscale'] and ($anagrafica['codice_fiscale'] != $anagrafica['piva'])) ? $anagrafica['codice_fiscale'] : str_replace($anagrafica->nazione->iso2, '', $anagrafica['piva']));
 
         if (empty($this->documento['progressivo_invio']) || !empty($new)) {
             $database = database();
@@ -386,7 +386,7 @@ class FatturaElettronica
         $result = [
             'IdTrasmittente' => [
                 'IdPaese' => $anagrafica->nazione->iso2,
-                'IdCodice' => (!empty($anagrafica['codice_fiscale'])) ? $anagrafica['codice_fiscale'] : str_replace($anagrafica->nazione->iso2, '', $anagrafica['piva']),
+                'IdCodice' => (!empty($anagrafica['codice_fiscale']) and ($anagrafica['codice_fiscale'] != $anagrafica['piva'])) ? $anagrafica['codice_fiscale'] : str_replace($anagrafica->nazione->iso2, '', $anagrafica['piva']),
             ],
         ];
 
@@ -644,7 +644,7 @@ class FatturaElettronica
             $percentuale = database()->fetchOne('SELECT percentuale FROM co_ritenutaacconto WHERE id = '.prepare($id_ritenuta))['percentuale'];
 
             $result['DatiRitenuta'] = [
-                'TipoRitenuta' => ($azienda['tipo'] == 'Privato') ? 'RT01' : 'RT02',
+                'TipoRitenuta' => (!empty($azienda['codice_fiscale']) and ($azienda['codice_fiscale'] != $azienda['piva'])) ? 'RT01' : 'RT02',
                 'ImportoRitenuta' => $totale_ritenutaacconto,
                 'AliquotaRitenuta' => $percentuale,
                 'CausalePagamento' => setting("Causale ritenuta d'acconto"),
@@ -688,20 +688,7 @@ class FatturaElettronica
         }
 
         // Sconto globale (2.1.1.8)
-        $documento['sconto_globale'] = floatval($documento['sconto_globale']);
-        if (!empty($documento['sconto_globale'])) {
-            $sconto = [
-                'Tipo' => $documento['sconto_globale'] > 0 ? 'SC' : 'MG',
-            ];
-
-            if ($documento['tipo_sconto_globale'] == 'PRC') {
-                $sconto['Percentuale'] = $documento['sconto_globale'];
-            } else {
-                $sconto['Importo'] = $documento['sconto_globale'];
-            }
-
-            $result['ScontoMaggiorazione'] = $sconto;
-        }
+        // Disabilitazione per aggiornamento sconti
 
         // Importo Totale Documento (2.1.1.9)
         // Valorizzare l’importo complessivo lordo della fattura (onnicomprensivo di Iva, bollo, contributi previdenziali, ecc…)
@@ -979,11 +966,11 @@ class FatturaElettronica
                 $dettaglio['DataFinePeriodo'] = $riga['data_fine_periodo'];
             }
 
-            $dettaglio['PrezzoUnitario'] = abs($riga->prezzo_unitario_vendita);
+            $dettaglio['PrezzoUnitario'] = $riga->prezzo_unitario_vendita;
 
             // Sconto (2.2.1.10)
-            $sconto = abs($riga->sconto);
-            $sconto_unitario = abs($riga->sconto_unitario);
+            $sconto = $riga->sconto;
+            $sconto_unitario = $riga->sconto_unitario;
             if (!empty($sconto_unitario)) {
                 $sconto = [
                     'Tipo' => $riga->sconto_unitario > 0 ? 'SC' : 'MG',
@@ -1001,7 +988,7 @@ class FatturaElettronica
             $aliquota = $riga->aliquota ?: $iva_descrizioni;
             $percentuale = floatval($aliquota->percentuale);
 
-            $dettaglio['PrezzoTotale'] = abs($riga->imponibile_scontato);
+            $dettaglio['PrezzoTotale'] = $riga->imponibile_scontato;
             $dettaglio['AliquotaIVA'] = $percentuale;
 
             if (!empty($riga['idritenutaacconto']) && empty($riga['is_descrizione'])) {

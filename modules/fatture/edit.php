@@ -174,7 +174,7 @@ if (empty($record['is_fiscale'])) {
                         <strike>';
                         }
 
-                        echo Translator::numberToLocale($scadenza['da_pagare']).'&euro;';
+                        echo moneyFormat($scadenza['da_pagare']);
 
                         if ($scadenza['pagato'] == $scadenza['da_pagare']) {
                             echo '
@@ -224,8 +224,8 @@ if ($dir == 'uscita') {
     ?>
 				<div class="row">
 					<div class="col-md-3">
-						{[ "type": "number", "label": "<?php echo tr('Marca da bollo'); ?>", "name": "bollo", "value": "$bollo$", "help": "<?php echo tr('Applicato solo se il totale della fattura è maggiore di _TOT_ €', [
-                            '_TOT_' => Translator::numberToLocale(setting("Soglia minima per l'applicazione della marca da bollo")),
+						{[ "type": "number", "label": "<?php echo tr('Marca da bollo'); ?>", "name": "bollo", "value": "$bollo$", "help": "<?php echo tr('Applicato solo se il totale della fattura è maggiore di _MONEY_', [
+                            '_MONEY_' => moneyFormat(setting("Soglia minima per l'applicazione della marca da bollo")),
                         ]),'.'; ?>" ]}
 					</div>
 				</div>
@@ -233,15 +233,9 @@ if ($dir == 'uscita') {
 }
 ?>
 
-
             <div class="row">
-
-                <div class="col-md-3">
-                    {[ "type": "number", "label": "<?php echo tr('Sconto incondizionato'); ?>", "name": "sconto_generico", "value": "$sconto_globale$", "help": "<?php echo tr('Sconto complessivo della fattura. Il valore positivo indica uno sconto. Per applicare un rincaro inserire un valore negativo.'); ?>", "icon-after": "choice|untprc|$tipo_sconto_globale$"<?php echo ($record['stato'] == 'Emessa') ? ', "disabled" : 1' : ''; ?> ]}
-                </div>
-
 				<div class="col-md-3">
-					{[ "type": "checkbox", "label": "<?php echo tr('Split payment'); ?>", "name": "split_payment", "value": "$split_payment$", "help": "<?php echo tr('Abilita lo split payment per questo documento.'); ?>", "placeholder": "<?php echo tr('Split payment'); ?>" ]}
+					{[ "type": "checkbox", "label": "<?php echo tr('Split payment'); ?>", "name": "split_payment", "value": "$split_payment$", "help": "<?php echo tr('Abilita lo split payment per questo documento. Le aliquote iva con natura N6 (reverse charge) non saranno disponibili.'); ?>", "placeholder": "<?php echo tr('Split payment'); ?>" ]}
 				</div>
 
 				<?php
@@ -450,7 +444,7 @@ if ($record['stato'] != 'Pagato' && $record['stato'] != 'Emessa') {
                     </div>';
 
             // Lettura contratti accettati, in attesa di conferma o in lavorazione
-            $contr_query = 'SELECT COUNT(*) AS tot FROM co_contratti WHERE idanagrafica='.prepare($record['idanagrafica']).' AND id_stato IN( SELECT id FROM co_staticontratti WHERE fatturabile = 1) AND co_contratti.id IN (SELECT idcontratto FROM co_righe_contratti WHERE co_righe_contratti.idcontratto = co_contratti.id AND (qta - qta_evasa) > 0)';
+            $contr_query = 'SELECT COUNT(*) AS tot FROM co_contratti WHERE idanagrafica='.prepare($record['idanagrafica']).' AND id_stato IN( SELECT id FROM co_staticontratti WHERE is_fatturabile = 1) AND co_contratti.id IN (SELECT idcontratto FROM co_righe_contratti WHERE co_righe_contratti.idcontratto = co_contratti.id AND (qta - qta_evasa) > 0)';
             $contratti = $dbo->fetchArray($contr_query)[0]['tot'];
             echo '
                     <div class="tip" data-toggle="tooltip" title="'.tr('Contratti accettati, in attesa di conferma o in lavorazione.').'" style="display:inline;">
@@ -485,18 +479,23 @@ if ($record['stato'] != 'Pagato' && $record['stato'] != 'Emessa') {
 
     $articoli = $dbo->fetchArray($art_query)[0]['tot'];
     echo '
-                        <a class="btn btn-sm btn-primary'.(!empty($articoli) ? '' : ' disabled').'" data-href="'.$rootdir.'/modules/fatture/row-add.php?id_module='.$id_module.'&id_record='.$id_record.'&is_articolo" data-toggle="tooltip" data-title="Aggiungi articolo">
+                        <a class="btn btn-sm btn-primary'.(!empty($articoli) ? '' : ' disabled').'" data-href="'.$structure->fileurl('row-add.php').'?id_module='.$id_module.'&id_record='.$id_record.'&is_articolo" data-toggle="tooltip" data-title="'.tr('Aggiungi articolo').'">
                             <i class="fa fa-plus"></i> '.tr('Articolo').'
                         </a>';
 
     echo '
-                        <a class="btn btn-sm btn-primary" data-href="'.$rootdir.'/modules/fatture/row-add.php?id_module='.$id_module.'&id_record='.$id_record.'&is_riga" data-toggle="tooltip" data-title="Aggiungi riga">
+                        <a class="btn btn-sm btn-primary" data-href="'.$structure->fileurl('row-add.php').'?id_module='.$id_module.'&id_record='.$id_record.'&is_riga" data-toggle="tooltip" data-title="'.tr('Aggiungi riga').'">
                             <i class="fa fa-plus"></i> '.tr('Riga').'
                         </a>';
 
     echo '
-                        <a class="btn btn-sm btn-primary" data-href="'.$rootdir.'/modules/fatture/row-add.php?id_module='.$id_module.'&id_record='.$id_record.'&is_descrizione" data-toggle="tooltip" data-title="Aggiungi descrizione">
+                        <a class="btn btn-sm btn-primary" data-href="'.$structure->fileurl('row-add.php').'?id_module='.$id_module.'&id_record='.$id_record.'&is_descrizione" data-toggle="tooltip" data-title="'.tr('Aggiungi descrizione').'">
                             <i class="fa fa-plus"></i> '.tr('Descrizione').'
+                        </a>';
+
+    echo '
+                        <a class="btn btn-sm btn-primary" data-href="'.$structure->fileurl('row-add.php').'?id_module='.$id_module.'&id_record='.$id_record.'&is_sconto" data-toggle="tooltip" data-title="'.tr('Aggiungi sconto/maggiorazione').'">
+                            <i class="fa fa-plus"></i> '.tr('Sconto/maggiorazione').'
                         </a>';
 }
 ?>
@@ -557,8 +556,8 @@ if ($dir == 'uscita' && $fattura->isFE()) {
                     div.addClass("alert-success").html("'.tr('Il totale del file XML corrisponde a quello calcolato dal gestionale').'.")
                 } else {
                     div.addClass("alert-warning").html("'.tr('Il totale del file XML non corrisponde a quello calcolato dal gestionale: previsto _XML_, calcolato _CALC_', [
-                        '_XML_' => '" + data.stored + "&euro;',
-                        '_CALC_' => '" + data.calculated + "&euro;',
+                        '_XML_' => '" + data.stored + " " + globals.currency + "',
+                        '_CALC_' => '" + data.calculated + " " + globals.currency + "',
                     ]).'.")
                 }
 

@@ -745,24 +745,24 @@ function start_inputmask(element) {
 
     var date = moment.localeData().longDateFormat('L').toLowerCase();
 
-    $(element + ".date-mask").inputmask(date, {
+    $(element + ".date-mask").not('.bound').inputmask(date, {
         "placeholder": date
-    });
+    }).addClass('bound');
 
-    $(element + '.email-mask').inputmask('Regex', {
+    $(element + '.email-mask').not('.bound').inputmask('Regex', {
         regex: "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$",
-    });
+    }).addClass('bound');
 
-    $(element + '.alphanumeric-mask').inputmask('Regex', {
+    $(element + '.alphanumeric-mask').not('.bound').inputmask('Regex', {
         regex: "[A-Za-z0-9#_|\/\\-.]*",
-    });
+    }).addClass('bound');
 
     if (isMobile()) {
         $(element + '.inputmask-decimal, ' + element + '.date-mask, ' + element + '.timestamp-mask').each(function () {
             $(this).attr('type', 'tel');
-        });
+        }).addClass('bound');
     } else {
-        $(element + '.inputmask-decimal').each(function () {
+        $(element + '.inputmask-decimal').not('.bound').each(function () {
             var $this = $(this);
 
             var min = $this.attr('min-value');
@@ -789,7 +789,7 @@ function start_inputmask(element) {
                 groupSeparator: globals.thousands,
                 onUnMask: function (maskedValue, unmaskedValue) {
                     return maskedValue.toEnglish();
-                }
+                },
             });
 
             $this.on('keyup', function () {
@@ -797,7 +797,7 @@ function start_inputmask(element) {
                     $(this).val(min);
                 }
             });
-        });
+        }).addClass('bound');
     }
 }
 

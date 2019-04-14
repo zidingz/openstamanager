@@ -132,7 +132,12 @@ class Fattura extends Document
      */
     public function getModuleAttribute()
     {
-        return $this->tipo->dir == 'entrata' ? 'Fatture di vendita' : 'Fatture di acquisto';
+        return $this->direzione == 'entrata' ? 'Fatture di vendita' : 'Fatture di acquisto';
+    }
+
+    public function getDirezioneAttribute()
+    {
+        return $this->tipo->dir;
     }
 
     // Calcoli
@@ -229,14 +234,14 @@ class Fattura extends Document
         return $this->hasMany(Components\Riga::class, 'iddocumento');
     }
 
+    public function sconti()
+    {
+        return $this->hasMany(Components\Sconto::class, 'iddocumento');
+    }
+
     public function descrizioni()
     {
         return $this->hasMany(Components\Descrizione::class, 'iddocumento');
-    }
-
-    public function scontoGlobale()
-    {
-        return $this->hasOne(Components\Sconto::class, 'iddocumento');
     }
 
     public function ritenutaContributi()
@@ -396,18 +401,6 @@ class Fattura extends Document
     public function isNotaDiAccredito()
     {
         return $this->tipo->reversed == 1;
-    }
-
-    public function updateSconto()
-    {
-        // Aggiornamento sconto
-        aggiorna_sconto([
-            'parent' => 'co_documenti',
-            'row' => 'co_righe_documenti',
-        ], [
-            'parent' => 'id',
-            'row' => 'iddocumento',
-        ], $this->id);
     }
 
     // Metodi statici

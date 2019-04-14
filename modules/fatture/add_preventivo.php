@@ -15,7 +15,7 @@ if (get('op')) {
         ],
         'serials' => false,
         'button' => tr('Aggiungi'),
-        'dir' => $dir,
+        'dir' => 'entrata',
     ];
 
     $result = [

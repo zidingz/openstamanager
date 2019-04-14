@@ -4,6 +4,7 @@ use Modules\Anagrafiche\Anagrafica;
 use Modules\Interventi\TipoSessione;
 use Modules\Preventivi\Components\Articolo;
 use Modules\Preventivi\Components\Riga;
+use Modules\Preventivi\Components\Sconto;
 use Modules\Preventivi\Preventivo;
 
 switch (post('op')) {
@@ -29,6 +30,7 @@ switch (post('op')) {
             $id_stato = post('id_stato');
             $nome = post('nome');
             $idanagrafica = post('idanagrafica');
+            $idsede = post('idsede');
             $idagente = post('idagente');
             $idreferente = post('idreferente');
             $idpagamento = post('idpagamento');
@@ -66,6 +68,7 @@ switch (post('op')) {
             $query = 'UPDATE co_preventivi SET id_stato='.prepare($idstato).','.
                 ' nome='.prepare($nome).','.
                 ' idanagrafica='.prepare($idanagrafica).','.
+                ' idsede='.prepare($idsede).','.
                 ' idagente='.prepare($idagente).','.
                 ' idreferente='.prepare($idreferente).','.
                 ' idpagamento='.prepare($idpagamento).','.
@@ -78,8 +81,6 @@ switch (post('op')) {
                 ' data_conclusione='.prepare($data_conclusione).','.
                 ' esclusioni='.prepare($esclusioni).','.
                 ' descrizione='.prepare($descrizione).','.
-                ' tipo_sconto_globale='.prepare($tipo_sconto).','.
-                ' sconto_globale='.prepare($sconto).','.
                 ' id_documento_fe='.prepare($id_documento_fe).','.
                 ' num_item='.prepare($num_item).','.
                 ' codice_cig='.prepare($codice_cig).','.
@@ -88,14 +89,6 @@ switch (post('op')) {
                 ' id_tipo_intervento='.prepare($id_tipo_intervento).','.
                 ' idiva='.prepare($idiva).' WHERE id='.prepare($id_record);
             $dbo->query($query);
-
-            aggiorna_sconto([
-                'parent' => 'co_preventivi',
-                'row' => 'co_righe_preventivi',
-            ], [
-                'parent' => 'id',
-                'row' => 'idpreventivo',
-            ], $id_record);
 
             // update_budget_preventivo( $id_record );
             flash()->info(tr('Preventivo modificato correttamente!'));
@@ -111,10 +104,7 @@ switch (post('op')) {
         $dbo->query('DROP TEMPORARY TABLE tmp');
 
         // Codice preventivo: calcolo il successivo in base al formato specificato
-        $numeropreventivo_template = setting('Formato codice preventivi');
-        $numeropreventivo_template = str_replace('#', '%', $numeropreventivo_template);
-        $rs = $dbo->fetchArray('SELECT numero FROM co_preventivi WHERE numero LIKE('.prepare(Util\Generator::complete($numeropreventivo_template)).') ORDER BY numero DESC LIMIT 0,1');
-        $numero = Util\Generator::generate(setting('Formato codice preventivi'), $rs[0]['numero']);
+        $numero = Preventivo::getNextNumero();
 
         $dbo->query('UPDATE co_preventivi SET id_stato=1, numero = '.prepare($numero).', master_revision = id WHERE id='.prepare($id_record));
 
@@ -124,6 +114,9 @@ switch (post('op')) {
         $dbo->query('UPDATE tmp SET idpreventivo = '.prepare($id_record));
         $dbo->query('INSERT INTO co_righe_preventivi SELECT NULL,tmp.* FROM tmp');
         $dbo->query('DROP TEMPORARY TABLE tmp');
+
+        //Azzero eventuale quantità evasa
+        $dbo->query('UPDATE co_righe_preventivi SET qta_evasa=0 WHERE id='.prepare($id_record));
 
         flash()->info(tr('Preventivo duplicato correttamente!'));
 
@@ -241,6 +234,29 @@ switch (post('op')) {
 
         break;
 
+    case 'manage_sconto':
+        if (post('idriga') != null) {
+            $sconto = Sconto::find(post('idriga'));
+        } else {
+            $sconto = Sconto::build($preventivo);
+        }
+
+        $sconto->descrizione = post('descrizione');
+        $sconto->id_iva = post('idiva');
+
+        $sconto->sconto_unitario = post('sconto_unitario');
+        $sconto->tipo_sconto = 'UNT';
+
+        $sconto->save();
+
+        if (post('idriga') != null) {
+            flash()->info(tr('Sconto/maggiorazione modificato!'));
+        } else {
+            flash()->info(tr('Sconto/maggiorazione aggiunta!'));
+        }
+
+        break;
+
     case 'editriga':
         $idriga = post('idriga');
         $descrizione = post('descrizione');
@@ -328,8 +344,6 @@ switch (post('op')) {
             'ore_lavoro' => $rs_preventivo[0]['ore_lavoro'],
             'costo_orario' => $rs_preventivo[0]['costo_orario'],
             'costo_km' => $rs_preventivo[0]['costo_km'],
-            'sconto_globale' => $rs_preventivo[0]['sconto_globale'],
-            'tipo_sconto_globale' => $rs_preventivo[0]['tipo_sconto_globale'],
             'master_revision' => $rs_preventivo[0]['master_revision'],
             'default_revision' => '1',
         ];
@@ -341,7 +355,6 @@ switch (post('op')) {
 
         for ($i = 0; $i < sizeof($rs_righe_preventivo); ++$i) {
             $righe_preventivo = [
-                'data_evasione' => $rs_righe_preventivo[$i]['data_evasione'],
                 'idpreventivo' => $id_record_new,
                 'idarticolo' => $rs_righe_preventivo[$i]['idarticolo'],
                 'is_descrizione' => $rs_righe_preventivo[$i]['is_descrizione'],
@@ -354,7 +367,6 @@ switch (post('op')) {
                 'sconto' => $rs_righe_preventivo[$i]['sconto'],
                 'sconto_unitario' => $rs_righe_preventivo[$i]['sconto_unitario'],
                 'tipo_sconto' => $rs_righe_preventivo[$i]['tipo_sconto'],
-                'sconto_globale' => $rs_righe_preventivo[$i]['sconto_globale'],
                 'um' => $rs_righe_preventivo[$i]['um'],
                 'qta' => $rs_righe_preventivo[$i]['qta'],
                 'order' => $rs_righe_preventivo[$i]['order'],
@@ -366,14 +378,4 @@ switch (post('op')) {
 
         flash()->info(tr('Aggiunta nuova revisione!'));
         break;
-}
-
-if (post('op') !== null && post('op') != 'update') {
-    aggiorna_sconto([
-        'parent' => 'co_preventivi',
-        'row' => 'co_righe_preventivi',
-    ], [
-        'parent' => 'id',
-        'row' => 'idpreventivo',
-    ], $id_record);
 }

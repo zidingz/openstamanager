@@ -91,25 +91,10 @@ abstract class Article extends Row
             throw new UnexpectedValueException();
         }
 
-        $previous = $this->qta;
-        $diff = $value - $previous;
-
-        $this->attributes['qta'] = $value;
+        $diff = parent::setQtaAttribute($value);
 
         if ($this->abilita_movimentazione) {
             $this->qta_movimentazione += $diff;
-        }
-
-        $database = database();
-
-        // Se c'è un collegamento ad un ddt, aggiorno la quantità evasa
-        if (!empty($this->idddt)) {
-            $database->query('UPDATE dt_righe_ddt SET qta_evasa = qta_evasa + '.$diff.' WHERE descrizione = '.prepare($this->descrizione).' AND idarticolo = '.prepare($this->idarticolo).' AND idddt = '.prepare($this->idddt).' AND idiva = '.prepare($this->idiva));
-        }
-
-        // Se c'è un collegamento ad un ordine, aggiorno la quantità evasa
-        if (!empty($this->idordine)) {
-            $database->query('UPDATE or_righe_ordini SET qta_evasa = qta_evasa + '.$diff.' WHERE descrizione = '.prepare($this->descrizione).' AND idarticolo = '.prepare($this->idarticolo).' AND idordine = '.prepare($this->idordine).' AND idiva = '.prepare($this->idiva));
         }
     }
 

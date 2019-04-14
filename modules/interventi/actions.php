@@ -3,6 +3,7 @@
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Articoli\Articolo as ArticoloOriginale;
 use Modules\Interventi\Components\Articolo;
+use Modules\Interventi\Components\Riga;
 use Modules\Interventi\Intervento;
 use Modules\Interventi\Stato;
 use Modules\Interventi\TipoSessione;
@@ -16,9 +17,6 @@ switch (post('op')) {
         if (!empty($idcontratto_riga) && $intervento->id_contratto != $idcontratto) {
             $dbo->update('co_promemoria', ['idintervento' => null], ['idintervento' => $id_record]);
         }
-
-        $tipo_sconto = post('tipo_sconto_globale');
-        $sconto = post('sconto_globale');
 
         // Salvataggio modifiche intervento
         $intervento->data_richiesta = post('data_richiesta');
@@ -37,9 +35,6 @@ switch (post('op')) {
         $intervento->idautomezzo = post('idautomezzo');
         $intervento->id_preventivo = post('idpreventivo');
         $intervento->id_contratto = $idcontratto;
-
-        $intervento->sconto_globale = $sconto;
-        $intervento->tipo_sconto_globale = $tipo_sconto;
 
         $intervento->id_documento_fe = post('id_documento_fe');
         $intervento->num_item = post('num_item');
@@ -325,6 +320,29 @@ switch (post('op')) {
     case 'delriga':
         $idriga = post('idriga');
         $dbo->query('DELETE FROM in_righe_interventi WHERE id='.prepare($idriga));
+
+        break;
+
+    case 'manage_sconto':
+        if (post('idriga') != null) {
+            $sconto = Riga::find(post('idriga'));
+        } else {
+            $sconto = Riga::build($intervento);
+        }
+
+        $sconto->descrizione = post('descrizione');
+        $sconto->id_iva = post('idiva');
+
+        $sconto->sconto_unitario = post('sconto_unitario');
+        $sconto->tipo_sconto = 'UNT';
+
+        $sconto->save();
+
+        if (post('idriga') != null) {
+            flash()->info(tr('Sconto/maggiorazione modificato!'));
+        } else {
+            flash()->info(tr('Sconto/maggiorazione aggiunta!'));
+        }
 
         break;
 

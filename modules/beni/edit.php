@@ -1,6 +1,4 @@
-<?php
-
-?><form action="" method="post" id="edit-form">
+<form action="" method="post" id="edit-form">
 	<input type="hidden" name="backto" value="record-edit">
 	<input type="hidden" name="op" value="update">
 
@@ -18,7 +16,6 @@
 			</div>
 		</div>
 	</div>
-
 </form>
 
 <?php

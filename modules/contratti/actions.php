@@ -3,6 +3,7 @@
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Contratti\Components\Articolo;
 use Modules\Contratti\Components\Riga;
+use Modules\Contratti\Components\Sconto;
 use Modules\Contratti\Contratto;
 
 switch (post('op')) {
@@ -88,23 +89,6 @@ switch (post('op')) {
 
             $dbo->query($query);
 
-            // Aggiornamento sconto
-            $tipo_sconto = post('tipo_sconto_generico');
-            $sconto = post('sconto_generico');
-
-            $dbo->update('co_contratti', [
-                'tipo_sconto_globale' => $tipo_sconto,
-                'sconto_globale' => $sconto,
-            ], ['id' => $id_record]);
-
-            aggiorna_sconto([
-                'parent' => 'co_contratti',
-                'row' => 'co_righe_contratti',
-            ], [
-                'parent' => 'id',
-                'row' => 'idcontratto',
-            ], $id_record);
-
             $dbo->query('DELETE FROM my_impianti_contratti WHERE idcontratto='.prepare($id_record));
             foreach ((array) post('matricolaimpianto') as $matricolaimpianto) {
                 $dbo->query('INSERT INTO my_impianti_contratti(idcontratto,idimpianto) VALUES('.prepare($id_record).', '.prepare($matricolaimpianto).')');
@@ -137,6 +121,56 @@ switch (post('op')) {
             }
 
             flash()->info(tr('Contratto modificato correttamente!'));
+        }
+
+        break;
+
+     // Duplica contratto
+    case 'copy':
+        $dbo->query('CREATE TEMPORARY TABLE tmp SELECT * FROM co_contratti WHERE id = '.prepare($id_record));
+        $dbo->query('ALTER TABLE tmp DROP id');
+        $dbo->query('INSERT INTO co_contratti SELECT NULL,tmp.* FROM tmp');
+        $id_record = $dbo->lastInsertedID();
+        $dbo->query('DROP TEMPORARY TABLE tmp');
+
+        // Codice contratto: calcolo il successivo in base al formato specificato
+        $numero = Contratto::getNextNumero();
+
+        $dbo->query('UPDATE co_contratti SET idstato=1, numero = '.prepare($numero).' WHERE id='.prepare($id_record));
+
+        //copio anche le righe del preventivo
+        $dbo->query('CREATE TEMPORARY TABLE tmp SELECT * FROM co_righe_contratti WHERE idcontratto = '.filter('id_record'));
+        $dbo->query('ALTER TABLE tmp DROP id');
+        $dbo->query('UPDATE tmp SET idcontratto = '.prepare($id_record));
+        $dbo->query('INSERT INTO co_righe_contratti SELECT NULL,tmp.* FROM tmp');
+        $dbo->query('DROP TEMPORARY TABLE tmp');
+
+        //Azzero eventuale quantità evasa
+        $dbo->query('UPDATE co_righe_contratti SET qta_evasa=0 WHERE id='.prepare($id_record));
+
+        flash()->info(tr('Contratto duplicato correttamente!'));
+
+        break;
+
+    case 'manage_sconto':
+        if (post('idriga') != null) {
+            $sconto = Sconto::find(post('idriga'));
+        } else {
+            $sconto = Sconto::build($contratto);
+        }
+
+        $sconto->descrizione = post('descrizione');
+        $sconto->id_iva = post('idiva');
+
+        $sconto->sconto_unitario = post('sconto_unitario');
+        $sconto->tipo_sconto = 'UNT';
+
+        $sconto->save();
+
+        if (post('idriga') != null) {
+            flash()->info(tr('Sconto/maggiorazione modificato!'));
+        } else {
+            flash()->info(tr('Sconto/maggiorazione aggiunta!'));
         }
 
         break;
@@ -350,7 +384,7 @@ switch (post('op')) {
                 }
 
                 // Cambio stato precedente contratto in concluso (non più pianificabile)
-                $dbo->query('UPDATE `co_contratti` SET `rinnovabile`= 0, `id_stato`= (SELECT id FROM co_staticontratti WHERE pianificabile = 0 AND fatturabile = 1 AND descrizione = \'Concluso\')  WHERE `id` = '.prepare($id_record));
+                $dbo->query('UPDATE `co_contratti` SET `rinnovabile`= 0, `id_stato`= (SELECT id FROM co_staticontratti WHERE is_pianificabile = 0 AND is_fatturabile = 1 AND descrizione = \'Concluso\')  WHERE `id` = '.prepare($id_record));
 
                 flash()->info(tr('Contratto rinnovato!'));
 
@@ -361,14 +395,4 @@ switch (post('op')) {
         }
 
         break;
-}
-
-if (post('op') !== null && post('op') != 'update') {
-    aggiorna_sconto([
-        'parent' => 'co_contratti',
-        'row' => 'co_righe_contratti',
-    ], [
-        'parent' => 'id',
-        'row' => 'idcontratto',
-    ], $id_record);
 }

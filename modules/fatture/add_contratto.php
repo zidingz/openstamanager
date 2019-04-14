@@ -2,8 +2,6 @@
 
 $module = Modules::get($id_module);
 
-$dir = ($module['name'] == 'Fatture di vendita') ? 'entrata' : 'uscita';
-
 if (get('op')) {
     $options = [
         'op' => 'add_contratto',
@@ -17,7 +15,7 @@ if (get('op')) {
         ],
         'serials' => false,
         'button' => tr('Aggiungi'),
-        'dir' => $dir,
+        'dir' => 'entrata',
     ];
 
     $result = [
@@ -29,6 +27,8 @@ if (get('op')) {
 
     return;
 }
+
+$_SESSION['superselect']['stato'] = 'is_fatturabile';
 
 echo '
 <div class="row">

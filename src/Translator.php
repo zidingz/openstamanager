@@ -11,6 +11,8 @@ class Translator
 {
     /** @var Intl\Formatter Oggetto per la conversione di date e numeri nella lingua selezionata */
     protected static $formatter;
+    /** @var string Simbolo della valuta corrente */
+    protected static $currency;
 
     /** @var Symfony\Component\Translation\Translator Oggetto dedicato alle traduzioni */
     protected $translator;
@@ -128,6 +130,25 @@ class Translator
         }
 
         return (string) $result;
+    }
+
+    /**
+     * Restituisce il simbolo della valuta del gestione.
+     *
+     * @since 2.4.9
+     *
+     * @return string
+     */
+    public static function getCurrency()
+    {
+        if (!isset(self::$currency)) {
+            $id = setting('Valuta');
+            $valuta = database()->fetchOne('SELECT symbol FROM zz_currencies WHERE id = '.prepare($id));
+
+            self::$currency = $valuta['symbol'];
+        }
+
+        return self::$currency;
     }
 
     /**

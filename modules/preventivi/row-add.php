@@ -1,15 +1,17 @@
 <?php
 
+use Modules\Preventivi\Preventivo;
+
 // Info contratto
-$rs = $dbo->fetchArray('SELECT * FROM co_preventivi WHERE id='.prepare($id_record));
-$idanagrafica = $rs[0]['idanagrafica'];
+$documento = Preventivo::find($id_record);
 
 // Impostazioni per la gestione
 $options = [
     'op' => 'addriga',
     'action' => 'add',
-    'dir' => 'entrata',
-    'idanagrafica' => $idanagrafica,
+    'dir' => $documento->direzione,
+    'idanagrafica' => $documento['idanagrafica'],
+    'totale' => $documento->totale,
 ];
 
 // Dati di default
@@ -24,11 +26,11 @@ $result = [
 ];
 
 // Leggo l'iva predefinita per l'anagrafica e se non c'è leggo quella predefinita generica
-$iva = $dbo->fetchArray('SELECT idiva_vendite AS idiva FROM an_anagrafiche WHERE idanagrafica='.prepare($idanagrafica));
+$iva = $dbo->fetchArray('SELECT idiva_vendite AS idiva FROM an_anagrafiche WHERE idanagrafica='.prepare($documento['idanagrafica']));
 $result['idiva'] = $iva[0]['idiva'] ?: setting('Iva predefinita');
 
 // Aggiunta sconto di default da listino per le vendite
-$listino = $dbo->fetchArray('SELECT prc_guadagno FROM an_anagrafiche INNER JOIN mg_listini ON an_anagrafiche.idlistino_vendite=mg_listini.id WHERE idanagrafica='.prepare($idanagrafica));
+$listino = $dbo->fetchArray('SELECT prc_guadagno FROM an_anagrafiche INNER JOIN mg_listini ON an_anagrafiche.idlistino_vendite=mg_listini.id WHERE idanagrafica='.prepare($documento['idanagrafica']));
 
 if ($listino[0]['prc_guadagno'] > 0) {
     $result['sconto_unitario'] = $listino[0]['prc_guadagno'];
@@ -41,6 +43,10 @@ if (get('is_descrizione') !== null) {
     $file = 'descrizione';
 } elseif (get('is_articolo') !== null) {
     $file = 'articolo';
+} elseif (get('is_sconto') !== null) {
+    $file = 'sconto';
+
+    $options['op'] = 'manage_sconto';
 }
 
 echo App::load($file.'.php', $result, $options);

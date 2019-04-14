@@ -306,15 +306,6 @@ function get_costi_intervento($id_intervento)
         $result['altro_scontato'] + ($result['altro_scontato'] * $result['altro_iva'] / 100),
     ]);
 
-    // Calcolo dello sconto incondizionato
-    $sconto = $dbo->fetchArray('SELECT sconto_globale, tipo_sconto_globale FROM in_interventi WHERE id='.prepare($id_intervento))[0];
-    $result['sconto_globale'] = ($sconto['tipo_sconto_globale'] == 'PRC') ? $result['totale_scontato'] * $sconto['sconto_globale'] / 100 : $sconto['sconto_globale'];
-    $result['sconto_globale'] = round($result['sconto_globale'], $decimals);
-
-    $result['totale_scontato'] = sum($result['totale_scontato'], -$result['sconto_globale']);
-    $result['iva_totale'] = sum($result['iva_totale'], -($result['sconto_globale'] * $rs_iva[0]['percentuale'] / 100));
-    $result['totale'] = sum($result['totale'], -($result['sconto_globale'] + ($result['sconto_globale'] * $rs_iva[0]['percentuale'] / 100)));
-
     return $result;
 }
 
@@ -514,7 +505,8 @@ function aggiungi_intervento_in_fattura($id_intervento, $id_fattura, $descrizion
 
     // Aggiunta sconto
     if (!empty($costi_intervento['sconto_globale'])) {
-        $subtot = -$costi_intervento['sconto_globale'];
+        $subtot = 0;
+        $sconto = $costi_intervento['sconto_globale'];
 
         // Calcolo iva
         $query = 'SELECT * FROM co_iva WHERE id='.prepare($id_iva);
@@ -538,7 +530,7 @@ function aggiungi_intervento_in_fattura($id_intervento, $id_fattura, $descrizion
             $ritenutaacconto = ($subtot + $rivalsainps) / 100 * $rs[0]['percentuale'];
         }
 
-        $query = 'INSERT INTO co_righe_documenti(iddocumento, idintervento, idconto, idiva, desc_iva, iva, iva_indetraibile, descrizione, subtotale, qta, idrivalsainps, rivalsainps, idritenutaacconto, ritenutaacconto, calcolo_ritenuta_acconto, `order`) VALUES('.prepare($id_fattura).', NULL, '.prepare($id_conto).', '.prepare($id_iva).', '.prepare($desc_iva).', '.prepare($iva).', '.prepare($iva_indetraibile).', '.prepare('Sconto '.$descrizione).', '.prepare($subtot).', 1, '.prepare($id_rivalsa_inps).', '.prepare($rivalsainps).', '.prepare($id_ritenuta_acconto).', '.prepare($ritenutaacconto).', '.prepare($calcolo_ritenuta_acconto).', (SELECT IFNULL(MAX(`order`) + 1, 0) FROM co_righe_documenti AS t WHERE iddocumento='.prepare($id_fattura).'))';
+        $query = 'INSERT INTO co_righe_documenti(iddocumento, idintervento, idconto, idiva, desc_iva, iva, iva_indetraibile, descrizione, subtotale, sconto_unitario, tipo_sconto, qta, idrivalsainps, rivalsainps, idritenutaacconto, ritenutaacconto, calcolo_ritenuta_acconto, `order`) VALUES('.prepare($id_fattura).', NULL, '.prepare($id_conto).', '.prepare($id_iva).', '.prepare($desc_iva).', '.prepare($iva).', '.prepare($iva_indetraibile).', '.prepare('Sconto '.$descrizione).', '.prepare($subtot).', '.$sconto.', "UNT", 1, '.prepare($id_rivalsa_inps).', '.prepare($rivalsainps).', '.prepare($id_ritenuta_acconto).', '.prepare($ritenutaacconto).', '.prepare($calcolo_ritenuta_acconto).', (SELECT IFNULL(MAX(`order`) + 1, 0) FROM co_righe_documenti AS t WHERE iddocumento='.prepare($id_fattura).'))';
         $dbo->query($query);
     }
 

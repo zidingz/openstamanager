@@ -1,44 +1,41 @@
 <?php
 
-// Info documento
-$rs = $dbo->fetchArray('SELECT * FROM co_documenti WHERE id='.prepare($id_record));
-$idanagrafica = $rs[0]['idanagrafica'];
+use Modules\Fatture\Fattura;
 
-if ($module['name'] == 'Fatture di vendita') {
-    $dir = 'entrata';
-    $conti = 'conti-vendite';
-} else {
-    $dir = 'uscita';
-    $conti = 'conti-acquisti';
-}
+$documento = Fattura::find($id_record);
 
 // Impostazioni per la gestione
 $options = [
     'op' => 'manage_riga',
     'action' => 'edit',
-    'dir' => $dir,
-    'conti' => $conti,
-    'idanagrafica' => $idanagrafica,
-    'edit_articolo' => false,
-    'show-ritenuta-contributi' => !empty($rs[0]['id_ritenuta_contributi']),
+    'dir' => $documento->direzione,
+    'conti' => $documento->direzione == 'entrata' ? 'conti-vendite' : 'conti-acquisti',
+    'idanagrafica' => $documento['idanagrafica'],
+    'show-ritenuta-contributi' => !empty($documento['id_ritenuta_contributi']),
+    'totale' => $documento->totale,
 ];
 
 // Dati della riga
-$riga = $dbo->fetchOne('SELECT * FROM co_righe_documenti WHERE iddocumento='.prepare($id_record).' AND id='.prepare(get('idriga')));
+$id_riga = get('idriga');
+$riga = $documento->getRighe()->find($id_riga);
 
-$result = $riga;
-$result['prezzo'] = $riga['subtotale'] / $riga['qta'];
+$result = $riga->toArray();
+$result['prezzo'] = $riga->prezzo_unitario_vendita;
 
 // Importazione della gestione dedicata
 $file = 'riga';
-if (!empty($result['is_descrizione'])) {
+if ($riga->isDescrizione()) {
     $file = 'descrizione';
 
     $options['op'] = 'manage_descrizione';
-} elseif (!empty($result['idarticolo'])) {
+} elseif ($riga->isArticolo()) {
     $file = 'articolo';
 
     $options['op'] = 'manage_articolo';
+} elseif ($riga->isSconto()) {
+    $file = 'sconto';
+
+    $options['op'] = 'manage_sconto';
 }
 
 echo App::load($file.'.php', $result, $options);

@@ -8,6 +8,7 @@ use Plugins;
 use UnexpectedValueException;
 use Uploads;
 use Util\XML;
+use Util\Zip;
 
 /**
  * Classe per la gestione della fatturazione elettronica in XML.
@@ -28,7 +29,23 @@ class Ricevuta
 
     public function __construct($name)
     {
-        $this->file = static::getImportDirectory().'/'.$name;
+        $file = static::getImportDirectory().'/'.$name;
+
+        if (ends_with($name, '.zip')) {
+            $original_file = $file;
+
+            $extraction_dir = static::getImportDirectory().'/tmp';
+            Zip::extract($file, $extraction_dir);
+
+            $name = basename($name, '.zip').'.xml';
+            $file = static::getImportDirectory().'/'.$name;
+            copy($extraction_dir.'/'.$name, $file);
+
+            delete($original_file);
+            delete($extraction_dir);
+        }
+
+        $this->file = $file;
         $this->xml = XML::readFile($this->file);
 
         $filename = explode('.', $name)[0];

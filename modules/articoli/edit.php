@@ -127,7 +127,7 @@ if (!empty($record['immagine'])) {
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6">
-                            {[ "type": "number", "label": "<?php echo tr('Prezzo di acquisto'); ?>", "name": "prezzo_acquisto", "value": "$prezzo_acquisto$", "icon-after": "&euro;" ]}
+                            {[ "type": "number", "label": "<?php echo tr('Prezzo di acquisto'); ?>", "name": "prezzo_acquisto", "value": "$prezzo_acquisto$", "icon-after": "<?php echo currency(); ?>" ]}
                         </div>
 
                         <div class="col-md-6">
@@ -160,7 +160,7 @@ if (!empty($record['immagine'])) {
                     <div class="row">
                         <div class="col-md-6">
 						<button type="button" class="btn btn-info btn-xs pull-right tip pull-right" title="<?php echo tr('Scorpora iva dal prezzo di vendita.'); ?>" id="scorpora_iva"><i class="fa fa-calculator" aria-hidden="true"></i></button>
-                          {[ "type": "number", "label": "<?php echo tr('Prezzo di vendita'); ?>", "name": "prezzo_vendita", "value": "$prezzo_vendita$", "icon-after": "&euro;" ]}
+                          {[ "type": "number", "label": "<?php echo tr('Prezzo di vendita'); ?>", "name": "prezzo_vendita", "value": "$prezzo_vendita$", "icon-after": "<?php echo currency(); ?>" ]}
                         </div>
 
                         <div class="col-md-6">
@@ -270,14 +270,14 @@ echo '
             echo '
                         <tr>
                             <td>'.tr('Base').'</td>
-                            <td>'.Translator::numberToLocale($rsart[0]['prezzo_vendita']).' &euro;</td>
+                            <td>'.moneyFormat($rsart[0]['prezzo_vendita']).'</td>
                         </tr>';
 
             for ($i = 0; $i < count($rsl); ++$i) {
                 echo '
                         <tr>
                             <td>'.$rsl[$i]['nome'].'</td>
-                            <td>'.Translator::numberToLocale($rsart[0]['prezzo_vendita'] - $rsart[0]['prezzo_vendita'] / 100 * $rsl[$i]['prc_guadagno']).' &euro;</td>
+                            <td>'.moneyFormat($rsart[0]['prezzo_vendita'] - $rsart[0]['prezzo_vendita'] / 100 * $rsl[$i]['prc_guadagno']).'</td>
                         </tr>';
             }
 
@@ -348,7 +348,6 @@ $("#categoria").change( function(){
 
     $("#subcategoria").val(null).trigger("change");
 });
-
 
 function scorpora_iva() {
 	if ($("#idiva_vendita").val()!=''){

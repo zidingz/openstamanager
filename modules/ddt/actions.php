@@ -4,6 +4,7 @@ use Modules\Anagrafiche\Anagrafica;
 use Modules\DDT\Components\Articolo;
 use Modules\DDT\Components\Descrizione;
 use Modules\DDT\Components\Riga;
+use Modules\DDT\Components\Sconto;
 use Modules\DDT\DDT;
 use Modules\DDT\Tipo;
 
@@ -87,21 +88,7 @@ switch (post('op')) {
                 'ritenutaacconto' => 0,
             ], ['id' => $id_record]);
 
-            // Aggiornamento sconto
-            $dbo->update('dt_ddt', [
-                'tipo_sconto_globale' => post('tipo_sconto_generico'),
-                'sconto_globale' => post('sconto_generico'),
-            ], ['id' => $id_record]);
-
-            aggiorna_sconto([
-                'parent' => 'dt_ddt',
-                'row' => 'dt_righe_ddt',
-            ], [
-                'parent' => 'id',
-                'row' => 'idddt',
-            ], $id_record);
-
-            $query = 'SELECT descrizione FROM dt_statiddt WHERE id='.prepare($id_stato);
+            $query = 'SELECT descrizione FROM dt_statiddt WHERE id='.prepare($idstatoddt);
             $rs = $dbo->fetchArray($query);
 
             // Ricalcolo inps, ritenuta e bollo (se l'ddt non è stato evaso)
@@ -189,11 +176,33 @@ switch (post('op')) {
         }
 
         // Ricalcolo inps, ritenuta e bollo
-        if ($dir == 'entrata') {
-            ricalcola_costiagg_ddt($id_record);
+        ricalcola_costiagg_ddt($id_record);
+
+        break;
+
+    case 'manage_sconto':
+        if (post('idriga') != null) {
+            $sconto = Sconto::find(post('idriga'));
         } else {
-            ricalcola_costiagg_ddt($id_record);
+            $sconto = Sconto::build($ddt);
         }
+
+        $sconto->descrizione = post('descrizione');
+        $sconto->id_iva = post('idiva');
+
+        $sconto->sconto_unitario = post('sconto_unitario');
+        $sconto->tipo_sconto = 'UNT';
+
+        $sconto->save();
+
+        if (post('idriga') != null) {
+            flash()->info(tr('Sconto/maggiorazione modificato!'));
+        } else {
+            flash()->info(tr('Sconto/maggiorazione aggiunta!'));
+        }
+
+        // Ricalcolo inps, ritenuta e bollo
+        ricalcola_costiagg_ddt($id_record);
 
         break;
 
@@ -235,15 +244,6 @@ switch (post('op')) {
             if ($riga->qta != $riga->qta_evasa) {
                 $parziale = true;
             }
-        }
-
-        // Aggiornamento sconto
-        if (post('evadere')[$ordine->scontoGlobale->id] == 'on') {
-            $ddt->tipo_sconto_globale = $ordine->tipo_sconto_globale;
-            $ddt->sconto_globale = $ordine->tipo_sconto_globale == 'PRC' ? $ordine->sconto_globale : $ordine->sconto_globale;
-            $ddt->save();
-
-            $ddt->updateSconto();
         }
 
         // Impostazione del nuovo stato
@@ -482,15 +482,4 @@ if (!empty($id_record) && setting('Cambia automaticamente stato ordini fatturati
     for ($i = 0; $i < sizeof($rs); ++$i) {
         $dbo->query('UPDATE or_ordini SET id_stato=(SELECT id FROM or_statiordine WHERE descrizione="'.get_stato_ordine($rs[$i]['idordine']).'") WHERE id = '.prepare($rs[$i]['idordine']));
     }
-}
-
-// Aggiornamento sconto sulle righe
-if (post('op') !== null && post('op') != 'update') {
-    aggiorna_sconto([
-        'parent' => 'dt_ddt',
-        'row' => 'dt_righe_ddt',
-    ], [
-        'parent' => 'id',
-        'row' => 'idddt',
-    ], $id_record);
 }

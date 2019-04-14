@@ -5,6 +5,7 @@ use Modules\Articoli\Articolo as ArticoloOriginale;
 use Modules\Fatture\Components\Articolo;
 use Modules\Fatture\Components\Descrizione;
 use Modules\Fatture\Components\Riga;
+use Modules\Fatture\Components\Sconto;
 use Modules\Fatture\Fattura;
 use Modules\Fatture\Tipo;
 
@@ -91,22 +92,6 @@ switch (post('op')) {
             $query = 'SELECT descrizione FROM co_statidocumento WHERE id='.prepare($id_stato);
             $rs = $dbo->fetchArray($query);
 
-            // Aggiornamento sconto
-            if ($record['stato'] != 'Pagato' && $record['stato'] != 'Emessa') {
-                $dbo->update('co_documenti', [
-                    'tipo_sconto_globale' => post('tipo_sconto_generico'),
-                    'sconto_globale' => post('sconto_generico'),
-                ], ['id' => $id_record]);
-
-                aggiorna_sconto([
-                    'parent' => 'co_documenti',
-                    'row' => 'co_righe_documenti',
-                ], [
-                    'parent' => 'id',
-                    'row' => 'iddocumento',
-                ], $id_record);
-            }
-
             // Ricalcolo inps, ritenuta e bollo (se la fattura non è stata pagata)
             if ($dir == 'entrata') {
                 ricalcola_costiagg_fattura($id_record);
@@ -117,8 +102,8 @@ switch (post('op')) {
             // Elimino la scadenza e tutti i movimenti, poi se la fattura è emessa le ricalcolo
             if ($rs[0]['descrizione'] == 'Bozza' or $rs[0]['descrizione'] == 'Annullata') {
                 elimina_scadenza($id_record);
-                elimina_movimento($id_record, 0);
-                // elimino movimento anche prima nota (se pagata o parzialmente pagata)
+                //elimina_movimento($id_record, 0);
+                //elimino movimento anche prima nota (se pagata o parzialmente pagata)
                 elimina_movimento($id_record, 1);
             } elseif ($rs[0]['descrizione'] == 'Emessa') {
                 elimina_scadenza($id_record);
@@ -187,6 +172,7 @@ switch (post('op')) {
         $rs = $dbo->fetchArray('SELECT idpreventivo FROM co_righe_documenti WHERE iddocumento='.prepare($id_record).' AND idpreventivo IS NOT NULL');
         for ($i = 0; $i < sizeof($rs); ++$i) {
             $dbo->query("UPDATE co_preventivi SET id_stato=(SELECT id FROM co_statipreventivi WHERE descrizione='In lavorazione') WHERE id=".prepare($rs[$i]['idpreventivo']));
+            $dbo->query('UPDATE co_righe_preventivi SET qta_evasa=0 WHERE idpreventivo='.prepare($rs[$i]['idpreventivo']));
         }
 
         // Se ci sono degli interventi collegati li rimetto nello stato "Completato"
@@ -308,7 +294,7 @@ switch (post('op')) {
 
         $articolo->calcolo_ritenuta_acconto = post('calcolo_ritenuta_acconto') ?: null;
         $articolo->id_ritenuta_acconto = post('id_ritenuta_acconto') ?: null;
-        $articolo->ritenuta_contributi = post('ritenuta_contributi');
+        $articolo->ritenuta_contributi = boolval(post('ritenuta_contributi'));
         $articolo->id_rivalsa_inps = post('id_rivalsa_inps') ?: null;
 
         $articolo->prezzo_unitario_acquisto = post('prezzo_acquisto', true) ?: 0;
@@ -330,7 +316,44 @@ switch (post('op')) {
 
         $articolo->save();
 
-        flash()->info(tr('Articolo aggiunto!'));
+        if (post('idriga') != null) {
+            flash()->info(tr('Articolo modificato!'));
+        } else {
+            flash()->info(tr('Articolo aggiunto!'));
+        }
+
+        // Ricalcolo inps, ritenuta e bollo
+        ricalcola_costiagg_fattura($id_record);
+
+        break;
+
+    case 'manage_sconto':
+        if (post('idriga') != null) {
+            $sconto = Sconto::find(post('idriga'));
+        } else {
+            $sconto = Sconto::build($fattura);
+        }
+
+        $sconto->descrizione = post('descrizione');
+
+        $sconto->id_iva = post('idiva');
+        $sconto->idconto = post('idconto');
+
+        $sconto->calcolo_ritenuta_acconto = post('calcolo_ritenuta_acconto') ?: null;
+        $sconto->id_ritenuta_acconto = post('id_ritenuta_acconto') ?: null;
+        $sconto->ritenuta_contributi = boolval(post('ritenuta_contributi'));
+        $sconto->id_rivalsa_inps = post('id_rivalsa_inps') ?: null;
+
+        $sconto->sconto_unitario = post('sconto_unitario');
+        $sconto->tipo_sconto = 'UNT';
+
+        $sconto->save();
+
+        if (post('idriga') != null) {
+            flash()->info(tr('Sconto/maggiorazione modificato!'));
+        } else {
+            flash()->info(tr('Sconto/maggiorazione aggiunta!'));
+        }
 
         // Ricalcolo inps, ritenuta e bollo
         ricalcola_costiagg_fattura($id_record);
@@ -357,7 +380,7 @@ switch (post('op')) {
 
         $riga->calcolo_ritenuta_acconto = post('calcolo_ritenuta_acconto') ?: null;
         $riga->id_ritenuta_acconto = post('id_ritenuta_acconto') ?: null;
-        $riga->ritenuta_contributi = post('ritenuta_contributi');
+        $riga->ritenuta_contributi = boolval(post('ritenuta_contributi'));
         $riga->id_rivalsa_inps = post('id_rivalsa_inps') ?: null;
 
         $riga->prezzo_unitario_acquisto = post('prezzo_acquisto', true) ?: 0;
@@ -476,12 +499,13 @@ switch (post('op')) {
             $idriga = post('idriga');
 
             // Lettura preventivi collegati
-            $query = 'SELECT iddocumento, idpreventivo, is_preventivo, idarticolo FROM co_righe_documenti WHERE id='.prepare($idriga);
+            $query = 'SELECT iddocumento, idpreventivo, is_preventivo, idarticolo, qta FROM co_righe_documenti WHERE id='.prepare($idriga);
             $rsp = $dbo->fetchArray($query);
             $id_record = $rsp[0]['iddocumento'];
             $idpreventivo = $rsp[0]['idpreventivo'];
             $is_preventivo = $rsp[0]['is_preventivo'];
             $idarticolo = $rsp[0]['idarticolo'];
+            $qta = $rsp[0]['qta'];
 
             // preventivo su unica riga, perdo il riferimento dell'articolo quindi lo vado a leggere da co_righe_preventivi
             if (empty($idarticolo) && $is_preventivo) {
@@ -491,12 +515,35 @@ switch (post('op')) {
                     if (!empty($rsa[$i]['idarticolo'])) {
                         add_movimento_magazzino($rsa[$i]['idarticolo'], $rsa[$i]['qta'], ['iddocumento' => $id_record]);
                     }
+
+                    // Ripristino le quantità da evadere nel preventivo
+                    $dbo->update('co_righe_preventivi',
+                        [
+                            'qta_evasa' => 0,
+                        ],
+                        [
+                            'idpreventivo' => $idpreventivo,
+                        ]
+                    );
                 }
             } else {
+                $rs5 = $dbo->fetchArray('SELECT idarticolo, id, qta, descrizione FROM co_righe_documenti WHERE  id = '.prepare($idriga));
+
                 if (!empty($idarticolo)) {
-                    $rs5 = $dbo->fetchArray('SELECT idarticolo, id, qta FROM co_righe_documenti WHERE  id = '.prepare($idriga).'  AND idintervento IS NULL');
                     rimuovi_articolo_dafattura($rs5[0]['idarticolo'], $id_record, $idriga);
                 }
+
+                // Ripristino le quantità da evadere nel preventivo
+                $dbo->update('co_righe_preventivi',
+                    [
+                        'qta_evasa' => 0,
+                    ],
+                    [
+                        'idarticolo' => $rs5[0]['idarticolo'],
+                        'descrizione' => $rs5[0]['descrizione'],
+                        'idpreventivo' => $idpreventivo,
+                    ]
+                );
             }
 
             $query = 'DELETE FROM co_righe_documenti WHERE iddocumento='.prepare($id_record).' AND id='.prepare($idriga);
@@ -703,15 +750,6 @@ switch (post('op')) {
             }
         }
 
-        // Aggiornamento sconto
-        if (post('evadere')[$ordine->scontoGlobale->id] == 'on') {
-            $fattura->tipo_sconto_globale = $ordine->tipo_sconto_globale;
-            $fattura->sconto_globale = $ordine->tipo_sconto_globale == 'PRC' ? $ordine->sconto_globale : $ordine->sconto_globale;
-            $fattura->save();
-
-            $fattura->updateSconto();
-        }
-
         // Impostazione del nuovo stato
         $descrizione = $parziale ? 'Parzialmente fatturato' : 'Fatturato';
         $stato = \Modules\Ordini\Stato::where('descrizione', $descrizione)->first();
@@ -779,15 +817,6 @@ switch (post('op')) {
             }
         }
 
-        // Aggiornamento sconto
-        if (post('evadere')[$ddt->scontoGlobale->id] == 'on') {
-            $fattura->tipo_sconto_globale = $ddt->tipo_sconto_globale;
-            $fattura->sconto_globale = $ddt->tipo_sconto_globale == 'PRC' ? $ddt->sconto_globale : $ddt->sconto_globale;
-            $fattura->save();
-
-            $fattura->updateSconto();
-        }
-
         // Impostazione del nuovo stato
         $descrizione = $parziale ? 'Parzialmente fatturato' : 'Fatturato';
         $stato = \Modules\DDT\Stato::where('descrizione', $descrizione)->first();
@@ -850,15 +879,6 @@ switch (post('op')) {
             if ($riga->qta != $riga->qta_evasa) {
                 $parziale = true;
             }
-        }
-
-        // Aggiornamento sconto
-        if (post('evadere')[$preventivo->scontoGlobale->id] == 'on') {
-            $fattura->tipo_sconto_globale = $preventivo->tipo_sconto_globale;
-            $fattura->sconto_globale = $preventivo->tipo_sconto_globale == 'PRC' ? $preventivo->sconto_globale : $preventivo->sconto_globale;
-            $fattura->save();
-
-            $fattura->updateSconto();
         }
 
         // Impostazione del nuovo stato
@@ -933,15 +953,6 @@ switch (post('op')) {
             }
         }
 
-        // Aggiornamento sconto
-        if (post('evadere')[$contratto->scontoGlobale->id] == 'on') {
-            $fattura->tipo_sconto_globale = $contratto->tipo_sconto_globale;
-            $fattura->sconto_globale = $contratto->tipo_sconto_globale == 'PRC' ? $contratto->sconto_globale : $contratto->sconto_globale;
-            $fattura->save();
-
-            $fattura->updateSconto();
-        }
-
         // Impostazione del nuovo stato
         $descrizione = $parziale ? 'Parzialmente fatturato' : 'Fatturato';
         $stato = \Modules\Contratti\Stato::where('descrizione', $descrizione)->first();
@@ -1002,15 +1013,6 @@ switch (post('op')) {
             }
         }
 
-        // Aggiornamento sconto
-        if (post('evadere')[$fattura->scontoGlobale->id] == 'on') {
-            $nota->tipo_sconto_globale = $fattura->tipo_sconto_globale;
-            $nota->sconto_globale = $fattura->tipo_sconto_globale == 'PRC' ? $fattura->sconto_globale : -$fattura->sconto_globale;
-            $nota->save();
-
-            $nota->updateSconto();
-        }
-
         $id_record = $nota->id;
 
         break;
@@ -1062,15 +1064,4 @@ if (!empty($id_record) && setting('Cambia automaticamente stato ordini fatturati
     for ($i = 0; $i < sizeof($rs); ++$i) {
         $dbo->query('UPDATE or_ordini SET id_stato=(SELECT id FROM or_statiordine WHERE descrizione="'.get_stato_ordine($rs[$i]['idordine']).'") WHERE id = '.prepare($rs[$i]['idordine']));
     }
-}
-
-// Aggiornamento sconto sulle righe
-if (post('op') !== null && post('op') != 'update') {
-    aggiorna_sconto([
-        'parent' => 'co_documenti',
-        'row' => 'co_righe_documenti',
-    ], [
-        'parent' => 'id',
-        'row' => 'iddocumento',
-    ], $id_record);
 }

@@ -7,14 +7,14 @@ echo '
     <input type="hidden" name="op" value="copy">
 </form>
 
-<button type="button" class="btn btn-primary" onclick="if( confirm(\'Duplicare questa fattura?\') ){ $(\'#form-copy\').submit(); }">
+<button type="button" class="btn btn-primary" '.((empty($record['ref_documento']) and empty($record['reversed'])) ? '' : 'disabled').' onclick="if( confirm(\'Duplicare questa fattura?\') ){ $(\'#form-copy\').submit(); }">
     <i class="fa fa-copy"></i> '.tr('Duplica fattura').'
 </button>';
 
 if ($dir == 'entrata') {
     echo '
 <div class="btn-group">
-    <button type="button" class="btn btn-primary unblockable dropdown-toggle '.(!empty($record['ref_documento']) || $record['stato'] != 'Bozza' ? '' : 'disabled').'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button type="button" class="btn btn-primary unblockable dropdown-toggle '.(((!empty($record['ref_documento']) || $record['stato'] != 'Bozza') and empty($record['reversed'])) ? '' : 'disabled').'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-magic"></i> '.tr('Crea').' <span class="caret"></span>
         <span class="sr-only">Toggle Dropdown</span>
     </button>
@@ -45,6 +45,13 @@ if (empty($record['is_fiscale'])) {
 <?php
 
 if (!empty($record['is_fiscale'])) {
+    //Aggiunta insoluto
+    if (!empty($record['riba']) && ($record['stato'] == 'Emessa' || $record['stato'] == 'Parzialmente pagato' || $record['stato'] == 'Pagato') && $dir == 'entrata') {
+        ?>
+                    <button type="button" class="btn btn-primary" onclick="launch_modal( '<?php echo tr('Registra insoluto'); ?>', '<?php echo $rootdir; ?>/add.php?id_module=<?php echo Modules::get('Prima nota')['id']; ?>&iddocumento=<?php echo $id_record; ?>&dir=<?php echo $dir; ?>&insoluto=1', 1 );"><i class="fa fa-euro"></i> <?php echo tr('Registra insoluto'); ?>...</button>
+    <?php
+    }
+
     // Aggiunta prima nota solo se non c'è già, se non si è in bozza o se il pagamento non è completo
     $n2 = $dbo->fetchNum('SELECT id FROM co_movimenti WHERE iddocumento='.prepare($id_record).' AND primanota=1');
 

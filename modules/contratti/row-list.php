@@ -61,13 +61,13 @@ foreach ($rs as $r) {
             <td class="text-right">';
     if (empty($r['is_descrizione'])) {
         echo '
-                '.Translator::numberToLocale($r['subtotale'] / $r['qta']).' &euro;';
+                '.moneyFormat($r['subtotale'] / $r['qta']);
 
         if ($r['sconto_unitario'] > 0) {
             echo '
                 <br><small class="label label-danger">'.tr('sconto _TOT_ _TYPE_', [
                     '_TOT_' => Translator::numberToLocale($r['sconto_unitario']),
-                    '_TYPE_' => ($r['tipo_sconto'] == 'PRC' ? '%' : '&euro;'),
+                    '_TYPE_' => ($r['tipo_sconto'] == 'PRC' ? '%' : currency()),
                 ]).'</small>';
         }
     }
@@ -79,7 +79,7 @@ foreach ($rs as $r) {
             <td class="text-right">';
     if (empty($r['is_descrizione'])) {
         echo '
-                '.Translator::numberToLocale($r['iva'])." &euro;<br>
+                '.moneyFormat($r['iva'])."<br>
                 <small class='help-block'>".$r['desc_iva'].'</small>';
     }
     echo '
@@ -90,7 +90,7 @@ foreach ($rs as $r) {
             <td class="text-right">';
     if (empty($r['is_descrizione'])) {
         echo '
-                '.Translator::numberToLocale($r['subtotale'] - $r['sconto']).' &euro;';
+                '.moneyFormat($r['subtotale'] - $r['sconto']);
     }
     echo '
             </td>';
@@ -99,7 +99,7 @@ foreach ($rs as $r) {
     echo '
             <td class="text-center">';
 
-    if ($record['stato'] != 'Pagato' && empty($r['sconto_globale'])) {
+    if ($record['stato'] != 'Pagato') {
         echo '
                 <form action="'.$rootdir.'/editor.php?id_module='.Modules::get('Contratti')['id'].'&id_record='.$id_record.'" method="post" id="delete-form-'.$r['id'].'" role="form">
                     <input type="hidden" name="backto" value="record-edit">
@@ -117,13 +117,6 @@ foreach ($rs as $r) {
         echo '
                     </div>
                 </form>';
-    }
-
-    if (empty($r['sconto_globale'])) {
-        echo '
-                <div class="handle clickable" style="padding:10px">
-                    <i class="fa fa-sort"></i>
-                </div>';
     }
 
     echo '
@@ -155,7 +148,7 @@ if (abs($sconto) > 0) {
             <b>'.tr('Imponibile', [], ['upper' => true]).':</b>
         </td>
         <td class="text-right">
-            <span id="budget">'.Translator::numberToLocale($imponibile).' &euro;</span>
+            <span id="budget">'.moneyFormat($imponibile).'</span>
         </td>
         <td></td>
     </tr>';
@@ -166,7 +159,7 @@ if (abs($sconto) > 0) {
             <b>'.tr('Sconto', [], ['upper' => true]).':</b>
         </td>
         <td class="text-right">
-            '.Translator::numberToLocale($sconto).' &euro;
+            '.moneyFormat($sconto).'
         </td>
         <td></td>
     </tr>';
@@ -178,7 +171,7 @@ if (abs($sconto) > 0) {
             <b>'.tr('Imponibile scontato', [], ['upper' => true]).':</b>
         </td>
         <td class="text-right">
-            '.Translator::numberToLocale($imponibile_scontato).' &euro;
+            '.moneyFormat($imponibile_scontato).'
         </td>
         <td></td>
     </tr>';
@@ -190,7 +183,7 @@ if (abs($sconto) > 0) {
             <b>'.tr('Imponibile', [], ['upper' => true]).':</b>
         </td>
         <td class="text-right">
-            <span id="budget">'.Translator::numberToLocale($imponibile).' &euro;</span>
+            <span id="budget">'.moneyFormat($imponibile).'</span>
         </td>
         <td></td>
     </tr>';
@@ -203,7 +196,7 @@ echo '
             <b>'.tr('Iva', [], ['upper' => true]).':</b>
         </td>
         <td class="text-right">
-            '.Translator::numberToLocale($iva).' &euro;
+            '.moneyFormat($iva).'
         </td>
         <td></td>
     </tr>';
@@ -215,7 +208,7 @@ echo '
             <b>'.tr('Totale', [], ['upper' => true]).':</b>
         </td>
         <td class="text-right">
-            '.Translator::numberToLocale($totale).' &euro;
+            '.moneyFormat($totale).'
         </td>
         <td></td>
     </tr>';
