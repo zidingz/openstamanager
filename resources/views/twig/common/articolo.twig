@@ -1,0 +1,100 @@
+{% set id_articolo = result['idarticolo'] : null %}
+
+$_SESSION['superselect']['dir'] = $options['dir'];
+$_SESSION['superselect']['idanagrafica'] = $options['idanagrafica'];
+$_SESSION['superselect']['id_articolo'] = $options['id_articolo'];
+
+$articolo = $database->fetchArray('SELECT codice, descrizione FROM mg_articoli WHERE id = '.prepare($result['id_articolo']))[0];
+
+{% if id_articolo is not defined %}
+<!-- Articolo -->
+<div class="row">
+    <div class="col-md-12">
+        {[ "type": "select", "label": "{{ 'Articolo'|trans }}", "name": "idarticolo", "id": "id_articolo", "required": 1, "value": "{{ id_articolo }}", "ajax-source": "articoli", "icon-after": "add|{{ module('Articoli').id }}||{{ options['dir'] == 'entrata' ? 'disabled' : '' }}" ]}
+    </div>
+</div>
+{% else %}
+    <p><strong>{{ 'Articolo'|trans }}</strong><br> {{ articolo.codice }} - {{ articolo.descrizione }}.</p>
+{% endif %}
+
+{% include 'common/riga.twig' %}
+
+{% if show_info %}
+<!-- Informazioni aggiuntive -->
+<div class="row" id="info_articolo">
+    <div class="col-md-4 text-center" id="prezzi">
+        <button type="button" class="btn btn-sm btn-info btn-block">
+            <i class="fa fa-search"></i> {{ 'Visualizza ultimi prezzi (cliente)'|trans }}
+        </button>
+        <div></div>
+    </div>
+
+    <div class="col-md-4 text-center" id="prezzi_acquisto">
+        <button type="button" class="btn btn-sm btn-info btn-block">
+            <i class="fa fa-search"></i> {{ 'Visualizza ultimi prezzi (acquisto)'|trans }}
+        </button>
+        <div></div>
+    </div>
+
+    <div class="col-md-4 text-center" id="prezzi_vendita">
+        <button type="button" class="btn btn-sm btn-info btn-block">
+            <i class="fa fa-search"></i> {{ 'Visualizza ultimi prezzi (vendita)'|trans }}
+        </button>
+        <div></div>
+    </div>
+</div>
+<br>
+{% endif %}
+
+<script>
+    $(document).ready(function () {
+        {% if show_info %}
+            {% if id_articolo is not defined %}
+        $("#info_articolo button").addClass('disabled').attr('disabled', true);
+            {% endif %}
+
+        $('#prezzi button').click(function () {
+            $('#prezzi div').load("{{ path_for('ajax-complete') }}?module=Articoli&op=get_prezzi&id_articolo=" + $('#id_articolo').selectData().id + "&idanagrafica={{ options['idanagrafica'] }}");
+        });
+
+        $('#prezzi_acquisto button').click(function () {
+            $('#prezzi_acquisto div').load("{{ path_for('ajax-complete') }}?module=Articoli&op=get_prezzi_acquisto&id_articolo=" + $('#id_articolo').selectData().id + "&idanagrafica={{ options['idanagrafica'] }}");
+        });
+
+        $('#prezzi_vendita button').click(function () {
+            $('#prezzi_vendita div').load("{{ path_for('ajax-complete') }}?module=Articoli&op=get_prezzi_vendita&id_articolo=" + $('#id_articolo').selectData().id + "&idanagrafica={{ options['idanagrafica'] }}");
+        });
+        {% endif %}
+
+        $("#id_articolo").on("change", function(){
+            // Autoimpostazione dei valori relativi
+            if ($(this).val()) {
+                session_set("superselect,id_articolo", $(this).val(), 0);
+                $data = $(this).selectData();
+
+                var id_conto = $data.idconto_{{ options['dir'] == 'entrata' ? 'vendita' : 'acquisto' }};
+
+                $("#prezzo").val($data.prezzo_{{ options['dir'] == 'entrata' ? 'vendita' : 'acquisto' }});
+                $("#descrizione_riga").val($data.descrizione);
+                $("#idiva").selectSetNew($data.idiva_vendita, $data.iva_vendita);
+                if(id_conto) {
+                    $("#idconto").selectSetNew(id_conto, $data.idconto_{{ options['dir'] == 'entrata' ? 'vendita' : 'acquisto' }}_title);
+                }
+                $("#um").selectSetNew($data.um, $data.um);
+            }';
+
+            {% if show_info %}
+            // Operazioni sui prezzi in fondo alla pagina
+            $("#info_articolo button").attr("disabled", !$(this).val());
+
+            if ($(this).val()) {
+                $("#info_articolo button").removeClass("disabled");
+            } else {
+                $("#info_articolo button").addClass("disabled");
+            }
+
+            $("#info_articolo div").html("");
+            {% endif %}
+        });
+    });
+</script>

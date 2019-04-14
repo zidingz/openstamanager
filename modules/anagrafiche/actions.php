@@ -159,18 +159,10 @@ switch (post('op')) {
         $anagrafica->cognome = post('cognome');
         $anagrafica->partita_iva = post('piva');
         $anagrafica->codice_fiscale = post('codice_fiscale');
-        $anagrafica->indirizzo = post('indirizzo');
-        $anagrafica->citta = post('citta');
-        $anagrafica->cap = post('cap');
-        $anagrafica->provincia = post('provincia');
-        $anagrafica->telefono = post('telefono');
-        $anagrafica->cellulare = post('cellulare');
-        $anagrafica->email = post('email');
         $anagrafica->idagente = $idagente;
         $anagrafica->pec = post('pec');
         $anagrafica->tipo = post('tipo');
         $anagrafica->codice_destinatario = post('codice_destinatario');
-        $anagrafica->id_nazione = post('id_nazione') ?: null;
 
         $anagrafica->save();
 
@@ -182,6 +174,7 @@ switch (post('op')) {
         $sede->telefono = post('telefono');
         $sede->cellulare = post('cellulare');
         $sede->email = post('email');
+        $sede->id_nazione = post('id_nazione') ?: null;
 
         $sede->save();
 

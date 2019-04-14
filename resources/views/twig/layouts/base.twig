@@ -9,7 +9,6 @@
         <meta name="robots" content="noindex,nofollow">
 
         <link href="{{ base_url() }}/assets/img/favicon.png" rel="icon" type="image/x-icon" />
-        {% set lang = translator.getCurrentLocale() %}
 
         <link rel="stylesheet" type="text/css" media="all" href="{{ base_url() }}/assets/css/app.min.css"/>
         <link rel="stylesheet" type="text/css" media="all" href="{{ base_url() }}/assets/css/style.min.css"/>
@@ -18,16 +17,15 @@
         <link rel="stylesheet" type="text/css" media="print" href="{{ base_url() }}/assets/css/print.min.css"/>
 
         <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/app.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/functions.min.js"></script>
+
         <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/custom.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/init.min.js"></script>
+
         <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/i18n/parsleyjs/{{ lang }}.min.js"></script>
         <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/i18n/select2/{{ lang }}.min.js"></script>
         <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/i18n/moment/{{ lang }}.min.js"></script>
         <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/i18n/fullcalendar/{{ lang }}.min.js"></script>
-
-        {% if auth.isAuthenticated() %}
-        <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/functions.min.js"></script>
-        <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/init.min.js"></script>
-        {% endif %}
 
         <!-- Impostazioni di default per gli alert -->
         <script>

@@ -51,7 +51,7 @@ class ContentMiddleware extends Middleware
         $args['version'] = \Update::getVersion();
         $args['revision'] = \Update::getRevision();
 
-        $args['is_ajax'] = $request->isXhr();
+        $args['handle_ajax'] = $request->isXhr() && filter('ajax');
 
         // Periodo di visualizzazione
         if (!empty($_GET['period_start'])) {

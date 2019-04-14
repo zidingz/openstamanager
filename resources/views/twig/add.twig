@@ -36,17 +36,17 @@
     });
 </script>
 
-{% if is_ajax %}
+{% if handle_ajax %}
 <script>
     $(document).ready(function(){
         data = {
-        {% for key, value in query_params %}
-            "{{ key }}": "{{ get(value) }}",
+        {% for key, value in query %}
+            "{{ key }}": "{{ value }}",
         {% endfor %}
         };
 
         $("#form_{{ module_id }}-{{ plugin_id }}").find("form").ajaxForm({
-            url: globals.rootdir + "/actions.php",
+            url: {{ path_for('module-add', {module_id: module_id}) }},
             beforeSubmit: function(arr, $form, options) {
                 return $form.parsley().validate();
             },
@@ -55,9 +55,9 @@
             success: function(response){
                 response = response.trim();
 
-                if(response && $("#{{ get('select') }}").val() !== undefined) {
+                if(response && $("#{{ query.select }}").val() !== undefined) {
                     result = JSON.parse(response);
-                    $("#{{ get('select') }}").selectSetNew(result.id, result.text);
+                    $("#{{ query.select }}").selectSetNew(result.id, result.text);
                 }
 
                 $("#bs-popup2").modal("hide");

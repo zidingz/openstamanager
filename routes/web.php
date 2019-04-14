@@ -29,14 +29,16 @@ $app->group('', function () use ($app) {
 
     $app->get('/configuration[/]', 'Controllers\Config\ConfigurationController:configuration')
         ->setName('configuration');
-    $app->post('/configuration[/]', 'Controllers\Config\ConfigurationController:configurationSave');
+    $app->post('/configuration[/]', 'Controllers\Config\ConfigurationController:configurationSave')
+        ->setName('configuration-save');
 
     $app->post('/configuration/test[/]', 'Controllers\Config\ConfigurationController:configurationTest')
-        ->setName('configurationTest');
+        ->setName('configuration-test');
 
     $app->get('/init[/]', 'Controllers\Config\InitController:init')
         ->setName('init');
-    $app->post('/init[/]', 'Controllers\Config\InitController:initSave');
+    $app->post('/init[/]', 'Controllers\Config\InitController:initSave')
+        ->setName('init-save');
 
     $app->get('/update[/]', 'Controllers\Config\UpdateController:update')
         ->setName('update');

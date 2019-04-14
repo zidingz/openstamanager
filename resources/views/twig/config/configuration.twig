@@ -56,11 +56,11 @@
         $("#test").on("click", function(){
             if($(this).closest("form").parsley().validate()){
                 prev_html = $("#test").html();
-                $("#test").html("<i class='fa fa-spinner fa-pulse  fa-fw'></i> {{ 'Attendere'|trans }}...");
+                $("#test").html("<i class='fa fa-spinner fa-pulse fa-fw'></i> {{ 'Attendere'|trans }}...");
                 $("#test").prop('disabled', true);
                 $("#install").prop('disabled', true);
                 $(this).closest("form").ajaxSubmit({
-                    url: '{{ path_for('configurationTest') }}',
+                    url: '{{ path_for('configuration-test') }}',
                     data: {
                         test: 1,
                     },

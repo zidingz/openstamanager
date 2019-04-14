@@ -66,7 +66,7 @@
             {% elseif name matches '/^icon_/' %}
                 {% set tags = " width='30'" %}
                 {% set name = name|replace({'icon_': 'icon_title_'}) %}
-                {% set field = name|replace({'icon_': ''}) %}
+                {% set field = field|replace({'icon_': ''}) %}
             {% endif %}
 
             <th {{ tags }} id="th_{{ searchFieldName(name) }}" {{ table['search'][key] == 1 ? ' class="search"' : ' class="no-search"' }} {{ table['slow'][key] == 1 ? ' data-slow="1"' : '' }}>{{ field }}</th>

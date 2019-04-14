@@ -42,6 +42,11 @@ class ConfigurationController extends Controller
         $username = post('username');
         $password = post('password');
 
+        $database = new Database($host, $username, $password, $database_name);
+        if(!$database->isConnected()){
+            return $this->twig->render($response, 'config\messages\error.twig', $args);
+        }
+
         // Impostazioni di configurazione strettamente necessarie al funzionamento del progetto
         $backup_config = '<?php
 
@@ -68,7 +73,14 @@ $db_name = \'|database|\';
         $creation = file_put_contents('config.inc.php', $new_config);
 
         if (!$creation) {
-            $response = $this->twig->render($response, 'config\messages\error.twig', $args);
+            $args['database_name'] = $database_name;
+            $args['username'] = $username;
+            $args['password'] = $password;
+            $args['host'] = $host;
+
+            $args['config'] = $new_config;
+
+            $response = $this->twig->render($response, 'config\messages\writing.twig', $args);
         } else {
             $response = $response->withRedirect($this->router->pathFor('login'));
         }

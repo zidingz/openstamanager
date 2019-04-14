@@ -111,8 +111,16 @@ class ModuleController extends Controller
 
     public function add($request, $response, $args)
     {
-        $args['query_params'] = $request->getQueryParams();
-        $response = $this->view->render($response, 'resources\views\add.php', $args);
+        $result = $this->oldAdd($args);
+        $args = array_merge($args, $result);
+
+        $args['query_params'] = [];
+        $query = $request->getQueryParams();
+        foreach ($query as $key => $value) {
+            $args['query'][$key] = get($value);
+        }
+
+        $response = $this->twig->render($response, 'old/add.twig', $args);
 
         return $response;
     }
@@ -286,6 +294,31 @@ class ModuleController extends Controller
         return [
             'content' => $content,
             'plugins_content' => $this->oldPlugins($args),
+        ];
+    }
+
+    protected function oldAdd($args)
+    {
+        extract($args);
+
+        $dbo = $database = $this->database;
+
+        // Lettura risultato query del modulo
+        $init = $args['structure']->filepath('init.php');
+        if (!empty($init)) {
+            include $init;
+        }
+
+        $content = $args['structure']->getAddFile();
+        if (!empty($content)) {
+            ob_start();
+            include $content;
+            $content = ob_get_clean();
+        }
+
+
+        return [
+            'content' => $content,
         ];
     }
 }

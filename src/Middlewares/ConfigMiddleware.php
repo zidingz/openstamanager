@@ -24,30 +24,32 @@ class ConfigMiddleware extends Middleware
             return $next($request, $response);
         }
 
+        $destination = [];
+
         // Requisiti di OpenSTAManager
         if (!RequirementsController::requirementsSatisfied()) {
-            $destination = 'requirements';
+            $destination = ['requirements'];
         }
 
         // Inizializzazione
         elseif (!ConfigurationController::isConfigured()) {
-            $destination = 'configuration';
+            $destination = ['configuration', 'configuration-save', 'configuration-test'];
         }
 
         // Installazione e/o aggiornamento
         elseif (Update::isUpdateAvailable()) {
-            $destination = 'update';
+            $destination = ['update', 'update-progress'];
         }
 
         // Configurazione informazioni di base
         elseif (!InitController::isInitialized()) {
-            $destination = 'init';
+            $destination = ['init', 'init-save'];
         }
 
-        if ($destination != $route->getName()) {
+        if (!empty($destination) && !in_array($route->getName(), $destination)) {
             Auth::logout();
 
-            return $response->withRedirect($this->router->pathFor($destination));
+            return $response->withRedirect($this->router->pathFor($destination[0]));
         }
 
         return $next($request, $response);
