@@ -18,7 +18,7 @@ $show_calcolo_ritenuta_acconto = $show_ritenuta_acconto;
 
 // Percentuale rivalsa e Percentuale ritenuta d'acconto
 if ($options['action'] == 'edit') {
-    $id_rivalsa_inps = $result['idrivalsainps'];
+    $id_rivalsa_inps = $result$result['idrivalsainps'];
     $id_ritenuta_acconto = $result['idritenutaacconto'];
     $calcolo_ritenuta_acconto = $result['calcolo_ritenuta_acconto'];
 } elseif ($options['action'] == 'add') {

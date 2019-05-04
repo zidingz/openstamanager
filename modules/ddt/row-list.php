@@ -172,12 +172,11 @@ if (!empty($rs)) {
                 </div>
             </form>";
         }
-		
-		echo '
+
+        echo '
 		<div class="handle clickable" style="padding:10px">
 			<i class="fa fa-sort"></i>
 		</div>';
-		
 
         echo '
         </td>

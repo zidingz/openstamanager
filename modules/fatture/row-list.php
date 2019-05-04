@@ -258,7 +258,12 @@ foreach ($righe as $row) {
         }
 
         echo "
-                    <a class='btn btn-xs btn-warning' title='Modifica questa riga...' onclick=\"launch_modal( 'Modifica riga', '".$structure->fileurl('row-edit.php').'?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$riga['id']."', 1 );\"><i class='fa fa-edit'></i></a>
+                    <a class='btn btn-xs btn-warning' title='Modifica questa riga...' onclick=\"launch_modal( 'Modifica riga', '".pathFor('module-record-action', [
+                'module_id' => $id_module,
+                'record_id' => $id_record,
+                'action' => 'rowEdit',
+                'params' => $riga['id'],
+            ])."', 1 );\"><i class='fa fa-edit'></i></a>
 
                     <a class='btn btn-xs btn-danger' title='Rimuovi questa riga...' onclick=\"if( confirm('Rimuovere questa riga dalla fattura?') ){ $('#delete-form-".$riga['id']."').submit(); }\"><i class='fa fa-trash'></i></a>
                 </div>

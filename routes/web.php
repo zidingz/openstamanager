@@ -97,7 +97,7 @@ $app->group('/module/{module_id:[0-9]+}', function () use ($app) {
     $app->get('[/]', 'Controllers\ModuleController:module')
         ->setName('module');
 
-    $app->get('/action/{action_name}[/]', 'Controllers\ModuleController:moduleAction')
+    $app->get('/action/{action}[/{params:.*}[/]]', 'Controllers\ModuleController:moduleAction')
         ->setName('module-action');
 
     $app->group('/edit/{record_id:[0-9]+}', function () use ($app) {
@@ -105,7 +105,7 @@ $app->group('/module/{module_id:[0-9]+}', function () use ($app) {
             ->setName('module-record');
         $app->post('[/]', 'Controllers\ModuleController:editRecord');
 
-        $app->get('/action/{action_name}[/]', 'Controllers\ModuleController:recordAction')
+        $app->get('/action/{action}[/{params:.*}[/]]', 'Controllers\ModuleController:recordAction')
             ->setName('module-record-action');
     });
 

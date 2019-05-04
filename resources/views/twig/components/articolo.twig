@@ -1,10 +1,7 @@
-{% set id_articolo = result['idarticolo'] : null %}
+{% extends "components/riga.twig" %}
 
-$_SESSION['superselect']['dir'] = $options['dir'];
-$_SESSION['superselect']['idanagrafica'] = $options['idanagrafica'];
-$_SESSION['superselect']['id_articolo'] = $options['id_articolo'];
-
-$articolo = $database->fetchArray('SELECT codice, descrizione FROM mg_articoli WHERE id = '.prepare($result['id_articolo']))[0];
+{% block content_before %}
+    {{ parent() }}
 
 {% if id_articolo is not defined %}
 <!-- Articolo -->
@@ -17,7 +14,7 @@ $articolo = $database->fetchArray('SELECT codice, descrizione FROM mg_articoli W
     <p><strong>{{ 'Articolo'|trans }}</strong><br> {{ articolo.codice }} - {{ articolo.descrizione }}.</p>
 {% endif %}
 
-{% include 'common/riga.twig' %}
+{% include 'components/riga.twig' %}
 
 {% if show_info %}
 <!-- Informazioni aggiuntive -->
@@ -48,6 +45,10 @@ $articolo = $database->fetchArray('SELECT codice, descrizione FROM mg_articoli W
 
 <script>
     $(document).ready(function () {
+        session_set("superselect,dir", {{ options['dir'] }}, 0);
+        session_set("superselect,idanagrafica", {{ options['idanagrafica'] }}, 0);
+        session_set("superselect,id_articolo", {{ options['id_articolo'] }}, 0);
+
         {% if show_info %}
             {% if id_articolo is not defined %}
         $("#info_articolo button").addClass('disabled').attr('disabled', true);
@@ -81,7 +82,7 @@ $articolo = $database->fetchArray('SELECT codice, descrizione FROM mg_articoli W
                     $("#idconto").selectSetNew(id_conto, $data.idconto_{{ options['dir'] == 'entrata' ? 'vendita' : 'acquisto' }}_title);
                 }
                 $("#um").selectSetNew($data.um, $data.um);
-            }';
+            }
 
             {% if show_info %}
             // Operazioni sui prezzi in fondo alla pagina
@@ -98,3 +99,4 @@ $articolo = $database->fetchArray('SELECT codice, descrizione FROM mg_articoli W
         });
     });
 </script>
+{% endblock %}

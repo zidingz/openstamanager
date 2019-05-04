@@ -106,10 +106,16 @@ $container['twig'] = function ($container) {
     $filter = new \Twig\TwigFilter('time', 'timeFormat');
     $twig->getEnvironment()->addFilter($filter);
 
+    $filter = new \Twig\TwigFilter('money', 'moneyFormat');
+    $twig->getEnvironment()->addFilter($filter);
+
     $filter = new \Twig\TwigFilter('diffForHumans', 'diffForHumans');
     $twig->getEnvironment()->addFilter($filter);
 
     $function = new \Twig\TwigFunction('setting', 'setting');
+    $twig->getEnvironment()->addFunction($function);
+
+    $function = new \Twig\TwigFunction('currency', 'currency');
     $twig->getEnvironment()->addFunction($function);
 
     $function = new \Twig\TwigFunction('searchFieldName', 'searchFieldName');

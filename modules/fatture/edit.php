@@ -481,24 +481,30 @@ if ($record['stato'] != 'Pagato' && $record['stato'] != 'Emessa') {
         $art_query .= ' AND (qta > 0 OR servizio = 1)';
     }
 
+    $row_add = pathFor('module-record-action', [
+        'module_id' => $id_module,
+        'record_id' => $id_record,
+        'action' => 'rowAdd',
+    ]);
+
     $articoli = $dbo->fetchArray($art_query)[0]['tot'];
     echo '
-                        <a class="btn btn-sm btn-primary'.(!empty($articoli) ? '' : ' disabled').'" data-href="'.$structure->fileurl('row-add.php').'?id_module='.$id_module.'&id_record='.$id_record.'&is_articolo" data-toggle="tooltip" data-title="'.tr('Aggiungi articolo').'">
+                        <a class="btn btn-sm btn-primary'.(!empty($articoli) ? '' : ' disabled').'" data-href="'.$row_add.'?is_articolo" data-toggle="tooltip" data-title="'.tr('Aggiungi articolo').'">
                             <i class="fa fa-plus"></i> '.tr('Articolo').'
                         </a>';
 
     echo '
-                        <a class="btn btn-sm btn-primary" data-href="'.$structure->fileurl('row-add.php').'?id_module='.$id_module.'&id_record='.$id_record.'&is_riga" data-toggle="tooltip" data-title="'.tr('Aggiungi riga').'">
+                        <a class="btn btn-sm btn-primary" data-href="'.$row_add.'?is_riga" data-toggle="tooltip" data-title="'.tr('Aggiungi riga').'">
                             <i class="fa fa-plus"></i> '.tr('Riga').'
                         </a>';
 
     echo '
-                        <a class="btn btn-sm btn-primary" data-href="'.$structure->fileurl('row-add.php').'?id_module='.$id_module.'&id_record='.$id_record.'&is_descrizione" data-toggle="tooltip" data-title="'.tr('Aggiungi descrizione').'">
+                        <a class="btn btn-sm btn-primary" data-href="'.$row_add.'?is_descrizione" data-toggle="tooltip" data-title="'.tr('Aggiungi descrizione').'">
                             <i class="fa fa-plus"></i> '.tr('Descrizione').'
                         </a>';
 
     echo '
-                        <a class="btn btn-sm btn-primary" data-href="'.$structure->fileurl('row-add.php').'?id_module='.$id_module.'&id_record='.$id_record.'&is_sconto" data-toggle="tooltip" data-title="'.tr('Aggiungi sconto/maggiorazione').'">
+                        <a class="btn btn-sm btn-primary" data-href="'.$row_add.'?is_sconto" data-toggle="tooltip" data-title="'.tr('Aggiungi sconto/maggiorazione').'">
                             <i class="fa fa-plus"></i> '.tr('Sconto/maggiorazione').'
                         </a>';
 }
@@ -526,7 +532,7 @@ if ($dir == 'entrata') {
 		<div class="row">
 			<div class="col-md-12">
 <?php
-include $docroot.'/modules/fatture/row-list.php';
+include $structure->filepath('row-list.php');
 ?>
 			</div>
 		</div>

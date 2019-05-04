@@ -1,7 +1,9 @@
-{% extends "common/descrizione.twig" %}
+{% extends "components/descrizione.twig" %}
 
-{% block response %}
+{% block content_after %}
     {{ parent() }}
+
+    {% include 'components/conti.twig' %}
 
     <!-- IVA -->
     <div class="row">
@@ -28,7 +30,7 @@
     {% if options['dir'] == 'entrata' %}
         <!-- Prezzo di acquisto unitario -->
         <div class="col-md-{{ width }}">
-            {[ "type": "number", "label": "{{ 'Prezzo unitario di acquisto'|trans }}", "name": "prezzo_acquisto", "value": "{{ result['prezzo_unitario_acquisto'] }}", "icon-after": "&euro;" ]}
+            {[ "type": "number", "label": "{{ 'Prezzo unitario di acquisto'|trans }}", "name": "prezzo_acquisto", "value": "{{ result['prezzo_unitario_acquisto'] }}", "icon-after": "{{ currency()|raw }}" ]}
         </div>
 
         <!-- Funzione per l'aggiornamento in tempo reale del guadagno -->
@@ -66,7 +68,7 @@
 
         <!-- Prezzo di vendita unitario -->
         <div class="col-md-{{ width }}">
-            {[ "type": "number", "label": "{{ label }}", "name": "prezzo", "value": "{{ result['prezzo'] }}", "required": 1, "icon-after": "&euro;" ]}
+            {[ "type": "number", "label": "{{ label }}", "name": "prezzo", "value": "{{ result['prezzo'] }}", "required": 1, "icon-after": "{{ currency()|raw }}" ]}
         </div>
 
         <!-- Sconto unitario -->

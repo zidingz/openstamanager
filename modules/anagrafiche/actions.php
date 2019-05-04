@@ -80,15 +80,14 @@ switch (post('op')) {
         $anagrafica->tipologie = (array) post('id_tipo_anagrafica');
 
         // Blocco il salvataggio del codice fiscale se già presente
-        if (!empty(post('codice_fiscale'))){
+        if (!empty(post('codice_fiscale'))) {
             $count_cf = $dbo->fetchNum('SELECT codice_fiscale FROM an_anagrafiche WHERE codice_fiscale = '.prepare(post('codice_fiscale')).' AND idanagrafica != '.prepare($id_record));
 
             if ($count_cf > 0) {
                 flash()->error(tr('Attenzione: il codice fiscale _COD_ è già stato utilizzato', [
                     '_COD_' => post('codice_fiscale'),
                 ]));
-            }
-            else {
+            } else {
                 $anagrafica->codice_fiscale = post('codice_fiscale');
             }
         } else {
@@ -96,15 +95,14 @@ switch (post('op')) {
         }
 
         // Blocco il salvataggio della partita iva se già presente
-        if (!empty(post('piva'))){
+        if (!empty(post('piva'))) {
             $count_piva = $dbo->fetchNum('SELECT piva FROM an_anagrafiche WHERE piva = '.prepare(post('piva')).' AND idanagrafica != '.prepare($id_record));
 
             if ($count_piva > 0) {
                 flash()->error(tr('Attenzione: la partita IVA _IVA_ è già stata utilizzata', [
                     '_IVA_' => post('piva'),
                 ]));
-            }
-            else {
+            } else {
                 $anagrafica->partita_iva = post('piva');
             }
         } else {
@@ -159,15 +157,14 @@ switch (post('op')) {
         $id_record = $anagrafica->id;
 
         // Blocco il salvataggio del codice fiscale se già presente
-        if (!empty(post('codice_fiscale'))){
+        if (!empty(post('codice_fiscale'))) {
             $count_cf = $dbo->fetchNum('SELECT codice_fiscale FROM an_anagrafiche WHERE codice_fiscale = '.prepare(post('codice_fiscale')).' AND idanagrafica != '.prepare($id_record));
 
             if ($count_cf > 0) {
                 flash()->error(tr('Attenzione: il codice fiscale _COD_ è già stato utilizzato', [
                     '_COD_' => post('codice_fiscale'),
                 ]));
-            }
-            else {
+            } else {
                 $anagrafica->codice_fiscale = post('codice_fiscale');
             }
         } else {
@@ -175,15 +172,14 @@ switch (post('op')) {
         }
 
         // Blocco il salvataggio della partita iva se già presente
-        if (!empty(post('piva'))){
+        if (!empty(post('piva'))) {
             $count_piva = $dbo->fetchNum('SELECT piva FROM an_anagrafiche WHERE piva = '.prepare(post('piva')).' AND idanagrafica != '.prepare($id_record));
 
             if ($count_piva > 0) {
                 flash()->error(tr('Attenzione: la partita IVA _IVA_ è già stata utilizzata', [
                 '_IVA_' => post('piva'),
             ]));
-            }
-            else {
+            } else {
                 $anagrafica->partita_iva = post('piva');
             }
         } else {

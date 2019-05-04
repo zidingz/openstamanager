@@ -1,0 +1,53 @@
+{% extends "components/descrizione.twig" %}
+
+{% block content_after %}
+    {{ parent() }}
+
+    {% include 'components/conti.twig' %}
+
+<div class="row">
+    <!-- Sconto percentuale -->
+    <div class="col-md-4">
+        {[ "type": "number", "label": "{{ 'Sconto/maggiorazione percentuale'|trans }}", "name": "sconto_percentuale", "icon-after": "%", "help": "{{ 'Il valore positivo indica uno sconto: per applicare una maggiorazione inserire un valore negativo'|trans }}" ]}
+    </div>
+
+    <!-- Sconto unitario -->
+    <div class="col-md-4">
+        {[ "type": "number", "label": "{{ 'Sconto/maggiorazione unitario'|trans }}", "name": "sconto_unitario", "value": "{{ result['sconto_unitario'] }}", "icon-after": "{{ currency()|raw }}", "help": "{{ 'Il valore positivo indica uno sconto: per applicare una maggiorazione inserire un valore negativo'|trans }}" ]}
+    </div>
+
+    <!-- Iva -->
+    <div class="col-md-4">
+        {[ "type": "select", "label": "{{ 'Iva'|trans }}", "name": "idiva", "required": 1, "value": "{{ result['idiva'] }}", "ajax-source": "iva" ]}
+    </div>
+</div>
+
+<script>
+    var descrizione = $("#descrizione_riga");
+
+    var form = descrizione.closest("form");
+    var sconto_percentuale = form.find("#sconto_percentuale");
+    var sconto_unitario = form.find("#sconto_unitario");
+
+    var totale = {{ options['imponibile_scontato'] }};
+
+    function aggiorna_sconto_percentuale() {
+        var sconto = sconto_percentuale.val().toEnglish();
+        var unitario = sconto / 100 * totale;
+
+        msg = sconto >= 0 ? "{{ 'Sconto percentuale'|trans }}" : "{{ 'Maggiorazione percentuale'|trans }}";
+
+        sconto_unitario.val(unitario.toLocale());
+        descrizione.val(msg + " " + Math.abs(sconto).toLocale() + "%");
+    }
+
+    function aggiorna_sconto_unitario(){
+        msg = sconto_unitario.val().toEnglish() >= 0 ? "{{ 'Sconto unitario'|trans }}" : "{{ 'Maggiorazione unitaria'|trans }}";
+
+        descrizione.val(msg);
+    }
+
+    sconto_percentuale.keyup(aggiorna_sconto_percentuale);
+    sconto_unitario.keyup(aggiorna_sconto_unitario);
+</script>
+{% endblock %}

@@ -179,7 +179,7 @@ class ModuleController extends Controller
         $class = $this->getRecordManager($request, $response, $args);
         $controller = new $class($this->container);
 
-        return $controller->manage($args['action_name'], $request, $response, $args);
+        return $controller->manage($args['action'], $request, $response, $args);
     }
 
     public function moduleAction($request, $response, $args)
@@ -187,7 +187,7 @@ class ModuleController extends Controller
         $class = $this->getModuleManager($request, $response, $args);
         $controller = new $class($this->container);
 
-        return $controller->manage($args['action_name'], $request, $response, $args);
+        return $controller->manage($args['action'], $request, $response, $args);
     }
 
     protected function getRecordManager($request, $response, $args)

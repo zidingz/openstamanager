@@ -1,0 +1,47 @@
+{% if options['show-rivalsa-inps'] or options['show-ritenuta-acconto'] %}
+<div class="row">
+
+    {% if options['show-rivalsa-inps'] %}
+    <!-- Rivalsa INPS -->
+    <div class="col-md-4">
+        {[ "type": "select", "label": "{{ 'Rivalsa'|trans }}", "name": "id_rivalsa_inps", "value": "{{ result['id_rivalsa_inps'] }}", "values": "query=SELECT * FROM co_rivalse", "help": "{{ options['dir'] == 'entrata' ? setting('Tipo Cassa Previdenziale') : null }}" ]}
+    </div>
+    {% endif %}
+
+    {% if options['show-ritenuta-acconto'] %}
+    <!-- Ritenuta d'acconto -->
+    <div class="col-md-4">
+        {[ "type": "select", "label": "{{ "Ritenuta d'acconto"|trans }}", "name": "id_ritenuta_acconto", "value": "{{ result['id_ritenuta_acconto'] }}", "values": "query=SELECT * FROM co_ritenutaacconto" ]}
+    </div>
+    {% endif %}
+
+    {% if options['show-calcolo-ritenuta-acconto'] %}
+    <!-- Metodo di calcolo ritenuta d'acconto -->
+<div class="col-md-4">
+    {[ "type": "select", "label": "{{ "Calcola ritenuta d'acconto su"|trans }}", "name": "calcolo_ritenuta_acconto", "value": "{{ result['calcolo_ritenuta_acconto'] }}", "values": "list=\"IMP\":\"Imponibile\", \"IMP+RIV\":\"Imponibile + rivalsa\"", "required": "1" ]}
+</div>
+    {% endif %}
+
+</div>
+{% endif %}
+
+{% if options['show-ritenuta-contributi'] or options['show-conto'] %}
+    {% set width = options['show-ritenuta-contributi'] and options['show-conto'] ? 6 : 12 %}
+
+<div class="row">
+    {% if options['show-ritenuta-contributi'] %}
+    <!-- Ritenuta contributi -->
+    <div class="col-md-{{ width }}">
+        {[ "type": "checkbox", "label": "{{ 'Ritenuta contributi'|trans }}", "name": "ritenuta_contributi", "value": "{{ result['ritenuta_contributi'] }}" ]}
+    </div>
+    {% endif %}
+
+    {% if options['show-conto'] %}
+    <!-- Conto -->
+    <div class="col-md-{{ width }}">
+        {[ "type": "select", "label": "{{ 'Conto'|trans }}", "name": "idconto", "required": 1, "value": "{{ result['idconto'] }}", "ajax-source": "{{ options['conti'] }}" ]}
+    </div>
+    {% endif %}
+
+</div>
+{% endif %}

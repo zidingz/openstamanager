@@ -278,7 +278,7 @@ function container()
 
 /*
  * Restituisce il simbolo della valuta del gestione.
- *
+
  * @since 2.4.9
  *
  * @return string
