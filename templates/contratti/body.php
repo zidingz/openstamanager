@@ -195,8 +195,8 @@ if ($options['pricing']) {
             <b>'.tr('Imponibile', [], ['upper' => true]).':</b>
         </td>
 
-        <th class="text-center">
-            <b>'.moneyFormat($imponibile).'</b>
+        <th class="text-right">
+            <b>'.moneyFormat($imponibile, 2).'</b>
         </th>
     </tr>';
 
@@ -206,8 +206,8 @@ if ($options['pricing']) {
             <b>'.tr('Sconto', [], ['upper' => true]).':</b>
         </td>
 
-        <th class="text-center">
-            <b>-'.moneyFormat($sconto).'</b>
+        <th class="text-right">
+            <b>-'.moneyFormat($sconto, 2).'</b>
         </th>
     </tr>';
     }
@@ -218,8 +218,8 @@ if ($options['pricing']) {
     	<td colspan="3" class="text-right border-top">
             <b>'.tr('Quotazione totale', [], ['upper' => true]).':</b>
     	</td>
-    	<th class="text-center">
-    		<b>'.moneyFormat($totale).'</b>
+    	<th class="text-right">
+    		<b>'.moneyFormat($totale, 2).'</b>
     	</th>
     </tr>';
 }

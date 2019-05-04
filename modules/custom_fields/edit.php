@@ -45,7 +45,7 @@
 
 <?php
 
-include $module->filepath('content-info.php');
+include $structure->filepath('content-info.php');
 
 ?>
 

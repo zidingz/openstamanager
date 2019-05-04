@@ -63,16 +63,17 @@ UPDATE `co_statipreventivi` SET `is_completato` = 1, `is_pianificabile` = 1, `is
 UPDATE `co_statipreventivi` SET `is_completato` = 1, `is_pianificabile` = 0, `is_fatturabile` = 1 WHERE `descrizione` = 'Concluso';
 UPDATE `co_statipreventivi` SET `is_completato` = 1, `is_pianificabile` = 1, `is_fatturabile` = 1 WHERE `descrizione` = 'Parzialmente fatturato';
 
-UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato, co_contratti.id, DATEDIFF( data_conclusione, NOW() ) AS giorni_rimanenti FROM co_contratti WHERE idstato IN(SELECT id FROM co_staticontratti WHERE is_fatturabile = 1) AND rinnovabile=1 AND NOW() > DATE_ADD( data_conclusione, INTERVAL - ABS(giorni_preavviso_rinnovo) DAY) AND YEAR(data_conclusione) > 1970 HAVING ISNULL((SELECT id FROM co_contratti contratti WHERE contratti.idcontratto_prev=co_contratti.id )) ORDER BY giorni_rimanenti ASC' WHERE `zz_widgets`.`name` = 'Contratti in scadenza';
-UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato FROM co_ordiniservizio WHERE idcontratto IN( SELECT id FROM co_contratti WHERE idstato IN(SELECT id FROM co_staticontratti WHERE ispianificabile = 1)) AND idintervento IS NULL' WHERE `zz_widgets`.`name` = 'Ordini di servizio da impostare';
+UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato, co_contratti.id, DATEDIFF( data_conclusione, NOW() ) AS giorni_rimanenti FROM co_contratti WHERE idstato IN(SELECT id FROM co_staticontratti WHERE is_fatturabile = 1) AND rinnovabile=1 AND ( ( (SELECT SUM(co_righe_contratti.qta) FROM co_righe_contratti WHERE co_righe_contratti.um=\'ore\' AND co_righe_contratti.idcontratto=co_contratti.id) - IFNULL( (SELECT SUM(in_interventi_tecnici.ore) FROM in_interventi_tecnici INNER JOIN in_interventi ON in_interventi_tecnici.idintervento=in_interventi.id WHERE in_interventi.id_contratto=co_contratti.id AND in_interventi.idstatointervento IN (SELECT in_statiintervento.idstatointervento FROM in_statiintervento WHERE in_statiintervento.completato = 1)), 0) ) < co_contratti.ore_preavviso_rinnovo OR NOW() > DATE_ADD( data_conclusione, INTERVAL - ABS(giorni_preavviso_rinnovo) DAY) ) AND YEAR(data_conclusione) > 1970 HAVING ISNULL((SELECT id FROM co_contratti contratti WHERE contratti.idcontratto_prev=co_contratti.id )) ORDER BY giorni_rimanenti ASC' WHERE `zz_widgets`.`name` = 'Contratti in scadenza';
+
+UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato FROM co_ordiniservizio WHERE idcontratto IN( SELECT id FROM co_contratti WHERE idstato IN(SELECT id FROM co_staticontratti WHERE is_pianificabile = 1)) AND idintervento IS NULL' WHERE `zz_widgets`.`name` = 'Ordini di servizio da impostare';
 UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato FROM co_promemoria WHERE idcontratto IN( SELECT id FROM co_contratti WHERE idstato IN (SELECT id FROM co_staticontratti WHERE is_pianificabile = 1)) AND idintervento IS NULL' WHERE `zz_widgets`.`name` = 'Interventi da pianificare';
 
 -- Fix filtri per data
-UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM `co_documenti` INNER JOIN `co_tipidocumento` ON `co_documenti`.`idtipodocumento` = `co_tipidocumento`.`id` WHERE 1=1 AND `dir` = \'uscita\' |segment| |date_period(`data`)| HAVING 2=2 ORDER BY `data` DESC, CAST(IF(numero_esterno=\'\', numero, numero_esterno) AS UNSIGNED) DESC' WHERE `zz_modules`.`name` = 'Fatture di acquisto';
+UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM `co_documenti` INNER JOIN `co_tipidocumento` ON `co_documenti`.`idtipodocumento` = `co_tipidocumento`.`id` WHERE 1=1 AND `dir` = ''uscita'' |segment| |date_period(`data`)| HAVING 2=2 ORDER BY `data` DESC, CAST(IF(numero_esterno='''', numero, numero_esterno) AS UNSIGNED) DESC' WHERE `zz_modules`.`name` = 'Fatture di acquisto';
 UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM co_documenti INNER JOIN co_tipidocumento ON co_documenti.idtipodocumento = co_tipidocumento.id WHERE 1=1 AND dir = ''entrata'' |segment| |date_period(`data`)| HAVING 2=2 ORDER BY data DESC, CAST(numero_esterno AS UNSIGNED) DESC' WHERE `zz_modules`.`name` = 'Fatture di vendita';
 UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM (`in_interventi` INNER JOIN `an_anagrafiche` ON `in_interventi`.`idanagrafica` = `an_anagrafiche`.`idanagrafica`) LEFT OUTER JOIN `in_interventi_tecnici` ON `in_interventi_tecnici`.`idintervento` = `in_interventi`.`id` WHERE 1=1  |date_period(`orario_inizio`,`data_richiesta`)| GROUP BY `in_interventi`.`id` HAVING 2=2 ORDER BY IFNULL(`orario_fine`, `data_richiesta`) DESC' WHERE `zz_modules`.`name` = 'Interventi';
-UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM `co_preventivi` WHERE 1=1 AND default_revision=1 |date_period(`data_bozza`)| HAVING 2=2 ORDER BY `id` DESC' WHERE `zz_modules`.`name` = 'Preventivi';
-UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM `co_contratti` WHERE 1=1 |date_period(`data_bozza`)| HAVING 2=2 ORDER BY `id` DESC' WHERE `zz_modules`.`name` = 'Contratti';
+UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM `co_preventivi` WHERE 1=1 AND default_revision=1 |date_period(custom,''|period_start|'' >= `data_bozza` AND ''|period_start|'' <= `data_conclusione`,''|period_end|'' >= `data_bozza` AND ''|period_end|'' <= `data_conclusione`,`data_bozza` >= ''|period_start|'' AND `data_bozza` <= ''|period_end|'',`data_conclusione` >= ''|period_start|'' AND `data_conclusione` <= ''|period_end|'',`data_bozza` >= ''|period_start|'' AND `data_conclusione` = ''0000-00-00'')| HAVING 2=2 ORDER BY `id` DESC' WHERE `zz_modules`.`name` = 'Preventivi';
+UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM `co_contratti` WHERE 1=1 |date_period(custom,''|period_start|'' >= `data_bozza` AND ''|period_start|'' <= `data_conclusione`,''|period_end|'' >= `data_bozza` AND ''|period_end|'' <= `data_conclusione`,`data_bozza` >= ''|period_start|'' AND `data_bozza` <= ''|period_end|'',`data_conclusione` >= ''|period_start|'' AND `data_conclusione` <= ''|period_end|'',`data_bozza` >= ''|period_start|'' AND `data_conclusione` = ''0000-00-00'')| HAVING 2=2 ORDER BY `id` DESC' WHERE `zz_modules`.`name` = 'Contratti';
 UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM `co_movimenti` INNER JOIN `co_pianodeiconti3` ON `co_movimenti`.`idconto` = `co_pianodeiconti3`.`id` WHERE 1=1 AND `primanota` = 1 |date_period(`co_movimenti`.`data`)| GROUP BY `idmastrino`, `primanota`, `co_movimenti`.`data` HAVING 2=2 ORDER BY `co_movimenti`.`data` DESC' WHERE `zz_modules`.`name` = 'Prima nota';
 UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM `or_ordini` INNER JOIN `or_tipiordine` ON `or_ordini`.`idtipoordine` = `or_tipiordine`.`id` WHERE 1=1 AND `dir` = ''entrata'' |date_period(`data`)| HAVING 2=2 ORDER BY `data` DESC, CAST(`numero_esterno` AS UNSIGNED) DESC' WHERE `zz_modules`.`name` = 'Ordini cliente';
 UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM `or_ordini` INNER JOIN `or_tipiordine` ON `or_ordini`.`idtipoordine` = `or_tipiordine`.`id` WHERE 1=1 AND `dir` = ''uscita'' |date_period(`data`)| HAVING 2=2 ORDER BY `data` DESC, CAST(`numero_esterno` AS UNSIGNED) DESC' WHERE `zz_modules`.`name` = 'Ordini fornitore';
@@ -175,8 +176,8 @@ INSERT INTO `co_movimenti_modelli` (`id`, `idmastrino`, `nome`, `descrizione`, `
 -- Segmenti per modulo scadenzario
 INSERT INTO `zz_segments` (`id`, `id_module`, `name`, `clause`, `position`, `pattern`, `note`, `predefined`, `predefined_accredito`, `predefined_addebito`, `is_fiscale`) VALUES
 (NULL, (SELECT id FROM zz_modules WHERE name='Scadenzario'), 'Scadenzario totale', '1=1', 'WHR', '####', '', 1, 0, 0, 1),
-(NULL, (SELECT id FROM zz_modules WHERE name='Scadenzario'), 'Scadenzario clienti', '((SELECT dir FROM co_tipidocumento WHERE co_tipidocumento.id=co_documenti.idtipodocumento)=\'entrata\')', 'WHR', '####', '', 0, 0, 0, 0),
-(NULL, (SELECT id FROM zz_modules WHERE name='Scadenzario'), 'Scadenzario fornitori', '((SELECT dir FROM co_tipidocumento WHERE co_tipidocumento.id=co_documenti.idtipodocumento)=\'uscita\')', 'WHR', '####', '', 0, 0, 0, 0),
+(NULL, (SELECT id FROM zz_modules WHERE name='Scadenzario'), 'Scadenzario clienti', '((SELECT dir FROM co_tipidocumento WHERE co_tipidocumento.id=co_documenti.idtipodocumento)=''entrata'')', 'WHR', '####', '', 0, 0, 0, 0),
+(NULL, (SELECT id FROM zz_modules WHERE name='Scadenzario'), 'Scadenzario fornitori', '((SELECT dir FROM co_tipidocumento WHERE co_tipidocumento.id=co_documenti.idtipodocumento)=''uscita'')', 'WHR', '####', '', 0, 0, 0, 0),
 (NULL, (SELECT id FROM zz_modules WHERE name='Scadenzario'), 'Scadenzario Ri.Ba.', 'co_pagamenti.riba=1', 'WHR', '####', '', 0, 0, 0, 0);
 
 -- Fix vari
@@ -225,10 +226,71 @@ UPDATE `zz_settings` SET `nome` = 'Tipo Cassa Previdenziale' WHERE `zz_settings`
 -- Aggiunta campo "Rif. fattura" nello scadenzario
 INSERT INTO `zz_views` (`id`, `id_module`, `name`, `query`, `order`, `search`, `slow`, `format`, `search_inside`, `order_by`, `visible`, `summable`, `default`) VALUES (NULL, (SELECT id FROM zz_modules WHERE name='Scadenzario'), 'Rif. Fattura', 'IF( numero_esterno!="", numero_esterno, numero )', '2', '1', '0', '0', NULL, NULL, '1', '0', '1');
 
-INSERT INTO `zz_group_view`(`id_gruppo`, `id_vista`) VALUES
-  ( (SELECT `id` FROM `zz_groups` WHERE `nome`='Amministratori'), (SELECT `id` FROM `zz_views` WHERE `id_module`=(SELECT `id` FROM `zz_modules` WHERE `name`='Scadenzario') AND `name`='Rif. Fattura') ),
-  ( (SELECT `id` FROM `zz_groups` WHERE `nome`='Clienti'), (SELECT `id` FROM `zz_views` WHERE `id_module`=(SELECT `id` FROM `zz_modules` WHERE `name`='Scadenzario') AND `name`='Rif. Fattura') ),
-  ( (SELECT `id` FROM `zz_groups` WHERE `nome`='Tecnici'), (SELECT `id` FROM `zz_views` WHERE `id_module`=(SELECT `id` FROM `zz_modules` WHERE `name`='Scadenzario') AND `name`='Rif. Fattura') ),
-  ( (SELECT `id` FROM `zz_groups` WHERE `nome`='Agenti'), (SELECT `id` FROM `zz_views` WHERE `id_module`=(SELECT `id` FROM `zz_modules` WHERE `name`='Scadenzario') AND `name`='Rif. Fattura') );
-
 UPDATE `zz_views` SET `order`=`order`+1 WHERE `id_module`=(SELECT `id` FROM `zz_modules` WHERE `name`='Scadenzario') AND `order` > 1 AND `name` != 'Rif. Fattura';
+
+-- Aggiornamento widget "Crediti da clienti"
+UPDATE `zz_widgets` SET `query` = 'SELECT CONCAT_WS('' '', REPLACE(REPLACE(REPLACE(FORMAT((SELECT ABS(SUM(da_pagare-pagato))), 2), '','', ''#''), ''.'', '',''),''#'', ''.''), ''&euro;'') AS dato FROM (co_scadenziario INNER JOIN co_documenti ON co_scadenziario.iddocumento=co_documenti.id) INNER JOIN co_tipidocumento ON co_documenti.idtipodocumento=co_tipidocumento.id WHERE co_tipidocumento.dir=''entrata'' AND co_documenti.idstatodocumento!=1 |segment| AND 1=1' WHERE `zz_widgets`.`name` = 'Crediti da clienti';
+
+UPDATE `fe_stati_documento` SET `icon`='fa fa-paper-plane-o text-info' WHERE `codice`='MC';
+UPDATE `fe_stati_documento` SET `icon`='fa fa-inbox text-success' WHERE `codice`='RC';
+UPDATE `fe_stati_documento` SET `icon`='fa fa-file-code-o text-info' WHERE `codice`='GEN';
+
+-- Impostazioni per i riferimenti ai documenti
+INSERT INTO `zz_settings` (`id`, `nome`, `valore`, `tipo`, `editable`, `sezione`, `order`) VALUES (NULL, 'Riferimento dei documenti nelle stampe', '1', 'boolean', 1, 'Generali', 13);
+INSERT INTO `zz_settings` (`id`, `nome`, `valore`, `tipo`, `editable`, `sezione`, `order`) VALUES (NULL, 'Riferimento dei documenti in Fattura Elettronica', '1', 'boolean', 1, 'Generali', 14);
+
+-- Supporto alla personalizzazione dell'API remota OSMCloud
+INSERT INTO `zz_settings` (`id`, `nome`, `valore`, `tipo`, `editable`, `sezione`, `order`) VALUES
+(NULL, 'OSMCloud Services API URL', 'https://services.osmcloud.it/api/', 'string', 0, 'Fatturazione Elettronica', 11);
+
+-- Miglioramento gestione marca da bollo
+INSERT INTO `zz_settings` (`id`, `nome`, `valore`, `tipo`, `editable`, `sezione`, `order`) VALUES
+(NULL, 'Addebita marca da bollo al cliente', 1, 'boolean', 1, 'Fatturazione', 13),
+(NULL, 'Iva da applicare su marca da bollo', (SELECT id FROM `co_iva` WHERE `deleted_at` IS NULL AND `descrizione` = 'Escluso art. 15' ORDER BY descrizione ASC), 'query=SELECT id, id, IF(codice_natura_fe IS NULL, IF(codice IS NULL, descrizione, CONCAT(codice, " - ", descrizione)), CONCAT( IF(codice IS NULL, descrizione, CONCAT(codice, " - ", descrizione)), " (", codice_natura_fe, ")" )) AS descrizione FROM `co_iva` WHERE `deleted_at` IS NULL ORDER BY descrizione ASC', 1, 'Fatturazione', 14),
+(NULL, 'Descrizione addebito bollo', 'Marca da bollo', 'string', 1, 'Fatturazione', 15),
+(NULL, 'Conto predefinito per la marca da bollo', (SELECT id FROM co_pianodeiconti3 WHERE idpianodeiconti2=(SELECT id FROM co_pianodeiconti2 WHERE descrizione='Ricavi') AND descrizione = 'Rimborso spese marche da bollo'), 'query=SELECT id, descrizione FROM co_pianodeiconti3 WHERE idpianodeiconti2=(SELECT id FROM co_pianodeiconti2 WHERE descrizione=''Ricavi'')', 1, 'Fatturazione', 16);
+
+ALTER TABLE `zz_settings` CHANGE `help` `help` varchar(255);
+UPDATE `zz_settings` SET `help` = NULL WHERE `help` = '';
+
+ALTER TABLE `co_documenti` CHANGE `data_stato_fe` `data_stato_fe` TIMESTAMP NULL, ADD `addebita_bollo` BOOLEAN NOT NULL DEFAULT TRUE, ADD `id_riga_bollo` int(11), ADD FOREIGN KEY (`id_riga_bollo`) REFERENCES `co_righe_documenti`(`id`) ON DELETE SET NULL;
+UPDATE `co_documenti` SET `data_ricezione` = NULL WHERE `data_ricezione` = '0000-00-00';
+UPDATE `co_documenti` SET `data_stato_fe` = NULL WHERE `data_stato_fe` = '0000-00-00 00:00:00';
+
+-- Rimozione tasto di stampa scadenzario totale da dentro la scadenza
+UPDATE `zz_prints` SET `is_record` = 0 WHERE `name` = 'Scadenzario';
+
+-- Aggiunta descrizione nello scadenzario, per scadenze generiche
+ALTER TABLE co_scadenziario ADD `descrizione` TEXT NOT NULL AFTER `tipo`;
+INSERT INTO `zz_views` (`id`, `id_module`, `name`, `query`, `order`, `search`, `slow`, `format`, `search_inside`, `order_by`, `visible`, `summable`, `default`) VALUES (NULL, (SELECT id FROM zz_modules WHERE `name`='Scadenzario'), 'Descrizione scadenza', 'co_scadenziario.descrizione', 1, 1, 0, 0, '', '', 1, 0, 1);
+
+-- Aggiunta segmento per scadenze generiche e F24
+INSERT INTO `zz_segments` (`id`, `id_module`, `name`, `clause`, `position`, `pattern`, `note`, `predefined`, `predefined_accredito`, `predefined_addebito`, `is_fiscale`) VALUES (NULL, (SELECT id FROM zz_modules WHERE `name`='Scadenzario'), 'Scadenzario generico', 'co_scadenziario.tipo="generico"', 'WHR', '####', '', 0, 0, 0, 0), (NULL, (SELECT id FROM zz_modules WHERE `name`='Scadenzario'), 'Scadenzario F24', 'co_scadenziario.tipo="f24"', 'WHR', '####', '', 0, 0, 0, 0);
+
+-- Aggiornamento modulo Scadenzario per adattamento a scadenze multiple
+UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM (`co_scadenziario` LEFT JOIN (((`co_documenti` LEFT JOIN `an_anagrafiche` ON `co_documenti`.`idanagrafica` = `an_anagrafiche`.`idanagrafica`) LEFT JOIN `co_pagamenti` ON `co_documenti`.`idpagamento` = `co_pagamenti`.`id`) LEFT JOIN `co_tipidocumento` ON `co_documenti`.`idtipodocumento` = `co_tipidocumento`.`id`) ON `co_scadenziario`.`iddocumento` = `co_documenti`.`id`) LEFT JOIN `co_statidocumento` ON `co_documenti`.`idstatodocumento` = `co_statidocumento`.`id` WHERE 1=1 HAVING 2=2 AND IF(`co_statidocumento`.`descrizione` IS NOT NULL, `co_statidocumento`.`descrizione` IN(''Emessa'',''Parzialmente pagato''), 3=3) ORDER BY `scadenza` ASC' WHERE `zz_modules`.`name` = 'Scadenzario';
+
+UPDATE `zz_segments` SET `clause` = '((SELECT dir FROM co_tipidocumento WHERE co_tipidocumento.id=co_documenti.idtipodocumento)=''entrata'') AND ABS(`co_scadenziario`.`pagato`) < ABS(`co_scadenziario`.`da_pagare`)' WHERE `zz_segments`.`id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Scadenzario') AND `zz_segments`.`name` = 'Scadenzario clienti';
+UPDATE `zz_segments` SET `clause` = '((SELECT dir FROM co_tipidocumento WHERE co_tipidocumento.id=co_documenti.idtipodocumento)=''uscita'') AND ABS(`co_scadenziario`.`pagato`) < ABS(`co_scadenziario`.`da_pagare`)' WHERE `zz_segments`.`id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Scadenzario') AND `zz_segments`.`name` = 'Scadenzario fornitori';
+UPDATE `zz_segments` SET `clause` = 'ABS(`co_scadenziario`.`pagato`) < ABS(`co_scadenziario`.`da_pagare`)' WHERE `zz_segments`.`id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Scadenzario') AND `zz_segments`.`name` = 'Scadenzario totale';
+
+-- Aggiornamento cambio colore scadenze
+UPDATE `zz_views` SET `query` = 'IF( pagato=da_pagare, ''#38CD4E'', IF(scadenza < NOW(), ''#cc4d37'', '''') )' WHERE `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Scadenzario') AND `name` = '_bg_';
+
+-- Aggiunta campo con totale da pagare
+INSERT INTO `zz_views` (`id`, `id_module`, `name`, `query`, `order`, `search`, `slow`, `format`, `search_inside`, `order_by`, `visible`, `summable`, `default`) VALUES (NULL, (SELECT id FROM zz_modules WHERE `name`='Scadenzario'), 'Saldo', 'da_pagare-pagato', 13, 1, 1, 1, '', '', 1, 1, 1);
+
+-- Aggiunta vista ore rimanenti nei contratti
+INSERT INTO `zz_views` (`id`, `id_module`, `name`, `query`, `order`, `search`, `slow`, `format`, `search_inside`, `order_by`, `visible`, `summable`, `default`) VALUES (NULL, (SELECT `zz_modules`.`id` FROM `zz_modules` WHERE `zz_modules`.`name`="Contratti"), 'Ore rimanenti', '( (SELECT SUM(co_righe_contratti.qta) FROM co_righe_contratti WHERE co_righe_contratti.um=''ore'' AND co_righe_contratti.idcontratto=co_contratti.id) - IFNULL( (SELECT SUM(in_interventi_tecnici.ore) FROM in_interventi_tecnici INNER JOIN in_interventi ON in_interventi_tecnici.idintervento=in_interventi.id WHERE in_interventi.id_contratto=co_contratti.id ), 0) )', '5', '1', '0', '1', '', '', '0', '0', '0');
+
+-- inserimento stato intervento da programmare
+INSERT INTO `in_statiintervento` (`idstatointervento`, `descrizione`, `colore`, `can_delete`, `completato`, `created_at`, `notifica`, `id_email`, `destinatari`) VALUES ('DAP', 'Da programmare', '#2deded', '1', '0', NULL, '0', NULL, NULL);
+
+-- Widget attività in programmazione
+INSERT INTO `zz_widgets` (`id`, `name`, `type`, `id_module`, `location`, `class`, `query`, `bgcolor`, `icon`, `print_link`, `more_link`, `more_link_type`, `php_include`, `text`, `enabled`, `order`, `help`) VALUES (NULL, 'Attività in programmazione', 'stats', '1', 'controller_top', 'col-md-12', 'SELECT COUNT(id) AS dato FROM in_interventi WHERE in_interventi.idstatointervento = (SELECT in_statiintervento.idstatointervento FROM in_statiintervento WHERE in_statiintervento.descrizione=\'Da programmare\') ORDER BY in_interventi.data_richiesta ASC', '#2deded', 'fa fa-hourglass-half', '', './modules/interventi/widgets/interventi_da_pianificare.php', 'popup', '', 'Attività in programmazione', '1', '8', NULL); 
+
+-- Widget attività ancora da programmare
+INSERT INTO `zz_widgets` (`id`, `name`, `type`, `id_module`, `location`, `class`, `query`, `bgcolor`, `icon`, `print_link`, `more_link`, `more_link_type`, `php_include`, `text`, `enabled`, `order`, `help`) VALUES (NULL, 'Attività confermate', 'stats', '1', 'controller_top', 'col-md-12', 'SELECT COUNT(id) AS dato FROM in_interventi WHERE in_interventi.idstatointervento = (SELECT in_statiintervento.idstatointervento FROM in_statiintervento WHERE in_statiintervento.descrizione=\'In programmazione\') ORDER BY in_interventi.data_richiesta ASC', '#f2bd00', 'fa fa-hourglass-half', '', './modules/interventi/widgets/interventi_confermati.php', 'popup', '', 'Attività confermate', '1', '8', NULL); 
+
+-- Aggiunta ore rimanenti nel contratto per preavviso rinnovo
+ALTER TABLE `co_contratti` ADD `ore_preavviso_rinnovo` INT(11) NULL AFTER `giorni_preavviso_rinnovo`; 

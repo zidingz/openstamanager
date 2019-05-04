@@ -34,11 +34,14 @@ class Anagrafica extends Model
      *
      * @return self
      */
-    public static function build($ragione_sociale, array $tipologie = [])
+    public static function build($ragione_sociale, $nome = '', $cognome = '', array $tipologie = [])
     {
         $model = parent::build();
 
         $model->ragione_sociale = $ragione_sociale;
+
+        $model->nome = $nome;
+        $model->cognome = $cognome;
 
         $ultimo = database()->fetchOne('SELECT codice FROM an_anagrafiche ORDER BY CAST(codice AS SIGNED) DESC LIMIT 1');
         $codice = Generator::generate(setting('Formato codice anagrafica'), $ultimo['codice']);
@@ -193,6 +196,20 @@ class Anagrafica extends Model
         $this->attributes['piva'] = trim(strtoupper($value));
     }
 
+    public function setNomeAttribute($value)
+    {
+        $this->attributes['nome'] = trim($value);
+
+        $this->fixRagioneSociale();
+    }
+
+    public function setCognomeAttribute($value)
+    {
+        $this->attributes['cognome'] = trim($value);
+
+        $this->fixRagioneSociale();
+    }
+
     public function setCodiceFiscaleAttribute($value)
     {
         $this->attributes['codice_fiscale'] = trim(strtoupper($value));
@@ -237,5 +254,12 @@ class Anagrafica extends Model
     public function getSedeLegaleAttribute()
     {
         return $this->sedi()->where('id', $this->id_sede_legale)->first();
+    }
+
+    protected function fixRagioneSociale()
+    {
+        if (!empty($this->cognome) || !empty($this->nome)) {
+            $this->ragione_sociale = $this->cognome.' '.$this->nome;
+        }
     }
 }

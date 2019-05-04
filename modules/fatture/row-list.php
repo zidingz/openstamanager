@@ -26,7 +26,7 @@ foreach ($righe as $row) {
     // Valori assoluti
     $riga['qta'] = abs($riga['qta']);
     $riga['prezzo_unitario_acquisto'] = abs($riga['prezzo_unitario_acquisto']);
-    $riga['imponibile_scontato'] = ($fattura->isNotaDiAccredito() ? abs($row->imponibile_scontato) : $row->imponibile_scontato);
+    $riga['imponibile_scontato'] = ($fattura->isNotaDiAccredito() ? -$row->imponibile_scontato : $row->imponibile_scontato);
     $riga['sconto_unitario'] = abs($riga['sconto_unitario']);
     $riga['sconto'] = abs($riga['sconto']);
     $riga['iva'] = abs($riga['iva']);
@@ -237,7 +237,7 @@ foreach ($righe as $row) {
     echo '
         <td class="text-center">';
 
-    if ($record['stato'] != 'Pagato' && $record['stato'] != 'Emessa') {
+    if ($record['stato'] != 'Pagato' && $record['stato'] != 'Emessa' && $riga['id'] != $fattura->rigaBollo->id) {
         echo "
             <form action='".$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record."' method='post' id='delete-form-".$riga['id']."' role='form'>
                 <input type='hidden' name='backto' value='record-edit'>
@@ -294,7 +294,7 @@ echo '
             <b>'.tr('Imponibile', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.moneyFormat($imponibile).'
+            '.moneyFormat($imponibile, 2).'
         </td>
         <td></td>
     </tr>';
@@ -307,7 +307,7 @@ if (!empty($sconto)) {
             <b>'.tr('Sconto', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.moneyFormat($sconto).'
+            '.moneyFormat($sconto, 2).'
         </td>
         <td></td>
     </tr>';
@@ -319,7 +319,7 @@ if (!empty($sconto)) {
             <b>'.tr('Imponibile scontato', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.moneyFormat($imponibile_scontato).'
+            '.moneyFormat($imponibile_scontato, 2).'
         </td>
         <td></td>
     </tr>';
@@ -340,7 +340,7 @@ if (!empty($fattura->rivalsa_inps)) {
 			<b>'.tr('Rivalsa', [], ['upper' => true]).' :</b>
         </td>
         <td align="right">
-            '.moneyFormat($fattura->rivalsa_inps).'
+            '.moneyFormat($fattura->rivalsa_inps, 2).'
         </td>
         <td></td>
     </tr>';
@@ -360,7 +360,7 @@ if (!empty($iva)) {
     echo '
         </td>
         <td align="right">
-            '.moneyFormat($iva).'
+            '.moneyFormat($iva, 2).'
         </td>
         <td></td>
     </tr>';
@@ -373,27 +373,10 @@ echo '
             <b>'.tr('Totale', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.moneyFormat($totale).'
+            '.moneyFormat($totale, 2).'
         </td>
         <td></td>
     </tr>';
-
-// Mostra marca da bollo se c'è
-if (!empty($fattura->bollo)) {
-    echo '
-    <tr>
-        <td colspan="5" class="text-right">
-		
-			<span class="tip" title="'.tr('Rivalsa per spese bollo fattura. Esclusa IVA articolo 15 d.p.r. 633/1972').'."  > <i class="fa fa-question-circle-o"></i></span>
-				
-            <b>'.tr('Marca da bollo', [], ['upper' => true]).':</b>
-        </td>
-        <td align="right">
-            '.moneyFormat($fattura->bollo).'
-        </td>
-        <td></td>
-    </tr>';
-}
 
 // RITENUTA D'ACCONTO
 if (!empty($fattura->ritenuta_acconto)) {
@@ -403,7 +386,7 @@ if (!empty($fattura->ritenuta_acconto)) {
             <b>'.tr("Ritenuta d'acconto", [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.moneyFormat($fattura->ritenuta_acconto).'
+            '.moneyFormat($fattura->ritenuta_acconto, 2).'
         </td>
         <td></td>
     </tr>';
@@ -431,7 +414,7 @@ if ($totale != $netto_a_pagare) {
             <b>'.tr('Netto a pagare', [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.moneyFormat($netto_a_pagare).'
+            '.moneyFormat($netto_a_pagare, 2).'
         </td>
         <td></td>
     </tr>';

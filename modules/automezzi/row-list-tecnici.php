@@ -3,7 +3,7 @@
 /*
     TECNICI ASSEGNATI ALL'AUTOMEZZO
 */
-$q_art = 'SELECT *, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=dt_automezzi_tecnici.idtecnico) AS nometecnico FROM dt_automezzi_tecnici WHERE idautomezzo='.prepare($id_record);
+$q_art = 'SELECT *, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=dt_automezzi_tecnici.idtecnico) AS nometecnico FROM dt_automezzi_tecnici WHERE idautomezzo='.prepare($id_record).' ORDER BY data_inizio DESC';
 $rs_art = $dbo->fetchArray($q_art);
 
 if (!empty($rs_art)) {

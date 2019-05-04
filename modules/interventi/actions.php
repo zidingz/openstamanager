@@ -277,13 +277,13 @@ switch (post('op')) {
 
         break;
 
-    case 'editriga':
+    case 'manage_riga':
         $idriga = post('idriga');
         $descrizione = post('descrizione');
         $qta = post('qta', true);
         $um = post('um');
         $idiva = post('idiva');
-        $prezzo_vendita = post('prezzo_vendita', true);
+        $prezzo_vendita = post('prezzo', true);
         $prezzo_acquisto = post('prezzo_acquisto', true);
 
         $sconto_unitario = post('sconto', true);
@@ -600,18 +600,33 @@ switch (post('op')) {
         $prezzo_ore_consuntivo_tecnico = $prezzo_ore_unitario_tecnico * $ore;
         $prezzo_km_consuntivo_tecnico = $prezzo_km_unitario_tecnico * $km;
 
-        // Sconti
+        // Sconti ore
         $sconto_unitario = post('sconto', true);
         $tipo_sconto = post('tipo_sconto');
-        $sconto = calcola_sconto([
-            'sconto' => $sconto_unitario,
-            'prezzo' => $prezzo_ore_consuntivo,
-            'tipo' => $tipo_sconto,
-        ]);
 
+        if ($tipo_sconto == 'UNT') {
+            $sconto = $sconto_unitario * $ore;
+        } else {
+            $sconto = calcola_sconto([
+                'sconto' => $sconto_unitario,
+                'prezzo' => $prezzo_ore_consuntivo,
+                'tipo' => $tipo_sconto,
+            ]);
+        }
+
+        // Sconti km
         $scontokm_unitario = post('sconto_km', true);
-        $tipo_scontokm = post('tipo_scontokm');
-        $scontokm = ($tipo_scontokm == 'PRC') ? ($prezzo_km_consuntivo * $scontokm_unitario) / 100 : $scontokm_unitario;
+        $tipo_scontokm = post('tipo_sconto_km');
+
+        if ($tipo_scontokm == 'UNT') {
+            $scontokm = $scontokm_unitario * $km;
+        } else {
+            $scontokm = calcola_sconto([
+                'sconto' => $scontokm_unitario,
+                'prezzo' => $prezzo_km_consuntivo,
+                'tipo' => $tipo_scontokm,
+            ]);
+        }
 
         $dbo->update('in_interventi_tecnici', [
             'id_tipo_intervento' => $id_tipo_intervento,

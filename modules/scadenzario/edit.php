@@ -32,7 +32,22 @@ if ($rs[0]['dir'] == 'entrata') {
                                 '.Modules::link('Anagrafiche', $rs[0]['idanagrafica'], $rs[0]['ragione_sociale']).'
                             </td>
                         </tr>';
-} else {
+    echo '
+                        <tr>
+                            <th>'.tr('Documento').':</th>
+                            <td>'.$rs[0]['descrizione'].'</td>
+                        </tr>';
+    echo '
+                        <tr>
+                            <th>'.tr('Numero').':</th>
+                            <td>'.$numero.'</td>
+                        </tr>';
+    echo '
+                        <tr>
+                            <th>'.tr('Data').':</th>
+                            <td>'.Translator::dateToLocale($rs[0]['data']).'</td>
+                        </tr>';
+} else if ($rs[0]['dir'] == 'uscita') {
     $dir = 'uscita';
     $modulo = 'Fatture di acquisto';
     echo "
@@ -40,23 +55,30 @@ if ($rs[0]['dir'] == 'entrata') {
                             <th width='120'>".tr('Fornitore').':</th>
                             <td>'.$rs[0]['ragione_sociale'].'</td>
                         </tr>';
-}
-
-echo '
+    echo '
                         <tr>
                             <th>'.tr('Documento').':</th>
                             <td>'.$rs[0]['descrizione'].'</td>
                         </tr>';
-echo '
+    echo '
                         <tr>
                             <th>'.tr('Numero').':</th>
                             <td>'.$numero.'</td>
                         </tr>';
-echo '
+    echo '
                         <tr>
                             <th>'.tr('Data').':</th>
                             <td>'.Translator::dateToLocale($rs[0]['data']).'</td>
                         </tr>';
+}else{
+    $rs = $dbo->fetchArray("SELECT * FROM co_scadenziario WHERE id='".$id_record."'");
+	echo "
+                        <tr>
+                                <th width='120'>".tr('Descrizione').':</th>
+                                <td><input type="text" class="form-control" name="descrizione" value="'.$rs[0]['descrizione'].'"></td>
+                        </tr>';
+}
+
 echo '
                     </table>
 
@@ -75,7 +97,12 @@ echo '
 $totale_da_pagare = 0;
 $totale_pagato = 0;
 
-$rs = $dbo->fetchArray('SELECT * FROM co_scadenziario WHERE iddocumento = (SELECT iddocumento FROM co_scadenziario s WHERE id='.prepare($id_record).') ORDER BY scadenza ASC');
+//Scelgo la query in base al segmento
+if($record['iddocumento']!=0){
+	$rs = $dbo->fetchArray('SELECT * FROM co_scadenziario WHERE iddocumento = (SELECT iddocumento FROM co_scadenziario s WHERE id='.prepare($id_record).') ORDER BY scadenza ASC');
+}else{
+	$rs = $dbo->fetchArray('SELECT * FROM co_scadenziario WHERE id='.prepare($id_record).' ORDER BY scadenza ASC');
+}
 
 for ($i = 0; $i < count($rs); ++$i) {
     if ($rs[$i]['da_pagare'] == $rs[$i]['pagato']) {
@@ -95,11 +122,11 @@ for ($i = 0; $i < count($rs); ++$i) {
                             </td>
 
                             <td align="right">
-                                {[ "type": "number", "name": "scadenza['.$rs[$i]['id'].']", "value": "'.Translator::numberToLocale($rs[$i]['da_pagare']).'" ]}
+                                {[ "type": "number", "name": "scadenza['.$rs[$i]['id'].']", "decimals": 2, "value": "'.Translator::numberToLocale($rs[$i]['da_pagare'],2).'" ]}
                             </td>
 
                             <td align="right">
-                                {[ "type": "number", "name": "pagato['.$rs[$i]['id'].']", "value": "'.Translator::numberToLocale($rs[$i]['pagato']).'"  ]}
+                                {[ "type": "number", "name": "pagato['.$rs[$i]['id'].']", "decimals": 2, "value": "'.Translator::numberToLocale($rs[$i]['pagato']).'"  ]}
                             </td>
                         </tr>';
 }
@@ -127,7 +154,7 @@ echo '
 					</table>
 
                     <div class='pull-right'>
-                        <a onclick="launch_modal( 'Aggiungi prima nota', '<?php echo $rootdir; ?>/add.php?id_module=<?php echo Modules::get('Prima nota')['id']; ?>&iddocumento=<?php echo $record['iddocumento']; ?>&dir=<?php echo $dir; ?>', 1 );" class="btn btn-sm btn-primary"><i class="fa fa-euro"></i> <?php echo tr('Aggiungi prima nota...'); ?></a>
+                        <a onclick="launch_modal( 'Registra contabile pagamento', '<?php echo $rootdir; ?>/add.php?id_module=<?php echo Modules::get('Prima nota')['id']; ?>&iddocumento=<?php echo $record['iddocumento']; ?>&dir=<?php echo $dir; ?>&idscadenza=<?php echo $id_record; ?>', 1 );" class="btn btn-sm btn-primary"><i class="fa fa-euro"></i> <?php echo tr('Registra contabile pagamento...'); ?></a>
                     </div>
 					
 					<div class="clearfix"></div>
@@ -140,7 +167,7 @@ echo '
                         ]); ?>.
 					</div>
 
-					<input type="hidden" id="totale_da_pagare" value="<?php echo Translator::numberToLocale($totale_da_pagare); ?>">
+					<input type="hidden" id="totale_da_pagare" value="<?php echo Translator::numberToLocale($totale_da_pagare, 2); ?>">
 				</div>
 			</div>
 		</div>
@@ -151,10 +178,29 @@ echo '
 
 {( "name": "log_email", "id_module": "$id_module$", "id_record": "$id_record$" )}
 
+<?php
+if($records[0]['iddocumento']==0){
+?>
+<a class="btn btn-danger ask" data-backto="record-list">
+    <i class="fa fa-trash"></i> <?php echo tr('Elimina'); ?>
+</a>
+<?php
+}
+?>
+
 <script>
+    globals.cifre_decimali = 2;
+    
 	$(document).ready( function(){
-		totale_ok();
-		$('input[name*=scadenza]').keyup( function(){ totale_ok(); } );
+        totale_ok();
+        
+        <?php
+        if($record['iddocumento']!=0){
+        ?>
+        $('input[name*=scadenza]').keyup( function(){ totale_ok(); } );
+        <?php
+        }
+        ?>
 	});
 
 	function totale_ok(){

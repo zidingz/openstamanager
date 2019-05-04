@@ -1,6 +1,6 @@
 <?php
 
-$fattura_pa = new Plugins\ImportFE\FatturaElettronica(get('filename'));
+$fattura_pa = Plugins\ImportFE\FatturaElettronica::manage(get('filename'));
 
 echo '
 <form action="'.$rootdir.'/actions.php" method="post">
@@ -13,16 +13,16 @@ echo '
     <input type="hidden" name="op" value="generate">';
 
 // Fornitore
-$fornitore = $fattura_pa->getHeader()['CedentePrestatore']['DatiAnagrafici'];
-$ragione_sociale = $fornitore['Anagrafica']['Denominazione'] ?: $fornitore['Anagrafica']['Nome'].' '.$fornitore['Anagrafica']['Cognome'];
-$codice_fiscale = $fornitore['CodiceFiscale'];
-$partita_iva = $fornitore['IdFiscaleIVA']['IdCodice'];
+$fornitore = $fattura_pa->getAnagrafe();
+$ragione_sociale = $fornitore['ragione_sociale'] ?: $fornitore['cognome'].' '.$fornitore['nome'];
+$codice_fiscale = $fornitore['codice_fiscale'];
+$partita_iva = $fornitore['partita_iva'];
 
-$sede = $fattura_pa->getHeader()['CedentePrestatore']['Sede'];
+$sede = $fornitore['sede'];
 
-$cap = $sede['CAP'];
-$citta = $sede['Comune'];
-$provincia = $sede['Provincia'];
+$cap = $sede['cap'];
+$citta = $sede['comune'];
+$provincia = $sede['provincia'];
 
 // Dati generali
 $dati_generali = $fattura_pa->getBody()['DatiGenerali']['DatiGeneraliDocumento'];
@@ -40,7 +40,7 @@ echo '
 				</small>
 			</h4>
 		</div>
-		
+
 		<div class="col-md-6">
 			<h4>'.$dati_generali['Numero'];
 
@@ -106,7 +106,7 @@ if (!empty($pagamenti)) {
 
         $descrizione = !empty($metodo['ModalitaPagamento']) ? database()->fetchOne('SELECT descrizione FROM fe_modalita_pagamento WHERE codice = '.prepare($metodo['ModalitaPagamento']))['descrizione'] : '';
 
-        echo Translator::numberToLocale($metodo['ImportoPagamento']).' &euro; 
+        echo Translator::numberToLocale($metodo['ImportoPagamento']).' &euro;
             ('.$descrizione.')
             </li>';
     }
@@ -143,7 +143,7 @@ if (!empty($righe)) {
     echo '
     <h4>
         '.tr('Righe').'
-        <button type="button" class="btn btn-info btn-sm pull-right" onclick="copy()"><i class="fa fa-copy"></i> '.tr('Copia dati contabili dalla prima riga').'</button>
+        <button type="button" class="btn btn-info btn-sm pull-right" onclick="copy()"><i class="fa fa-copy"></i> '.tr('Copia dati contabili dalla prima riga valorizzata').'</button>
         <div class="clearfix"></div>
     </h4>
 
@@ -168,12 +168,12 @@ if (!empty($righe)) {
         <tr>
             <td>
                 '.$riga['Descrizione'].'<br>
-                
+
                 <small>'.tr('Q.tà: _QTA_ _UM_', [
                     '_QTA_' => Translator::numberToLocale($riga['Quantita']),
                     '_UM_' => $riga['UnitaMisura'],
                 ]).'</small><br>
-                
+
                 <small>'.tr('Aliquota iva _PRC_% _DESC_', [
                     '_PRC_' => Translator::numberToLocale($riga['AliquotaIVA']),
                     '_DESC_' => $riga['RiferimentoNormativo'] ? ' - '.$riga['RiferimentoNormativo'] : '',
@@ -197,16 +197,33 @@ if (!empty($righe)) {
     echo '
     <script>
     function copy(){
-        $iva = $("select[name^=iva").first().selectData();
-        $conto = $("select[name^=conto").first().selectData();
+        var first_iva = null;
+        var first_conto = null;
 
-        if($iva) {
+        $("select[name^=iva").each( function(){
+            if( $(this).val() != "" && first_iva == null ){
+                first_iva = $(this);
+            }
+        });
+
+        $("select[name^=conto").each( function(){
+            if( $(this).val() != "" && first_conto == null ){
+                first_conto = $(this);
+            }
+        });
+
+
+        if(first_iva) {
+            $iva = first_iva.selectData();
+
             $("select[name^=iva").each(function(){
                 $(this).selectSet($iva.id);
             });
         }
 
-        if($conto) {
+        if(first_conto) {
+            $conto = first_conto.selectData();
+
             $("select[name^=conto").each(function(){
                 $(this).selectSetNew($conto.id, $conto.text);
             });
