@@ -68,6 +68,9 @@ function srcJS() {
             config.development + '/' + config.paths.js + '/independent/*.js',
         ])
         .pipe(minifyJS())
+        .pipe(gulpIf('!*.min.*', rename({
+            suffix: '.min'
+        })))
         .pipe(gulp.dest(config.production + '/' + config.paths.js));
 
     return merge(js, indip);
@@ -223,16 +226,16 @@ function csrf() {
 
 function pdfjs() {
     var web = gulp.src([
-            config.main.bowerDirectory + '/pdfjs-dist/web/**/*',
-            '!' + config.main.bowerDirectory + '/pdfjs-dist/web/cmaps/*',
-            '!' + config.main.bowerDirectory + '/pdfjs-dist/web/*.map',
-            '!' + config.main.bowerDirectory + '/pdfjs-dist/web/*.pdf',
+            config.main.bowerDirectory + '/pdf/web/**/*',
+            '!' + config.main.bowerDirectory + '/pdf/web/cmaps/*',
+            '!' + config.main.bowerDirectory + '/pdf/web/*.map',
+            '!' + config.main.bowerDirectory + '/pdf/web/*.pdf',
         ])
         .pipe(gulp.dest(config.production + '/pdfjs/web'));
 
     var build = gulp.src([
-            config.main.bowerDirectory + '/pdfjs-dist/build/*',
-            '!' + config.main.bowerDirectory + '/pdfjs-dist/build/*.map',
+            config.main.bowerDirectory + '/pdf/build/*',
+            '!' + config.main.bowerDirectory + '/pdf/build/*.map',
         ])
         .pipe(gulp.dest(config.production + '/pdfjs/build'));
 

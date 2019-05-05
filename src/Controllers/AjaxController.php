@@ -6,6 +6,7 @@ use AJAX;
 use Modules;
 use Translator;
 use Util\Query;
+use Prints;
 
 class AjaxController extends Controller
 {

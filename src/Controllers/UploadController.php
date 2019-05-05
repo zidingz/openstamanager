@@ -55,7 +55,7 @@ class UploadController extends Controller
         } elseif ($file->isImage()) {
             $response = $this->twig->render($response, 'uploads\img.twig', $args);
         } elseif ($file->isPDF()) {
-            $args['link'] = ROOTDIR.'/assets/pdfjs/web/viewer.html?file='.$link;
+            $args['link'] = $request->getUri()->getBasePath().'/assets/pdfjs/web/viewer.html?file='.$link;
 
             $response = $this->twig->render($response, 'uploads\frame.twig', $args);
         } else {

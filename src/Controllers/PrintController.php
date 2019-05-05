@@ -12,7 +12,7 @@ class PrintController extends Controller
             'print_id' => $args['print_id'],
             'record_id' => $args['record_id'],
         ]);
-        $args['link'] = ROOTDIR.'/assets/pdfjs/web/viewer.html?file='.$link;
+        $args['link'] = $request->getUri()->getBasePath().'/assets/pdfjs/web/viewer.html?file='.$link;
 
         $response = $this->twig->render($response, 'uploads\frame.twig', $args);
 
