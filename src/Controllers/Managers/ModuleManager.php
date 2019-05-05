@@ -2,10 +2,8 @@
 
 namespace Controllers\Managers;
 
-abstract class ModuleManager extends ControllerManager
+abstract class ModuleManager extends CustomManager
 {
-    abstract public function page($request, $response, $args);
-
     abstract public function add($request, $response, $args);
 
     abstract public function create($request, $response, $args);

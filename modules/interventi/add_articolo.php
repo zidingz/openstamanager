@@ -204,7 +204,7 @@ echo '
 </form>';
 
 echo '
-	<script src="'.$rootdir.'/assets/js/init.min.js"></script>';
+	<script src="'.ROOTDIR.'/assets/js/init.min.js"></script>';
 
 ?>
 

@@ -78,9 +78,9 @@ $app->group('/ajax', function () use ($app) {
     $app->get('/search[/]', 'Controllers\AjaxController:search')
         ->setName('ajax-search');
 
-    $app->get('/session[/]', 'Controllers\AjaxController:session')
+    $app->get('/session[/]', 'Controllers\AjaxController:sessionSet')
         ->setName('ajax-session');
-    $app->get('/session-array[/]', 'Controllers\AjaxController:search')
+    $app->get('/session-array[/]', 'Controllers\AjaxController:sessionSetArray')
         ->setName('ajax-session-array');
 
     $app->group('/dataload', function () use ($app) {
@@ -97,7 +97,7 @@ $app->group('/module/{module_id:[0-9]+}', function () use ($app) {
     $app->get('[/]', 'Controllers\ModuleController:module')
         ->setName('module');
 
-    $app->get('/action/{action}[/{params:.*}[/]]', 'Controllers\ModuleController:moduleAction')
+    $app->map(['GET', 'POST'], '/action/{action}[/{params:.*}[/]]', 'Controllers\ModuleController:moduleAction')
         ->setName('module-action');
 
     $app->group('/edit/{record_id:[0-9]+}', function () use ($app) {
@@ -105,7 +105,7 @@ $app->group('/module/{module_id:[0-9]+}', function () use ($app) {
             ->setName('module-record');
         $app->post('[/]', 'Controllers\ModuleController:editRecord');
 
-        $app->get('/action/{action}[/{params:.*}[/]]', 'Controllers\ModuleController:recordAction')
+        $app->map(['GET', 'POST'], '/action/{action}[/{params:.*}[/]]', 'Controllers\ModuleController:recordAction')
             ->setName('module-record-action');
     });
 

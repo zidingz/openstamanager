@@ -286,8 +286,6 @@ if (!empty($id_intervento)) {
 	</div>
 </form>
 
-<script src="<?php echo $rootdir; ?>/assets/js/init.min.js"></script>
-
 <script type="text/javascript">
 	$(document).ready(function(){
         if(!$("#bs-popup #idanagrafica").val()){
@@ -450,7 +448,9 @@ if (!empty($id_intervento)) {
             $('#add-form').find('[type=submit]').prop("disabled", true).addClass("disabled");
             $('#add-form').find('input:disabled, select:disabled, textarea:disabled').removeAttr('disabled');
 
-            $.post(globals.rootdir + '/actions.php?id_module=<?php echo Modules::get('Interventi')['id']; ?>', $('#add-form').serialize(), function(data,response){
+            $.post('<?php echo pathFor('module-add', [
+                'module_id' => Modules::get('Interventi')['id'],
+            ]) ?>', $('#add-form').serialize(), function(data,response){
                 if(response=="success"){
                     // Se l'aggiunta intervento proviene dalla scheda di pianificazione ordini di servizio della dashboard, la ricarico
                     if(ref == "dashboard"){

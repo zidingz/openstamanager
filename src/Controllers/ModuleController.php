@@ -158,7 +158,7 @@ class ModuleController extends Controller
 
             $record_id = $controller->actions($request, $response, $args);
         } else {
-            $class = $th;
+            $class = $this->getRecordManager($request, $response, $args);
             $controller = new $class($this->container);
 
             $record_id = $controller->create($request, $response, $args);
@@ -176,7 +176,7 @@ class ModuleController extends Controller
 
     public function recordAction($request, $response, $args)
     {
-        $class = $this->getRecordManager($request, $response, $args);
+        $class = $this->getRecordActionsManager($request, $response, $args);
         $controller = new $class($this->container);
 
         return $controller->manage($args['action'], $request, $response, $args);
@@ -184,7 +184,7 @@ class ModuleController extends Controller
 
     public function moduleAction($request, $response, $args)
     {
-        $class = $this->getModuleManager($request, $response, $args);
+        $class = $this->getModuleActionsManager($request, $response, $args);
         $controller = new $class($this->container);
 
         return $controller->manage($args['action'], $request, $response, $args);
@@ -207,6 +207,28 @@ class ModuleController extends Controller
 
         if (!class_exists($class)) {
             throw new NotFoundException($request, $response);
+        }
+
+        return $class;
+    }
+
+    protected function getModuleActionsManager($request, $response, $args)
+    {
+        $class = $args['structure']->namespace.'\ModuleActions';
+
+        if (!class_exists($class)) {
+            return $this->getModuleManager($request, $response, $args);
+        }
+
+        return $class;
+    }
+
+    protected function getRecordActionsManager($request, $response, $args)
+    {
+        $class = $args['structure']->namespace.'\RecordActions';
+
+        if (!class_exists($class)) {
+            return $this->getRecordManager($request, $response, $args);
         }
 
         return $class;

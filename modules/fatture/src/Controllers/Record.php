@@ -11,7 +11,9 @@ class Record extends RecordManager
 {
     use RowTrait;
 
-    protected $rowOptions = [];
+    protected $rowOptions = [
+        'show-conto' => true,
+    ];
 
     public function page($request, $response, $args)
     {

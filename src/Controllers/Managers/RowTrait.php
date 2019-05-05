@@ -79,7 +79,7 @@ trait RowTrait
             'idanagrafica' => $documento['idanagrafica'],
             'imponibile_scontato' => $documento->imponibile_scontato,
             'show-ritenuta-contributi' => !empty($documento['id_ritenuta_contributi']),
-            'show-conto' => true,
+            'show-conto' => false,
             'id_ritenuta_acconto_anagrafica' => $id_ritenuta_acconto_anagrafica,
         ];
 

@@ -850,7 +850,7 @@ function session_set_array(session_array, value, inversed) {
         inversed = 1;
     }
 
-    return $.get(globals.rootdir + "/ajax.php?op=session_set_array&session=" + session_array + "&value=" + value + "&inversed=" + inversed);
+    return $.get(globals.ajax_array_set_url + "?&session=" + session_array + "&value=" + value + "&inversed=" + inversed);
 }
 
 /**
@@ -865,7 +865,7 @@ function session_set(session_array, value, clear, reload) {
         reload = 0;
     }
 
-    return $.get(globals.rootdir + "/ajax.php?op=session_set&session=" + session_array + "&value=" + value + "&clear=" + clear, function (data, status) {
+    return $.get(globals.ajax_set_url + "?session=" + session_array + "&value=" + value + "&clear=" + clear, function (data, status) {
 
         if (reload == 1)
             location.reload();

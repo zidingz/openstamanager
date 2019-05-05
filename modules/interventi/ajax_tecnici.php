@@ -220,7 +220,7 @@ if (!$is_completato) {
 }
 
 echo '
-<script src="'.$rootdir.'/assets/js/init.min.js"></script>
+<script src="'.ROOTDIR.'/assets/js/init.min.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){';

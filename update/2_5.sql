@@ -1,6 +1,8 @@
 -- Strutture per la gestione Slim
 ALTER TABLE `zz_modules` ADD `namespace` varchar(255);
 UPDATE `zz_modules` SET `namespace` = 'Modules\\Fatture\\Controllers' WHERE `name` = 'Fatture di vendita';
+UPDATE `zz_modules` SET `namespace` = 'Modules\\Fatture\\Controllers' WHERE `name` = 'Fatture di acquisto';
+UPDATE `zz_modules` SET `namespace` = 'Modules\\Dashboard\\Controllers' WHERE `name` = 'Dashboard';
 
 -- Standardizzazione tabelle
 

@@ -74,6 +74,8 @@
         select_url: "{{ path_for('ajax-select') }}",
         dataload_module_url: "{{ path_for('ajax-dataload-module', {'module_id': '|id_module|'}) }}",
         dataload_plugin_url: "{{path_for('ajax-dataload-plugin', {'plugin_id': '|id_plugin|', 'module_record_id': '|id_parent|'}) }}",
+        ajax_set_url: "{{ path_for('ajax-session') }}",
+        ajax_array_set_url: "{{ path_for('ajax-session-array') }}",
     };
 </script>
 

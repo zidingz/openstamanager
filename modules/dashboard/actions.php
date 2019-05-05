@@ -4,11 +4,11 @@ if (!isset($user['idanagrafica'])) {
     $user['idanagrafica'] = '';
 }
 
-switch (get('op')) {
+switch (post('op')) {
     // Lettura calendario tecnici
     case 'get_current_month':
-        $start = get('start');
-        $end = get('end');
+        $start = post('start');
+        $end = post('end');
 
         $stati = (array) $_SESSION['dashboard']['idstatiintervento'];
         $stati[] = prepare('');
@@ -27,7 +27,10 @@ switch (get('op')) {
                 'title' => '<b>Int. '.$r['codice'].'</b> '.$r['cliente'].'<br><b>'.tr('Tecnici').':</b> '.$r['nome_tecnico'].' '.(($r['have_attachments']) ? '<i class="fa fa-paperclip" aria-hidden="true"></i>' : ''),
                 'start' => $r['orario_inizio'],
                 'end' => $r['orario_fine'],
-                'url' => $rootdir.'/editor.php?id_module='.Modules::get('Interventi')['id'].'&id_record='.$r['idintervento'],
+                'url' =>  pathFor('module-record', [
+                    'module_id' => Modules::get('Interventi')['id'],
+                    'record_id' => $r['idintervento']
+                ]),
                 'backgroundColor' => $r['colore'],
                 'textColor' => color_inverse($r['colore']),
                 'borderColor' => ($r['colore_tecnico'] == '#FFFFFF') ? color_darken($r['colore_tecnico'], 100) : $r['colore_tecnico'],
@@ -40,10 +43,10 @@ switch (get('op')) {
         break;
 
     case 'update_intervento':
-        $sessione = get('id');
-        $idintervento = get('idintervento');
-        $orario_inizio = get('timeStart');
-        $orario_fine = get('timeEnd');
+        $sessione = post('id');
+        $idintervento = post('idintervento');
+        $orario_inizio = post('timeStart');
+        $orario_fine = post('timeEnd');
 
         // Aggiornamento prezzo totale
         $q = 'SELECT in_interventi_tecnici.prezzo_ore_unitario, idtecnico, in_statiintervento.completato FROM in_interventi_tecnici INNER JOIN in_interventi ON in_interventi_tecnici.idintervento=in_interventi.id LEFT OUTER JOIN in_statiintervento ON in_interventi.id_stato = in_statiintervento.id WHERE in_interventi.id='.prepare($idintervento).' AND in_statiintervento.completato = 0 '.Modules::getAdditionalsQuery('Interventi');
@@ -68,9 +71,9 @@ switch (get('op')) {
         break;
 
     case 'get_more_info':
-        $id = get('id');
-        $timeStart = get('timeStart');
-        $timeEnd = get('timeEnd');
+        $id = post('id');
+        $timeStart = post('timeStart');
+        $timeEnd = post('timeEnd');
 
         //Lettura dati intervento di riferimento
         $query = 'SELECT in_interventi_tecnici.idintervento, in_interventi.id, idtecnico, orario_inizio, orario_fine, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS nome_tecnico, (SELECT colore FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS colore FROM in_interventi_tecnici INNER JOIN in_interventi ON in_interventi_tecnici.idintervento=in_interventi.id WHERE in_interventi.id='.prepare($id).' '.Modules::getAdditionalsQuery('Interventi');
@@ -131,8 +134,7 @@ switch (get('op')) {
     break;
 
     case 'load_intreventi':
-
-        $mese = $_GET['mese'];
+        $mese = $_POST['mese'];
 
         // Righe inserite
         $qp = "SELECT co_promemoria.id, idcontratto, richiesta, DATE_FORMAT( data_richiesta, '%m%Y') AS mese, data_richiesta, an_anagrafiche.ragione_sociale, 'promemoria' AS ref, (SELECT descrizione FROM in_tipiintervento WHERE in_tipiintervento.id=co_promemoria.id_tipo_intervento) AS tipointervento FROM (co_promemoria INNER JOIN co_contratti ON co_promemoria.idcontratto=co_contratti.id) INNER JOIN an_anagrafiche ON co_contratti.idanagrafica=an_anagrafiche.idanagrafica WHERE idcontratto IN( SELECT id FROM co_contratti WHERE id_stato IN(SELECT id FROM co_staticontratti WHERE is_pianificabile = 1) ) AND idintervento IS NULL
