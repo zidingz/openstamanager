@@ -35,7 +35,7 @@ if (!empty($list)) {
         }
 
         echo '
-                <button type="button" class="btn btn-warning" onclick="download(this, \''.$element.'\')">
+                <button type="button" class="btn btn-warning" '.((!extension_loaded('ssl') and strpos($element, 'p7m') !== false) ? 'disabled' : '').' onclick="download(this, \''.$element.'\')">
                     <i class="fa fa-download"></i> '.tr('Importa').'
                 </button>
             </td>
@@ -79,6 +79,11 @@ function download(button, file) {
 				buttonRestore(button, restore);
 				$(button).prop("disabled", true);
             }
+        },
+        error: function(xhr) {
+            alert("'.tr('Errore').': " + xhr.responseJSON.error.message);
+
+            buttonRestore(button, restore);
         }
     });
 }

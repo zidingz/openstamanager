@@ -6,7 +6,7 @@ $tecnici = $dbo->fetchArray("SELECT idanagrafica, ragione_sociale FROM an_anagra
     SELECT idanagrafica FROM an_tipianagrafiche_anagrafiche WHERE id_tipo_anagrafica IN (
         SELECT id FROM an_tipianagrafiche WHERE descrizione = 'Tecnico'
     )
-) ORDER BY ragione_sociale");
+) AND deleted_at IS NULL ORDER BY ragione_sociale");
 
 if (!empty($tecnici)) {
     echo '

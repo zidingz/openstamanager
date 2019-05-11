@@ -73,7 +73,7 @@ if (Auth::check()) {
                 id_module: \''.$id_module.'\',
                 id_record: \''.$id_record.'\',
 
-                aggiornamenti_id: \''.($dbo->isInstalled() ? Modules::get('Aggiornamenti')['id'] : '').'\',
+                order_manager_id: \''.($dbo->isInstalled() ? Modules::get('Stato dei serivizi')['id'] : '').'\',
 
                 cifre_decimali: '.setting('Cifre decimali per importi').',
 
@@ -143,25 +143,48 @@ if (Auth::check()) {
                         </span>
                     </div>
 
+                    <!-- Navbar Right Menu -->
+                     <div class="navbar-custom-menu" id="right-menu">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown notifications-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-bell-o"></i>
+                                    <span class="label label-warning">
+                                        <span id="hooks-loading"><i class="fa fa-spinner fa-spin"></i></span>
+                                        <span id="hooks-count"></span>
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><ul class="menu" id="hooks">
 
-					<div id="right-menu" class="pull-right">
-                        <button onclick="window.print()" class="btn btn-sm btn-info tip" title="'.tr('Stampa').'">
-                            <i class="fa fa-print"></i>
-                        </button>
-						<a href="'.$rootdir.'/bug.php" class="btn btn-sm btn-github tip" title="'.tr('Segnalazione bug').'">
-                            <i class="fa fa-bug"></i>
-                        </a>
-						<a href="'.$rootdir.'/log.php" class="btn btn-sm btn-github tip" title="'.tr('Log accessi').'">
-                            <i class="fa fa-book"></i>
-                        </a>
-						<a href="'.$rootdir.'/info.php" class="btn btn-sm btn-github tip" title="'.tr('Informazioni').'">
-                            <i class="fa fa-info"></i>
-                        </a>
-						<a href="'.$router->pathFor('logout').'" class="btn btn-sm btn-danger tip" title="'.tr('Esci').'">
-                            <i class="fa fa-power-off"></i>
-                        </a>
-					</div>
+                                    </ul></li>
+                                </ul>
+                            </li>
+
+                            <li><a href="#" onclick="window.print()" class="btn-info tip" title="'.tr('Stampa').'">
+                                <i class="fa fa-print"></i>
+                            </a></li>
+
+                            <li><a href="'.$rootdir.'/bug.php" class="btn-github tip" title="'.tr('Segnalazione bug').'">
+                                <i class="fa fa-bug"></i>
+                            </a></li>
+
+                            <li><a href="'.$rootdir.'/log.php" class="btn-github tip" title="'.tr('Log accessi').'">
+                                <i class="fa fa-book"></i>
+                            </a></li>
+
+                            <li><a href="'.$rootdir.'/info.php" class="btn-github tip" title="'.tr('Informazioni').'">
+                                <i class="fa fa-info"></i>
+                            </a></li>
+
+                            <li><a href="'.$rootdir.'/index.php?op=logout" class="btn-danger tip" title="'.tr('Esci').'">
+                                <i class="fa fa-power-off"></i>
+                            </a></li>
+                        </ul>
+                     </div>
+
 				</nav>
+
 			</header>
 
             <aside class="main-sidebar">

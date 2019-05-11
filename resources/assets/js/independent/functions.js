@@ -38,7 +38,7 @@ function start_widgets($widgets) {
                 var new_class = "";
 
                 var order = $(this).sortable('toArray').toString();
-                $.post(globals.rootdir + "/actions.php?id_module=" + globals.aggiornamenti_id, {
+                $.post(globals.rootdir + "/actions.php?id_module=" + globals.order_manager_id, {
                     op: 'updatewidget',
                     location: dst_list,
                     id_module: globals.id_module,
@@ -47,7 +47,7 @@ function start_widgets($widgets) {
                     id: ui.item.attr('id')
                 });
 
-                $.post(globals.rootdir + "/actions.php?id_module=" + globals.aggiornamenti_id, {
+                $.post(globals.rootdir + "/actions.php?id_module=" + globals.order_manager_id, {
                     op: 'sortwidget',
                     location: dst_list,
                     ids: order,

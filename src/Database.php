@@ -420,7 +420,7 @@ class Database
         if (!empty($order)) {
             foreach ((array) $order as $key => $value) {
                 $order = is_numeric($key) ? 'ASC' : strtoupper($value);
-                $field = is_numeric($key) ? $value : key;
+                $field = is_numeric($key) ? $value : $key;
 
                 if ($order == 'ASC') {
                     $statement = $statement->orderBy($field);

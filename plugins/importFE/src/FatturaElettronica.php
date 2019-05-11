@@ -28,12 +28,23 @@ class FatturaElettronica
     /** @var array XML della fattura */
     protected $xml = null;
 
-    /** @var FatturaElettronica Fattura collegata */
+    /** @var Fattura Fattura collegata */
     protected $fattura = null;
 
     public function __construct($name)
     {
         $this->file = static::getImportDirectory().'/'.$name;
+
+        if (ends_with($name, '.p7m')) {
+            $file = XML::decodeP7M($this->file);
+
+            if (!empty($file)) {
+                delete($this->file);
+
+                $this->file = $file;
+            }
+        }
+
         $this->xml = XML::readFile($this->file);
 
         // Individuazione fattura pre-esistente
@@ -59,7 +70,7 @@ class FatturaElettronica
             $module = Modules::get('Fatture di acquisto');
 
             $plugin = $module->plugins->first(function ($value, $key) {
-                return $value->name = 'Fatturazione Elettronica';
+                return $value->name == 'Fatturazione Elettronica';
             });
 
             self::$directory = DOCROOT.'/'.$plugin->upload_directory;
