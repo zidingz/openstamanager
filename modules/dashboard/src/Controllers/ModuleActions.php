@@ -2,7 +2,7 @@
 
 namespace Modules\Dashboard\Controllers;
 
-use Controllers\Managers\ControllerManager;
+use Managers\ControllerManager;
 
 class ModuleActions extends ControllerManager
 {

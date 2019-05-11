@@ -53,6 +53,8 @@ class ContentMiddleware extends Middleware
 
         $args['handle_ajax'] = $request->isXhr() && filter('ajax');
 
+        $args['order_manager_id'] = $this->database->isInstalled() ? Modules::get('Stato dei serivizi')['id'] : null;
+
         // Periodo di visualizzazione
         if (!empty($_GET['period_start'])) {
             $_SESSION['period_start'] = $_GET['period_start'];

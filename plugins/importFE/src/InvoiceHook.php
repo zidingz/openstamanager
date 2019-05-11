@@ -2,7 +2,7 @@
 
 namespace Plugins\ImportFE;
 
-use Common\HookManager;
+use Managers\HookManager;
 use Modules;
 
 class InvoiceHook extends HookManager
@@ -23,7 +23,9 @@ class InvoiceHook extends HookManager
             return $value->name == 'Fatturazione Elettronica';
         });
 
-        $link = ROOTDIR.'/controller.php?id_module='.$module->id.'#tab_'.$plugin->id;
+        $link = pathFor('module', [
+            'module_id' => $module->id,
+        ]).'#tab_'.$plugin->id;
 
         return [
             'icon' => 'fa fa-file-text-o',

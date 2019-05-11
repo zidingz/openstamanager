@@ -2,7 +2,7 @@
 
 namespace Plugins\ReceiptFE;
 
-use Common\HookManager;
+use Managers\HookManager;
 use Modules;
 
 class ReceiptHook extends HookManager
@@ -23,7 +23,9 @@ class ReceiptHook extends HookManager
             return $value->name == 'Ricevute FE';
         });
 
-        $link = ROOTDIR.'/controller.php?id_module='.$module->id.'#tab_'.$plugin->id;
+        $link = pathFor('module', [
+            'module_id' => $module->id,
+        ]).'#tab_'.$plugin->id;
 
         return [
             'icon' => 'fa fa-dot-circle-o',

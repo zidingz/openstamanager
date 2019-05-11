@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use Controllers\Managers\RetroController;
+use Managers\RetroController;
 use Slim\Exception\NotFoundException;
 
 class ModuleController extends Controller

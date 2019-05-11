@@ -1,6 +1,6 @@
 <?php
 
-namespace Common;
+namespace Managers;
 
 abstract class HookManager
 {

@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use AJAX;
+use Models\Hook;
 use Modules;
 use Translator;
 use Util\Query;
@@ -308,6 +309,34 @@ class AjaxController extends Controller
                 $results['data'][] = $result;
             }
         }
+
+        $response = $response->write(json_encode($results));
+
+        return $response;
+    }
+
+    public function hooks($request, $response, $args)
+    {
+        $hooks = Hook::all();
+
+        $results = [];
+        foreach ($hooks as $hook) {
+            $results[] = [
+                'id' => $hook->id,
+                'name' => $hook->name,
+            ];
+        }
+
+        $response = $response->write(json_encode($results));
+
+        return $response;
+    }
+
+    public function hook($request, $response, $args){
+        $hook_id = $args['hook_id'];
+        $hook = Hook::find($hook_id);
+
+        $results = $hook->execute();
 
         $response = $response->write(json_encode($results));
 

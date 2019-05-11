@@ -2,9 +2,9 @@
 
 namespace Modules\Fatture\Controllers;
 
-use Controllers\Managers\RecordManager;
-use Controllers\Managers\RetroController;
-use Controllers\Managers\RowTrait;
+use Managers\RecordManager;
+use Managers\RetroController;
+use Managers\RowTrait;
 use Modules\Fatture\Fattura;
 
 class Record extends RecordManager

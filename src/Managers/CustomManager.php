@@ -1,6 +1,6 @@
 <?php
 
-namespace Controllers\Managers;
+namespace Managers;
 
 abstract class CustomManager extends ControllerManager
 {

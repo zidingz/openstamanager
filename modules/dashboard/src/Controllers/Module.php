@@ -2,8 +2,8 @@
 
 namespace Modules\Dashboard\Controllers;
 
-use Controllers\Managers\CustomManager;
-use Controllers\Managers\RetroController;
+use Managers\CustomManager;
+use Managers\RetroController;
 
 class Module extends CustomManager
 {

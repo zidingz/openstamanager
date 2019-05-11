@@ -78,11 +78,19 @@ $app->group('/ajax', function () use ($app) {
     $app->get('/search[/]', 'Controllers\AjaxController:search')
         ->setName('ajax-search');
 
+    // Hooks
+    $app->get('/hooks[/]', 'Controllers\AjaxController:hooks')
+        ->setName('hooks');
+    $app->get('/hook/{hook_id:[0-9]+}[/]', 'Controllers\AjaxController:hook')
+        ->setName('hook');
+
+    // Sessioni
     $app->get('/session[/]', 'Controllers\AjaxController:sessionSet')
         ->setName('ajax-session');
     $app->get('/session-array[/]', 'Controllers\AjaxController:sessionSetArray')
         ->setName('ajax-session-array');
 
+    // Dataload
     $app->group('/dataload', function () use ($app) {
         $app->get('/{module_id:[0-9]+}[/]', 'Controllers\AjaxController:dataLoad')
             ->setName('ajax-dataload-module');

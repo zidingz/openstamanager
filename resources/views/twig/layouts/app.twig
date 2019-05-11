@@ -20,7 +20,7 @@
         id_module: '{{ id_module }}',
         id_record: '{{ id_record }}',
 
-        aggiornamenti_id: '{{ id_aggiornamenti }}',
+        order_manager_id: '{{ order_manager_id }}',
 
         cifre_decimali: {{ setting('Cifre decimali per importi') }},
 
@@ -113,26 +113,45 @@
                 </span>
             </div>
 
-            <div id="right-menu" class="pull-right">
-                <button onclick="window.print()" class="btn btn-sm btn-info tip" title="{{ 'Stampa'|trans }}">
-                    <i class="fa fa-print"></i>
-                </button>
+            <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu" id="right-menu">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown notifications-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bell-o"></i>
+                            <span class="label label-warning">
+                                <span id="hooks-loading"><i class="fa fa-spinner fa-spin"></i></span>
+                                <span id="hooks-count"></span>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><ul class="menu" id="hooks">
 
-                <a href="{{ path_for('bug') }}" class="btn btn-sm btn-github tip" title="{{ 'Segnalazione bug'|trans }}">
-                    <i class="fa fa-bug"></i>
-                </a>
+                            </ul></li>
+                        </ul>
+                    </li>
 
-                <a href="{{ path_for('logs') }}" class="btn btn-sm btn-github tip" title="{{ 'Log accessi'|trans }}">
-                    <i class="fa fa-book"></i>
-                </a>
+                    <li><a href="#" class="btn-info tip" title="{{ 'Stampa'|trans }}">
+                        <i class="fa fa-print"></i>
+                    </a></li>
 
-                <a href="{{ path_for('info') }}" class="btn btn-sm btn-github tip" title="{{ 'Informazioni'|trans }}">
-                    <i class="fa fa-info"></i>
-                </a>
+                    <li><a href="{{ path_for('bug') }}" class="btn-github tip" title="{{ 'Segnalazione bug'|trans }}">
+                        <i class="fa fa-bug"></i>
+                    </a></li>
 
-                <a href="{{ path_for('logout') }}" class="btn btn-sm btn-danger tip" title="{{ 'Esci'|trans }}">
-                    <i class="fa fa-power-off"></i>
-                </a>
+                    <li><a href="{{ path_for('logs') }}" class="btn-github tip" title="{{ 'Log accessi'|trans }}">
+                        <i class="fa fa-book"></i>
+                    </a></li>
+
+                    <li><a href="{{ path_for('info') }}" class="btn-github tip" title="{{ 'Informazioni'|trans }}">
+                        <i class="fa fa-info"></i>
+                    </a></li>
+
+                    <li><a href="{{ path_for('logout') }}" class="btn-danger tip" title="{{ 'Esci'|trans }}">
+                        <i class="fa fa-power-off"></i>
+                    </a></li>
+                    
+                </ul>
             </div>
         </nav>
     </header>
@@ -194,6 +213,56 @@
             <small class="text-muted">({{ revision ? revision : 'In sviluppo'|trans }})</small>
         </span>
     </footer>
+
+    <!-- Hooks -->
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: "{{ path_for('hooks') }}",
+                type: "get",
+                success: function(data) {
+                    hooks = JSON.parse(data);
+
+                    hooks.forEach(function(item, index){
+                        executeHook(item, hooks.length);
+                    });
+                },
+            });
+        });
+
+        function executeHook(hook, length){
+            $("#hooks").append('<li id="hook-loader-' + hook.id + '"><a href="#">{{ 'Hook "_NAME_" in esecuzione'|trans({'_NAME_': "' + hook.name + '"})|raw }}</a></li>');
+
+            $.ajax({
+                url: "{{ path_for('hook', {'hook_id': '" + hook.id + "'})|raw }}",
+                type: "get",
+                success: function(data) {
+                    result = JSON.parse(data);
+
+                    $("#hook-loader-" + hook.id).remove();
+                    message = '<li class="hook-element"><a href="' + (result.link ? result.link : "#") + '"><i class="' + result.icon + '"></i> ' + result.message + '</a></li>';
+
+                    // Inserimento della notifica
+                    if(result.notify) {
+                        hooks_count = $("#hooks-count");
+                        number = parseInt(hooks_count.text());
+                        number = isNaN(number) ? 0 : number;
+
+                        hooks_count.text(parseInt(number) + 1);
+
+                        $("#hooks").prepend(message);
+                    } else {
+                        $("#hooks").append(message);
+                    }
+
+                    // Rimozione eventuale della rotella di caricamento
+                    if($(".hook-element").length == hooks.length) {
+                        $("#hooks-loading").hide();
+                    }
+                },
+            });
+        }
+    </script>
 
     <!-- Modal di default -->
     <div class="modal fade" id="bs-popup" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="true"></div>

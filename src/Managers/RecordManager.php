@@ -1,6 +1,6 @@
 <?php
 
-namespace Controllers\Managers;
+namespace Managers;
 
 abstract class RecordManager extends ControllerManager
 {

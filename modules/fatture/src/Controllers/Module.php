@@ -2,8 +2,8 @@
 
 namespace Modules\Fatture\Controllers;
 
-use Controllers\Managers\ModuleManager;
-use Controllers\Managers\RetroController;
+use Managers\ModuleManager;
+use Managers\RetroController;
 
 class Module extends ModuleManager
 {

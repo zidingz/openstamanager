@@ -244,7 +244,7 @@ $(document).ready(function () {
             stop: function (event, ui) {
                 var order = $(this).sortable('toArray').toString();
 
-                $.post(globals.rootdir + "/actions.php?id_module=" + globals.aggiornamenti_id, {
+                $.post(globals.rootdir + "/actions.php?id_module=" + globals.order_manager_id, {
                     op: 'sortmodules',
                     ids: order
                 });

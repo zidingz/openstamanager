@@ -1,6 +1,6 @@
 <?php
 
-namespace Controllers\Managers;
+namespace Managers;
 
 use Controllers\Controller;
 use HTMLBuilder\HTMLBuilder;
