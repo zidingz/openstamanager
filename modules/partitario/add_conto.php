@@ -20,7 +20,7 @@ $idconto = get('id');
     </div>
     <br>
 
-    <div class="pull-right">
+    <div class="float-right">
         <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> <?php echo tr('Aggiungi'); ?></button>
     </div>
     <div class="clearfix"></div>

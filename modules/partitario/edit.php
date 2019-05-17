@@ -16,12 +16,12 @@ for ($x = 0; $x < $n1; ++$x) {
     $ricavi = [];
 
     if ($rs1[$x]['descrizione'] == 'Economico') {
-        echo "<hr><h2 class=\"pull-left\">Conto economico</h2>\n";
+        echo "<hr><h2 class=\"float-left\">Conto economico</h2>\n";
     } else {
-        echo "<hr><h2 class=\"pull-left\">Stato patrimoniale</h2>\n";
+        echo "<hr><h2 class=\"float-left\">Stato patrimoniale</h2>\n";
     }
 
-    echo "<div class=\"pull-right\"><br>\n";
+    echo "<div class=\"float-right\"><br>\n";
     echo Prints::getLink('Mastrino', $rs1[$x]['id'], null, tr('Stampa'), null, 'lev=1');
     echo "</div>\n";
     echo "<div class=\"clearfix\"></div>\n";

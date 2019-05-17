@@ -12,7 +12,7 @@
     {% endfor %}
 
     globals = {
-        rootdir: '{{ rootdir }}',
+        rootdir: '{{ base_url() }}',
         js: '{{ paths['js'] }}',
         css: '{{ paths['css'] }}',
         img: '{{ paths['img'] }}',
@@ -97,13 +97,13 @@
             </li>
 
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" id="daterange" class="nav-link">
-                    <i class="fa fa-calendar" style="color:{{ calendar.color }}"></i> <i class="fa fa-caret-down"></i>
+                <a href="#" id="daterange" class="nav-link {{ calendar.is_current ?  'calendar-wrong' : '' }}">
+                    <i class="fa fa-calendar"></i> <i class="fa fa-caret-down"></i>
                 </a>
             </li>
 
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" class="nav-link">
+                <a href="#" class="nav-link {{  calendar.is_current ?  'calendar-wrong' : '' }}">
                     {{ calendar.start|date }} - {{ calendar.end|date }}
                 </a>
             </li>
@@ -124,7 +124,7 @@
                 </div>
             </li>
 
-            <li class="nav-item"><a href="#" onclick="window.print()" class="nav-link btn-info tip" title="{{ 'Stampa'|trans }}">
+            <li class="nav-item"><a href="#" onclick="window.print()" class="nav-link btn-info text-white tip" title="{{ 'Stampa'|trans }}">
                 <i class="fa fa-print"></i>
             </a></li>
 
@@ -140,7 +140,7 @@
                 <i class="fa fa-info"></i>
             </a></li>
 
-            <li><a href="{{ path_for('logout') }}" class="nav-link btn-danger tip" title="{{ 'Esci'|trans }}">
+            <li><a href="{{ path_for('logout') }}" class="nav-link btn-danger text-white tip" title="{{ 'Esci'|trans }}">
                 <i class="fa fa-power-off"></i>
             </a></li>
         </ul>
@@ -177,7 +177,8 @@
             </div>
             <!-- /.search form -->
 
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">                {{ main_menu|raw }}
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
+                {{ main_menu|raw }}
             </ul>
         </section>
         <!-- /.sidebar -->

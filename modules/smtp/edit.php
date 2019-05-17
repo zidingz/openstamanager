@@ -89,7 +89,7 @@ if (!empty($elementi)) {
         <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Template email collegati: _NUM_', [
             '_NUM_' => count($elementi),
         ]).'</h3>
-        <div class="card-tools pull-right">
+        <div class="card-tools float-right">
             <button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
         </div>
     </div>

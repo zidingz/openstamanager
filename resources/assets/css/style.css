@@ -323,7 +323,7 @@ span.form-control {
     font-size: 11px;
 }
 
-.nav-tabs-custom>.nav-tabs.pull-right>li>a.back-btn {
+.nav-tabs-custom>.nav-tabs.float-right>li>a.back-btn {
     font-size: 12px;
     color: #3C8DBC;
 }
@@ -341,7 +341,7 @@ span.form-control {
     border-bottom: 0 !important;
 }
 
-.nav-tabs-custom>.nav-tabs.pull-right>li>a.back-btn:hover {
+.nav-tabs-custom>.nav-tabs.float-right>li>a.back-btn:hover {
     cursor: pointer;
     color: #72AFD2;
 }
@@ -432,7 +432,7 @@ span.form-control {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.02) inset;
 }
 
-.sidebar-menu li>a>.pull-right-container {
+.sidebar-menu li>a>.float-right-container {
     position: absolute;
     padding: 12px;
     right: 10px;
@@ -611,7 +611,7 @@ input.small-width {
     border-top: 3px solid #ddd;
 }
 
-.nav-tabs-custom>.nav-tabs.pull-right>li:first-of-type.active>a {
+.nav-tabs-custom>.nav-tabs.float-right>li:first-of-type.active>a {
     border-right-color: #f4f4f4;
     border-right-width: 1px;
     border-left-width: 0px;

@@ -111,7 +111,7 @@ if ($module['name'] == 'Fatture di vendita') {
     <div class="card card-outline card-info '.($collapsed ? 'collapsed-box' : '').'">
 	    <div class="card-header with-border">
 	        <h3 class="card-title">'.tr('Dati Fatturazione Elettronica').'</h3>
-	        <div class="card-tools pull-right">
+	        <div class="card-tools float-right">
 	            <button type="button" class="btn btn-card-tool" data-widget="collapse">
 	                <i class="fa fa-plus"></i>
 	            </button>

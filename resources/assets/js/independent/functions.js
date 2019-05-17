@@ -249,7 +249,7 @@ function start_datatables() {
                             $(win.document.body)
                                 .css('font-size', '10pt')
                                 .append(
-                                    '<table class="main-records table table-condensed table-bordered dataTable"><tfoot><tr><td></td><td class="pull-right">' + $('#summable').text() + '</td><td></td></tr></tfoot></table>'
+                                    '<table class="main-records table table-condensed table-bordered dataTable"><tfoot><tr><td></td><td class="float-right">' + $('#summable').text() + '</td><td></td></tr></tfoot></table>'
                                 );
                             $(win.document.body).find('table')
                                 .addClass('compact')
@@ -536,7 +536,7 @@ function start_superselect() {
     $('.superselect').each(function () {
         $this = $(this);
         $(this).select2({
-            theme: "bootstrap",
+            theme: "bootstrap4",
             language: "it",
             width: '100%',
             maximumSelectionLength: $this.data('maximum') ? $this.data('maximum') : -1,

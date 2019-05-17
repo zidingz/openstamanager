@@ -60,7 +60,7 @@ $_SESSION['superselect']['idanagrafica'] = $record['idanagrafica'];
 				<div class="col-md-3">
                     <?php
 
-                    echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="pull-right"');
+                    echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="float-right"');
 
                     if ($dir == 'entrata') {
                         ?>
@@ -133,7 +133,7 @@ $_SESSION['superselect']['idanagrafica'] = $record['idanagrafica'];
 	</div>
 
 	<div class="card-body">
-		<div class="pull-left">
+		<div class="float-left">
 <?php
 
 if ($record['flag_completato'] == 0) {
@@ -190,7 +190,7 @@ if (!empty($elementi)) {
         <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Documenti collegati: _NUM_', [
             '_NUM_' => count($elementi),
         ]).'</h3>
-        <div class="card-tools pull-right">
+        <div class="card-tools float-right">
             <button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
         </div>
     </div>

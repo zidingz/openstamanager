@@ -30,7 +30,7 @@ class HTMLWrapper implements WrapperInterface
 
             if (!empty($values['icon-before'])) {
                 $result .= '
-        <span class="input-group-prepend'.(!empty($values['icon-custom']) ? ' '.$values['icon-custom'] : '').'">'.$values['icon-before'].'</span>';
+        <span class="input-group-prepend input-group-text'.(!empty($values['icon-custom']) ? ' '.$values['icon-custom'] : '').'">'.$values['icon-before'].'</span>';
             }
         }
 
@@ -44,7 +44,7 @@ class HTMLWrapper implements WrapperInterface
         if (!empty($values['icon-before']) || !empty($values['icon-after'])) {
             if (!empty($values['icon-after'])) {
                 $result .= '
-                <span class="input-group-append'.(!empty($values['icon-custom']) ? ' '.$values['icon-custom'] : '').'">'.$values['icon-after'].'</span>';
+                <span class="input-group-append input-group-text'.(!empty($values['icon-custom']) ? ' '.$values['icon-custom'] : '').'">'.$values['icon-after'].'</span>';
             }
 
             $result .= '
@@ -57,7 +57,7 @@ class HTMLWrapper implements WrapperInterface
 
         if (!empty($values['help']) && !empty($values['show-help'])) {
             $result .= '
-        <span class="form-text pull-left"><small>'.$values['help'].'</small></span>';
+        <span class="form-text float-left"><small>'.$values['help'].'</small></span>';
 
             unset($values['help']);
             unset($values['show-help']);

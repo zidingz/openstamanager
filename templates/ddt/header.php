@@ -7,7 +7,7 @@ $default_header$
 
 <div class="row">
     <!-- Dati Ddt -->
-    <div class="col--6">
+    <div class="col-xs-6">
         <div class="text-center" style="height:5mm;">
             <b>DDT</b>
         </div>
@@ -55,7 +55,7 @@ $default_header$
         </table>
     </div>
 
-    <div class="col--5 col--offset-1">
+    <div class="col-xs-5 col-xs-offset-1">
         <table class="table" style="width:100%;margin-top:5mm;">
             <tr>
                 <td class="border-full" style="height:20mm;">

@@ -208,11 +208,11 @@ echo '
                 </div>
 
 
-                <div class="col--6  col-md-2">
+                <div class="col-6  col-md-2">
                     {[ "type": "time", "label": "'.tr('Orario inizio').'", "name": "orario_inizio", "value": "'.$orario_inizio.'", "disabled": "1" ]}
                 </div>
 
-                <div class="col--6  col-md-2">
+                <div class="col-6  col-md-2">
                     {[ "type": "time", "label": "'.tr('Orario fine').'", "name": "orario_fine", "value": "'.$orario_fine.'", "disabled": "1" ]}
                 </div>
             </div>

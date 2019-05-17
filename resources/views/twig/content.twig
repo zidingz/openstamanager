@@ -27,7 +27,7 @@
 
     {% if structure.segments|length > 1 %}
 <div class="row">
-    <div class="col-md-4 pull-right">
+    <div class="col-md-4 float-right">
         {[ "type": "select", "name": "id_segment_", "required": 0, "values": "query=SELECT id, name AS descrizione FROM zz_segments WHERE id_module = {{ module_id }}", "value": "{{ _SESSION['module_' ~ module_id]['id_segment'] }}" ]}
     </div>
 </div>

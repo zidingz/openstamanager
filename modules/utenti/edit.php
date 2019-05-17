@@ -99,7 +99,7 @@ if (!empty($utenti)) {
 			<div class=\'alert alert-info\' ><i class=\'fa fa-info-circle\'></i> '.tr('Non ci sono utenti in questo gruppo').'.</div>';
 }
 echo '
-			<a data-toggle="modal" data-href="'.$rootdir.'/modules/utenti/user.php?idgruppo='.$record['id'].'" data-title="'.tr('Aggiungi utente').'" class="pull-right btn btn-primary"><i class="fa fa-plus"></i> '.tr('Aggiungi utente').'</a>
+			<a data-toggle="modal" data-href="'.$rootdir.'/modules/utenti/user.php?idgruppo='.$record['id'].'" data-title="'.tr('Aggiungi utente').'" class="float-right btn btn-primary"><i class="fa fa-plus"></i> '.tr('Aggiungi utente').'</a>
 		</div>
 	</div>';
 
@@ -112,7 +112,7 @@ echo '
 		<div class="card-header">
             <h3 class="card-title">'.tr('Permessi _GROUP_', [
                 '_GROUP_' => $record['nome'],
-            ]).((empty($record['editable'])) ? '<a class=\'clickable btn-sm pull-right ask\'  data-msg="'.tr('Verranno reimpostati i permessi di default per il gruppo \''.$record['nome'].'\' ').'." data-class="btn btn-lg btn-warning" data-button="'.tr('Reimposta permessi').'" data-op="restore_permission"  >'.tr('Reimposta permessi').'</a>' : '').'</h3>
+            ]).((empty($record['editable'])) ? '<a class=\'clickable btn-sm float-right ask\'  data-msg="'.tr('Verranno reimpostati i permessi di default per il gruppo \''.$record['nome'].'\' ').'." data-class="btn btn-lg btn-warning" data-button="'.tr('Reimposta permessi').'" data-op="restore_permission"  >'.tr('Reimposta permessi').'</a>' : '').'</h3>
 
 		</div>
 
@@ -167,7 +167,7 @@ echo '
     $(document).ready(function(){
         $("#save").addClass("hide");
     });
-	$("li.active.header button.btn-primary").attr("data-href", $("a.pull-right").attr("data-href") );
+	$("li.active.header button.btn-primary").attr("data-href", $("a.float-right").attr("data-href") );
     function update_permissions(id, value){
         $.get(
             globals.rootdir + "/actions.php?id_module='.$id_module.'&id_record='.$id_record.'&op=update_permission&idmodulo=" + id + "&permesso=" + value,

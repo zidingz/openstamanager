@@ -24,7 +24,7 @@ foreach ($records as $record) {
 
 echo '
 			<div class="clearfix"></div><hr>
-            <div class="pull-right">
+            <div class="float-right">
 				<button type="submit" class="btn btn-success"><i class="fa fa-check"></i> '.tr('Salva modifiche').'</button>
 			</div>
 		</div>

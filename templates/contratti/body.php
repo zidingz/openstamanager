@@ -12,7 +12,7 @@ $autofill = [
 
 echo '
 <div class="row">
-    <div class="col--6">
+    <div class="col-xs-6">
         <div class="text-center" style="height:5mm;">
             <b>'.tr('Contratto num. _NUM_ del _DATE_', [
                 '_NUM_' => $records[0]['numero'],
@@ -37,7 +37,7 @@ if (!empty($records[0]['idimpianti'])) {
 echo '
     </div>
 
-    <div class="col--5 col--offset-1">
+    <div class="col-xs-5 col-xs-offset-1">
         <table class="table" style="width:100%;margin-top:5mm;">
             <tr>
                 <td colspan=2 class="border-full" style="height:16mm;">
@@ -148,7 +148,7 @@ foreach ($righe as $r) {
 
             if ($r['sconto'] > 0) {
                 echo '
-                    <br><small class="form-text">- '.tr('sconto _TOT_ _TYPE_', [
+                    <br><small class="help-block">- '.tr('sconto _TOT_ _TYPE_', [
                         '_TOT_' => Translator::numberToLocale($r['sconto_unitario']),
                         '_TYPE_' => ($r['tipo_sconto'] == 'PRC' ? '%' : currency()),
                     ]).'</small>';

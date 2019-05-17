@@ -180,7 +180,7 @@ function download(button) {
 
                     <label><input type="file" name="blob" id="blob"></label>
 
-                    <button type="button" class="btn btn-primary pull-right" onclick="update()">
+                    <button type="button" class="btn btn-primary float-right" onclick="update()">
                         <i class="fa fa-upload"></i> '.tr('Carica').'
                     </button>
                 </form>

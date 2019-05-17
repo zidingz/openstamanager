@@ -11,7 +11,7 @@ if (!$disabled) {
 
 // Creazione altri documenti
 echo '
-<div style="margin-left:4px;" class="dropdown pull-right">
+<div style="margin-left:4px;" class="dropdown float-right">
     <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" '.($disabled ? '' : 'disabled').' >
         <i class="fa fa-magic"></i>&nbsp;'.tr('Crea').'...
         <span class="caret"></span>

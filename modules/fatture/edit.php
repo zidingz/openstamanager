@@ -121,7 +121,7 @@ if (empty($record['is_fiscale'])) {
 				<div class="col-md-3">
 					<?php
 
-                    echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="pull-right"');
+                    echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="float-right"');
 
                     if ($dir == 'entrata') {
                         ?>
@@ -189,7 +189,7 @@ if (empty($record['is_fiscale'])) {
 
                     if ($fattura->isFE() && $ricalcola && $module['name'] == 'Fatture di acquisto') {
                         echo '
-                    <button type="button" class="btn btn-info btn-sm pull-right tip" title="'.tr('Ricalcola le scadenze').'. '.tr('Per ricalcolare correttamente le scadenze, imposta la fattura in stato \'\'Bozza\'\' e correggi il metodo di  come desiderato, poi re-imposta lo stato \'\'Emessa\'\' e utilizza questa funzione').'." id="ricalcola_scadenze">
+                    <button type="button" class="btn btn-info btn-sm float-right tip" title="'.tr('Ricalcola le scadenze').'. '.tr('Per ricalcolare correttamente le scadenze, imposta la fattura in stato \'\'Bozza\'\' e correggi il metodo di  come desiderato, poi re-imposta lo stato \'\'Emessa\'\' e utilizza questa funzione').'." id="ricalcola_scadenze">
                         <i class="fa fa-calculator" aria-hidden="true"></i>
                     </button>';
                     }
@@ -426,7 +426,7 @@ if ($tipodoc == 'Fattura accompagnatoria di vendita') {
 	<div class="card-body">
 		<div class="row">
 			<div class="col-md-12">
-				<div class="pull-left">
+				<div class="float-left">
 <?php
 if ($record['stato'] != 'Pagato' && $record['stato'] != 'Emessa') {
     if (empty($record['ref_documento'])) {
@@ -523,7 +523,7 @@ if ($record['stato'] != 'Pagato' && $record['stato'] != 'Emessa') {
 ?>
 				</div>
 
-				<div class="pull-right">
+				<div class="float-right">
 					<!-- Stampe -->
 <?php
 //stampa solo per fatture di vendita

@@ -8,7 +8,7 @@ if (Auth::check()) {
 
 			<footer class="main-footer">
                 <a class="hidden-xs" href="https://www.openstamanager.com" title="'.tr("Il gestionale open source per l'assistenza tecnica e la fatturazione").'." target="_blank"><strong>'.tr('OpenSTAManager').'</strong></a>
-				<span class="pull-right hidden-xs">
+				<span class="float-right hidden-xs">
                     <strong>'.tr('Versione').'</strong> '.$version.'
                     <small class="text-muted">('.(!empty($revision) ? $revision : tr('In sviluppo')).')</small>
                 </span>

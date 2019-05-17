@@ -89,7 +89,7 @@ if ($total == 0) {
 
 		<ul class="dropdown-menu" role="menu" id="idstati_ul">
 			<?php echo $checks; ?>
-			<div class="btn-group pull-right">
+			<div class="btn-group float-right">
 				<button  id="selectallstati" onclick="<?php echo $allchecksstati; ?>" class="btn btn-primary btn-sm" type="button"><?php echo tr('Tutti'); ?></button>
 				<button id="deselectallstati" class="btn btn-danger btn-sm" type="button"><i class="fa fa-times"></i></button>
 			</div>
@@ -140,7 +140,7 @@ if ($total == 0) {
 
 		<ul class="dropdown-menu" role="menu" id="idtipi_ul">
 			<?php echo $checks; ?>
-			<div class="btn-group pull-right">
+			<div class="btn-group float-right">
 				<button  id="selectalltipi" onclick="<?php echo $allcheckstipi; ?>" class="btn btn-primary btn-sm" type="button"><?php echo tr('Tutti'); ?></button>
 				<button id="deselectalltipi" class="btn btn-danger btn-sm" type="button"><i class="fa fa-times"></i></button>
 			</div>
@@ -222,7 +222,7 @@ if ($totale_tecnici == 0) {
 
 		<ul class="dropdown-menu" role="menu" id="idtecnici_ul">
 			<?php echo $checks; ?>
-			<div class="btn-group pull-right">
+			<div class="btn-group float-right">
 				<button id="selectalltecnici" onclick="<?php echo $allchecktecnici; ?>" class="btn btn-primary btn-sm" type="button"><?php echo tr('Tutti'); ?></button>
 				<button id="deselectalltecnici" class="btn btn-danger btn-sm" type="button"><i class="fa fa-times"></i></button>
 			</div>
@@ -274,7 +274,7 @@ if ($total == 0) {
 
 		<ul class="dropdown-menu" role="menu" id="idzone_ul">
 			<?php echo $checks; ?>
-			<div class="btn-group pull-right">
+			<div class="btn-group float-right">
 				<button id="selectallzone" onclick="<?php echo $allcheckzone; ?>" class="btn btn-primary btn-sm" type="button"><?php echo tr('Tutti'); ?></button>
 				<button id="deselectallzone" class="btn btn-danger btn-sm" type="button"><i class="fa fa-times"></i></button>
 			</div>

@@ -66,7 +66,7 @@ echo '
                 <div class="col-md-12">
                     <p class="text-danger">'.tr('Totale prodotti da inserire').': <span id="totale_prodotti">0</span></p>
 
-                    <button type="submit" id="inserisci" class="btn btn-success pull-right" onclick="if( confirm(\'Confermi l\\\'inserimento di \' + globalsp.n_prodotti + \' prodotti?\') ){ $(\'#insert_form\').submit(); }"><i class="fa fa-check"></i> '.tr('Salva modifiche').'</button>
+                    <button type="submit" id="inserisci" class="btn btn-success float-right" onclick="if( confirm(\'Confermi l\\\'inserimento di \' + globalsp.n_prodotti + \' prodotti?\') ){ $(\'#insert_form\').submit(); }"><i class="fa fa-check"></i> '.tr('Salva modifiche').'</button>
                     <div class="clearfix"></div>
                     <div class="alert alert-info">';
 

@@ -21,7 +21,7 @@
 
 				<div class="col-md-6">
                     <?php
-                        echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="pull-right"');
+                        echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="float-right"');
                     ?>
 
 					{[ "type": "select", "label": "<?php echo tr('Cliente'); ?>", "name": "idanagrafica", "id": "idanagrafica_c", "required": 1, "value": "$idanagrafica$", "ajax-source": "clienti" ]}
@@ -50,7 +50,7 @@
 				<div class="col-md-3">
                     <?php
                         if ($record['idagente'] != 0) {
-                            echo Modules::link('Anagrafiche', $record['idagente'], null, null, 'class="pull-right"');
+                            echo Modules::link('Anagrafiche', $record['idagente'], null, null, 'class="float-right"');
                         }
                     ?>
 					{[ "type": "select", "label": "<?php echo tr('Agente'); ?>", "name": "idagente", "values": "query=SELECT an_anagrafiche.idanagrafica AS id, ragione_sociale AS descrizione FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.id_tipo_anagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE descrizione='Agente' AND deleted_at IS NULL ORDER BY ragione_sociale", "value": "$idagente$" ]}
@@ -439,7 +439,7 @@ if (!empty($elementi)) {
         <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Documenti collegati: _NUM_', [
             '_NUM_' => count($elementi),
         ]).'</h3>
-        <div class="card-tools pull-right">
+        <div class="card-tools float-right">
             <button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
         </div>
     </div>

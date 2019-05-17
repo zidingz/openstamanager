@@ -1,7 +1,7 @@
 <?php
 
 echo '
-<script src="'.$rootdir.'/assets/js/chartjs/Chart.min.js"></script>';
+<script src="'.ROOTDIR.'/assets/js/chartjs/Chart.min.js"></script>';
 
 $start = $_SESSION['period_start'];
 $end = $_SESSION['period_end'];
@@ -64,13 +64,13 @@ echo '
     <div class="card-header with-border">
         <h3 class="card-title">'.tr('Vendite e acquisti').'</h3>
 
-        <div class="card-tools pull-right">
+        <div class="card-tools float-right">
             <button type="button" class="btn btn-card-tool" data-widget="collapse">
                 <i class="fa fa-minus"></i>
             </button>
         </div>
     </div>
-    <canvas class="card-body collapse in" id="fatturato" height="100"></canvas>
+    <canvas class="card-body" id="fatturato" height="100"></canvas>
 </div>';
 
 // Script per il grafico del fatturato
@@ -130,13 +130,13 @@ echo '
             <div class="card-header with-border">
                 <h3 class="card-title">'.tr('Clienti TOP').'</h3>
 
-                <div class="card-tools pull-right">
+                <div class="card-tools float-right">
                     <button type="button" class="btn btn-card-tool" data-widget="collapse">
                         <i class="fa fa-minus"></i>
                     </button>
                 </div>
             </div>
-            <div class="card-body collapse in">';
+            <div class="card-body">';
 if (!empty($clienti)) {
     echo '
                 <table class="table table-striped">
@@ -176,13 +176,13 @@ echo '
             <div class="card-header with-border">
                 <h3 class="card-title">'.tr('Articoli più venduti').'</h3>
 
-                <div class="card-tools pull-right">
+                <div class="card-tools float-right">
                     <button type="button" class="btn btn-card-tool" data-widget="collapse">
                         <i class="fa fa-minus"></i>
                     </button>
                 </div>
             </div>
-            <div class="card-body collapse in">';
+            <div class="card-body">';
 if (!empty($articoli)) {
     echo '
                 <table class="table table-striped">
@@ -249,13 +249,13 @@ echo '
     <div class="card-header with-border">
         <h3 class="card-title">'.tr('Interventi per tipologia').'</h3>
 
-        <div class="card-tools pull-right">
+        <div class="card-tools float-right">
             <button type="button" class="btn btn-card-tool" data-widget="collapse">
                 <i class="fa fa-minus"></i>
             </button>
         </div>
     </div>
-    <canvas class="card-body collapse in" id="interventi" height="100"></canvas>
+    <canvas class="card-body" id="interventi" height="100"></canvas>
 </div>';
 
 // Script per il grafico del fatturato

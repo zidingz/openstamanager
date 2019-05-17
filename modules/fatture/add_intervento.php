@@ -110,7 +110,7 @@ echo '
     <!-- PULSANTI -->
 	<div class="row">
 		<div class="col-md-12 text-right">
-			<button type="submit" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> '.tr('Aggiungi').'</button>
+			<button type="submit" class="btn btn-primary float-right"><i class="fa fa-plus"></i> '.tr('Aggiungi').'</button>
 		</div>
     </div>
 </form>';

@@ -69,7 +69,7 @@ class ContentMiddleware extends Middleware
         $args['calendar'] = [
             'start' => $_SESSION['period_start'],
             'end' => $_SESSION['period_end'],
-            'color' => ($_SESSION['period_start'] != date('Y').'-01-01' || $_SESSION['period_end'] != date('Y').'-12-31') ? 'red' : 'white',
+            'is_current' => ($_SESSION['period_start'] != date('Y').'-01-01' || $_SESSION['period_end'] != date('Y').'-12-31'),
         ];
 
         // Argomenti di ricerca dalla sessione

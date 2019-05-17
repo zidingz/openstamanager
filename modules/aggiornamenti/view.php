@@ -17,7 +17,7 @@ echo '
         <h3 class="card-title">
             <a data-toggle="tab" href="#info">'.tr("Informazioni sull'aggiornamento").'</a>
         </h3>
-        <a data-toggle="tab" href="#changelog" class="pull-right">'.tr('Changelog').'</a>
+        <a data-toggle="tab" href="#changelog" class="float-right">'.tr('Changelog').'</a>
     </div>
     <div class="card-body tab-content">
         <div id="info" class="tab-pane fade in active">';
@@ -27,7 +27,7 @@ echo '
             <p>'.tr("Il pacchetto selezionato contiene un aggiornamento dell'intero gestionale").'.</p>
             <p>'.tr("Si consiglia vivamente di effettuare un backup dell'installazione prima di procedere").'.</p>
 
-            <button type="button" class="btn btn-primary pull-right" onclick="backup()">
+            <button type="button" class="btn btn-primary float-right" onclick="backup()">
                 <i class="fa fa-database"></i> '.tr('Crea backup').'
             </button>
 
@@ -142,7 +142,7 @@ echo '
             </button>
         </form>
 
-        <form action="'.pathFor('module', ['module_id' => $id_module]).'" method="post" class="pull-right" style="display:inline-block">
+        <form action="'.pathFor('module', ['module_id' => $id_module]).'" method="post" class="float-right" style="display:inline-block">
             <input type="hidden" name="op" value="execute">
             <input type="hidden" name="backto" value="record-list">
 

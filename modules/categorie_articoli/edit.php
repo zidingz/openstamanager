@@ -37,7 +37,7 @@
 	</div>
 
 	<div class="card-body">
-		<div class="pull-left">
+		<div class="float-left">
 			<a class="btn btn-primary" data-href="<?php echo $rootdir; ?>/add.php?id_module=<?php echo $id_module; ?>&id_original=<?php echo $id_record; ?>" data-toggle="modal" data-title="<?php echo tr('Aggiungi riga'); ?>"><i class="fa fa-plus"></i> <?php echo tr('Sottocategoria'); ?></a><br>
 		</div>
 		<div class="clearfix"></div>

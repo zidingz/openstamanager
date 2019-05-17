@@ -11,7 +11,7 @@
 
 
 		<div class="col-md-12">
-			<a href="#" class="pull-right" id="default">[Default]</a>
+			<a href="#" class="float-right" id="default">[Default]</a>
 			{[ "type": "textarea", "label": "<?php echo tr('Contenuto'); ?>", "name": "contenuto", "id": "contenuto_add", "required": 1, "class": "autosize", "extra": "rows='10'" ]}
 		</div>
 	</div>

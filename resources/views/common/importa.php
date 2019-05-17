@@ -196,7 +196,7 @@ if (!empty($righe)) {
     <!-- PULSANTI -->
     <div class="row">
         <div class="col-md-12 text-right">
-            <button type="submit" id="submit_btn" class="btn btn-primary pull-right">
+            <button type="submit" id="submit_btn" class="btn btn-primary float-right">
                 <i class="fa fa-plus"></i> '.$options['button'].'
             </button>
         </div>

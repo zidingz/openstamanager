@@ -27,7 +27,7 @@
             <i class="fa fa-chevron-left"></i> {{ "Torna all'elenco"|trans }}
         </a>
 
-        <div class="pull-right">
+        <div class="float-right">
             {( "name": "button", "type": "print", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}" )}
 
             {( "name": "button", "type": "email", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}" )}
@@ -76,7 +76,7 @@
     <div class="clearfix"></div>
     <br>
 
-    <div class="pull-right" id="pulsanti-modulo">
+    <div class="float-right" id="pulsanti-modulo">
         {% block buttons %}{% endblock %}
     </div>
 

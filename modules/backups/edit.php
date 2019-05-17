@@ -127,7 +127,7 @@ echo '
 
                     <label><input type="file" name="blob" id="blob"></label>
 
-                    <button type="button" class="btn btn-primary pull-right" onclick="restore()">
+                    <button type="button" class="btn btn-primary float-right" onclick="restore()">
                         <i class="fa fa-upload"></i> '.tr('Ripristina').'...
                     </button>
                 </form>
@@ -158,7 +158,7 @@ if (file_exists($backup_dir)) {
     } else {
         echo '
 <div class="row">
-    <div class="col--12 col-md-6">
+    <div class="col-12 col-md-6">
         <h3>'.tr('Backup compressi').'</h3>';
 
         if (!empty($backups_zip)) {
@@ -186,7 +186,7 @@ if (file_exists($backup_dir)) {
             
             <a class="btn btn-primary" href="'.$rootdir.'/modules/backups/actions.php?op=getfile&file='.$name.'" target="_blank"><i class="fa fa-download"></i> '.tr('Scarica').'</a>
 
-            <div class="pull-right">
+            <div class="float-right">
                 <a class="btn btn-warning ask" data-backto="record-edit" data-method="post" data-op="restore" data-zip="'.$name.'" data-msg="'.tr('Vuoi ripristinare questo backup?').'" data-button="Ripristina" data-class="btn btn-lg btn-warning">
                     <i class="fa fa-upload"></i>
                 </a>
@@ -207,7 +207,7 @@ if (file_exists($backup_dir)) {
         echo '
     </div>
 
-    <div class="col--12 col-md-6">
+    <div class="col-12 col-md-6">
         <h3>'.tr('Backup non compressi').'</h3>';
 
         // Backup non compressi e quindi non scaricabili
@@ -236,7 +236,7 @@ if (file_exists($backup_dir)) {
 
             <a class="btn btn-sm btn-warning disabled" href="javascript:;"><i class="fa fa-times"></i> '.tr('Non scaricabile').'</a>
 
-            <div class="pull-right">
+            <div class="float-right">
                 <a class="btn btn-warning ask" data-backto="record-edit" data-method="post" data-op="restore" data-folder="'.$name.'" data-msg="'.tr('Vuoi ripristinare questo backup?').'" data-button="Ripristina" data-class="btn btn-lg btn-warning">
                     <i class="fa fa-upload"></i>
                 </a>
@@ -266,7 +266,7 @@ if (file_exists($backup_dir)) {
 // Creazione backup
 if (!empty($backup_dir)) {
     echo '
-<button type="button" class="btn btn-primary pull-right" onclick="backup()"><i class="fa fa-database"></i> '.tr('Crea backup').'...</button>
+<button type="button" class="btn btn-primary float-right" onclick="backup()"><i class="fa fa-database"></i> '.tr('Crea backup').'...</button>
 
 <div class="clearfix"></div>';
 }

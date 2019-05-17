@@ -55,7 +55,7 @@ li.header > a {
 .text-right {
     text-align: right;
 }
-.pull-left {
+.float-left {
     float: left;
     text-align: left;
 }

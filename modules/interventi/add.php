@@ -251,7 +251,7 @@ if (!empty($id_intervento)) {
     <div class="card card-outline card-primary collapsable <?php echo get('ref') ? '' : 'collapsed-box'; ?>">
         <div class="card-header with-border">
 			<h3 class="card-title"><?php echo tr('Ore di lavoro'); ?></h3>
-            <div class="card-tools pull-right">
+            <div class="card-tools float-right">
                 <button type="button" class="btn btn-card-tool" data-widget="collapse">
                     <i class="fa fa-<?php echo get('ref') ? 'minus' : 'plus'; ?>"></i>
                 </button>

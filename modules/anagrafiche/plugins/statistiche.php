@@ -16,8 +16,8 @@ echo '
             <div class="info-box">
                 <span class="info-box-icon bg-'.(count($rsi) == 0 ? 'gray' : 'aqua').'"><i class="fa fa-question"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text pull-left">'.tr('Preventivi').'</span>
-                    '.(count($rsi) > 0 ? '<span class="info-box-text pull-right"><a href="'.$rootdir.'/controller.php?id_module='.Modules::get('Preventivi')['id'].'&search_Cliente='.$rsi[0]['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
+                    <span class="info-box-text float-left">'.tr('Preventivi').'</span>
+                    '.(count($rsi) > 0 ? '<span class="info-box-text float-right"><a href="'.$rootdir.'/controller.php?id_module='.Modules::get('Preventivi')['id'].'&search_Cliente='.$rsi[0]['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
                     <br class="clearfix">
                     <span class="info-box-number">
                         <big>'.count($rsi).'</big><br>
@@ -41,8 +41,8 @@ echo '
             <div class="info-box">
                 <span class="info-box-icon bg-'.(count($rsi) == 0 ? 'gray' : 'purple').'"><i class="fa fa-refresh"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text pull-left">'.tr('Contratti').'</span>
-                    '.(count($rsi) > 0 ? '<span class="info-box-text pull-right"><a href="'.$rootdir.'/controller.php?id_module='.Modules::get('Contratti')['id'].'&search_Cliente='.$rsi[0]['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
+                    <span class="info-box-text float-left">'.tr('Contratti').'</span>
+                    '.(count($rsi) > 0 ? '<span class="info-box-text float-right"><a href="'.$rootdir.'/controller.php?id_module='.Modules::get('Contratti')['id'].'&search_Cliente='.$rsi[0]['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
                     <br class="clearfix">
                     <span class="info-box-number">
                         <big>'.count($rsi).'</big><br>
@@ -66,8 +66,8 @@ echo '
             <div class="info-box">
                 <span class="info-box-icon bg-'.(count($rsi) == 0 ? 'gray' : 'blue').'"><i class="fa fa-file-text"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text pull-left">'.tr('Ordini cliente').'</span>
-                    '.(count($rsi) > 0 ? '<span class="info-box-text pull-right"><a href="'.$rootdir.'/controller.php?id_module='.Modules::get('Ordini cliente')['id'].'&search_Ragione-sociale='.$rsi[0]['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
+                    <span class="info-box-text float-left">'.tr('Ordini cliente').'</span>
+                    '.(count($rsi) > 0 ? '<span class="info-box-text float-right"><a href="'.$rootdir.'/controller.php?id_module='.Modules::get('Ordini cliente')['id'].'&search_Ragione-sociale='.$rsi[0]['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
                     <br class="clearfix">
                     <span class="info-box-number">
                         <big>'.count($rsi).'</big><br>
@@ -99,8 +99,8 @@ echo '
             <div class="info-box">
                 <span class="info-box-icon bg-'.(count($rsi) == 0 ? 'gray' : 'red').'"><i class="fa fa-cog"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text pull-left">'.tr('Attività').'</span>
-                    '.(count($rsi) > 0 ? '<span class="info-box-text pull-right"><a href="'.$rootdir.'/controller.php?id_module='.Modules::get('Interventi')['id'].'&search_Ragione-sociale='.$rsi[0]['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
+                    <span class="info-box-text float-left">'.tr('Attività').'</span>
+                    '.(count($rsi) > 0 ? '<span class="info-box-text float-right"><a href="'.$rootdir.'/controller.php?id_module='.Modules::get('Interventi')['id'].'&search_Ragione-sociale='.$rsi[0]['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
                     <br class="clearfix">
                     <span class="info-box-number">
                         <big>'.count($rsi).'</big><br>
@@ -124,8 +124,8 @@ echo '
             <div class="info-box">
                 <span class="info-box-icon bg-'.(count($rsi) == 0 ? 'gray' : 'maroon').'"><i class="fa fa-truck"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text pull-left">'.tr('Ddt in uscita').'</span>
-                    '.(count($rsi) > 0 ? '<span class="info-box-text pull-right"><a href="'.$rootdir.'/controller.php?id_module='.Modules::get('Ddt di vendita')['id'].'&search_Ragione-sociale='.$rsi[0]['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
+                    <span class="info-box-text float-left">'.tr('Ddt in uscita').'</span>
+                    '.(count($rsi) > 0 ? '<span class="info-box-text float-right"><a href="'.$rootdir.'/controller.php?id_module='.Modules::get('Ddt di vendita')['id'].'&search_Ragione-sociale='.$rsi[0]['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
                     <br class="clearfix">
                     <span class="info-box-number">
                         <big>'.count($rsi).'</big><br>
@@ -149,8 +149,8 @@ echo '
             <div class="info-box">
                 <span class="info-box-icon bg-'.(count($rsi) == 0 ? 'gray' : 'green').'"><i class="fa fa-money"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text pull-left">'.tr('Fatture').'</span>
-                    '.(count($rsi) > 0 ? '<span class="info-box-text pull-right"><a href="'.$rootdir.'/controller.php?id_module='.Modules::get('Fatture di vendita')['id'].'&search_Ragione-sociale='.$rsi[0]['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
+                    <span class="info-box-text float-left">'.tr('Fatture').'</span>
+                    '.(count($rsi) > 0 ? '<span class="info-box-text float-right"><a href="'.$rootdir.'/controller.php?id_module='.Modules::get('Fatture di vendita')['id'].'&search_Ragione-sociale='.$rsi[0]['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
                     <br class="clearfix">
                     <span class="info-box-number">
                         <big>'.count($rsi).'</big><br>

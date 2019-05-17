@@ -30,7 +30,7 @@ include_once __DIR__.'/../../core.php';
     </div>
   </div>
 
-  <div class='pull-right'>
+  <div class='float-right'>
     <button type='submit' class='btn btn-primary'><i class='fa fa-plus'></i> Aggiungi</button>
   </div>
 

@@ -159,7 +159,7 @@ if (!empty($record['immagine'])) {
 
                     <div class="row">
                         <div class="col-md-6">
-						<button type="button" class="btn btn-info btn-sm pull-right tip pull-right" title="<?php echo tr('Scorpora iva dal prezzo di vendita.'); ?>" id="scorpora_iva"><i class="fa fa-calculator" aria-hidden="true"></i></button>
+						<button type="button" class="btn btn-info btn-sm float-right tip float-right" title="<?php echo tr('Scorpora iva dal prezzo di vendita.'); ?>" id="scorpora_iva"><i class="fa fa-calculator" aria-hidden="true"></i></button>
                           {[ "type": "number", "label": "<?php echo tr('Prezzo di vendita'); ?>", "name": "prezzo_vendita", "value": "$prezzo_vendita$", "icon-after": "<?php echo currency(); ?>" ]}
                         </div>
 
@@ -389,7 +389,7 @@ if (!empty($elementi)) {
         <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Documenti collegati: _NUM_', [
             '_NUM_' => count($elementi),
         ]).'</h3>
-        <div class="card-tools pull-right">
+        <div class="card-tools float-right">
             <button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
         </div>
     </div>

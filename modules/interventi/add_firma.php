@@ -61,7 +61,7 @@ if (get('anteprima') !== null) {
             </button>
         </div>
         <div class="col-md-6">
-            <button type="submit" class="btn btn-success pull-right" data-action="save">
+            <button type="submit" class="btn btn-success float-right" data-action="save">
                 <i class="fa fa-check"></i> <?php echo tr('Salva firma'); ?>
             </button>
         </div>

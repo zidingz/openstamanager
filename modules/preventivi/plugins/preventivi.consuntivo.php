@@ -312,7 +312,7 @@ if (in_array($record['stato'], ['Accettato', 'In lavorazione', 'Pagato'])) {
     <!-- PULSANTI -->
 	<div class="row">
 		<div class="col-md-12 text-right">
-			<button type="submit" class="btn btn-primary pull-right" onclick="if($(\'#idintervento\').val() && confirm(\'Aggiungere questo intervento al preventivo?\'){ $(this).parent().submit(); }">
+			<button type="submit" class="btn btn-primary float-right" onclick="if($(\'#idintervento\').val() && confirm(\'Aggiungere questo intervento al preventivo?\'){ $(this).parent().submit(); }">
                 <i class="fa fa-plus"></i> '.tr('Aggiungi').'
             </button>
 		</div>

@@ -113,7 +113,7 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
 								</h3>';
         if ($editable) {
             echo '
-                                <a class="btn btn-danger ask pull-right" data-backto="record-edit" data-id="'.$field['id'].'">
+                                <a class="btn btn-danger ask float-right" data-backto="record-edit" data-id="'.$field['id'].'">
                                     <i class="fa fa-trash"></i> '.tr('Elimina').'
                                 </a>';
         }
@@ -151,7 +151,7 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
         echo ', "help": "'.tr('Gruppi di utenti in grado di visualizzare questo campo').'" ]}
 									</div>
 
-									<div class="col--12 col-md-6">
+									<div class="col-12 col-md-6">
 										{[ "type": "select", "label": "'.tr('Visibilità').'", "name": "visible['.$key.']", "values": "list=\"0\":\"'.tr('Nascosto (variabili di stato)').'\",\"1\": \"'.tr('Visibile nella sezione').'\"", "value": "'.$field['visible'].'", "help": "'.tr('Stato del campo: visibile nella tabella oppure nascosto').'" ]}
 									</div>
 								</div>
@@ -216,7 +216,7 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
 		<div class="col-md-3">
 			<div class="card card-primary">
 				<div class="card-header">
-					<h3 class="card-title">'.tr('Ordine di visualizzazione').' <span class="tip pull-right" title="'.tr('Trascina per ordinare le colonne').'."><i class="fa fa-question-circle-o"></i></span></h3>
+					<h3 class="card-title">'.tr('Ordine di visualizzazione').' <span class="tip float-right" title="'.tr('Trascina per ordinare le colonne').'."><i class="fa fa-question-circle-o"></i></span></h3>
 				</div>
 
 				<div class="card-body sortable">';
@@ -338,12 +338,12 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
                             </h3>';
         if ($editable) {
             echo '
-                            <a class="btn btn-danger ask pull-right" data-backto="record-edit" data-op="delete_filter" data-id="'.$additional['id'].'">
+                            <a class="btn btn-danger ask float-right" data-backto="record-edit" data-op="delete_filter" data-id="'.$additional['id'].'">
                                 <i class="fa fa-trash"></i> '.tr('Elimina').'
                             </a>';
         }
         echo '
-                            <a class="btn btn-warning ask pull-right" data-backto="record-edit" data-msg="'.($additional['enabled'] ? tr('Disabilitare questo elemento?') : tr('Abilitare questo elemento?')).'" data-op="change" data-id="'.$additional['id'].'" data-class="btn btn-lg btn-warning" data-button="'.($additional['enabled'] ? tr('Disabilita') : tr('Abilita')).'">
+                            <a class="btn btn-warning ask float-right" data-backto="record-edit" data-msg="'.($additional['enabled'] ? tr('Disabilitare questo elemento?') : tr('Abilitare questo elemento?')).'" data-op="change" data-id="'.$additional['id'].'" data-class="btn btn-lg btn-warning" data-button="'.($additional['enabled'] ? tr('Disabilita') : tr('Abilita')).'">
                                 <i class="fa fa-eye-slash"></i> '.($additional['enabled'] ? tr('Disabilita') : tr('Abilita')).'
                             </a>';
         echo '

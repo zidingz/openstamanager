@@ -159,7 +159,7 @@ if (!empty($records)) {
     if (!empty($records)) {
         echo '
 <br>
-<div class="pull-right">
+<div class="float-right">
     <button type="button" title="Elimina tutti i promemoria non associati ad intervento" class="btn btn-danger ask tip" data-op="delete-non-associati" data-id_plugin="'.$id_plugin.'" data-backto="record-edit">
         <i class="fa fa-trash"></i> '.tr('Elimina promemoria').'
     </button>

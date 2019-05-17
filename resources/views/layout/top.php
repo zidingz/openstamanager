@@ -136,7 +136,7 @@ if (Auth::check()) {
 						<span class="icon-bar"></span>
 					</a>
 
-					<div class="input-group btn-calendar pull-left">
+					<div class="input-group btn-calendar float-left">
                         <button id="daterange" class="btn"><i class="fa fa-calendar" style="color:'.$calendar.'"></i> <i class="fa fa-caret-down" style="color:'.$calendar.';" ></i></button>
                         <span class="hidden-xs" style="vertical-align:middle; color:'.$calendar.';">
                             '.Translator::dateToLocale($_SESSION['period_start']).' - '.Translator::dateToLocale($_SESSION['period_end']).'

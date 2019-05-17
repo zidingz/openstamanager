@@ -16,7 +16,7 @@
 			<div class="row">
 				<div class="col-md-3">
                     <?php
-                        echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="pull-right"');
+                        echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="float-right"');
                     ?>
 					{[ "type": "select", "label": "<?php echo tr('Cliente'); ?>", "name": "idanagrafica", "required": 1, "values": "query=SELECT an_anagrafiche.idanagrafica AS id, ragione_sociale AS descrizione FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.id_tipo_anagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE descrizione='Cliente' AND deleted_at IS NULL ORDER BY ragione_sociale", "value": "$idanagrafica$", "ajax-source": "clienti", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
 				</div>
@@ -27,7 +27,7 @@
 
 				<div class="col-md-3">
 					<?php
-                        echo Modules::link('Anagrafiche', $record['idclientefinale'], null, null, 'class="pull-right"');
+                        echo Modules::link('Anagrafiche', $record['idclientefinale'], null, null, 'class="float-right"');
                     ?>
 					{[ "type": "select", "label": "<?php echo tr('Per conto di'); ?>", "name": "idclientefinale", "value": "$idclientefinale$", "ajax-source": "clienti", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
 				</div>
@@ -43,7 +43,7 @@
 					<?php
                     if (!empty($record['idpreventivo'])) {
                         echo '
-                        '.Modules::link('Preventivi', $record['idpreventivo'], null, null, 'class="pull-right"');
+                        '.Modules::link('Preventivi', $record['idpreventivo'], null, null, 'class="float-right"');
                     }
                     ?>
 
@@ -56,7 +56,7 @@
 
                         if (!empty($record['idcontratto'])) {
                             echo '
-                            '.Modules::link('Contratti', $record['idcontratto'], null, null, 'class="pull-right"');
+                            '.Modules::link('Contratti', $record['idcontratto'], null, null, 'class="float-right"');
                         }
                     ?>
 
@@ -180,7 +180,7 @@
 		</div>
 
 		<div class="card-body">
-			<div class="pull-right">
+			<div class="float-right">
 				<a class='btn btn-secondary btn-details' onclick="$('.extra').removeClass('hide'); $(this).addClass('hide'); $('#dontshowall_dettagli').removeClass('hide');" id='showall_dettagli'><i class='fa fa-square-o'></i> <?php echo tr('Visualizza dettaglio costi'); ?></a>
 				<a class='btn btn-info btn-details hide' onclick="$('.extra').addClass('hide'); $(this).addClass('hide'); $('#showall_dettagli').removeClass('hide');" id='dontshowall_dettagli'><i class='fa fa-check-square-o'></i> <?php echo tr('Visualizza dettaglio costi'); ?></a>
 			</div>
@@ -390,7 +390,7 @@ if (!empty($elementi)) {
         <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Documenti collegati: _NUM_', [
             '_NUM_' => count($elementi),
         ]).'</h3>
-        <div class="card-tools pull-right">
+        <div class="card-tools float-right">
             <button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
         </div>
     </div>

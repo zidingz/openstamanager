@@ -36,15 +36,15 @@
             {% endif %}
         </a>
 
-        <ul class="nav nav-tabs pull-right" id="tabs" role="tablist">
+        <ul class="nav nav-tabs float-right" id="tabs" role="tablist">
             {% for plugin in plugins %}
-                <li class="nav-item pull-right">
+                <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#tab_{{ plugin.id }}" id="link-tab_{{ plugin.id }}">{{ plugin.title }}</a>
                 </li>
             {% endfor %}
 
             {% if include_operations and user.isAdmin() %}
-                <li class="nav-item pull-right bg-warning">
+                <li class="nav-item float-right bg-warning">
                     <a class="nav-link" data-toggle="tab" href="#tab_info" id="link-tab_info">{{ 'Info'|trans }}</a>
                 </li>
             {% endif %}

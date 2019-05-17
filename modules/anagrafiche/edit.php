@@ -285,7 +285,7 @@ if (!empty($google)) {
             $piano_dei_conti_fornitore = tr('_NAME_', [
                     '_NAME_' => $conto['numero'].'.'.$conto['numero_conto'].' '.$conto['descrizione'],
                 ]);
-            echo Modules::link('Piano dei conti', null, null, null, 'class="pull-right"');
+            echo Modules::link('Piano dei conti', null, null, null, 'class="float-right"');
         } else {
             $piano_dei_conti_fornitore = tr('Nessuno');
         } ?>
@@ -360,7 +360,7 @@ if (!empty($google)) {
             $piano_dei_conti_cliente = tr('_NAME_', [
                         '_NAME_' => $conto['numero'].'.'.$conto['numero_conto'].' '.$conto['descrizione'],
                     ]);
-            echo Modules::link('Piano dei conti', null, null, null, 'class="pull-right"');
+            echo Modules::link('Piano dei conti', null, null, null, 'class="float-right"');
         } else {
             $piano_dei_conti_cliente = tr('Nessuno');
         } ?>
@@ -573,7 +573,7 @@ if (!empty($elementi)) {
         <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Documenti collegati: _NUM_', [
             '_NUM_' => count($elementi),
         ]).'</h3>
-        <div class="card-tools pull-right">
+        <div class="card-tools float-right">
             <button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
         </div>
     </div>

@@ -71,7 +71,7 @@ echo '
             </div>
 
             <div class="col-md-3">
-                <button type="button" class="btn btn-primary pull-right" onclick="upload(this)">
+                <button type="button" class="btn btn-primary float-right" onclick="upload(this)">
                     <i class="fa fa-upload"></i> '.tr('Carica documento fornitore').'
                 </button>
             </div>
@@ -89,7 +89,7 @@ echo '
 // Ricerca automatica
 if (Interaction::isEnabled()) {
     echo '
-        <button type="button" class="btn btn-primary pull-right" onclick="search(this)">
+        <button type="button" class="btn btn-primary float-right" onclick="search(this)">
             <i class="fa fa-refresh"></i> '.tr('Ricerca fatture di acquisto').'
         </button>';
 }

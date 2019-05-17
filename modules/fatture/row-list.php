@@ -118,7 +118,7 @@ foreach ($righe as $row) {
     <tr data-id="'.$riga['id'].'" '.$extra.'>
         <td>
             '.Modules::link($row->isArticolo() ? Modules::get('Articoli')['id'] : null, $row->isArticolo() ? $riga['idarticolo'] : null, $riga['descrizione']).'
-            <small class="pull-right text-muted">'.$extra_riga.'</small>';
+            <small class="float-right text-muted">'.$extra_riga.'</small>';
 
     if (!empty($riga['abilita_serial'])) {
         if (!empty($mancanti)) {

@@ -25,7 +25,7 @@ $idpianodeiconti2 = $rs[0]['idpianodeiconti2'];
     </div>
     <br>
 
-    <div class="pull-right">
+    <div class="float-right">
         <button type="submit" class="btn btn-primary"><i class="fa fa-edit"></i> Modifica</button>
     </div>
     <div class="clearfix"></div>
