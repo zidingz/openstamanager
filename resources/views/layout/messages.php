@@ -5,12 +5,12 @@ $messages = flash()->getMessages();
 
 if (!Auth::check() && (!empty($messages['info']) || !empty($messages['warning']) || !empty($messages['error']))) {
     echo '
-<div class="box box-warning box-center">
-    <div class="box-header with-border text-center">
-        <h3 class="box-title">'.tr('Informazioni').'</h3>
+<div class="card card-outline card-warning card-center">
+    <div class="card-header with-border text-center">
+        <h3 class="card-title">'.tr('Informazioni').'</h3>
     </div>
 
-    <div class="box-body">';
+    <div class="card-body">';
 }
 
 // Infomazioni

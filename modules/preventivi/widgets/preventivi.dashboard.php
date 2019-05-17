@@ -26,7 +26,7 @@
                 $attr = '';
             }
 
-            echo '<tr '.$attr.'><td><a href="'.$rootdir.'/editor.php?id_module='.Modules::get('Preventivi')['id'].'&id_record='.$rs[$i]['id'].'">'.$rs[$i]['nome']."</a><br><small class='help-block'>".$rs[$i]['ragione_sociale']."</small></td>\n";
+            echo '<tr '.$attr.'><td><a href="'.$rootdir.'/editor.php?id_module='.Modules::get('Preventivi')['id'].'&id_record='.$rs[$i]['id'].'">'.$rs[$i]['nome']."</a><br><small class='form-text'>".$rs[$i]['ragione_sociale']."</small></td>\n";
             echo "<td $attr>".$data_accettazione."</td>\n";
             echo "<td $attr>".$data_conclusione."</td></tr>\n";
         }

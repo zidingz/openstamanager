@@ -63,11 +63,11 @@ if ($flg_completato) {
 
 // IMPIANTI
 echo '
-<div class="box">
-    <div class="box-header with-border">
-        <h3 class="box-title">'.tr("Impianti dell'intervento").'</h3>
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">'.tr("Impianti dell'intervento").'</h3>
     </div>
-    <div class="box-body">
+    <div class="card-body">
         <p>'.tr("Impianti su cui è stato effettuato l'intervento").'</p>';
 
 $query = 'SELECT * FROM my_impianti_interventi INNER JOIN my_impianti ON my_impianti_interventi.idimpianto=my_impianti.id WHERE idintervento='.prepare($id_record);
@@ -175,7 +175,7 @@ echo '
         <form action="'.$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'&op=link_myimpianti" method="post">
             <input type="hidden" name="backto" value="record-edit">
             <div class="row">
-                <div class="col-xs-12 col-md-6">
+                <div class="col--12 col-md-6">
                     {[ "type": "select", "name": "matricole[]", "multiple": 1, "value": "'.implode(',', $impianti).'", "values": "query=SELECT my_impianti.id, CONCAT(matricola, \' - \', nome) AS descrizione, CONCAT(nomesede, IF(citta IS NULL OR citta = \'\', \'\', CONCAT(\' (\', citta, \')\'))) AS optgroup FROM my_impianti JOIN (SELECT id, nomesede, citta FROM an_sedi UNION SELECT 0 AS id, \'Sede legale\' AS nomesede, \'\' AS citta) AS t ON t.id = my_impianti.idsede WHERE idanagrafica='.prepare($record['idanagrafica']).' ORDER BY idsede ASC, matricola ASC", "extra": "'.$readonly.'" ]}
                 </div>
             </div>

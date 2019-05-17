@@ -336,25 +336,32 @@ class Modules
 
         $result = '';
         if ($show) {
-            $result .= '<li class="treeview';
-            if ($active) {
-                $result .= ' active actual';
+            $result .= '<li class="nav-item ';
+
+            if (!empty($temp)) {
+                $result .= ' has-treeview';
             }
+
+            if ($active) {
+                $result .= ' menu-open active actual';
+            }
+
             $result .= '" id="'.$element['id'].'">
-                <a href="'.$link.'" target="'.$target.'" >
+                <a href="'.$link.'" target="'.$target.'" class="nav-link">
                     <i class="'.$element['icon'].'"></i>
-                    <span>'.$title.'</span>';
+                    <p>
+                        '.$title;
             if (!empty($submenus) && !empty($temp)) {
                 $result .= '
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
+                        <i class="right fa fa-angle-left"></i>
+                    </p>
                 </a>
-                <ul class="treeview-menu">
+                <ul class="nav nav-treeview">
                     '.$temp.'
                 </ul>';
             } else {
                 $result .= '
+                    </p>
                 </a>';
             }
             $result .= '

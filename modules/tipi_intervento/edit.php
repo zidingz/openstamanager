@@ -20,12 +20,12 @@
 
 	</div>
 
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Costi unitari'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Costi unitari'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<div class="row">
 				<div class="col-md-4">
 					{[ "type": "number", "label": "<?php echo tr('Costo orario'); ?>", "name": "costo_orario", "required": 1, "value": "$costo_orario$", "icon-after": "<i class='fa fa-euro'></i>" ]}
@@ -43,12 +43,12 @@
 	</div>
 
 
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Costi unitari riconosciuti al tecnico'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Costi unitari riconosciuti al tecnico'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<div class="row">
 				<div class="col-md-4">
 					{[ "type": "number", "label": "<?php echo tr('Costo orario'); ?>", "name": "costo_orario_tecnico", "required": 1, "value": "$costo_orario_tecnico$", "icon-after": "<i class='fa fa-euro'></i>" ]}

@@ -6,12 +6,12 @@
 	<input type="hidden" name="id_record" value="<?php echo $id_record; ?>">
 
 	<!-- DATI SEGMENTO -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Segmento'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Segmento'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<div class="row">
 
 				<div class="col-md-4">
@@ -71,12 +71,12 @@ $_SESSION['module_'.$record['id_module']]['id_segment'] = $previous_module;
 if (str_contains($current_module['option'], '|segment|')) {
     ?>
 	<!-- Campi extra -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Sezionale'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Sezionale'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<div class="row">
 				<div class="col-md-6">
                     {[ "type": "text", "label": "<?php echo tr('Maschera'); ?>", "name": "pattern", "class": "", "value": "$pattern$", "maxlength": 25, "placeholder":"####/YYYY", "extra": "<?php echo ($tot > 0) ? 'readonly' : ''; ?>" ]}
@@ -98,14 +98,14 @@ if (str_contains($current_module['option'], '|segment|')) {
 			</div>
 
 			<!-- Istruzioni per il contenuto -->
-            <div class="box box-info">
-                <div class="box-header">
-                    <h3 class="box-title"><?php echo tr('Istruzioni per il campo _FIELD_', [
+            <div class="card card-outline card-info">
+                <div class="card-header">
+                    <h3 class="card-title"><?php echo tr('Istruzioni per il campo _FIELD_', [
                         '_FIELD_' => tr('Maschera'),
                     ]); ?></h3>
                 </div>
 
-                <div class="box-body">
+                <div class="card-body">
                     <p><?php echo tr('Le seguenti sequenze di testo vengono sostituite nel seguente modo'); ?>:</p>
                     <ul>
 <?php

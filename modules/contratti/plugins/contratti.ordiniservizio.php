@@ -72,11 +72,11 @@ elseif (get('op') == 'del_ordineservizio') {
 }
 
 echo '
-<div class="box">
-    <div class="box-header with-border">
-        <h3 class="box-title">'.tr('Pianificazione ordini di servizio').'</h3>
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">'.tr('Pianificazione ordini di servizio').'</h3>
     </div>
-    <div class="box-body">';
+    <div class="card-body">';
 
 echo '
 <p>'.tr('Qui puoi programmare gli ordini di servizio del contratto').'.</p>';

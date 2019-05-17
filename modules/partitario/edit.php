@@ -38,7 +38,7 @@ for ($x = 0; $x < $n1; ++$x) {
         echo "	<div>\n";
 
         // Stampa mastrino
-        echo Prints::getLink('Mastrino', $rs2[$y]['id'], 'btn-info btn-xs', '', null, 'lev=2');
+        echo Prints::getLink('Mastrino', $rs2[$y]['id'], 'btn-info btn-sm', '', null, 'lev=2');
 
         echo '		<b>'.$rs2[$y]['numero'].' '.htmlentities($rs2[$y]['descrizione'], ENT_QUOTES, 'ISO-8859-1')."</b><br>\n";
 
@@ -69,19 +69,19 @@ for ($x = 0; $x < $n1; ++$x) {
 
             // Stampa mastrino
             if (!empty($rs)) {
-                $tools .= Prints::getLink('Mastrino', $rs3[$z]['id'], 'btn-info btn-xs', '', null, 'lev=3');
+                $tools .= Prints::getLink('Mastrino', $rs3[$z]['id'], 'btn-info btn-sm', '', null, 'lev=3');
             }
 
             if ($nr <= 0 && $rs3[$z]['can_delete'] == '1') {
                 $tools .= '
-                                    <a class="btn btn-danger btn-xs ask" data-toggle="tooltip" title="'.tr('Elimina').'" data-backto="record-list" data-op="del" data-idconto="'.$rs3[$z]['id'].'">
+                                    <a class="btn btn-danger btn-sm ask" data-toggle="tooltip" title="'.tr('Elimina').'" data-backto="record-list" data-op="del" data-idconto="'.$rs3[$z]['id'].'">
                                         <i class="fa fa-trash"></i>
                                     </a>';
             }
 
             // Possibilità di modificare il nome del conto livello3
             if ($rs3[$z]['can_edit'] == '1') {
-                $tools .= "			<button type='button' class='btn btn-warning btn-xs' data-toggle='tooltip' title='Modifica questo conto...' onclick=\"launch_modal( 'Modifica conto', '".$rootdir.'/modules/partitario/edit_conto.php?id='.$rs3[$z]['id']."', 1 );\"><i class='fa fa-edit'></i></button>\n";
+                $tools .= "			<button type='button' class='btn btn-warning btn-sm' data-toggle='tooltip' title='Modifica questo conto...' onclick=\"launch_modal( 'Modifica conto', '".$rootdir.'/modules/partitario/edit_conto.php?id='.$rs3[$z]['id']."', 1 );\"><i class='fa fa-edit'></i></button>\n";
             }
 
             $tools .= "			</span>\n";
@@ -91,7 +91,7 @@ for ($x = 0; $x < $n1; ++$x) {
 
             if (!empty($rs)) {
                 echo '
-                    <a href="javascript:;" class="btn btn-primary btn-xs plus-btn"><i class="fa fa-plus"></i></a>';
+                    <a href="javascript:;" class="btn btn-primary btn-sm plus-btn"><i class="fa fa-plus"></i></a>';
             }
 
             $id_anagrafica = $rs3[$z]['id_cliente'] ?: $rs3[$z]['id_fornitore'];
@@ -186,7 +186,7 @@ for ($x = 0; $x < $n1; ++$x) {
         echo "	</table>\n";
 
         // Possibilità di inserire un nuovo conto
-        echo "	<button type='button' class='btn btn-xs btn-primary' data-toggle='tooltip'  title='".tr('Aggiungi un nuovo conto...')."' onclick=\"launch_modal( '".tr('Nuovo conto')."', '".$rootdir.'/modules/partitario/add_conto.php?id='.$rs2[$y]['id']."', 1 );\"><i class='fa fa-plus-circle'></i></button><br><br>\n";
+        echo "	<button type='button' class='btn btn-sm btn-primary' data-toggle='tooltip'  title='".tr('Aggiungi un nuovo conto...')."' onclick=\"launch_modal( '".tr('Nuovo conto')."', '".$rootdir.'/modules/partitario/add_conto.php?id='.$rs2[$y]['id']."', 1 );\"><i class='fa fa-plus-circle'></i></button><br><br>\n";
         echo "</div>\n";
     } // Fine livello 2
 

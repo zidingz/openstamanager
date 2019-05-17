@@ -4,9 +4,9 @@ if ($options['hide_header']) {
     echo '
 	<!-- Intestazione vuota fornitore -->
 	<div class="row" style="height:111px;">
-		<div class="col-xs-6">
+		<div class="col--6">
 		</div>
-		<div class="col-xs-6 text-right">
+		<div class="col--6 text-right">
 		</div>
 	</div>';
 } else {
@@ -19,7 +19,7 @@ echo '
 <br>
 <div class="row">
     <!-- Dati Fattura -->
-    <div class="col-xs-6">
+    <div class="col--6">
         <div class="text-center" style="height:5mm;">
             <b>$tipo_doc$</b>
         </div>
@@ -71,7 +71,7 @@ echo '
         </table>
     </div>
 
-    <div class="col-xs-5 col-xs-offset-1">
+    <div class="col--5 col--offset-1">
         <table class="table" style="width:100%;margin-top:5mm;">
             <tr>
                 <td colspan=2 class="border-full"'.(!$fattura_accompagnatoria ? ' style="height:20mm;"' : '').'>

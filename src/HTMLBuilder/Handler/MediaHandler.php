@@ -43,7 +43,7 @@ class MediaHandler implements HandlerInterface
         // Visualizzazione dell'immagine e della relativa spunta per la cancellazione
         else {
             $values['class'][] = 'img-thumbnail';
-            $values['class'][] = 'img-responsive';
+            $values['class'][] = 'img-fluid';
 
             // Generazione del codice HTML
             return '

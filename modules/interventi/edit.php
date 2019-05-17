@@ -6,12 +6,12 @@
 	<input type="hidden" name="id_record" value="<?php echo $id_record; ?>">
 
 	<!-- DATI CLIENTE -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Dati cliente'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Dati cliente'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<!-- RIGA 1 -->
 			<div class="row">
 				<div class="col-md-3">
@@ -68,12 +68,12 @@
 	</div>
 
 	<!-- DATI INTERVENTO -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Dati intervento'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Dati intervento'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<!-- RIGA 3 -->
 			<div class="row">
 				<div class="col-md-3">
@@ -139,9 +139,9 @@
 
     ?>
     <!-- Fatturazione Elettronica PA-->
-    <div class="panel panel-primary <?php echo ($record['tipo_anagrafica'] == 'Ente pubblico' || $record['tipo_anagrafica'] == 'Azienda') ? 'show' : 'hide'; ?>" >
-        <div class="panel-heading">
-            <h3 class="panel-title"><?php echo tr('Dati appalto'); ?>
+    <div class="card card-primary <?php echo ($record['tipo_anagrafica'] == 'Ente pubblico' || $record['tipo_anagrafica'] == 'Azienda') ? 'show' : 'hide'; ?>" >
+        <div class="card-header">
+            <h3 class="card-title"><?php echo tr('Dati appalto'); ?>
 			<?php if (!empty($record['idcontratto'])) {
         ?>
 			<span class="tip" title="<?php echo tr('E\' possibile specificare i dati dell\'appalto solo se il cliente è di tipo \'Ente pubblico\' o \'Azienda\' e l\'attività non risulta già collegata ad un contratto.'); ?>" > <i class="fa fa-question-circle-o"></i></span>
@@ -150,7 +150,7 @@
     } ?>
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
 					{[ "type": "<?php echo !empty($record['idcontratto']) ? 'span' : 'text'; ?>", "label": "<?php echo tr('Identificatore Documento'); ?>", "name": "id_documento_fe", "required": 0, "help": "<?php echo tr('<span>Obbligatorio per valorizzare CIG/CUP. &Egrave; possible inserire: </span><ul><li>N. determina</li><li>RDO</li><li>Ordine MEPA</li></ul>'); ?>", "value": "<?php echo $record['id_documento_fe']; ?>", "maxlength": 20, "readonly": "<?php echo $record['flag_completato']; ?>", "extra": "" ]}
@@ -174,14 +174,14 @@
 
 
 	<!-- ORE LAVORO -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Ore di lavoro'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Ore di lavoro'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<div class="pull-right">
-				<a class='btn btn-default btn-details' onclick="$('.extra').removeClass('hide'); $(this).addClass('hide'); $('#dontshowall_dettagli').removeClass('hide');" id='showall_dettagli'><i class='fa fa-square-o'></i> <?php echo tr('Visualizza dettaglio costi'); ?></a>
+				<a class='btn btn-secondary btn-details' onclick="$('.extra').removeClass('hide'); $(this).addClass('hide'); $('#dontshowall_dettagli').removeClass('hide');" id='showall_dettagli'><i class='fa fa-square-o'></i> <?php echo tr('Visualizza dettaglio costi'); ?></a>
 				<a class='btn btn-info btn-details hide' onclick="$('.extra').addClass('hide'); $(this).addClass('hide'); $('#showall_dettagli').removeClass('hide');" id='dontshowall_dettagli'><i class='fa fa-check-square-o'></i> <?php echo tr('Visualizza dettaglio costi'); ?></a>
 			</div>
 			<div class="clearfix"></div>
@@ -207,12 +207,12 @@
 
 
     <!-- ARTICOLI -->
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h3 class="panel-title"><?php echo tr('Materiale utilizzato'); ?></h3>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title"><?php echo tr('Materiale utilizzato'); ?></h3>
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
             <div id="articoli">
 				<?php
                     if (file_exists($docroot.'/modules/interventi/custom/ajax_articoli.php')) {
@@ -232,12 +232,12 @@
     </div>
 
     <!-- SPESE AGGIUNTIVE -->
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h3 class="panel-title"><?php echo tr('Altre spese'); ?></h3>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title"><?php echo tr('Altre spese'); ?></h3>
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
 <?php
 
 if (!$record['flag_completato']) {
@@ -265,12 +265,12 @@ include $structure->filepath('ajax_righe.php');
     </div>
 
     <!-- COSTI TOTALI -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Costi totali'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Costi totali'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<div class="row">
 				<div class="col-md-12" id="costi">
 					<?php
@@ -385,16 +385,16 @@ $elementi = $dbo->fetchArray('SELECT `co_documenti`.*, `co_tipidocumento`.`descr
 
 if (!empty($elementi)) {
     echo '
-<div class="box box-warning collapsable collapsed-box">
-    <div class="box-header with-border">
-        <h3 class="box-title"><i class="fa fa-warning"></i> '.tr('Documenti collegati: _NUM_', [
+<div class="card card-outline card-warning collapsable collapsed-box">
+    <div class="card-header with-border">
+        <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Documenti collegati: _NUM_', [
             '_NUM_' => count($elementi),
         ]).'</h3>
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+        <div class="card-tools pull-right">
+            <button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
         </div>
     </div>
-    <div class="box-body">
+    <div class="card-body">
         <ul>';
 
     foreach ($elementi as $fattura) {

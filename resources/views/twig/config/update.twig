@@ -2,9 +2,9 @@
 
 {% block title %}{{ installing ? 'Installazione'|trans : 'Aggiornamento'|trans }}{% endblock %}
 
-{% block box_class %}box-warning text-center{% endblock %}
+{% block box_class %}card-warning text-center{% endblock %}
 {% block box_header %}
-<h3 class="box-title">{{ installing ? 'Installazione di OpenSTAManager'|trans : 'Aggiornamento di OpenSTAManager'|trans }}</h3>
+<h3 class="card-title">{{ installing ? 'Installazione di OpenSTAManager'|trans : 'Aggiornamento di OpenSTAManager'|trans }}</h3>
 {% endblock %}
 
 {% block content %}
@@ -46,14 +46,14 @@
             </div>
         </div>
         <hr>
-        <div class="box box-info text-center collapsed-box">
-            <div class="box-header with-border">
-                <h3 class="box-title"><a class="clickable" onclick="$(this).closest('.box').boxWidget('toggle')">{{ 'Log'|trans }}</a></h3>
-                <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" onclick="$(this).closest('.box').boxWidget('toggle')"><i class="fa fa-plus"></i></button>
+        <div class="card card-outline card-info text-center collapsed-box">
+            <div class="card-header with-border">
+                <h3 class="card-title"><a class="clickable" onclick="$(this).closest('.box').boxWidget('toggle')">{{ 'Log'|trans }}</a></h3>
+                <div class="card-tools pull-right">
+                    <button type="button" class="btn btn-card-tool" onclick="$(this).closest('.box').boxWidget('toggle')"><i class="fa fa-plus"></i></button>
                 </div>
             </div>
-            <div class="box-body info text-left"></div>
+            <div class="card-body info text-left"></div>
         </div>
     </div>
     <div id="result"></div>

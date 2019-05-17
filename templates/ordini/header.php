@@ -7,7 +7,7 @@ $default_header$
 <div class="row">
 
     <!-- Dati Ordine -->
-    <div class="col-xs-6">
+    <div class="col--6">
 		<div class="text-center" style="height:5mm;">
 			<b>$tipo_doc$</b>
 		</div>
@@ -38,7 +38,7 @@ $default_header$
 	</div>
 	
 	<!-- Dati Cliente/Fornitore -->
-	<div class="col-xs-5 col-xs-offset-1">
+	<div class="col--5 col--offset-1">
         <table class="table" style="width:100%;margin-top:5mm;">
             <tr>
                 <td class="border-full" style="height:20mm;">

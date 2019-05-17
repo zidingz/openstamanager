@@ -7,12 +7,12 @@
 
     {% block before_content %}{% endblock %}
 
-<div class="box box-center-large {% block box_class %}{% endblock %}">
-    <div class="box-header with-border text-center">
+<div class="card card-outline box-center-large {% block box_class %}{% endblock %}">
+    <div class="card-header with-border text-center">
         {% block box_header %}{% endblock %}
     </div>
 
-    <div class="box-body">
+    <div class="card-body">
         {% block content %}{% endblock %}
     </div>
 </div>

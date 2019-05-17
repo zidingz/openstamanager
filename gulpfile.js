@@ -40,7 +40,7 @@ var config = {
         js: 'js',
         css: 'css',
         images: 'img',
-        fonts: 'fonts'
+        fonts: 'webfonts'
     }
 };
 
@@ -130,7 +130,6 @@ function srcCSS() {
 
     var themes = gulp.src([
             config.development + '/' + config.paths.css + '/themes/*.{css,scss,less,styl}',
-            config.main.bowerDirectory + '/admin-lte/dist/css/skins/_all-skins.css',
         ])
         .pipe(gulpIf('*.scss', sass(), gulpIf('*.less', less(), gulpIf('*.styl', stylus()))))
         .pipe(autoprefixer({
@@ -148,22 +147,22 @@ function srcCSS() {
 
 
 // Elaborazione delle immagini
-const images = gulp.parallel(() => {
-    var src = mainBowerFiles('**/*.{jpg,png,jpeg,gif}', {
-        paths: config.main,
-        debugging: config.debug,
-    });
+const images = srcImages;
+/*
+gulp.parallel(() => {*/
+    //var src = mainBowerFiles('**/*.{jpg,png,jpeg,gif}', {
+/*
+paths: config.main,
+    debugging: config.debug,
+});
 
-    if(src.length != 0){
-        return gulp.src(src, {
-            allowEmpty: true
-        })
-            .pipe(flatten())
-            .pipe(gulp.dest(config.production + '/' + config.paths.images));
-    }
-
-    return;
+return gulp.src(src, {
+    allowEmpty: true
+})
+    .pipe(flatten())
+    .pipe(gulp.dest(config.production + '/' + config.paths.images));
 }, srcImages);
+*/
 
 // Elaborazione delle immagini personalizzate
 function srcImages() {

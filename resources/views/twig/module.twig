@@ -17,41 +17,39 @@
 {% block content %}
     {{ block('top_content') }}
 
-    <div class="nav-tabs-custom">
-    <ul class="nav nav-tabs pull-right" id="tabs" role="tablist">
-        <li class="pull-left active header">
-            <a data-toggle="tab" href="#tab_0">
+    <div class="content-header">
+        <a class="h2" data-toggle="tab" href="#tab_0" style="color: inherit; text-decoration: inherit;">
+            {% if structure.help %}
+            <span class="tip" title="{{ structure.help }}" data-position="bottom">
+                {% endif %}
+
+                    <i class="{{ structure.icon }}"></i> {{ structure.title }}
+
                 {% if structure.help %}
-                <span class="tip" title="{{ structure.help }}" data-position="bottom">
+                    <i class="fa fa-question-circle-o" style="font-size:0.75em"></i>
+                </span>
             {% endif %}
 
-                <i class="{{ structure.icon }}"></i> {{ structure.title }}
+            {% if structure.hasAddFile() and structure.permission == 'rw' %}
+                <!-- Pulsante "Aggiungi" solo se la struttura lo supporta -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-title="{{ 'Aggiungi'|trans }}..." data-href="{{ path_for('module-add', {'module_id': module_id}) }}"><i class="fa fa-plus"></i></button>
+            {% endif %}
+        </a>
 
-                    {% if structure.help %}
-                <i class="fa fa-question-circle-o" style="font-size:0.75em"></i>
-            </span>
-                {% endif %}
+        <ul class="nav nav-tabs pull-right" id="tabs" role="tablist">
+            {% for plugin in plugins %}
+                <li class="nav-item pull-right">
+                    <a class="nav-link" data-toggle="tab" href="#tab_{{ plugin.id }}" id="link-tab_{{ plugin.id }}">{{ plugin.title }}</a>
+                </li>
+            {% endfor %}
 
-                {% if structure.hasAddFile() and structure.permission == 'rw' %}
-                    <!-- Pulsante "Aggiungi" solo se la struttura lo supporta -->
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-title="{{ 'Aggiungi'|trans }}..." data-href="{{ path_for('module-add', {'module_id': module_id}) }}"><i class="fa fa-plus"></i></button>
-                {% endif %}
-
-            </a>
-        </li>
-
-        {% if include_operations and user.isAdmin() %}
-            <li class="bg-warning">
-                <a data-toggle="tab" href="#tab_info" id="link-tab_info">{{ 'Info'|trans }}</a>
-            </li>
-        {% endif %}
-
-        {% for plugin in plugins %}
-            <li>
-                <a data-toggle="tab" href="#tab_{{ plugin.id }}" id="link-tab_{{ plugin.id }}">{{ plugin.title }}</a>
-            </li>
-        {% endfor %}
-    </ul>
+            {% if include_operations and user.isAdmin() %}
+                <li class="nav-item pull-right bg-warning">
+                    <a class="nav-link" data-toggle="tab" href="#tab_info" id="link-tab_info">{{ 'Info'|trans }}</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
 
     <div class="tab-content">
         <div id="tab_0" class="tab-pane active">
@@ -68,7 +66,6 @@
 
         {% block plugins_content %}{% endblock %}
     </div>
-</div>
 
     {{ block('bottom_content') }}
 {% endblock %}

@@ -21,12 +21,12 @@ if (!empty($rs)) {
 $api = BASEURL.'/api/?token='.$token;
 
 echo '
-<div class="box">
-    <div class="box-header">
-        <h3 class="box-title">'.tr('Account').'</h3>
+<div class="card card-outline card-primary">
+    <div class="card-header">
+        <h3 class="card-title">'.tr('Account').'</h3>
     </div>
 
-    <div class="box-body">';
+    <div class="card-body">';
 
 // Cambio password e nome utente
 echo '
@@ -54,12 +54,12 @@ echo '
 <div class="row">
     <div class="col-md-6">
 
-        <div class="box box-success">
-            <div class="box-header">
-                <h3 class="box-title">'.tr('API').'</h3>
+        <div class="card card-outline card-success">
+            <div class="card-header">
+                <h3 class="card-title">'.tr('API').'</h3>
             </div>
 
-            <div class="box-body">
+            <div class="card-body">
                 <p>'.tr("Puoi utilizzare il token per accedere all'API del gestionale e per visualizzare il calendario su applicazioni esterne").'.</p>
 
                 <p>'.tr('Token personale').': <b>'.$token.'</b></p>
@@ -73,20 +73,20 @@ $link = $api.'&resource=sync';
 echo '
 
     <div class="col-md-6">
-        <div class="box box-info">
-            <div class="box-header">
-                <h3 class="box-title">'.tr('Calendario interventi').'</h3>
+        <div class="card card-outline card-info">
+            <div class="card-header">
+                <h3 class="card-title">'.tr('Calendario interventi').'</h3>
             </div>
 
-            <div class="box-body">
+            <div class="card-body">
             <p>'.tr("Per accedere al calendario eventi attraverso l'API, accedi al seguente link").':</p>
             <a href="'.$link.'" target="_blank">'.$link.'</a>
             </div>
 
-            <div class="box-header">
-                <h3 class="box-title">'.tr('Configurazione').'</h3>
+            <div class="card-header">
+                <h3 class="card-title">'.tr('Configurazione').'</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
             <div>
                 <p>'.tr("Per _ANDROID_, scarica un'applicazione dedicata dal _LINK_", [
                     '_ANDROID_' => '<b>'.tr('Android').'</b>',

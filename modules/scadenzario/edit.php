@@ -6,12 +6,12 @@ echo '
 	<input type="hidden" name="backto" value="record-edit">
 	<input type="hidden" name="id_record" value="'.$id_record.'">
 
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title">'.tr('Dettagli scadenza').'</h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title">'.tr('Dettagli scadenza').'</h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<div class="row">
 
 				<!-- Info scadenza -->

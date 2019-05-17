@@ -33,16 +33,16 @@ echo '
 	</div>';
 
 echo '
-    <div class="box box-info collapsed-box">
-	    <div class="box-header with-border">
-	        <h3 class="box-title">'.tr('Dati anagrafici').'</h3>
-	        <div class="box-tools pull-right">
-	            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+    <div class="card card-outline card-info collapsed-box">
+	    <div class="card-header with-border">
+	        <h3 class="card-title">'.tr('Dati anagrafici').'</h3>
+	        <div class="card-tools pull-right">
+	            <button type="button" class="btn btn-card-tool" data-widget="collapse">
 	                <i class="fa fa-plus"></i>
 	            </button>
 	        </div>
 	    </div>
-	    <div class="box-body">
+	    <div class="card-body">
 			<div class="row">
 				<div class="col-md-4">
 					{[ "type": "text", "label": "'.tr('Partita IVA').'", "maxlength": 13, "name": "piva", "class": "text-center alphanumeric-mask" ]}

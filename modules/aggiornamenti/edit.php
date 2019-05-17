@@ -17,13 +17,13 @@ if (function_exists(custom)) {
     $tables = customTables();
     if (!empty($custom) || !empty($tables)) {
         echo '
-	<div class="box box-warning">
-		<div class="box-header with-border">
-			<h3 class="box-title"><span class="tip" title="'.tr('Elenco delle personalizzazioni rilevabili dal gestionale').'.">
+	<div class="card card-outline card-warning">
+		<div class="card-header with-border">
+			<h3 class="card-title"><span class="tip" title="'.tr('Elenco delle personalizzazioni rilevabili dal gestionale').'.">
 				<i class="fa fa-edit"></i> '.tr('Personalizzazioni').'
 			</span></h3>
 		</div>
-		<div class="box-body">';
+		<div class="card-body">';
 
         if (!empty($custom)) {
             echo '
@@ -167,13 +167,13 @@ function download(button) {
     echo '
 <div class="row">
     <div class="col-md-8">
-        <div class="box box-success">
-            <div class="box-header with-border">
-                <h3 class="box-title">
+        <div class="card card-outline card-success">
+            <div class="card-header with-border">
+                <h3 class="card-title">
                     '.tr('Carica un aggiornamento').' <span class="tip" title="'.tr('Form di caricamento aggiornamenti del gestionale e innesti di moduli e plugin').'."><i class="fa fa-question-circle-o"></i></span>
                 </h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <form action="'.pathFor('module', ['module_id' => $id_module]).'" method="post" enctype="multipart/form-data" class="form-inline" id="update">
                     <input type="hidden" name="op" value="upload">
                     <input type="hidden" name="backto" value="record-list">
@@ -191,13 +191,13 @@ function download(button) {
     echo '
 
     <div class="col-md-4">
-        <div class="box box-info">
-            <div class="box-header with-border">
-                <h3 class="box-title">
+        <div class="card card-outline card-info">
+            <div class="card-header with-border">
+                <h3 class="card-title">
                     '.tr('Ricerca aggiornamenti').' <span class="tip" title="'.tr('Controllo automatico della presenza di aggiornamenti per il gestionale').'."><i class="fa fa-question-circle-o"></i></span>
                 </h3>
             </div>
-            <div class="box-body">';
+            <div class="card-body">';
 
     if (extension_loaded('curl')) {
         echo '

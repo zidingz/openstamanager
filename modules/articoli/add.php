@@ -35,7 +35,7 @@ unset($_SESSION['superselect']['id_categoria']);
 <script>
 $(document).ready(function () {
     var sub = $('#add-form').find('#subcategoria_add');
-    var original = sub.parent().find(".input-group-addon button").data("href");
+    var original = sub.parent().find(".input-group-prepend button").data("href");
 
     $('#add-form').find('#categoria').change( function(){
         sub.selectInfo('id_categoria', $(this).val())
@@ -43,11 +43,11 @@ $(document).ready(function () {
         sub.selectReset();
 
         if($(this).val()){
-            sub.parent().find(".input-group-addon button").removeClass("hide");
-            sub.parent().find(".input-group-addon button").data("href", original + "&id_original="+$(this).val());
+            sub.parent().find(".input-group-prepend button").removeClass("hide");
+            sub.parent().find(".input-group-prepend button").data("href", original + "&id_original="+$(this).val());
         }
         else {
-            sub.parent().find(".input-group-addon button").addClass("hide");
+            sub.parent().find(".input-group-prepend button").addClass("hide");
         }
     });
 });

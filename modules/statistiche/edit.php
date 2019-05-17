@@ -60,17 +60,17 @@ for ($i = 0; $i < $count; ++$i) {
 
 // Fatturato
 echo '
-<div class="box box-success">
-    <div class="box-header with-border">
-        <h3 class="box-title">'.tr('Vendite e acquisti').'</h3>
+<div class="card card-outline card-success">
+    <div class="card-header with-border">
+        <h3 class="card-title">'.tr('Vendite e acquisti').'</h3>
 
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+        <div class="card-tools pull-right">
+            <button type="button" class="btn btn-card-tool" data-widget="collapse">
                 <i class="fa fa-minus"></i>
             </button>
         </div>
     </div>
-    <canvas class="box-body collapse in" id="fatturato" height="100"></canvas>
+    <canvas class="card-body collapse in" id="fatturato" height="100"></canvas>
 </div>';
 
 // Script per il grafico del fatturato
@@ -126,17 +126,17 @@ $totale = $dbo->fetchArray("SELECT SUM(co_righe_documenti.subtotale - co_righe_d
 echo '
 <div class="row">
     <div class="col-md-6">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title">'.tr('Clienti TOP').'</h3>
+        <div class="card card-outline card-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title">'.tr('Clienti TOP').'</h3>
 
-                <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <div class="card-tools pull-right">
+                    <button type="button" class="btn btn-card-tool" data-widget="collapse">
                         <i class="fa fa-minus"></i>
                     </button>
                 </div>
             </div>
-            <div class="box-body collapse in">';
+            <div class="card-body collapse in">';
 if (!empty($clienti)) {
     echo '
                 <table class="table table-striped">
@@ -172,17 +172,17 @@ $articoli = $dbo->fetchArray("SELECT SUM(co_righe_documenti.qta) AS qta, mg_arti
 
 echo '
     <div class="col-md-6">
-        <div class="box box-danger">
-            <div class="box-header with-border">
-                <h3 class="box-title">'.tr('Articoli più venduti').'</h3>
+        <div class="card card-outline card-danger">
+            <div class="card-header with-border">
+                <h3 class="card-title">'.tr('Articoli più venduti').'</h3>
 
-                <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <div class="card-tools pull-right">
+                    <button type="button" class="btn btn-card-tool" data-widget="collapse">
                         <i class="fa fa-minus"></i>
                     </button>
                 </div>
             </div>
-            <div class="box-body collapse in">';
+            <div class="card-body collapse in">';
 if (!empty($articoli)) {
     echo '
                 <table class="table table-striped">
@@ -245,17 +245,17 @@ foreach ($tipi as $tipo) {
 }
 
 echo '
-<div class="box box-info">
-    <div class="box-header with-border">
-        <h3 class="box-title">'.tr('Interventi per tipologia').'</h3>
+<div class="card card-outline card-info">
+    <div class="card-header with-border">
+        <h3 class="card-title">'.tr('Interventi per tipologia').'</h3>
 
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+        <div class="card-tools pull-right">
+            <button type="button" class="btn btn-card-tool" data-widget="collapse">
                 <i class="fa fa-minus"></i>
             </button>
         </div>
     </div>
-    <canvas class="box-body collapse in" id="interventi" height="100"></canvas>
+    <canvas class="card-body collapse in" id="interventi" height="100"></canvas>
 </div>';
 
 // Script per il grafico del fatturato

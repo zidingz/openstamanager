@@ -48,7 +48,7 @@ echo '
 			<h4>'.$dati_generali['Numero'];
 
         echo '
-				<a href="'.$structure->fileurl('view.php').'?filename='.$filename.'" class="btn btn-info btn-xs" target="_blank" >
+				<a href="'.$structure->fileurl('view.php').'?filename='.$filename.'" class="btn btn-info btn-sm" target="_blank" >
 					<i class="fa fa-eye"></i> '.tr('Visualizza').'
 				</a>';
 

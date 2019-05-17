@@ -328,10 +328,18 @@ span.form-control {
     color: #3C8DBC;
 }
 
-.navbar-nav > .notifications-menu > .dropdown-menu > li .menu > li > a, .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a, .navbar-nav > .tasks-menu > .dropdown-menu > li .menu > li > a
+.dropdown-item
  {
      white-space: normal;
  }
+
+.content-wrapper > .content{
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+.nav-tabs{
+    border-bottom: 0 !important;
+}
 
 .nav-tabs-custom>.nav-tabs.pull-right>li>a.back-btn:hover {
     cursor: pointer;
@@ -373,7 +381,6 @@ span.form-control {
 .info-box-text {
     white-space: normal;
     overflow: auto;
-    font-size: 12px;
 }
 
 .colorpicker,

@@ -34,7 +34,7 @@ if (!empty($rs)) {
     <tr class="'.$class.'">
         <td>
             '.Modules::link('Contratti', $r['id'], $r['nome']).'<br>
-            <small class="help-block">'.$r['ragione_sociale'].'</small>
+            <small class="form-text">'.$r['ragione_sociale'].'</small>
         </td>
         <td class="text-center">'.$data_accettazione.'</td>
         <td class="text-center">'.$data_conclusione.'</td>

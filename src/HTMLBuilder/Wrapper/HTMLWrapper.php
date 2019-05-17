@@ -20,7 +20,7 @@ class HTMLWrapper implements WrapperInterface
         // Generazione dell'etichetta
         if (!empty($values['label'])) {
             $result .= '
-<div class="form-group">
+<div>
     <label for="'.prepareToField($values['id']).'">'.(empty($values['help']) ? $values['label'] : '<span class="tip" title="'.prepareToField($values['help']).'">'.$values['label'].' <i class="fa fa-question-circle-o"></i></span>').'</label>';
         }
 
@@ -30,7 +30,7 @@ class HTMLWrapper implements WrapperInterface
 
             if (!empty($values['icon-before'])) {
                 $result .= '
-        <span class="input-group-addon before'.(!empty($values['icon-custom']) ? ' '.$values['icon-custom'] : '').'">'.$values['icon-before'].'</span>';
+        <span class="input-group-prepend'.(!empty($values['icon-custom']) ? ' '.$values['icon-custom'] : '').'">'.$values['icon-before'].'</span>';
             }
         }
 
@@ -44,7 +44,7 @@ class HTMLWrapper implements WrapperInterface
         if (!empty($values['icon-before']) || !empty($values['icon-after'])) {
             if (!empty($values['icon-after'])) {
                 $result .= '
-                <span class="input-group-addon after'.(!empty($values['icon-custom']) ? ' '.$values['icon-custom'] : '').'">'.$values['icon-after'].'</span>';
+                <span class="input-group-append'.(!empty($values['icon-custom']) ? ' '.$values['icon-custom'] : '').'">'.$values['icon-after'].'</span>';
             }
 
             $result .= '
@@ -57,7 +57,7 @@ class HTMLWrapper implements WrapperInterface
 
         if (!empty($values['help']) && !empty($values['show-help'])) {
             $result .= '
-        <span class="help-block pull-left"><small>'.$values['help'].'</small></span>';
+        <span class="form-text pull-left"><small>'.$values['help'].'</small></span>';
 
             unset($values['help']);
             unset($values['show-help']);

@@ -190,7 +190,7 @@ if (Auth::check()) {
             <aside class="main-sidebar">
                 <section class="sidebar">
 
-                    <!-- Sidebar user panel -->
+                    <!-- Sidebar user card -->
                     <div class="user-panel text-center info">
                         <div class="info">
                             <p><a href="'.$rootdir.'/modules/utenti/info.php">
@@ -201,7 +201,7 @@ if (Auth::check()) {
                         </div>
 
                         <div class="image">
-                            <img src="'.$paths['img'].'/logo.png" class="img-circle img-responsive" alt="'.tr('OpenSTAManager').'" />
+                            <img src="'.$paths['img'].'/logo.png" class="img-circle img-fluid" alt="'.tr('OpenSTAManager').'" />
                         </div>
                     </div>
 

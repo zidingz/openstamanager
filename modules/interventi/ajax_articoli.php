@@ -122,14 +122,14 @@ if (!empty($rs)) {
 
             if ($r['abilita_serial']) {
                 echo '
-            <button type="button" class="btn btn-info btn-xs" data-toggle="tooltip" onclick="launch_modal(\''.tr('Modifica articoli').'\', \''.$rootdir.'/modules/fatture/add_serial.php?id_module='.$id_module.'&id_record='.$id_record.'&idarticolo='.$r['idriga'].'&idriga='.$r['id'].'\', 1);"><i class="fa fa-barcode"></i></button>';
+            <button type="button" class="btn btn-info btn-sm" data-toggle="tooltip" onclick="launch_modal(\''.tr('Modifica articoli').'\', \''.$rootdir.'/modules/fatture/add_serial.php?id_module='.$id_module.'&id_record='.$id_record.'&idarticolo='.$r['idriga'].'&idriga='.$r['id'].'\', 1);"><i class="fa fa-barcode"></i></button>';
             }
 
             echo '
 
-            <button type="button" class="btn btn-warning btn-xs" data-toggle="tooltip" onclick="launch_modal(\''.tr('Modifica articoli').'\', \''.$rootdir.'/modules/interventi/add_articolo.php?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$r['idriga'].'\', 1);"><i class="fa fa-edit"></i></button>
+            <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" onclick="launch_modal(\''.tr('Modifica articoli').'\', \''.$rootdir.'/modules/interventi/add_articolo.php?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$r['idriga'].'\', 1);"><i class="fa fa-edit"></i></button>
 
-            <button type="button" class="btn btn-danger btn-xs" data-toggle="tooltip" title="Riporta in magazzino" onclick="if(confirm(\''.tr('Riportare questo articolo in magazzino?').'\') ){ ritorna_al_magazzino(\''.$r['id'].'\'); }"><i class="fa fa-angle-double-left"></i> <i class="fa fa-truck"></i></button>
+            <button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" title="Riporta in magazzino" onclick="if(confirm(\''.tr('Riportare questo articolo in magazzino?').'\') ){ ritorna_al_magazzino(\''.$r['id'].'\'); }"><i class="fa fa-angle-double-left"></i> <i class="fa fa-truck"></i></button>
         </td>';
         }
         echo '

@@ -163,12 +163,12 @@ if (!empty($id_intervento)) {
 ?>
 
 	<!-- DATI CLIENTE -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Dati cliente'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Dati cliente'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 
 			<!-- RIGA 1 -->
 			<div class="row">
@@ -213,12 +213,12 @@ if (!empty($id_intervento)) {
 	</div>
 
 	<!-- DATI INTERVENTO -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Dati intervento'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Dati intervento'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<!-- RIGA 3 -->
 			<div class="row">
                 <div class="col-md-3">
@@ -248,17 +248,17 @@ if (!empty($id_intervento)) {
 	</div>
 
 	<!-- DATI INTERVENTO -->
-    <div class="box box-primary collapsable <?php echo get('ref') ? '' : 'collapsed-box'; ?>">
-        <div class="box-header with-border">
-			<h3 class="box-title"><?php echo tr('Ore di lavoro'); ?></h3>
-            <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+    <div class="card card-outline card-primary collapsable <?php echo get('ref') ? '' : 'collapsed-box'; ?>">
+        <div class="card-header with-border">
+			<h3 class="card-title"><?php echo tr('Ore di lavoro'); ?></h3>
+            <div class="card-tools pull-right">
+                <button type="button" class="btn btn-card-tool" data-widget="collapse">
                     <i class="fa fa-<?php echo get('ref') ? 'minus' : 'plus'; ?>"></i>
                 </button>
             </div>
 		</div>
 
-		<div class="box-body">
+		<div class="card-body">
 			<div class="row">
 				<div class="col-md-6">
 					{[ "type": "timestamp", "label": "<?php echo tr('Inizio attività'); ?>", "name": "orario_inizio", "required": <?php echo get('ref') ? 1 : 0; ?>, "value": "<?php echo $orario_inizio; ?>" ]}

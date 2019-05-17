@@ -23,12 +23,12 @@ if ($dir == 'entrata') {
 	<input type="hidden" name="id_record" value="<?php echo $id_record; ?>">
 
 	<!-- INTESTAZIONE -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Intestazione'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Intestazione'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 
 			<?php
                 if ($dir == 'entrata') {
@@ -189,7 +189,7 @@ if (empty($record['is_fiscale'])) {
 
                     if ($fattura->isFE() && $ricalcola && $module['name'] == 'Fatture di acquisto') {
                         echo '
-                    <button type="button" class="btn btn-info btn-xs pull-right tip" title="'.tr('Ricalcola le scadenze').'. '.tr('Per ricalcolare correttamente le scadenze, imposta la fattura in stato \'\'Bozza\'\' e correggi il metodo di  come desiderato, poi re-imposta lo stato \'\'Emessa\'\' e utilizza questa funzione').'." id="ricalcola_scadenze">
+                    <button type="button" class="btn btn-info btn-sm pull-right tip" title="'.tr('Ricalcola le scadenze').'. '.tr('Per ricalcolare correttamente le scadenze, imposta la fattura in stato \'\'Bozza\'\' e correggi il metodo di  come desiderato, poi re-imposta lo stato \'\'Emessa\'\' e utilizza questa funzione').'." id="ricalcola_scadenze">
                         <i class="fa fa-calculator" aria-hidden="true"></i>
                     </button>';
                     }
@@ -256,12 +256,12 @@ if (empty($record['is_fiscale'])) {
 
 <?php
 echo '
-    <div class="box box-info">
-        <div class="box-header with-border">
-            <h3 class="box-title"><i class="fa fa-certificate "></i> '.tr('Marca da bollo').'</h3>
+    <div class="card card-outline card-info">
+        <div class="card-header with-border">
+            <h3 class="card-title"><i class="fa fa-certificate "></i> '.tr('Marca da bollo').'</h3>
         </div>
 
-        <div class="box-body">
+        <div class="card-body">
             <div class="row">
                 <div class="col-md-4">
                     {[ "type": "checkbox", "label": "'.tr('Addebita marca da bollo').'", "name": "addebita_bollo", "value": "$addebita_bollo$" ]}
@@ -290,12 +290,12 @@ echo '
 
 if ($tipodoc == 'Fattura accompagnatoria di vendita') {
     echo '
-    <div class="box box-info">
-        <div class="box-header with-border">
-            <h3 class="box-title"><i class="fa fa-edit"></i> '.tr('Dati Fattura accompagnatoria').'</h3>
+    <div class="card card-outline card-info">
+        <div class="card-header with-border">
+            <h3 class="card-title"><i class="fa fa-edit"></i> '.tr('Dati Fattura accompagnatoria').'</h3>
         </div>
 
-        <div class="box-body">
+        <div class="card-body">
             <div class="row">
                 <div class="col-md-3">
                     {[ "type": "select", "label": "'.tr('Aspetto beni').'", "name": "idaspettobeni", "placeholder": "", "ajax-source": "aspetto-beni", "value": "$idaspettobeni$", "icon-after": "add|'.Modules::get('Aspetto beni')['id'].'||'.(($record['stato'] != 'Bozza') ? 'disabled' : '').'" ]}
@@ -418,12 +418,12 @@ if ($tipodoc == 'Fattura accompagnatoria di vendita') {
 
 
 <!-- RIGHE -->
-<div class="panel panel-primary">
-	<div class="panel-heading">
-		<h3 class="panel-title">Righe</h3>
+<div class="card card-primary">
+	<div class="card-header">
+		<h3 class="card-title">Righe</h3>
 	</div>
 
-	<div class="panel-body">
+	<div class="card-body">
 		<div class="row">
 			<div class="col-md-12">
 				<div class="pull-left">

@@ -2,17 +2,17 @@
 
 {% block title %}{{ "Configurazione"|trans }}{% endblock %}
 
-{% block box_class %}box-warning{% endblock %}
+{% block box_class %}card-warning{% endblock %}
 {% block box_header %}
 <img src="{{ base_url() }}/assets/img/logo.png" alt="{{ 'OSM Logo'|trans }}">
-<h3 class="box-title">{{ "Configurazione per l'installazione"|trans }}</h3>
+<h3 class="card-title">{{ "Configurazione per l'installazione"|trans }}</h3>
 {% endblock %}
 
 {% block content %}
     <!-- Controlli per essere sicuro che l'utente abbia letto la licenza -->
     <script>
     $(document).ready(function(){
-        let wizard = $(".box-body");
+        let wizard = $(".card-body");
 
         wizard.smartWizard({
             useURLhash: false,
@@ -126,7 +126,7 @@
             <a href="https://www.openstamanager.com/contattaci/?subject=Assistenza%20installazione%20OSM" target="_blank" ><img class="pull-right" width="32" src="{{ base_url() }}/assets/img/help.png" alt="{{ 'Aiuto'|trans }}" title="{{ 'Contatta il nostro help-desk'|trans }}"/></a>
 
             <p>{{ 'Non hai ancora configurato OpenSTAManager'|trans }}.</p>
-            <p><small class="help-block">{{ 'Configura correttamente il software con i seguenti parametri (modificabili successivamente dal file _FILE_)'|trans({'_FILE_': '<b>config.inc.php</b>'})|raw }}</small></p>
+            <p><small class="form-text">{{ 'Configura correttamente il software con i seguenti parametri (modificabili successivamente dal file _FILE_)'|trans({'_FILE_': '<b>config.inc.php</b>'})|raw }}</small></p>
 
             <!-- Form dei parametri -->
             <form action="" method="post" id="config-form">

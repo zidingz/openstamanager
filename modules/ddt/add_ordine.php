@@ -43,15 +43,15 @@ echo '
     </div>
 </div>
 
-<div class="box" id="info-box">
-    <div class="box-header with-border">
-        <h3 class="box-title">'.tr('Informazioni di importazione').'</h3>
+<div class="card card-outline card-primary" id="info-box">
+    <div class="card-header with-border">
+        <h3 class="card-title">'.tr('Informazioni di importazione').'</h3>
     </div>
-    <div class="box-body" id="righe_documento">
+    <div class="card-body" id="righe_documento">
     </div>
 </div>
 
-<div class="alert alert-info" id="box-loading">
+<div class="alert alert-info" id="card-loading">
     <i class="fa fa-spinner fa-spin"></i> '.tr('Caricamento in corso').'...
 </div>';
 
@@ -62,7 +62,7 @@ echo '
 <script>
     var box = $("#info-box");
     var content = $("#righe_documento");
-    var loader = $("#box-loading");
+    var loader = $("#card-loading");
 
     $(document).ready(function(){
         box.hide();

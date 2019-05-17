@@ -2,9 +2,9 @@
 
 {% block title %}{{ "Errore di configurazione"|trans }}{% endblock %}
 
-{% block box_class %}box-danger{% endblock %}
+{% block box_class %}card-danger{% endblock %}
 {% block box_header %}
-    <h3 class="box-title">{{ 'Permessi di scrittura mancanti'|trans }}</h3>
+    <h3 class="card-title">{{ 'Permessi di scrittura mancanti'|trans }}</h3>
 {% endblock %}
 
 {% block content %}
@@ -25,14 +25,14 @@
 
 <hr>
 
-<div class="box box-default collapsed-box">
-    <div class="box-header with-border">
-        <h4 class="box-title"><a class="clickable" data-widget="collapse">{{ 'Creazione manuale'|trans }}</a></h4>
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+<div class="card card-outline card-default collapsed-box">
+    <div class="card-header with-border">
+        <h4 class="card-title"><a class="clickable" data-widget="collapse">{{ 'Creazione manuale'|trans }}</a></h4>
+        <div class="card-tools pull-right">
+            <button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
         </div>
     </div>
-    <div class="box-body">
+    <div class="card-body">
         <p>{{ 'Inserire il seguente testo nel file _FILE_'|trans({'_FILE_': '<b>config.inc.php</b>'})|raw }}</p>
         <pre class="text-left">{{ config }}</pre>
     </div>

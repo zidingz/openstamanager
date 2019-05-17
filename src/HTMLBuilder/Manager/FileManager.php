@@ -38,11 +38,11 @@ class FileManager implements ManagerInterface
 
         if (!empty($options['showpanel'])) {
             $result .= '
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h3 class="panel-title">'.tr('Allegati').'</h3>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">'.tr('Allegati').'</h3>
         </div>
-        <div class="panel-body">';
+        <div class="card-body">';
         }
 
         $count = 0;
@@ -58,16 +58,16 @@ class FileManager implements ManagerInterface
 
             if (!empty($rs)) {
                 $result .= '
-<div class="box box-success">
-    <div class="box-header with-border">
-        <h3 class="box-title">'.(!empty($category) ? $category : tr('Generale')).'</h3>
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+<div class="card card-outline card-success">
+    <div class="card-header with-border">
+        <h3 class="card-title">'.(!empty($category) ? $category : tr('Generale')).'</h3>
+        <div class="card-tools pull-right">
+            <button type="button" class="btn btn-card-tool" data-widget="collapse">
                 <i class="fa fa-minus"></i>
             </button>
         </div>
     </div>
-    <div class="box-body no-padding table-responsive">
+    <div class="card-body no-padding table-responsive">
     <table class="table table-striped table-condensed ">
 	  <thead>
         <tr>
@@ -90,26 +90,26 @@ class FileManager implements ManagerInterface
             </td>
             <td>'.\Translator::timestampToLocale($r['created_at']).'</td>
             <td class="text-right">
-                <a class="btn btn-xs btn-primary" href="'.ROOTDIR.'/actions.php?id_module='.$options['id_module'].'&op=download_file&id='.$r['id'].'&filename='.$r['filename'].'" target="_blank">
+                <a class="btn btn-sm btn-primary" href="'.ROOTDIR.'/actions.php?id_module='.$options['id_module'].'&op=download_file&id='.$r['id'].'&filename='.$r['filename'].'" target="_blank">
                     <i class="fa fa-download"></i>
                 </a>';
 
                     // Anteprime supportate dal browser
                     if ($file->hasPreview()) {
                         $result .= '
-                <button class="btn btn-xs btn-info" data-target="#bs-popup2" type="button" data-title="'.prepareToField($r['name']).' <small style=\'color:white\'><i>('.$r['filename'].')</i></small>" data-href="'.ROOTDIR.'/view.php?file_id='.$r['id'].'">
+                <button class="btn btn-sm btn-info" data-target="#bs-popup2" type="button" data-title="'.prepareToField($r['name']).' <small style=\'color:white\'><i>('.$r['filename'].')</i></small>" data-href="'.ROOTDIR.'/view.php?file_id='.$r['id'].'">
                     <i class="fa fa-eye"></i>
                 </button>';
                     } else {
                         $result .= '
-                <button class="btn btn-xs btn-default disabled" title="'.tr('Anteprima file non disponibile').'" disabled>
+                <button class="btn btn-sm btn-secondary disabled" title="'.tr('Anteprima file non disponibile').'" disabled>
                     <i class="fa fa-eye"></i>
                 </button>';
                     }
 
                     if (!$options['readonly']) {
                         $result .= '
-                <a class="btn btn-xs btn-danger ask" data-backto="record-edit" data-msg="'.tr('Vuoi eliminare questo file?').'" data-op="unlink_file" data-filename="'.$r['filename'].'" data-id_record="'.$r['id_record'].'" data-id_plugin="'.$options['id_plugin'].'" data-callback="reload_'.$attachment_id.'">
+                <a class="btn btn-sm btn-danger ask" data-backto="record-edit" data-msg="'.tr('Vuoi eliminare questo file?').'" data-op="unlink_file" data-filename="'.$r['filename'].'" data-id_record="'.$r['id_record'].'" data-id_plugin="'.$options['id_plugin'].'" data-callback="reload_'.$attachment_id.'">
                     <i class="fa fa-trash"></i>
                 </a>';
                     }

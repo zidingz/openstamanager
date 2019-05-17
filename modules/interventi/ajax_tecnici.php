@@ -104,14 +104,14 @@ if (!empty($sessioni)) {
                             <th class="text-danger">'.tr('Costo').':</th>
                             <td align="right">
                                 '.Translator::numberToLocale($costo_ore_consuntivo_tecnico)."
-                                <small class='help-block'>".Translator::numberToLocale($costo_ore_unitario_tecnico).'x'.Translator::numberToLocale($ore).'<br>+'.Translator::numberToLocale($costo_dirittochiamata_tecnico).'</small>
+                                <small class='form-text'>".Translator::numberToLocale($costo_ore_unitario_tecnico).'x'.Translator::numberToLocale($ore).'<br>+'.Translator::numberToLocale($costo_dirittochiamata_tecnico).'</small>
                             </td>
                         </tr>
                         <tr>
                             <th>'.tr('Addebito').':</th>
                             <td align="right">
                                 '.Translator::numberToLocale($costo_ore_consuntivo).'
-                                <small class="help-block">'.Translator::numberToLocale($costo_ore_unitario).'x'.Translator::numberToLocale($ore).'<br>+'.Translator::numberToLocale($costo_dirittochiamata).'</small>
+                                <small class="form-text">'.Translator::numberToLocale($costo_ore_unitario).'x'.Translator::numberToLocale($ore).'<br>+'.Translator::numberToLocale($costo_dirittochiamata).'</small>
                             </td>
                         </tr>
                         <tr>
@@ -133,7 +133,7 @@ if (!empty($sessioni)) {
                         <th class="text-danger">'.tr('Costo').':</th>
                         <td align="right">
                             '.Translator::numberToLocale($costo_km_consuntivo_tecnico).'
-                            <small class="help-block">
+                            <small class="form-text">
                                 '.Translator::numberToLocale($costo_km_unitario_tecnico).'x'.Translator::numberToLocale($km).'
                             </small><br>
                         </td>
@@ -142,7 +142,7 @@ if (!empty($sessioni)) {
                         <th>'.tr('Addebito').':</th>
                         <td align="right">
                             '.Translator::numberToLocale($costo_km_consuntivo).'
-                            <small class="help-block">
+                            <small class="form-text">
                                 '.Translator::numberToLocale($costo_km_unitario).'x'.Translator::numberToLocale($km).'
                             </small><br>
                         </td>

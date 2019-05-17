@@ -81,7 +81,7 @@ foreach ($rs as $r) {
     if (empty($r['is_descrizione'])) {
         echo '
                 '.moneyFormat($r['iva']).'
-                <br><small class="help-block">'.$r['desc_iva'].'</small>';
+                <br><small class="form-text">'.$r['desc_iva'].'</small>';
     }
     echo'
             </td>';
@@ -107,9 +107,9 @@ foreach ($rs as $r) {
                     <input type='hidden' name='idarticolo' value='".$r['idarticolo']."'>
 
                     <div class='btn-group'>
-                        <a class='btn btn-xs btn-warning' title='Modifica riga' onclick=\"launch_modal( 'Modifica riga', '".$rootdir.'/modules/preventivi/row-edit.php?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$r['id']."', 1 );\"><i class='fa fa-edit'></i></a>
+                        <a class='btn btn-sm btn-warning' title='Modifica riga' onclick=\"launch_modal( 'Modifica riga', '".$rootdir.'/modules/preventivi/row-edit.php?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$r['id']."', 1 );\"><i class='fa fa-edit'></i></a>
 
-                        <a href='javascript:;' class='btn btn-xs btn-danger' title='Rimuovi questa riga' onclick=\"if( confirm('Rimuovere questa riga dal preventivo?') ){ $('#delete-form-".$r['id']."').submit(); }\"><i class='fa fa-trash'></i></a>
+                        <a href='javascript:;' class='btn btn-sm btn-danger' title='Rimuovi questa riga' onclick=\"if( confirm('Rimuovere questa riga dal preventivo?') ){ $('#delete-form-".$r['id']."').submit(); }\"><i class='fa fa-trash'></i></a>
                     </div>
                 </form>";
     }

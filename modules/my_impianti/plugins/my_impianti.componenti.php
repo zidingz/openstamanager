@@ -84,11 +84,11 @@ if (empty($id_list)) {
 }
 
 echo '
-<div class="box">
-    <div class="box-header with-border">
-        <h3 class="box-title">'.tr('Componenti installati').'</h3>
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">'.tr('Componenti installati').'</h3>
     </div>
-    <div class="box-body">';
+    <div class="card-body">';
 
 // Elenca i componenti disponibili
 $cmp = \Util\Ini::getList($docroot.'/files/my_impianti/', $id_list);
@@ -133,7 +133,7 @@ if (!empty($rs2)) {
     $prev_componente = '';
 
     echo '
-        <div class="panel-group" id="accordion">';
+        <div class="card-group" id="accordion">';
 
     // Ciclo tra tutti i componenti
     for ($j = 0; $j < $n2; ++$j) {
@@ -156,9 +156,9 @@ if (!empty($rs2)) {
         // per non confonderlo come componente in uso in questo momento
         $same = ($prev_componente == $nome_componente);
         echo '
-            <div class="panel panel-'.($same ? 'default' : 'primary').'">
-                <div class="panel-heading'.($same ? ' mini' : '').'">
-                    <h4 class="panel-title'.($same ? ' mini' : '').'">
+            <div class="card card-'.($same ? 'default' : 'primary').'">
+                <div class="card-header'.($same ? ' mini' : '').'">
+                    <h4 class="card-title'.($same ? ' mini' : '').'">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse_'.$j.'">'.($same ? '<small>' : '').$nome_componente.' ('.$statocomponente.')'.($same ? '</small>' : '').'</a>
                     </h4>
                 </div>';
@@ -173,8 +173,8 @@ if (!empty($rs2)) {
         }
 
         echo '
-                <div id="collapse_'.$j.'" class="panel-collapse collapse '.$in.'">
-                    <div class="panel-body">';
+                <div id="collapse_'.$j.'" class="card-collapse collapse '.$in.'">
+                    <div class="card-body">';
         // FORM COMPONENTE
         echo '
                         <form method="post" action="'.$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'&op=updatecomponente&id='.$rs2[$j]['id'].'">

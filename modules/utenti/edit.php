@@ -3,14 +3,14 @@
 $utenti = $dbo->fetchArray('SELECT *, (SELECT ragione_sociale FROM an_anagrafiche WHERE an_anagrafiche.idanagrafica=zz_users.idanagrafica ) AS ragione_sociale, (SELECT GROUP_CONCAT(descrizione SEPARATOR ", ") FROM an_tipianagrafiche INNER JOIN an_tipianagrafiche_anagrafiche ON an_tipianagrafiche.id=an_tipianagrafiche_anagrafiche.id_tipo_anagrafica WHERE idanagrafica=zz_users.idanagrafica GROUP BY idanagrafica) AS tipo FROM zz_users WHERE idgruppo='.prepare($record['id']));
 
 echo '
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title">'.tr('Utenti _GROUP_', [
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title">'.tr('Utenti _GROUP_', [
                 '_GROUP_' => $record['nome'],
             ]).'</h3>
 		</div>
 
-		<div class="panel-body">';
+		<div class="card-body">';
 if (!empty($utenti)) {
     echo '
         <div class="table-responsive">
@@ -108,15 +108,15 @@ echo '
 	<hr>';
 
 echo '
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-            <h3 class="panel-title">'.tr('Permessi _GROUP_', [
+	<div class="card card-primary">
+		<div class="card-header">
+            <h3 class="card-title">'.tr('Permessi _GROUP_', [
                 '_GROUP_' => $record['nome'],
-            ]).((empty($record['editable'])) ? '<a class=\'clickable btn-xs pull-right ask\'  data-msg="'.tr('Verranno reimpostati i permessi di default per il gruppo \''.$record['nome'].'\' ').'." data-class="btn btn-lg btn-warning" data-button="'.tr('Reimposta permessi').'" data-op="restore_permission"  >'.tr('Reimposta permessi').'</a>' : '').'</h3>
+            ]).((empty($record['editable'])) ? '<a class=\'clickable btn-sm pull-right ask\'  data-msg="'.tr('Verranno reimpostati i permessi di default per il gruppo \''.$record['nome'].'\' ').'." data-class="btn btn-lg btn-warning" data-button="'.tr('Reimposta permessi').'" data-op="restore_permission"  >'.tr('Reimposta permessi').'</a>' : '').'</h3>
 
 		</div>
 
-		<div class="panel-body">';
+		<div class="card-body">';
 if ($record['nome'] != 'Amministratori') {
     echo '
 			<div class="table-responsive">

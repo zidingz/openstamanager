@@ -12,14 +12,14 @@ include App::filepath('resources\views|custom|\layout', 'header.php');
 include App::filepath('resources\views|custom|\layout', 'messages.php');
 
 echo '
-<div class="box box-center-large box-warning nav nav-tabs">
-    <div class="box-header with-border">
-        <h3 class="box-title">
+<div class="card card-outline card-center-large card-warning nav nav-tabs">
+    <div class="card-header with-border">
+        <h3 class="card-title">
             <a data-toggle="tab" href="#info">'.tr("Informazioni sull'aggiornamento").'</a>
         </h3>
         <a data-toggle="tab" href="#changelog" class="pull-right">'.tr('Changelog').'</a>
     </div>
-    <div class="box-body tab-content">
+    <div class="card-body tab-content">
         <div id="info" class="tab-pane fade in active">';
 
     if ($update->isCoreUpdate()) {

@@ -67,7 +67,7 @@
         end_date: '{{ calendar.end|date }}',
 
         ckeditorToolbar: [
-            ["Undo","Redo","-","Cut","Copy","Paste","PasteText","PasteFromWord","-","Scayt", "-","Link","Unlink","-","Bold","Italic","Underline","Superscript","SpecialChar","HorizontalRule","-","JustifyLeft","JustifyCenter","JustifyRight","JustifyBlock","-","NumberedList","BulletedList","Outdent","Indent","Blockquote","-","Styles","Format","Image","Table", "TextColor", "BGColor" ],
+            "heading", "|", "bold", "italic", "link", "bulletedList", "numberedList", "imageUpload", "blockQuote", "insertTable", "mediaEmbed", "|", "undo", "redo"
         ],
 
         tempo_attesa_ricerche: {{ setting('Tempo di attesa ricerche in secondi') }},
@@ -88,89 +88,79 @@
 
 {% block body %}
 <div class="wrapper">
-    <header class="main-header">
-        <a href="https://www.openstamanager.com" class="logo" title="{{ "Il gestionale open source per l'assistenza tecnica e la fatturazione"|trans }}" target="_blank">
-            <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini">{{ 'OSM'|trans }}</span>
-            <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg">{{ 'OpenSTAManager'|trans }}</span>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="main-header navbar navbar-expand bg-white navbar-light" role="navigation">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
+            </li>
+
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="#" id="daterange" class="nav-link">
+                    <i class="fa fa-calendar" style="color:{{ calendar.color }}"></i> <i class="fa fa-caret-down"></i>
+                </a>
+            </li>
+
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="#" class="nav-link">
+                    {{ calendar.start|date }} - {{ calendar.end|date }}
+                </a>
+            </li>
+        </ul>
+
+        <!-- Navbar Right Menu -->
+        <div class="navbar-nav ml-auto" id="right-menu">
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="#" data-toggle="dropdown">
+                    <i class="fa fa-bell-o"></i>
+                    <span class="badge badge-warning navbar-badge">
+                        <span id="hooks-loading"><i class="fa fa-spinner fa-spin fa-xs"></i></span>
+                        <span id="hooks-count"></span>
+                    </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" id="hooks">
+
+                </div>
+            </li>
+
+            <li class="nav-item"><a href="#" onclick="window.print()" class="nav-link btn-info tip" title="{{ 'Stampa'|trans }}">
+                <i class="fa fa-print"></i>
+            </a></li>
+
+            <li class="nav-item"><a href="{{ path_for('bug') }}" class="nav-link tip" title="{{ 'Segnalazione bug'|trans }}">
+                <i class="fa fa-bug"></i>
+            </a></li>
+
+            <li class="nav-item"><a href="{{ path_for('logs') }}" class="nav-link tip" title="{{ 'Log accessi'|trans }}">
+                <i class="fa fa-book"></i>
+            </a></li>
+
+            <li class="nav-item"><a href="{{ path_for('info') }}" class="nav-link tip" title="{{ 'Informazioni'|trans }}">
+                <i class="fa fa-info"></i>
+            </a></li>
+
+            <li><a href="{{ path_for('logout') }}" class="nav-link btn-danger tip" title="{{ 'Esci'|trans }}">
+                <i class="fa fa-power-off"></i>
+            </a></li>
+        </ul>
+    </nav>
+
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <a href="https://www.openstamanager.com" class="brand-link" title="{{ "Il gestionale open source per l'assistenza tecnica e la fatturazione"|trans }}" target="_blank">
+            <img src="{{ base_url() }}/assets/img/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
+            <span class="brand-text">{{ 'OpenSTAManager'|trans }}</span>
         </a>
 
-        <!-- Header Navbar: style can be found in header.less -->
-        <nav class="navbar navbar-static-top" role="navigation">
-            <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-                <span class="sr-only">{{ 'Mostra/nascondi menu'|trans }}</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-
-            <div class="input-group btn-calendar pull-left">
-                <button id="daterange" class="btn"><i class="fa fa-calendar" style="color:{{ calendar.color }}"></i> <i class="fa fa-caret-down"></i></button>
-                <span class="hidden-xs" style="vertical-align:middle">
-                    {{ calendar.start|date }} - {{ calendar.end|date }}
-                </span>
-            </div>
-
-            <!-- Navbar Right Menu -->
-            <div class="navbar-custom-menu" id="right-menu">
-                <ul class="nav navbar-nav">
-                    <li class="dropdown notifications-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bell-o"></i>
-                            <span class="label label-warning">
-                                <span id="hooks-loading"><i class="fa fa-spinner fa-spin"></i></span>
-                                <span id="hooks-count"></span>
-                            </span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><ul class="menu" id="hooks">
-
-                            </ul></li>
-                        </ul>
-                    </li>
-
-                    <li><a href="#" class="btn-info tip" title="{{ 'Stampa'|trans }}">
-                        <i class="fa fa-print"></i>
-                    </a></li>
-
-                    <li><a href="{{ path_for('bug') }}" class="btn-github tip" title="{{ 'Segnalazione bug'|trans }}">
-                        <i class="fa fa-bug"></i>
-                    </a></li>
-
-                    <li><a href="{{ path_for('logs') }}" class="btn-github tip" title="{{ 'Log accessi'|trans }}">
-                        <i class="fa fa-book"></i>
-                    </a></li>
-
-                    <li><a href="{{ path_for('info') }}" class="btn-github tip" title="{{ 'Informazioni'|trans }}">
-                        <i class="fa fa-info"></i>
-                    </a></li>
-
-                    <li><a href="{{ path_for('logout') }}" class="btn-danger tip" title="{{ 'Esci'|trans }}">
-                        <i class="fa fa-power-off"></i>
-                    </a></li>
-                    
-                </ul>
-            </div>
-        </nav>
-    </header>
-
-    <aside class="main-sidebar">
         <section class="sidebar">
-
             <!-- Sidebar user panel -->
-            <div class="user-panel text-center info">
+            <div class="user-panel text-center">
                 <div class="info">
-                    <p><a href="{{ path_for('user') }}">
-                            <i class="fa fa-user"></i>
-                            {{ user.username }}
-                        </a></p>
+                    <a href="{{ path_for('user') }}" class="d-block">
+                        <i class="fa fa-user"></i>
+                        {{ user.username }}
+                    </a>
                     <p id="datetime"></p>
-                </div>
-
-                <div class="image">
-                    <img src="{{ base_url() }}/assets/img/logo.png" class="img-circle img-responsive" alt="{{ 'OpenSTAManager'|trans }}" />
                 </div>
             </div>
 
@@ -178,8 +168,8 @@
             <div class="sidebar-form">
                 <div class="input-group">
                     <input type="text" name="q" class="form-control" id="supersearch" placeholder="{{ 'Cerca'|trans }}..."/>
-                    <span class="input-group-btn">
-                        <button class="btn btn-flat" id="search-btn" name="search" type="submit" ><i class="fa fa-search"></i>
+                    <span class="input-group-append">
+                        <button class="input-group-text" id="search-btn" name="search" type="submit" ><i class="fa fa-search"></i>
                         </button>
                     </span>
 
@@ -187,28 +177,29 @@
             </div>
             <!-- /.search form -->
 
-            <ul class="sidebar-menu">
-                {{ main_menu|raw }}
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">                {{ main_menu|raw }}
             </ul>
         </section>
         <!-- /.sidebar -->
     </aside>
 
     <!-- Right side column. Contains the navbar and content of the page -->
-    <aside class="content-wrapper">
+    <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
+            <div class="container-fluid">
 
             {% include 'layouts/messages/messages.twig' %}
 
             {% block content %}{% endblock %}
-            
+
+            </div>
         </section>
-    </aside>
+    </div>
 
     <footer class="main-footer">
         <a class="hidden-xs" href="https://www.openstamanager.com" title="{{ "Il gestionale open source per l'assistenza tecnica e la fatturazione"|trans }}" target="_blank"><strong>{{ 'OpenSTAManager'|trans }}</strong></a>
-        <span class="pull-right hidden-xs">
+        <span class="float-right hidden-xs">
             <strong>{{ 'Versione'|trans }}:</strong> {{ version }}
             <small class="text-muted">({{ revision ? revision : 'In sviluppo'|trans }})</small>
         </span>
@@ -231,7 +222,7 @@
         });
 
         function executeHook(hook, length){
-            $("#hooks").append('<li id="hook-loader-' + hook.id + '"><a href="#">{{ 'Hook "_NAME_" in esecuzione'|trans({'_NAME_': "' + hook.name + '"})|raw }}</a></li>');
+            $("#hooks").append('<li class="dropdown-item" id="hook-loader-' + hook.id + '"><a href="#">{{ 'Hook "_NAME_" in esecuzione'|trans({'_NAME_': "' + hook.name + '"})|raw }}</a></li>');
 
             $.ajax({
                 url: "{{ path_for('hook', {'hook_id': '" + hook.id + "'})|raw }}",
@@ -240,7 +231,7 @@
                     result = JSON.parse(data);
 
                     $("#hook-loader-" + hook.id).remove();
-                    message = '<li class="hook-element"><a href="' + (result.link ? result.link : "#") + '"><i class="' + result.icon + '"></i> ' + result.message + '</a></li>';
+                    message = '<li class="hook-element dropdown-item"><a href="' + (result.link ? result.link : "#") + '"><i class="' + result.icon + '"></i> ' + result.message + '</a></li>';
 
                     // Inserimento della notifica
                     if(result.notify) {

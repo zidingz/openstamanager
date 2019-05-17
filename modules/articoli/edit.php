@@ -14,12 +14,12 @@ if (!empty($record['immagine'])) {
 	<input type="hidden" name="op" value="update">
 
 	<!-- DATI ANAGRAFICI -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Articolo'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Articolo'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<div class="row">
 				<div class="col-md-3">
 					{[ "type": "image", "label": "<?php echo tr('Immagine'); ?>", "name": "immagine", "class": "img-thumbnail", "value": "<?php echo $img; ?>" ]}
@@ -119,12 +119,12 @@ if (!empty($record['immagine'])) {
     <!-- informazioni Acquisto/Vendita -->
     <div class="row">
         <div class="col-md-6">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title"><?php echo tr('Acquisto'); ?></h3>
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title"><?php echo tr('Acquisto'); ?></h3>
                 </div>
 
-                <div class="panel-body">
+                <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
                             {[ "type": "number", "label": "<?php echo tr('Prezzo di acquisto'); ?>", "name": "prezzo_acquisto", "value": "$prezzo_acquisto$", "icon-after": "<?php echo currency(); ?>" ]}
@@ -145,21 +145,21 @@ if (!empty($record['immagine'])) {
         </div>
 
         <div class="col-md-6">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">
                         <?php echo tr('Vendita'); ?>
                     </h3>
                 </div>
 
-                <div class="panel-body">
+                <div class="card-body">
 
                     
                     <div class="clearfix"></div>
 
                     <div class="row">
                         <div class="col-md-6">
-						<button type="button" class="btn btn-info btn-xs pull-right tip pull-right" title="<?php echo tr('Scorpora iva dal prezzo di vendita.'); ?>" id="scorpora_iva"><i class="fa fa-calculator" aria-hidden="true"></i></button>
+						<button type="button" class="btn btn-info btn-sm pull-right tip pull-right" title="<?php echo tr('Scorpora iva dal prezzo di vendita.'); ?>" id="scorpora_iva"><i class="fa fa-calculator" aria-hidden="true"></i></button>
                           {[ "type": "number", "label": "<?php echo tr('Prezzo di vendita'); ?>", "name": "prezzo_vendita", "value": "$prezzo_vendita$", "icon-after": "<?php echo currency(); ?>" ]}
                         </div>
 
@@ -199,12 +199,12 @@ if (!empty($record['immagine'])) {
 
     </div>
 
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Aggiungi informazioni componente personalizzato'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Aggiungi informazioni componente personalizzato'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 <?php
 
     echo '
@@ -245,12 +245,12 @@ echo '
 		</div>
 	</div>
 
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title">'.tr('Prezzo articolo per listino').'</h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title">'.tr('Prezzo articolo per listino').'</h3>
 		</div>
 
-		<div class="panel-body">';
+		<div class="card-body">';
 
         $rsl = $dbo->fetchArray('SELECT * FROM mg_listini ORDER BY id ASC');
 
@@ -296,11 +296,11 @@ echo '
 	</div>
 
 
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title">'.tr('Questo articolo è presente nei seguenti automezzi').':</h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title">'.tr('Questo articolo è presente nei seguenti automezzi').':</h3>
 		</div>
-		<div class="panel-body">';
+		<div class="card-body">';
 
         // Quantità nell'automezzo
         $rsa = $dbo->fetchArray('SELECT qta, (SELECT nome FROM dt_automezzi WHERE id=idautomezzo) AS nome, (SELECT targa FROM dt_automezzi WHERE id=idautomezzo) AS targa FROM mg_articoli_automezzi WHERE idarticolo='.prepare($id_record));
@@ -384,16 +384,16 @@ UNION SELECT `co_preventivi`.`id`, `co_preventivi`.`data_bozza`, `co_preventivi`
 
 if (!empty($elementi)) {
     echo '
-<div class="box box-warning collapsable collapsed-box">
-    <div class="box-header with-border">
-        <h3 class="box-title"><i class="fa fa-warning"></i> '.tr('Documenti collegati: _NUM_', [
+<div class="card card-outline card-warning collapsable collapsed-box">
+    <div class="card-header with-border">
+        <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Documenti collegati: _NUM_', [
             '_NUM_' => count($elementi),
         ]).'</h3>
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+        <div class="card-tools pull-right">
+            <button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
         </div>
     </div>
-    <div class="box-body">
+    <div class="card-body">
         <ul>';
 
     foreach ($elementi as $elemento) {

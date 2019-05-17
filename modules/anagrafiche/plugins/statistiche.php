@@ -21,7 +21,7 @@ echo '
                     <br class="clearfix">
                     <span class="info-box-number">
                         <big>'.count($rsi).'</big><br>
-                        <small class="help-block">'.moneyFormat($totale_preventivi).'</small>
+                        <small class="form-text">'.moneyFormat($totale_preventivi).'</small>
                     </span>
                 </div>
             </div>
@@ -46,7 +46,7 @@ echo '
                     <br class="clearfix">
                     <span class="info-box-number">
                         <big>'.count($rsi).'</big><br>
-                        <small class="help-block">'.moneyFormat($totale_contratti).'</small>
+                        <small class="form-text">'.moneyFormat($totale_contratti).'</small>
                     </span>
                 </div>
             </div>
@@ -71,7 +71,7 @@ echo '
                     <br class="clearfix">
                     <span class="info-box-number">
                         <big>'.count($rsi).'</big><br>
-                        <small class="help-block">'.moneyFormat($totale_ordini_cliente).'</small>
+                        <small class="form-text">'.moneyFormat($totale_ordini_cliente).'</small>
                     </span>
                 </div>
             </div>
@@ -104,7 +104,7 @@ echo '
                     <br class="clearfix">
                     <span class="info-box-number">
                         <big>'.count($rsi).'</big><br>
-                        <small class="help-block">'.moneyFormat($totale_interventi).'</small>
+                        <small class="form-text">'.moneyFormat($totale_interventi).'</small>
                     </span>
                 </div>
             </div>
@@ -129,7 +129,7 @@ echo '
                     <br class="clearfix">
                     <span class="info-box-number">
                         <big>'.count($rsi).'</big><br>
-                        <small class="help-block">'.moneyFormat($totale_ddt_uscita).'</small>
+                        <small class="form-text">'.moneyFormat($totale_ddt_uscita).'</small>
                     </span>
                 </div>
             </div>
@@ -154,7 +154,7 @@ echo '
                     <br class="clearfix">
                     <span class="info-box-number">
                         <big>'.count($rsi).'</big><br>
-                        <small class="help-block">'.moneyFormat($totale_fatture_vendita).'</small>
+                        <small class="form-text">'.moneyFormat($totale_fatture_vendita).'</small>
                     </span>
                 </div>
             </div>

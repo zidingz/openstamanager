@@ -139,7 +139,7 @@ if (!empty($type) && $type != 'menu' && $type != 'custom') {
         <div class="col-md-5">
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-primary btn-select-all">'.tr('Seleziona tutto').'</button>
-                <button type="button" class="btn btn-default btn-select-none">'.tr('Deseleziona tutto').'</button>
+                <button type="button" class="btn btn-secondary btn-select-none">'.tr('Deseleziona tutto').'</button>
             </div>
         </div>
 
@@ -196,9 +196,9 @@ if (!empty($type) && $type != 'menu' && $type != 'custom') {
 
     echo '
 
-                <button type="button" class="btn btn-default table-btn btn-copy disabled" disabled>'.tr('Copia').'</button>
+                <button type="button" class="btn btn-secondary table-btn btn-copy disabled" disabled>'.tr('Copia').'</button>
 
-                <button type="button" class="btn btn-default table-btn btn-print disabled" disabled>'.tr('Stampa').'</button>
+                <button type="button" class="btn btn-secondary table-btn btn-print disabled" disabled>'.tr('Stampa').'</button>
             </div>
         </div>
     </div>';

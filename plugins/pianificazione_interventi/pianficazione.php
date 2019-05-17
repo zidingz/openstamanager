@@ -69,12 +69,12 @@ echo '
 
     echo '
 	<!-- DATI PROMEMORIA -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title">'.tr('Dati').'</h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title">'.tr('Dati').'</h3>
 		</div>
 
-        <div class="panel-body">
+        <div class="card-body">
 
 			<div class="row">
 				<div class="col-md-6">
@@ -106,12 +106,12 @@ echo '
 
 echo '
         <!-- ARTICOLI -->
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h3 class="panel-title">'.tr('Materiale da utilizzare').'</h3>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">'.tr('Materiale da utilizzare').'</h3>
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
             <div id="articoli">';
 
 include $plugin->filepath('ajax_articoli.php');
@@ -130,12 +130,12 @@ echo '
 
 echo '
         <!-- SPESE AGGIUNTIVE -->
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">'.tr('Altre spese previste').'</h3>
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">'.tr('Altre spese previste').'</h3>
             </div>
 
-            <div class="panel-body">
+            <div class="card-body">
                 <div id="righe">';
 
 include $plugin->filepath('ajax_righe.php');
@@ -156,12 +156,12 @@ echo '{( "name": "filelist_and_upload", "id_record": "'.$id_record.'", "id_modul
 
 echo '
 	<!-- PIANIFICAZIONE CICLICA -->
-	<div class="panel panel-primary '.(!empty($is_add) ? 'hide' : '').'">
-		<div class="panel-heading">
-			<h3 class="panel-title">'.tr('Promemoria ciclico?').'</h3>
+	<div class="card card-primary '.(!empty($is_add) ? 'hide' : '').'">
+		<div class="card-header">
+			<h3 class="card-title">'.tr('Promemoria ciclico?').'</h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 
             <!--div class="col-md-8">
                 {[ "type": "checkbox", "label": "'.tr('Pianifica anche date passate').'", "name": "date_passate", "value": "0", "placeholder": "'.tr('Pianificare promemoria anche con date precedenti ad oggi: ').date('d/m/Y').'" ]}
@@ -191,12 +191,12 @@ echo '
 
 echo '
 	<!-- PIANIFICARE INTERVENTI -->
-	<div class="panel panel-primary '.(!empty($is_add) ? 'hide' : '').'">
-		<div class="panel-heading">
-			<h3 class="panel-title">'.tr('Pianificare interventi?').'</h3>
+	<div class="card card-primary '.(!empty($is_add) ? 'hide' : '').'">
+		<div class="card-header">
+			<h3 class="card-title">'.tr('Pianificare interventi?').'</h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 
             <div class="row">
                 <div class="col-md-4">
@@ -208,11 +208,11 @@ echo '
                 </div>
 
 
-                <div class="col-xs-6  col-md-2">
+                <div class="col--6  col-md-2">
                     {[ "type": "time", "label": "'.tr('Orario inizio').'", "name": "orario_inizio", "value": "'.$orario_inizio.'", "disabled": "1" ]}
                 </div>
 
-                <div class="col-xs-6  col-md-2">
+                <div class="col--6  col-md-2">
                     {[ "type": "time", "label": "'.tr('Orario fine').'", "name": "orario_fine", "value": "'.$orario_fine.'", "disabled": "1" ]}
                 </div>
             </div>
@@ -238,16 +238,16 @@ echo '
     $(document).ready(function() {
 
         if ($("#id_tipo_intervento_").val()==null){
-            $("#add_form .panel-primary .panel-primary").hide();
+            $("#add_form .card-primary .card-primary").hide();
             $("#bs-popup .btn-primary").hide();
         };
 
         $("#id_tipo_intervento_").change(function(){
             if (($(this).val()!="")){
-                $("#add_form .panel-primary .panel-primary").show();
+                $("#add_form .card-primary .card-primary").show();
                 $("#bs-popup .btn-primary").show();
             } else {
-                $("#add_form .panel-primary .panel-primary").hide();
+                $("#add_form .card-primary .card-primary").hide();
                 $("#bs-popup .btn-primary").hide();
             }
         });

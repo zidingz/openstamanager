@@ -7,7 +7,7 @@ use AcceptanceTester;
 class RowHelper extends \Codeception\Module
 {
     /** @param string */
-    protected $finalPattern = "//div[@class='panel-heading' and contains(string(), 'Righe')]/parent::*//table//tr[contains(string(), '|name|')]//td[2]";
+    protected $finalPattern = "//div[@class='card-header' and contains(string(), 'Righe')]/parent::*//table//tr[contains(string(), '|name|')]//td[2]";
     protected $dir;
 
     /**

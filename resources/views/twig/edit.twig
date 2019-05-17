@@ -5,11 +5,11 @@
     {( "name": "widgets", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}", "position": "top", "editor": "controller" )}
 
     {% if setting('Attiva notifica di presenza utenti sul record') %}
-        <div class="box box-warning box-solid text-center info-active hide">
-            <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa fa-warning"></i> {{ 'Attenzione!'|trans }}</h3>
+        <div class="card card-outline card-warning card-solid text-center info-active hide">
+            <div class="card-header with-border">
+                <h3 class="card-title"><i class="fa fa-warning"></i> {{ 'Attenzione!'|trans }}</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <p>{{ 'I seguenti utenti stanno visualizzando questa pagina'|trans }}:</p>
                 <ul class="list">
                 </ul>
@@ -51,11 +51,11 @@
 
             // Pulsanti dinamici
             if (!isMobile()) {
-                $("#pulsanti").affix({
-                    offset: {
-                        top: 200
-                    }
-                });
+                //$("#pulsanti").affix({
+                //    offset: {
+                //        top: 200
+                //    }
+                //});
 
                 if ($("#pulsanti").hasClass("affix")) {
                     $("#pulsanti").css("width", $("#tab_0").css("width"));
@@ -125,9 +125,10 @@
     {( "name": "widgets", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}", "position": "right", "place": "editor" )}
 
     <hr>
-    <a class="btn btn-default" href="{{ path_for('module', {'module_id': module_id}) }}">
+    <a class="btn btn-secondary" href="{{ path_for('module', {'module_id': module_id}) }}">
         <i class="fa fa-chevron-left"></i> {{ 'Indietro'|trans }}
     </a>
+
 
     <script>
         // Se l'utente ha i permessi in sola lettura per il modulo, converto tutti i campi di testo in span

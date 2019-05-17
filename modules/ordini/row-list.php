@@ -118,7 +118,7 @@ if (!empty($rs)) {
         if (empty($r['is_descrizione'])) {
             echo '
             '.moneyFormat($r['iva']).'
-            <br><small class="help-block">'.$r['desc_iva'].'</small>';
+            <br><small class="form-text">'.$r['desc_iva'].'</small>';
         }
         echo '
         </td>';
@@ -157,13 +157,13 @@ if (!empty($rs)) {
 
             if (!empty($r['idarticolo']) && $r['abilita_serial']) {
                 echo "
-                    <a class='btn btn-primary btn-xs'data-toggle='tooltip' title='Aggiorna SN...' onclick=\"launch_modal( 'Aggiorna SN', '".$rootdir.'/modules/fatture/add_serial.php?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$r['id'].'&idarticolo='.$r['idarticolo']."', 1 );\"><i class='fa fa-barcode' aria-hidden='true'></i></a>";
+                    <a class='btn btn-primary btn-sm'data-toggle='tooltip' title='Aggiorna SN...' onclick=\"launch_modal( 'Aggiorna SN', '".$rootdir.'/modules/fatture/add_serial.php?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$r['id'].'&idarticolo='.$r['idarticolo']."', 1 );\"><i class='fa fa-barcode' aria-hidden='true'></i></a>";
             }
 
             echo "
-                    <a class='btn btn-xs btn-warning' title='Modifica questa riga...' onclick=\"launch_modal( 'Modifica riga', '".$rootdir.'/modules/ordini/row-edit.php?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$r['id'].'&dir='.$dir."', 1 );\"><i class='fa fa-edit'></i></a>
+                    <a class='btn btn-sm btn-warning' title='Modifica questa riga...' onclick=\"launch_modal( 'Modifica riga', '".$rootdir.'/modules/ordini/row-edit.php?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$r['id'].'&dir='.$dir."', 1 );\"><i class='fa fa-edit'></i></a>
 
-                    <a class='btn btn-xs btn-danger' title='Rimuovi questa riga...' onclick=\"if( confirm('Rimuovere questa riga dall\\'ordine?') ){ $('#delete-form-".$r['id']."').submit(); }\"><i class='fa fa-trash'></i></a>
+                    <a class='btn btn-sm btn-danger' title='Rimuovi questa riga...' onclick=\"if( confirm('Rimuovere questa riga dall\\'ordine?') ){ $('#delete-form-".$r['id']."').submit(); }\"><i class='fa fa-trash'></i></a>
                 </div>
             </form>";
         }

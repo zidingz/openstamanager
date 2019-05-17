@@ -17,12 +17,12 @@ if (!empty($record['immagine'])) {
 	<input type="hidden" name="matricola" value="<?php echo $id_record; ?>">
 
 	<!-- DATI ANAGRAFICI -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Dati impianto'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Dati impianto'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<div class="row">
 				<div class="col-md-3">
 					{[ "type": "image", "label": "<?php echo tr('Immagine'); ?>", "name": "immagine", "class": "img-thumbnail", "value": "<?php echo $img; ?>" ]}

@@ -93,7 +93,7 @@ class WidgetManager implements ManagerInterface
 
         // Generazione del codice HTML
         $result = '
-<button type="button" class="close" onclick="if(confirm(\'Disabilitare questo widget?\')) { $.post( \''.ROOTDIR.'/actions.php?id_module='.self::getModule()->id.'\', { op: \'disable_widget\', id: \''.$widget['id'].'\' }, function(response){ location.reload(); }); };" >
+<button type="button" class="close" onclick="if(confirm(\'Disabilitare questo widget?\')) { $.post( \''.ROOTDIR.'/actions.php?id_module='.self::getModule()->id.'\', { op: \'disable_widget\', id: \''.$widget['id'].'\' }, function(response){ location.reload(); }); };">
     <span aria-hidden="true">&times;</span><span class="sr-only">'.tr('Chiudi').'</span>
 </button>';
 
@@ -158,7 +158,7 @@ class WidgetManager implements ManagerInterface
     protected function custom($widget)
     {
         $result = '
-        <button type="button" class="close" onclick="if(confirm(\'Disabilitare questo widget?\')) { $.post( \''.ROOTDIR.'/actions.php?id_module='.self::getModule()->id.'\', { op: \'disable_widget\', id: \''.$widget['id'].'\' }, function(response){ location.reload(); }); };" >
+        <button type="button" class="close" onclick="if(confirm(\'Disabilitare questo widget?\')) { $.post( \''.ROOTDIR.'/actions.php?id_module='.self::getModule()->id.'\', { op: \'disable_widget\', id: \''.$widget['id'].'\' }, function(response){ location.reload(); }); };">
             <span aria-hidden="true">&times;</span><span class="sr-only">'.tr('Chiudi').'</span>
         </button>';
 

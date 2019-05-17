@@ -5,11 +5,11 @@ include_once __DIR__.'/../../../core.php';
 // Gestione dei lotti degli articoli
 
 echo '
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        <h3 class="panel-title">'.tr('Produzione').'</h3>
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">'.tr('Produzione').'</h3>
     </div>
-    <div class="panel-body">';
+    <div class="card-body">';
 
 $search_lotto = get('search_lotto');
 $search_serial = get('search_serial');
@@ -28,7 +28,7 @@ echo '
 
 // Campi di inserimento lotti
 echo '
-            <div class="row form-group">
+            <div class="row">
                 <div class="col-md-12">
                     <h4>'.tr('Inserimento nuovi prodotti').'</h4>
                 </div>
@@ -36,7 +36,7 @@ echo '
 
 // Serial
 echo '
-            <div class="row form-group">
+            <div class="row">
                 <label class="col-md-2 control-label" for="serial_start">'.tr('Serial number da').':</label>
 
                 <div class="col-md-2">
@@ -89,11 +89,11 @@ echo '
 
 // Ricerca
 echo '
-<div class="box">
-    <div class="box-header with-border">
-        <h3 class="box-title">'.tr('Ricerca prodotti').'</h3>
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">'.tr('Ricerca prodotti').'</h3>
     </div>
-    <div class="box-body">
+    <div class="card-body">
         <div class="text-right">
             <small style="color:#f00;">';
 

@@ -5,12 +5,12 @@
 	<input type="hidden" name="op" value="update">
 
 	<!-- DATI -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Dati'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Dati'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<div class="row">
 				<div class="col-md-8">
 					{[ "type": "text", "label": "<?php echo tr('Nome'); ?>", "name": "nome", "required": 1, "value": "$nome$" ]}
@@ -31,12 +31,12 @@
 
 </form>
 
-<div class="panel panel-primary">
-	<div class="panel-heading">
-		<h3 class="panel-title"><?php echo tr('Sottocategorie'); ?></h3>
+<div class="card card-primary">
+	<div class="card-header">
+		<h3 class="card-title"><?php echo tr('Sottocategorie'); ?></h3>
 	</div>
 
-	<div class="panel-body">
+	<div class="card-body">
 		<div class="pull-left">
 			<a class="btn btn-primary" data-href="<?php echo $rootdir; ?>/add.php?id_module=<?php echo $id_module; ?>&id_original=<?php echo $id_record; ?>" data-toggle="modal" data-title="<?php echo tr('Aggiungi riga'); ?>"><i class="fa fa-plus"></i> <?php echo tr('Sottocategoria'); ?></a><br>
 		</div>

@@ -13,12 +13,12 @@
 </div>
 {% endif %}
 
-<div class="box">
-    <div class="box-header">
-        <h3 class="box-title"><i class="fa fa-bug"></i> {{ 'Segnalazione bug'|trans }}</h3>
+<div class="card card-outline card-primary">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fa fa-bug"></i> {{ 'Segnalazione bug'|trans }}</h3>
     </div>
 
-    <div class="box-body">
+    <div class="card-body">
         <form method="post" action="">
             <input type="hidden" name="op" value="send">
 
@@ -85,6 +85,9 @@
 
         var firstFocus = 1;
 
+        /*
+        editor.setData(html);
+
         CKEDITOR.instances.body.on("key", function() {
             setTimeout(function(){
                 if(CKEDITOR.instances.body.getData() == ""){
@@ -103,9 +106,7 @@
                 });
                 firstFocus = 0;
             }
-        });
+        });*/
     });
 </script>
-
-<script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/ckeditor/ckeditor.js'.'"></script>
 {% endblock %}

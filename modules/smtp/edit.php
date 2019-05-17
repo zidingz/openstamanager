@@ -6,12 +6,12 @@
 	<input type="hidden" name="backto" value="record-edit">
 
 	<!-- DATI -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Dati'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Dati'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
             <div class="row">
                 <div class="col-md-6">
                     {[ "type": "text", "label": "<?php echo tr('Nome account'); ?>", "name": "name", "value": "$name$", "required": 1 ]}
@@ -84,16 +84,16 @@ $elementi = $dbo->fetchArray('SELECT `id`, `name` FROM `zz_emails` WHERE `id_smt
 
 if (!empty($elementi)) {
     echo '
-<div class="box box-warning collapsable collapsed-box">
-    <div class="box-header with-border">
-        <h3 class="box-title"><i class="fa fa-warning"></i> '.tr('Template email collegati: _NUM_', [
+<div class="card card-outline card-warning collapsable collapsed-box">
+    <div class="card-header with-border">
+        <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Template email collegati: _NUM_', [
             '_NUM_' => count($elementi),
         ]).'</h3>
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+        <div class="card-tools pull-right">
+            <button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
         </div>
     </div>
-    <div class="box-body">
+    <div class="card-body">
         <ul>';
 
     foreach ($elementi as $elemento) {

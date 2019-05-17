@@ -5,12 +5,12 @@
 	<input type="hidden" name="op" value="update">
 
 	<!-- DATI -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Dati'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Dati'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<div class="row">
 				<div class="col-md-6">
 					{[ "type": "text", "label": "<?php echo tr('Descrizione'); ?>", "name": "descrizione", "value": "$descrizione$", "required": 1 ]}
@@ -37,12 +37,12 @@
 		</div>
 	</div>
 
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Rate'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Rate'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<div class="data">
 <?php
 $values = '';
@@ -57,16 +57,16 @@ $results = $dbo->fetchArray('SELECT * FROM `co_pagamenti` WHERE descrizione='.pr
 $cont = 1;
 foreach ($results as $result) {
     echo '
-				<div class="box box-success">
-					<div class="box-header with-border">
-						<h3 class="box-title">'.tr('Rata _NUMBER_', [
+				<div class="card card-outline card-success">
+					<div class="card-header with-border">
+						<h3 class="card-title">'.tr('Rata _NUMBER_', [
                             '_NUMBER_' => $cont,
                         ]).'</h3>
 						<a class="btn btn-danger pull-right" onclick="';
     echo "if(confirm('".tr('Eliminare questo elemento?')."')){ location.href='".$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'&op=delete_rata&id='.$result['id']."'; }";
     echo '"><i class="fa fa-trash"></i> '.tr('Elimina').'</a>
 					</div>
-					<div class="box-body">
+					<div class="card-body">
 						<input type="hidden" value="'.$result['id'].'" name="id[]">
 
 						<div class="row">
@@ -123,11 +123,11 @@ foreach ($results as $result) {
 
 </form>
 
-<div class="box box-warning box-solid text-center hide" id="wait">
-	<div class="box-header with-border">
-		<h3 class="box-title"><i class="fa fa-warning"></i> <?php echo tr('Attenzione!'); ?></h3>
+<div class="card card-outline card-warning card-solid text-center hide" id="wait">
+	<div class="card-header with-border">
+		<h3 class="card-title"><i class="fa fa-warning"></i> <?php echo tr('Attenzione!'); ?></h3>
 	</div>
-	<div class="box-body">
+	<div class="card-body">
 		<p><?php echo tr('Prima di poter continuare con il salvataggio è necessario che i valori percentuali raggiungano in totale il 100%'); ?>.</p>
 	</div>
 </div>
@@ -138,11 +138,11 @@ foreach ($results as $result) {
 <?php
 echo '
 <form class="hide" id="template">
-    <div class="box">
-        <div class="box-header with-border">
-            <h3 class="box-title">'.tr('Nuova rata').'</h3>
+    <div class="card card-outline card-primary">
+        <div class="card-header with-border">
+            <h3 class="card-title">'.tr('Nuova rata').'</h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
             <input type="hidden" value="" name="id[]">
 
             <div class="row">

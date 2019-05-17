@@ -6,14 +6,14 @@ echo '
 	<input type="hidden" name="op" value="update">
 
 	<!-- DATI -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-            <h3 class="panel-title">'.tr('Impostazioni _SEZIONE_', [
+	<div class="card card-primary">
+		<div class="card-header">
+            <h3 class="card-title">'.tr('Impostazioni _SEZIONE_', [
                 '_SEZIONE_' => $record['sezione'],
             ]).'</h3>
 		</div>
 
-		<div class="panel-body">';
+		<div class="card-body">';
 
 foreach ($records as $record) {
     echo '

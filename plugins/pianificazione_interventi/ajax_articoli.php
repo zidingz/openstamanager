@@ -119,11 +119,11 @@ if (!empty($rs)) {
         if (!empty($is_add)) {
             echo '
         <td>
-            <button type="button" class="btn btn-warning btn-xs" data-title="'.tr('Modifica spesa').'" onclick="launch_modal(\'Modifica spesa\', \''.$plugin->fileurl('add_articolo.php').'?id_plugin='.$id_plugin.'&id_record='.$id_record.'&idriga='.$r['id'].'\', 1, \'#bs-popup2\');">
+            <button type="button" class="btn btn-warning btn-sm" data-title="'.tr('Modifica spesa').'" onclick="launch_modal(\'Modifica spesa\', \''.$plugin->fileurl('add_articolo.php').'?id_plugin='.$id_plugin.'&id_record='.$id_record.'&idriga='.$r['id'].'\', 1, \'#bs-popup2\');">
                 <i class="fa fa-edit"></i>
             </button>
 
-            <button type="button" class="btn btn-danger btn-xs" data-toggle="tooltip" title="'.tr('Elimina materiale').'" onclick="if(confirm(\''.tr('Eliminare questo materiale?').'\') ){ ritorna_al_magazzino(\''.$r['id'].'\'); }">
+            <button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" title="'.tr('Elimina materiale').'" onclick="if(confirm(\''.tr('Eliminare questo materiale?').'\') ){ ritorna_al_magazzino(\''.$r['id'].'\'); }">
                 <i class="fa fa-angle-double-left"></i><i class="fa fa-truck"></i>
             </button>
         </td>';

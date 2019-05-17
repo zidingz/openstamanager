@@ -6,12 +6,12 @@
 	<input type="hidden" name="backto" value="record-edit">
 
 	<!-- DATI -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Dati'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Dati'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
             <div class="row">
                 <div class="col-md-8">
                     {[ "type": "text", "label": "<?php echo tr('Nome'); ?>", "name": "name", "value": "$name$", "required": 1 ]}
@@ -86,12 +86,12 @@ $variables = include Modules::filepath($record['id_module'], 'variables.php');
 
 echo '
 <!-- Istruzioni per il contenuto -->
-<div class="box box-info">
-    <div class="box-header">
-        <h3 class="box-title">'.tr('Istruzioni per i campi automatici').'</h3>
+<div class="card card-outline card-info">
+    <div class="card-header">
+        <h3 class="card-title">'.tr('Istruzioni per i campi automatici').'</h3>
     </div>
 
-    <div class="box-body">';
+    <div class="card-body">';
 
 if (!empty($variables)) {
     echo '

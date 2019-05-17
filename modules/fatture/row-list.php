@@ -212,7 +212,7 @@ foreach ($righe as $row) {
     if (!$row->isDescrizione()) {
         echo '
             '.moneyFormat($riga['iva']).'
-            <br><small class="'.(($row->aliquota->deleted_at) ? 'text-red' : '').' help-block">'.$row->aliquota->descrizione.(($row->aliquota->esente) ? ' ('.$row->aliquota->codice_natura_fe.')' : null).'</small>';
+            <br><small class="'.(($row->aliquota->deleted_at) ? 'text-red' : '').' form-text">'.$row->aliquota->descrizione.(($row->aliquota->esente) ? ' ('.$row->aliquota->codice_natura_fe.')' : null).'</small>';
     }
 
     echo '
@@ -254,18 +254,18 @@ foreach ($righe as $row) {
 
         if (!$fattura->isNotaDiAccredito() && $row->isArticolo() && $riga['abilita_serial'] && (empty($riga['idddt']) || empty($riga['idintervento']))) {
             echo "
-                    <a class='btn btn-primary btn-xs'data-toggle='tooltip' title='Aggiorna SN...' onclick=\"launch_modal( 'Aggiorna SN', '".$structure->fileurl('add_serial.php').'?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$riga['id'].'&idarticolo='.$riga['idarticolo']."', 1 );\"><i class='fa fa-barcode' aria-hidden='true'></i></a>";
+                    <a class='btn btn-primary btn-sm'data-toggle='tooltip' title='Aggiorna SN...' onclick=\"launch_modal( 'Aggiorna SN', '".$structure->fileurl('add_serial.php').'?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$riga['id'].'&idarticolo='.$riga['idarticolo']."', 1 );\"><i class='fa fa-barcode' aria-hidden='true'></i></a>";
         }
 
         echo "
-                    <a class='btn btn-xs btn-warning' title='Modifica questa riga...' onclick=\"launch_modal( 'Modifica riga', '".pathFor('module-record-action', [
+                    <a class='btn btn-sm btn-warning' title='Modifica questa riga...' onclick=\"launch_modal( 'Modifica riga', '".pathFor('module-record-action', [
                 'module_id' => $id_module,
                 'record_id' => $id_record,
                 'action' => 'rowEdit',
                 'params' => $riga['id'],
             ])."', 1 );\"><i class='fa fa-edit'></i></a>
 
-                    <a class='btn btn-xs btn-danger' title='Rimuovi questa riga...' onclick=\"if( confirm('Rimuovere questa riga dalla fattura?') ){ $('#delete-form-".$riga['id']."').submit(); }\"><i class='fa fa-trash'></i></a>
+                    <a class='btn btn-sm btn-danger' title='Rimuovi questa riga...' onclick=\"if( confirm('Rimuovere questa riga dalla fattura?') ){ $('#delete-form-".$riga['id']."').submit(); }\"><i class='fa fa-trash'></i></a>
                 </div>
             </form>";
     }

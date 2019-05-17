@@ -33,16 +33,16 @@ class EmailManager implements ManagerInterface
 
         // Codice HTML
         $result = '
-<div class="box box-info collapsable collapsed-box">
-    <div class="box-header with-border">
-        <h3 class="box-title"><i class="fa fa-envelope"></i> '.tr('Email inviate: _NUM_', [
+<div class="card card-outline card-info collapsable collapsed-box">
+    <div class="card-header with-border">
+        <h3 class="card-title"><i class="fa fa-envelope"></i> '.tr('Email inviate: _NUM_', [
             '_NUM_' => count($operations),
         ]).'</h3>
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+        <div class="card-tools pull-right">
+            <button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
         </div>
     </div>
-    <div class="box-body">
+    <div class="card-body">
         <ul>';
 
         foreach ($operations as $operation) {

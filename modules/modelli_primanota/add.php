@@ -47,8 +47,8 @@
 
     echo '
 		<!-- Istruzioni per il contenuto -->
-		<div class="box box-info">
-			<div class="box-body">';
+		<div class="card card-outline card-info">
+			<div class="card-body">';
 
     if (!empty($variables)) {
         echo '

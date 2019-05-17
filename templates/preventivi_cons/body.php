@@ -4,7 +4,7 @@ $report_name = 'preventivo_'.$records[0]['numero'].'_cons.pdf';
 
 echo '
 <div class="row">
-    <div class="col-xs-6">
+    <div class="col--6">
         <div class="text-center">
             <h4 class="text-bold">'.tr('Consuntivo', [], ['upper' => true]).'</h4>
             <b>'.tr('Preventivo num. _NUM_ del _DATE_', [
@@ -14,7 +14,7 @@ echo '
         </div>
     </div>
 
-    <div class="col-xs-5 col-xs-offset-1">
+    <div class="col--5 col--offset-1">
         <table class="table" style="width:100%;margin-top:5mm;">
             <tr>
                 <td colspan=2 class="border-full" style="height:16mm;">

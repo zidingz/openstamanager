@@ -874,7 +874,7 @@ function session_set(session_array, value, clear, reload) {
 }
 
 function session_keep_alive() {
-    $.get(globals.rootdir + '/core.php');
+    $.get(globals.rootdir + '/');
 }
 
 /**

@@ -108,16 +108,16 @@ if ($module['name'] == 'Fatture di vendita') {
     $collapsed = empty($result['data_inizio_periodo']) && empty($result['data_fine_periodo']) && empty($result['riferimento_amministrazione']);
 
     echo '
-    <div class="box box-info '.($collapsed ? 'collapsed-box' : '').'">
-	    <div class="box-header with-border">
-	        <h3 class="box-title">'.tr('Dati Fatturazione Elettronica').'</h3>
-	        <div class="box-tools pull-right">
-	            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+    <div class="card card-outline card-info '.($collapsed ? 'collapsed-box' : '').'">
+	    <div class="card-header with-border">
+	        <h3 class="card-title">'.tr('Dati Fatturazione Elettronica').'</h3>
+	        <div class="card-tools pull-right">
+	            <button type="button" class="btn btn-card-tool" data-widget="collapse">
 	                <i class="fa fa-plus"></i>
 	            </button>
 	        </div>
 	    </div>
-        <div class="box-body">';
+        <div class="card-body">';
 
     $tipi_cessione_prestazione = [
         [

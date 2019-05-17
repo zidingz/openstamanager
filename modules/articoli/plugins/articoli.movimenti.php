@@ -5,11 +5,11 @@ include_once __DIR__.'/../../../core.php';
 // Movimentazione degli articoli
 
 echo '
-<div class="box">
-    <div class="box-header with-border">
-        <h3 class="box-title">'.tr('Movimenti').'</h3>
+<div class="card card-outline card-primary">
+    <div class="card-header with-border">
+        <h3 class="card-title">'.tr('Movimenti').'</h3>
     </div>
-    <div class="box-body">';
+    <div class="card-body">';
 
 // Calcolo la quantità dai movimenti in magazzino
 $rst = $dbo->fetchArray('SELECT COUNT(mg_movimenti.id) AS `row`, SUM(qta) AS qta_totale, (SELECT SUM(qta) FROM mg_movimenti  WHERE idarticolo='.prepare($id_record).' AND (idintervento IS NULL OR idautomezzo = 0) AND data <= CURDATE()) AS qta_totale_attuale FROM mg_movimenti WHERE idarticolo='.prepare($id_record).' AND (idintervento IS NULL OR idautomezzo = 0)');

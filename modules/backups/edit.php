@@ -115,13 +115,13 @@ $upload_max_filesize = ini_get('upload_max_filesize');
 $max_execution_time = ini_get('max_execution_time');
 echo '
     <div class="col-md-4">
-        <div class="box box-success">
-            <div class="box-header with-border">
-                <h3 class="box-title">
+        <div class="card card-outline card-success">
+            <div class="card-header with-border">
+                <h3 class="card-title">
                     '.tr('Ripristina backup').' <small>(upload_max_filesize: '.$upload_max_filesize.')</small> <small>(max_execution_time: '.$max_execution_time.')</small>
                 </h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <form action="" method="post" enctype="multipart/form-data" id="restore">
                     <input type="hidden" name="op" value="restore">
 
@@ -158,7 +158,7 @@ if (file_exists($backup_dir)) {
     } else {
         echo '
 <div class="row">
-    <div class="col-xs-12 col-md-6">
+    <div class="col--12 col-md-6">
         <h3>'.tr('Backup compressi').'</h3>';
 
         if (!empty($backups_zip)) {
@@ -207,7 +207,7 @@ if (file_exists($backup_dir)) {
         echo '
     </div>
 
-    <div class="col-xs-12 col-md-6">
+    <div class="col--12 col-md-6">
         <h3>'.tr('Backup non compressi').'</h3>';
 
         // Backup non compressi e quindi non scaricabili

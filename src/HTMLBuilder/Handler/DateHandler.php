@@ -57,7 +57,7 @@ class DateHandler implements HandlerInterface
         if (empty($result)) {
             if (empty($values['label'])) {
                 $result = '
-<div class="form-group">';
+<div>';
 
                 if (empty($values['icon-before']) || empty($values['icon-after'])) {
                     $result .= '

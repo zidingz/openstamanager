@@ -51,14 +51,14 @@ if (empty($id_record)) {
     for ($column = 0; $column < $count; ++$column) {
         echo '
     <div class="col-sm-6 col-lg-4">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">'.tr('Colonna _NUM_', [
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">'.tr('Colonna _NUM_', [
                     '_NUM_' => $column + 1,
                 ]).'</h3>
             </div>
 
-            <div class="panel-body">';
+            <div class="card-body">';
 
         // Individuazione delle corrispondenze
         $selected = null;

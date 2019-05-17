@@ -123,7 +123,7 @@ foreach ($rs_gen as $r) {
                     $count += 0.4;
                 }
                 echo '
-            <br><small class="help-block">- '.tr('sconto _TOT_ _TYPE_', [
+            <br><small class="form-text">- '.tr('sconto _TOT_ _TYPE_', [
                 '_TOT_' => Translator::numberToLocale($r['sconto_unitario']),
                 '_TYPE_' => ($r['tipo_sconto'] == 'PRC' ? '%' : currency()),
             ]).'</small>';

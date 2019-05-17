@@ -6,12 +6,12 @@
 	<input type="hidden" name="id_record" value="<?php echo $id_record; ?>">
 
 	<!-- DATI ARTICOLO -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Automezzo'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Automezzo'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<div class="row">
 				<div class="col-md-4">
 					{[ "type": "text", "label": "<?php echo tr('Nome'); ?>", "name": "nome", "required": 1, "value": "$nome$" ]}
@@ -35,16 +35,16 @@
 
 	<!--TECNICI -->
 	<div class="col-md-6">
-		<div class="panel panel-primary">
-			<div class="panel-heading">
+		<div class="card card-primary">
+			<div class="card-header">
 				<div class="row">
 					<div class="col-md-12">
-						<h3 class="panel-title"><?php echo tr('Tecnici responsabili automezzo'); ?></h3>
+						<h3 class="card-title"><?php echo tr('Tecnici responsabili automezzo'); ?></h3>
 					</div>
 				</div>
 			</div>
 
-			<div class="panel-body">
+			<div class="card-body">
 				<div class="row">
 					<div class="col-md-12" >
 						<form action="<?php echo $rootdir; ?>/editor.php?id_module=<?php echo Modules::get('Automezzi')['id']; ?>&id_record=<?php echo $id_record; ?>" id="updatetech-form" method="post" role="form">
@@ -72,16 +72,16 @@
 
 	<!-- MAGAZZINO AUTOMEZZO -->
 	<div class="col-md-6">
-		<div class="panel panel-primary">
-			<div class="panel-heading">
+		<div class="card card-primary">
+			<div class="card-header">
 				<div class="row">
 					<div class="col-md-12">
-						<h3 class="panel-title"><?php echo tr('Magazzino automezzo'); ?></h3>
+						<h3 class="card-title"><?php echo tr('Magazzino automezzo'); ?></h3>
 					</div>
 				</div>
 			</div>
 
-			<div class="panel-body">
+			<div class="card-body">
 				<div class="row">
 					<div class="col-md-12">
 						<?php

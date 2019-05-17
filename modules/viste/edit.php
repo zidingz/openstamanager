@@ -10,12 +10,12 @@ echo '
 	<input type="hidden" name="op" value="update">
 
 	<!-- DATI -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title">'.tr('Opzioni di visualizzazione').'</h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title">'.tr('Opzioni di visualizzazione').'</h3>
 		</div>
 
-		<div class="panel-body">';
+		<div class="card-body">';
 $options = ($record['options2'] == '') ? $record['options'] : $record['options2'];
 if ($options == 'menu') {
     echo '
@@ -84,12 +84,12 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
 
 	<div class="row">
 		<div class="col-md-9">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<h3 class="panel-title">'.tr('Campi disponibili').'</h3>
+			<div class="card card-primary">
+				<div class="card-header">
+					<h3 class="card-title">'.tr('Campi disponibili').'</h3>
 				</div>
 
-				<div class="panel-body">
+				<div class="card-body">
 					<div class="data">';
 
     $key = 0;
@@ -98,15 +98,15 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
         $editable = !($field['default'] && $enable_readonly);
 
         echo '
-					    <div class="box ';
+					    <div class="card card-outline ';
         if ($field['visible']) {
-            echo 'box-success';
+            echo 'card-success';
         } else {
-            echo 'box-danger';
+            echo 'card-danger';
         }
         echo '">
-							<div class="box-header with-border">
-								<h3 class="box-title">
+							<div class="card-header with-border">
+								<h3 class="card-title">
 									<a data-toggle="collapse" href="#field-'.$field['id'].'">'.tr('Campo in posizione _POSITION_', [
                                         '_POSITION_' => $field['order'],
                                     ]).' ('.$field['name'].')</a>
@@ -119,7 +119,7 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
         }
         echo '
 							</div>
-							<div id="field-'.$field['id'].'" class="box-body collapse">
+							<div id="field-'.$field['id'].'" class="card-body collapse">
 								<div class="row">
 									<input type="hidden" value="'.$field['id'].'" name="id['.$key.']">
 
@@ -151,7 +151,7 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
         echo ', "help": "'.tr('Gruppi di utenti in grado di visualizzare questo campo').'" ]}
 									</div>
 
-									<div class="col-xs-12 col-md-6">
+									<div class="col--12 col-md-6">
 										{[ "type": "select", "label": "'.tr('Visibilità').'", "name": "visible['.$key.']", "values": "list=\"0\":\"'.tr('Nascosto (variabili di stato)').'\",\"1\": \"'.tr('Visibile nella sezione').'\"", "value": "'.$field['visible'].'", "help": "'.tr('Stato del campo: visibile nella tabella oppure nascosto').'" ]}
 									</div>
 								</div>
@@ -214,12 +214,12 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
 		</div>
 
 		<div class="col-md-3">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<h3 class="panel-title">'.tr('Ordine di visualizzazione').' <span class="tip pull-right" title="'.tr('Trascina per ordinare le colonne').'."><i class="fa fa-question-circle-o"></i></span></h3>
+			<div class="card card-primary">
+				<div class="card-header">
+					<h3 class="card-title">'.tr('Ordine di visualizzazione').' <span class="tip pull-right" title="'.tr('Trascina per ordinare le colonne').'."><i class="fa fa-question-circle-o"></i></span></h3>
 				</div>
 
-				<div class="panel-body sortable">';
+				<div class="card-body sortable">';
 
     foreach ($fields as $field) {
         echo '
@@ -243,11 +243,11 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
 
     echo '
 <form class="hide" id="template">
-	<div class="box">
-		<div class="box-header with-border">
-			<h3 class="box-title">'.tr('Nuovo campo').'</h3>
+	<div class="card card-outline card-primary">
+		<div class="card-header with-border">
+			<h3 class="card-title">'.tr('Nuovo campo').'</h3>
 		</div>
-		<div class="box-body">
+		<div class="card-body">
 			<div class="row">
 				<input type="hidden" value="" name="id[-id-]">
 				<div class="col-md-12">
@@ -309,12 +309,12 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
 	<input type="hidden" name="op" value="filters">
 
     <div class="col-md-12">
-        <div class="panel panel-warning">
-            <div class="panel-heading">
-                <h3 class="panel-title">'.tr('Filtri per gruppo di utenti').'</h3>
+        <div class="card card-warning">
+            <div class="card-header">
+                <h3 class="card-title">'.tr('Filtri per gruppo di utenti').'</h3>
             </div>
 
-            <div class="panel-body">
+            <div class="card-body">
                 <div class="data">';
 
     $num = 0;
@@ -323,15 +323,15 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
         $editable = !($additional['default'] && $enable_readonly);
 
         echo '
-                    <div class="box ';
+                    <div class="card card-outline ';
         if ($additional['enabled']) {
-            echo 'box-success';
+            echo 'card-success';
         } else {
-            echo 'box-danger';
+            echo 'card-danger';
         }
         echo '">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">
                                 <a data-toggle="collapse" href="#additional-'.$additional['id'].'">'.tr('Filtro: _NAME_', [
                                     '_NAME_' => $additional['name'],
                                 ]).'</a>
@@ -348,7 +348,7 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
                             </a>';
         echo '
                         </div>
-                        <div id="additional-'.$additional['id'].'" class="box-body collapse">
+                        <div id="additional-'.$additional['id'].'" class="card-body collapse">
 
                             <div class="row">
                                 <div class="col-md-12">
@@ -410,11 +410,11 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
 
     echo '
 <form class="hide" id="template_filter">
-	<div class="box">
-		<div class="box-header with-border">
-			<h3 class="box-title">'.tr('Nuovo filtro').'</h3>
+	<div class="card card-outline card-primary">
+		<div class="card-header with-border">
+			<h3 class="card-title">'.tr('Nuovo filtro').'</h3>
 		</div>
-		<div class="box-body">
+		<div class="card-body">
 
 			<div class="row">
 				<div class="col-md-12">
@@ -501,7 +501,7 @@ $(document).ready(function(){
 			update: function(event, ui) {
 				
 				var order = "";
-                $("div.panel-body.sortable  p[data-id]").each( function(){
+                $("div.card-body.sortable  p[data-id]").each( function(){
                     order += ","+$(this).data("id");
                 });
 				

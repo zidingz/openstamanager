@@ -2,10 +2,10 @@
 
 {% block title %}{{ "Login"|trans }}{% endblock %}
 
-{% block box_class %}box-warning text-center login-box{% endblock %}
+{% block box_class %}card-warning text-center login-box{% endblock %}
 {% block box_header %}
     <img src="{{ base_url() }}/assets/img/logo.png" alt="{{ 'OSM Logo'|trans }}">
-    <h3 class="box-title">{{ "OpenSTAManager"|trans }}</h3>
+    <h3 class="card-title">{{ "OpenSTAManager"|trans }}</h3>
 {% endblock %}
 
 {% block before_content %}
@@ -19,12 +19,12 @@
     {% endif %}
 
     {% if brute.actual %}
-    <div class="box box-danger box-center" id="brute">
-        <div class="box-header with-border text-center">
-            <h3 class="box-title">{{ 'Attenzione'|trans }}</h3>
+    <div class="card card-outline card-danger card-center" id="brute">
+        <div class="card-header with-border text-center">
+            <h3 class="card-title">{{ 'Attenzione'|trans }}</h3>
         </div>
 
-        <div class="box-body text-center">
+        <div class="card-body text-center">
             <p>{{ 'Sono stati effettuati troppi tentativi di accesso consecutivi!'|trans }}</p>
             <p>{{ 'Tempo rimanente (in secondi)'|trans }}: <span id="brute-timeout">{{ brute.timeout + 1 }}</span></p>
         </div>
@@ -61,18 +61,18 @@
 {% block content %}
 <form action="" method="post">
     <div class="form-group input-group">
-        <span class="input-group-addon before"><i class="fa fa-user"></i></span>
+        <span class="input-group-prepend input-group-text"><i class="fa fa-user"></i></span>
         <input type="text" name="username" autocomplete="username" class="form-control" placeholder="{{ 'Nome utente'|trans }}" value="{{ username }}">
     </div>
     <div class="form-group input-group">
-        <span class="input-group-addon before"><i class="fa fa-lock"></i></span>
+        <span class="input-group-prepend input-group-text"><i class="fa fa-lock"></i></span>
         <input type="password" name="password" autocomplete="current-password" class="form-control" placeholder="{{ 'Password'|trans }}">
     </div>
     <div class="form-group">
         <input type="checkbox" name="keep_alive" {{ keep_alive ? 'checked' : '' }}/> {{ 'Mantieni attiva la sessione'|trans }}
     </div>
 
-    <div class="box-footer">
+    <div class="card-footer">
         <button type="submit" id="login" class="btn btn-danger btn-block">{{ 'Accedi'|trans }}</button>
     </div>
 </form>

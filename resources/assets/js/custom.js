@@ -1,8 +1,8 @@
 $(document).ready(function () {
     // Fix per il menu principale
-    $('.sidebar-menu').tree({
-        followLink: true,
-    });
+    //$('.sidebar-menu').tree({
+    //    followLink: true,
+    //});
 
     // Pulsante per il ritorno a inizio pagina
     var slideToTop = $("<div />");
@@ -131,7 +131,7 @@ $(document).ready(function () {
             },
             function (start, end) {
                 // Esegue il submit del periodo selezionato e ricarica la pagina
-                $.get(globals.rootdir + '/core.php?period_start=' + start.format('YYYY-MM-DD') + '&period_end=' + end.format('YYYY-MM-DD'), function (data) {
+                $.get(globals.ajax_set_url + '/core.php?period_start=' + start.format('YYYY-MM-DD') + '&period_end=' + end.format('YYYY-MM-DD'), function (data) {
                     location.reload();
                 });
             }

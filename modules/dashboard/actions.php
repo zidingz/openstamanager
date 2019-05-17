@@ -168,7 +168,7 @@ switch (post('op')) {
                 }
             }
         } else {
-            echo '<br><small class="help-block">'.tr('Non ci sono interventi da pianificare per questo mese').'</small>';
+            echo '<br><small class="form-text">'.tr('Non ci sono interventi da pianificare per questo mese').'</small>';
         }
 
         break;

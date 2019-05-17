@@ -45,7 +45,7 @@ if (!empty($rsi)) {
         echo '
     <tr style="background:'.$colori[$int['id_stato']].';">
         <td>
-            <a href="javascript:;" class="btn btn-primary btn-xs" onclick="$(\'#dettagli_'.$int['id'].'\').toggleClass(\'hide\'); $(this).find(\'i\').toggleClass(\'fa-plus\').toggleClass(\'fa-minus\');"><i class="fa fa-plus"></i></a>
+            <a href="javascript:;" class="btn btn-primary btn-sm" onclick="$(\'#dettagli_'.$int['id'].'\').toggleClass(\'hide\'); $(this).find(\'i\').toggleClass(\'fa-plus\').toggleClass(\'fa-minus\');"><i class="fa fa-plus"></i></a>
             '.Modules::link('Interventi', $int['id'], tr('Intervento num. _NUM_ del _DATE_', [
                 '_NUM_' => $int['codice'],
                 '_DATE_' => Translator::dateToLocale($int['inizio']),
@@ -148,7 +148,7 @@ if (!empty($rsi)) {
                 echo '
                 <tr>
                     <td>
-                        '.Modules::link('Articoli', $r['idarticolo'], $r['descrizione']).(!empty($extra) ? '<small class="help-block">'.implode(', ', $extra).'</small>' : '').'
+                        '.Modules::link('Articoli', $r['idarticolo'], $r['descrizione']).(!empty($extra) ? '<small class="form-text">'.implode(', ', $extra).'</small>' : '').'
                     </td>
                     <td class="text-right">'.Translator::numberToLocale($r['qta'], 'qta').'</td>
                     <td class="text-right danger">'.Translator::numberToLocale($r['prezzo_acquisto'] * $r['qta']).'</td>

@@ -53,9 +53,9 @@ echo '
     }
 </script>
 
-<div class="box box-success">
-    <div class="box-header with-border">
-        <h3 class="box-title">
+<div class="card card-outline card-success">
+    <div class="card-header with-border">
+        <h3 class="card-title">
             '.tr('Carica un XML').'
 
             <span class="tip" title="'.tr('Formati supportati: XML e P7M').'.">
@@ -64,7 +64,7 @@ echo '
 
         </h3>
     </div>
-    <div class="box-body" id="upload">
+    <div class="card-body" id="upload">
         <div class="row">
             <div class="col-md-9">
                 <label><input type="file" name="blob" id="blob"></label>
@@ -80,9 +80,9 @@ echo '
 </div>';
 
 echo '
-<div class="box box-info">
-    <div class="box-header with-border">
-        <h3 class="box-title">
+<div class="card card-outline card-info">
+    <div class="card-header with-border">
+        <h3 class="card-title">
             '.tr('Fatture da importare').'</span>
         </h3>';
 
@@ -96,7 +96,7 @@ if (Interaction::isEnabled()) {
 
 echo '
     </div>
-    <div class="box-body" id="list">';
+    <div class="card-body" id="list">';
 
 if (Interaction::isEnabled()) {
     echo '

@@ -3,21 +3,20 @@
     "main": "gulpfile.js",
     "dependencies": {
         "@ckeditor/ckeditor5-build-classic": "^12.0.0",
-        "admin-lte": "^2.4.0",
+        "@fortawesome/fontawesome-free": "^5.8.2",
+        "admin-lte": "^3.0.0-alpha.2",
         "autosize": "^3.0.21",
-        "bootstrap": "^3.3.7",
+        "bootstrap": "^4.3.1",
         "bootstrap-colorpicker": "2.5.1",
         "bootstrap-daterangepicker": "^2.1.25",
         "chart.js": "^2.7.0",
-        "ckeditor": "git://github.com/ckeditor/ckeditor-releases.git#full/latest",
         "components-jqueryui": "^1.12.1",
         "core-js": "^2.5.1",
-        "datatables.net-bs": "^1.10.15",
+        "datatables.net-bs4": "^1.10.15",
         "datatables.net-buttons-bs": "^1.3.1",
         "datatables.net-scroller-bs": "^1.4.2",
         "datatables.net-select-bs": "^1.2.2",
         "eonasdan-bootstrap-datetimepicker": "^4.17.47",
-        "font-awesome": "^4.7.0",
         "fullcalendar": "^3.4.0",
         "geocomplete": "^1.7.0",
         "inputmask": "3.3.9",
@@ -70,7 +69,7 @@
         "almond": {
             "ignore": true
         },
-        "ckeditor": {
+        "@ckeditor/ckeditor5-build-classic": {
             "ignore": true
         },
         "chart.js": {
@@ -82,8 +81,16 @@
                 "dist/js/adminlte.js"
             ],
             "dependencies": {
-                "jquery": ">=1.9.1"
+                "jquery": ">=1.9.1",
+                "bootstrap": "*"
             }
+        },
+        "@fortawesome/fontawesome-free": {
+            "main": [
+                "css/all.min.css",
+                "css/v4-shims.min.css",
+                "webfonts/*"
+            ]
         },
         "bootstrap": {
             "main": [
@@ -92,11 +99,10 @@
                 "dist/fonts/*"
             ],
             "dependencies": {
-                "jquery": ">=1.9.1",
-                "admin-lte": "*"
+                "jquery": ">=1.9.1"
             }
         },
-        "datatables.net-bs": {
+        "datatables.net-bs4": {
             "main": [
                 "js/dataTables.bootstrap.js",
                 "css/dataTables.bootstrap.css"

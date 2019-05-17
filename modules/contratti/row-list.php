@@ -79,7 +79,7 @@ foreach ($rs as $r) {
     if (empty($r['is_descrizione'])) {
         echo '
                 '.moneyFormat($r['iva'])."<br>
-                <small class='help-block'>".$r['desc_iva'].'</small>';
+                <small class='form-text'>".$r['desc_iva'].'</small>';
     }
     echo '
             </td>';
@@ -110,9 +110,9 @@ foreach ($rs as $r) {
                     <div class="btn-group">';
 
         echo "
-                        <a class='btn btn-xs btn-warning' onclick=\"launch_modal('Modifica riga', '".$rootdir.'/modules/contratti/row-edit.php?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$r['id']."', 1 );\"><i class='fa fa-edit'></i></a>
+                        <a class='btn btn-sm btn-warning' onclick=\"launch_modal('Modifica riga', '".$rootdir.'/modules/contratti/row-edit.php?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$r['id']."', 1 );\"><i class='fa fa-edit'></i></a>
 
-                        <a href='javascript:;' class='btn btn-xs btn-danger' title='Rimuovi questa riga' onclick=\"if( confirm('Rimuovere questa riga dal contratto?') ){ $('#delete-form-".$r['id']."').submit(); }\"><i class='fa fa-trash'></i></a>";
+                        <a href='javascript:;' class='btn btn-sm btn-danger' title='Rimuovi questa riga' onclick=\"if( confirm('Rimuovere questa riga dal contratto?') ){ $('#delete-form-".$r['id']."').submit(); }\"><i class='fa fa-trash'></i></a>";
         echo '
                     </div>
                 </form>';

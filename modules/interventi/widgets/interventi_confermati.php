@@ -19,7 +19,7 @@ if (!empty($rs)) {
     <tr >
         <td>
             '.Modules::link('Interventi', $r['id'], 'Intervento n. '.$r['codice'].' del '.$data_richiesta).'<br>
-            <small class="help-block">'.$r['ragione_sociale'].'</small>
+            <small class="form-text">'.$r['ragione_sociale'].'</small>
         </td>
         <td class="text-center">'.$data_richiesta.'</td>
     </tr>';
