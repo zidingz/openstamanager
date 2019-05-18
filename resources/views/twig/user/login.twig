@@ -4,8 +4,10 @@
 
 {% block box_class %}card-warning text-center login-box{% endblock %}
 {% block box_header %}
-    <img src="{{ base_url() }}/assets/img/logo.png" alt="{{ 'OSM Logo'|trans }}">
-    <h3 class="card-title">{{ "OpenSTAManager"|trans }}</h3>
+    <h3 class="card-title">
+        <img src="{{ base_url() }}/assets/img/logo.png" alt="{{ 'OSM Logo'|trans }}">
+        {{ "OpenSTAManager"|trans }}
+    </h3>
 {% endblock %}
 
 {% block before_content %}

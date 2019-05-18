@@ -20,7 +20,7 @@ class HTMLWrapper implements WrapperInterface
         // Generazione dell'etichetta
         if (!empty($values['label'])) {
             $result .= '
-<div>
+<div class="form-group">
     <label for="'.prepareToField($values['id']).'">'.(empty($values['help']) ? $values['label'] : '<span class="tip" title="'.prepareToField($values['help']).'">'.$values['label'].' <i class="fa fa-question-circle-o"></i></span>').'</label>';
         }
 

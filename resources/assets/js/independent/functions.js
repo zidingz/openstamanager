@@ -89,34 +89,28 @@ function launch_modal(title, href, init_modal, id) {
         }
     });
 
+    var html = '<div class="modal-dialog modal-lg">' +
+        '	<div class="modal-content">' +
+        '		<div class="modal-header bg-light-blue">' +
+        '			<h5 class="modal-title"><i class="fa fa-pencil"></i> ' + title + '</h5>' +
+        '           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">' + globals.translations.close + '</span></button>' +
+        '		</div>' +
+        '		<div class="modal-body">|data|</div>';
+
     // Lettura contenuto div
     if (href.substr(0, 1) == '#') {
         data = $(href).html();
 
-        $(id).html(
-            '<div class="modal-dialog modal-lg">' +
-            '	<div class="modal-content">' +
-            '		<div class="modal-header bg-light-blue">' +
-            '			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">' + globals.translations.close + '</span></button>' +
-            '			<h4 class="modal-title"><i class="fa fa-pencil"></i> ' + title + '</h4>' +
-            '		</div>' +
-            '		<div class="modal-body">' + data + '</div>'
-        );
+        $(id).html(html.replace('|data|', data));
+
         if (init_modal == 1) {
             $(id).modal('show');
         }
     } else {
         $.get(href, function (data, response) {
             if (response == 'success') {
-                $(id).html(
-                    '<div class="modal-dialog modal-lg">' +
-                    '	<div class="modal-content">' +
-                    '		<div class="modal-header bg-light-blue">' +
-                    '			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">' + globals.translations.close + '</span></button>' +
-                    '			<h4 class="modal-title"><i class="fa fa-pencil"></i> ' + title + '</h4>' +
-                    '		</div>' +
-                    '		<div class="modal-body">' + data + '</div>'
-                );
+                $(id).html(html.replace('|data|', data));
+
                 if (init_modal == 1) {
                     $(id).modal('show');
                 }
@@ -536,7 +530,7 @@ function start_superselect() {
     $('.superselect').each(function () {
         $this = $(this);
         $(this).select2({
-            theme: "bootstrap4",
+            theme: "bootstrap",
             language: "it",
             width: '100%',
             maximumSelectionLength: $this.data('maximum') ? $this.data('maximum') : -1,

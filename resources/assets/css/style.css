@@ -112,18 +112,18 @@ a.disabled {
     padding: 0 0px;
 }
 
-.box-center {
+.card-center {
     width: 600px;
     margin: 7% auto
 }
 
-.box-center-large {
+.card-center-large {
     width: 850px;
     margin: 7% auto
 }
 
-.box-center .box-body,
-.box-center-large .box-body {
+.card-center .card-body,
+.card-center-large .card-body {
     padding: 20px;
     border-top: 0
 }
@@ -546,8 +546,8 @@ input.small-width {
 }
 
 @media screen and (max-width: 767px) {
-    .box-center,
-    .box-center-large {
+    .card-center,
+    .card-center-large {
         width: 90%;
         margin-top: 20px
     }
