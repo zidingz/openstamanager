@@ -49,6 +49,9 @@ class PermissionMiddleware extends Middleware
         ]);
         Query::setSegments(true);
 
+        // Fix per la visione degli elementi eliminati (per permettere il rispristino)
+        $query = str_replace(['AND `deleted_at` IS NULL', '`deleted_at` IS NULL', 'AND deleted_at IS NULL', 'deleted_at IS NULL'], '', $query);
+
         $has_access = !empty($query) ? $this->database->fetchNum($query) !== 0 : true;
 
         return $has_access;

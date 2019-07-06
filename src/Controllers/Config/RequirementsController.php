@@ -47,11 +47,11 @@ class RequirementsController extends Controller
 
         'upload_max_filesize' => [
             'type' => 'value',
-            'suggested' => '>16M',
+            'suggested' => '>32M',
         ],
         'post_max_size' => [
             'type' => 'value',
-            'suggested' => '>16M',
+            'suggested' => '>32M',
         ],
     ];
 

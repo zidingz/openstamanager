@@ -52,6 +52,14 @@ class AjaxController extends Controller
         return $response;
     }
 
+    public function flash($request, $response, $args)
+    {
+        $response = flash()->getMessages();
+        $response = $response->write(json_encode($results));
+
+        return $response;
+    }
+
     public function listAttachments($request, $response, $args)
     {
         $result = '{( "name": "filelist_and_upload", "id_module": "'.$id_module.'", "id_record": "'.$id_record.'", "id_plugin": "'.$id_plugin.'" )}';

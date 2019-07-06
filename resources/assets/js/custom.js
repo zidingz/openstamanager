@@ -49,13 +49,13 @@ $(document).ready(function () {
             scrollTop: 0
         }, 500);
     });
-    
+
     $(".sidebar-toggle").click(function(){
         setTimeout(function(){
             window.dispatchEvent(new Event('resize'));
         }, 350);
     });
-    
+
     // Forza l'evento "blur" nei campi di testo per formattare i numeri con
     // jquery inputmask prima del submit
     setTimeout( function(){
@@ -73,6 +73,25 @@ $(document).ready(function () {
         // Imposta la lingua per la gestione automatica delle date dei diversi plugin
         moment.locale(globals.locale);
         globals.timestampFormat = moment.localeData().longDateFormat('L') + ' ' + moment.localeData().longDateFormat('LT');
+
+        // Standard per i popup
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "12000",
+            "extendedTimeOut": "8000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
 
         // Imposta lo standard per la conversione dei numeri
         numeral.register('locale', 'it', {
@@ -131,7 +150,7 @@ $(document).ready(function () {
             },
             function (start, end) {
                 // Esegue il submit del periodo selezionato e ricarica la pagina
-                $.get(globals.ajax_set_url + '/core.php?period_start=' + start.format('YYYY-MM-DD') + '&period_end=' + end.format('YYYY-MM-DD'), function (data) {
+                $.get(globals.ajax_set_url + '?period_start=' + start.format('YYYY-MM-DD') + '&period_end=' + end.format('YYYY-MM-DD'), function (data) {
                     location.reload();
                 });
             }

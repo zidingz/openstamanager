@@ -20,7 +20,25 @@
 {% endblock %}
 
 {% block module_content %}
+    {% if record.deleted_at is not empty %}
+    <div class="alert alert-danger text-center">
+        <h3>{{ 'Ripristinare il record?'|trans }}</h3>
 
+        <a class="btn btn-warning" id="restore">
+            <i class="fa fa-undo"></i> {{ 'Ripristina'|trans }}
+        </a>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $("#restore").click(function(){
+                $("input[name=op]").attr("value", "restore");
+                $("#submit").trigger("click");
+            })
+        });
+    </script>
+    {% endif %}
+}
     <!--  Pulsanti di default -->
     <div id="pulsanti">
         <a class="btn btn-warning" href="{{ path_for('module', {'module_id': module_id}) }}">
@@ -46,6 +64,8 @@
             form.prepend('<button type="submit" id="submit" class="hide"></button>');
 
             $("#save").click(function(){
+                //submitAjax(form);
+
                 $("#submit").trigger("click");
             });
 
@@ -100,6 +120,15 @@
         $(document).ready(function(){
             var form = $("#custom_fields_top-edit").parent().find("form").first();
 
+            // Rimozione select inizializzati
+            $("#custom_fields_bottom-edit").find("select").each(function () {
+                $(this).select2().select2("destroy");
+            });
+
+            $("#custom_fields_bottom-edit").find("select").each(function () {
+                $(this).select2().select2("destroy");
+            });
+
             // Campi a inizio form
             form.prepend($("#custom_fields_top-edit").html());
 
@@ -115,6 +144,8 @@
             }
 
             last.after($("#custom_fields_bottom-edit").html());
+
+            start_superselect();
         });
     </script>
 {% endblock %}

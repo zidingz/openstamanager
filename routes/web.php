@@ -84,6 +84,10 @@ $app->group('/ajax', function () use ($app) {
     $app->get('/hook/{hook_id:[0-9]+}[/]', 'Controllers\AjaxController:hook')
         ->setName('hook');
 
+    // Messaggi flash
+    $app->get('/flash[/]', 'Controllers\AjaxController:flash')
+        ->setName('flash');
+
     // Sessioni
     $app->get('/session[/]', 'Controllers\AjaxController:sessionSet')
         ->setName('ajax-session');

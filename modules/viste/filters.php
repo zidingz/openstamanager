@@ -4,7 +4,7 @@ echo '
 <form action="" method="post" role="form">
 	<input type="hidden" name="backto" value="record-edit">
 	<input type="hidden" name="op" value="filters">
-	
+
     <div class="data">';
 
 $num = 0;
@@ -13,9 +13,9 @@ foreach ($additionals as $num => $additional) {
     $editable = !($additional['default'] && $enable_readonly);
 
     echo '
-        <div class="box box-'.($additional['enabled'] ? 'success' : 'danger').'">
-            <div class="box-header with-border">
-                <h3 class="box-title">
+        <div class="card card-outline card-'.($additional['enabled'] ? 'success' : 'danger').'">
+            <div class="card-header with-border">
+                <h3 class="card-title">
                     <a data-toggle="collapse" href="#additional-'.$additional['id'].'">'.tr('Filtro: _NAME_', [
 '_NAME_' => $additional['name'],
 ]).'</a>
@@ -23,18 +23,18 @@ foreach ($additionals as $num => $additional) {
 
     if ($editable) {
         echo '
-                <a class="btn btn-danger ask pull-right" data-backto="record-edit" data-op="delete_filter" data-id="'.$additional['id'].'">
+                <a class="btn btn-danger ask float-right" data-backto="record-edit" data-op="delete_filter" data-id="'.$additional['id'].'">
                     <i class="fa fa-trash"></i> '.tr('Elimina').'
                 </a>';
     }
 
     echo '
-                <a class="btn btn-warning ask pull-right" data-backto="record-edit" data-msg="'.($additional['enabled'] ? tr('Disabilitare questo elemento?') : tr('Abilitare questo elemento?')).'" data-op="change" data-id="'.$additional['id'].'" data-class="btn btn-lg btn-warning" data-button="'.($additional['enabled'] ? tr('Disabilita') : tr('Abilita')).'">
+                <a class="btn btn-warning ask float-right" data-backto="record-edit" data-msg="'.($additional['enabled'] ? tr('Disabilitare questo elemento?') : tr('Abilitare questo elemento?')).'" data-op="change" data-id="'.$additional['id'].'" data-class="btn btn-lg btn-warning" data-button="'.($additional['enabled'] ? tr('Disabilita') : tr('Abilita')).'">
                     <i class="fa fa-eye-slash"></i> '.($additional['enabled'] ? tr('Disabilita') : tr('Abilita')).'
                 </a>';
     echo '
             </div>
-            <div id="additional-'.$additional['id'].'" class="box-body collapse">
+            <div id="additional-'.$additional['id'].'" class="card-body collapse">
 
                 <div class="row">
                     <div class="col-md-12">
@@ -84,11 +84,11 @@ echo '
 
 echo '
 <form class="hide" id="template_filter">
-	<div class="box">
-		<div class="box-header with-border">
-			<h3 class="box-title">'.tr('Nuovo filtro').'</h3>
+	<div class="card card-outline">
+		<div class="card-header with-border">
+			<h3 class="card-title">'.tr('Nuovo filtro').'</h3>
 		</div>
-		<div class="box-body">
+		<div class="card-body">
 
 			<div class="row">
 				<div class="col-md-12">

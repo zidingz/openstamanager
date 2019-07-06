@@ -18,6 +18,15 @@
     $(document).ready(function(){
         var form = $("#custom_fields_top-add").parent().find("form").first();
 
+        // Rimozione select inizializzati
+        $("#custom_fields_bottom-add").find("select").each(function () {
+            $(this).select2().select2("destroy");
+        });
+
+        $("#custom_fields_bottom-add").find("select").each(function () {
+            $(this).select2().select2("destroy");
+        });
+
         // Campi a inizio form
         form.prepend($("#custom_fields_top-add").html());
 
@@ -33,6 +42,8 @@
         }
 
         last.after($("#custom_fields_bottom-add").html());
+
+        start_superselect();
     });
 </script>
 
@@ -45,26 +56,17 @@
         {% endfor %}
         };
 
-        $("#form_{{ module_id }}-{{ plugin_id }}").find("form").ajaxForm({
-            url: {{ path_for('module-add', {module_id: module_id}) }},
-            beforeSubmit: function(arr, $form, options) {
-                return $form.parsley().validate();
-            },
-            data: data,
-            type: "post",
-            success: function(response){
-                response = response.trim();
-
-                if(response && $("#{{ query.select }}").val() !== undefined) {
-                    result = JSON.parse(response);
-                    $("#{{ query.select }}").selectSetNew(result.id, result.text);
+        $("#form_{{ module_id }}-{{ plugin_id }}").find("form").submit(function () {
+            submitAjax(this, data, function(response) {
+                // Selezione automatica nuovo valore per il select
+                select = "#{{ query.select }}";
+                if ($(select).val() !== undefined) {
+                    $(select).selectSetNew(response.id, response.text);
                 }
-
                 $("#bs-popup2").modal("hide");
-            },
-            error: function(xhr, error, thrown) {
-                ajaxError(xhr, error, thrown);
-            }
+            });
+
+            return false;
         });
     });
 </script>
