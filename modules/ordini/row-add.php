@@ -4,6 +4,7 @@ use Modules\Ordini\Ordine;
 
 // Info contratto
 $documento = Ordine::find($id_record);
+$dir = $documento->direzione;
 
 // Impostazioni per la gestione
 $options = [

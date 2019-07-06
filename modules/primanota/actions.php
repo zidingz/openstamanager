@@ -4,6 +4,7 @@ switch (post('op')) {
     case 'add':
         $all_ok = true;
         $iddocumento = post('iddocumento');
+        $idscadenza = post('idscadenza');
         $data = post('data', true);
         $idmastrino = get_new_idmastrino();
         $descrizione = post('descrizione');
@@ -43,10 +44,10 @@ switch (post('op')) {
 
         if ($totale_pagato != 0 && empty($insoluto)) {
             // Inserisco nello scadenziario il totale pagato
-            aggiorna_scadenziario($iddocumento, abs($totale_pagato), $data);
+            aggiorna_scadenziario($iddocumento, abs($totale_pagato), $data, $idscadenza);
         } elseif (!empty($insoluto)) {
             //Rimuovo dallo scadenzario l'insoluto
-            aggiorna_scadenziario($iddocumento, -abs($totale_pagato), $data);
+            aggiorna_scadenziario($iddocumento, -abs($totale_pagato), $data, $idscadenza);
         }
 
         // Se non va a buon fine qualcosa elimino il mastrino per non lasciare incongruenze nel db

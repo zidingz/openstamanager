@@ -5,7 +5,7 @@ unset($_SESSION['superselect']['idanagrafica']);
 unset($_SESSION['superselect']['idsede']);
 
 // Calcolo del nuovo codice
-$new_codice = \Modules\Interventi\Intervento::getNextCodice();
+$new_codice = \Modules\Interventi\Intervento::getNextCodice($data);
 
 // Se ho passato l'idanagrafica, carico il tipo di intervento di default
 $idanagrafica = filter('idanagrafica');
@@ -111,6 +111,7 @@ elseif (!empty($id_intervento)) {
     $id_tipo_intervento = $rs[0]['id_tipo_intervento'];
     $data = (null !== filter('data')) ? filter('data') : $rs[0]['data_richiesta'];
     $data_richiesta = $rs[0]['data_richiesta'];
+    $data_scadenza = $rs[0]['data_scadenza'];
     $richiesta = $rs[0]['richiesta'];
     $idsede = $rs[0]['idsede'];
     $idanagrafica = $rs[0]['idanagrafica'];
@@ -226,7 +227,7 @@ if (!empty($id_intervento)) {
                 </div>
 
                 <div class="col-md-3">
-                    {[ "type": "timestamp", "label": "<?php echo tr('Data/ora scadenza'); ?>", "name": "data_scadenza", "required": 0, "value": "" ]}
+                    {[ "type": "timestamp", "label": "<?php echo tr('Data/ora scadenza'); ?>", "name": "data_scadenza", "required": 0, "value": "<?php echo $data_scadenza; ?>" ]}
                 </div>
 
 				<div class="col-md-3">

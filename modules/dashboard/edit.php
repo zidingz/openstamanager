@@ -315,7 +315,7 @@ if (!empty($rsp)) {
     $rsp_old = $dbo->fetchNum($qp_old);
 
     if ($rsp_old > 0) {
-        echo '<div class="alert alert-warning alert-dismissible" role="alert"><i class="fa fa-exclamation-triangle"></i><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button> '.tr('Ci sono '.$rsp_old.' interventi scaduti da pianificare.').'</div>';
+        echo '<div class="alert alert-warning alert-dismissible text-sm" role="alert"><i class="fa fa-exclamation-triangle"></i><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> '.tr('Ci sono '.$rsp_old.' attività scadute.').'</div>';
     }
 
     $mesi = months();
@@ -372,42 +372,45 @@ $link = pathFor('module-action', [
 
 <script type="text/javascript">
 
-    $('#select-intreventi-pianificare').change(function(){
-        var mese = $(this).val();
-        $.post( '<?php echo $link; ?>', { op: 'load_intreventi', mese: mese }, function(data){
-            $('#interventi-pianificare').html(data);
-            $('#external-events .fc-event').each(function() {
+	function load_interventi_da_pianificare(mese){
+
+		if (mese == undefined){
+			// Seleziono il mese corrente per gli interventi da pianificare
+			var date = new Date();
+			var mese;
+			date.setDate(date.getDate());
+
+			//Note: January is 0, February is 1, and so on.
+			mese = ('0' + (date.getMonth()+1)).slice(-2) + date.getFullYear();
+
+			$('#select-intreventi-pianificare option[value='+mese+']').attr('selected','selected').trigger('change');
+		}
+
+		$('#interventi-pianificare').html('<center><br><br><i class=\'fa fa-refresh fa-spin fa-2x fa-fw\'></i></center>');
+		$.get( '<?php echo $link; ?>', { op: 'load_intreventi', mese: mese }, function(data){
+
+        })
+		.done(function( data ) {
+			$('#interventi-pianificare').html(data);
+			$('#external-events .fc-event').each(function() {
                 $(this).draggable({
                     zIndex: 999,
                     revert: true,
                     revertDuration: 0
                 });
             });
-        });
+
+		});
+
+	}
+    $('#select-intreventi-pianificare').change(function(){
+        var mese = $(this).val();
+        load_interventi_da_pianificare(mese);
+
     });
 
 	$(document).ready(function() {
-        // Seleziono il mese corrente per gli interventi da pianificare
-        var date = new Date();
-        var mese;
-        date.setDate(date.getDate());
-
-        //Note: January is 0, February is 1, and so on.
-        mese = ('0' + (date.getMonth()+1)).slice(-2) + date.getFullYear();
-
-        $('#select-intreventi-pianificare option[value='+mese+']').attr('selected','selected').trigger('change');
-
-        $.post( '<?php echo $link; ?>', { op: 'load_intreventi', mese: mese }, function(data){
-            $('#interventi-pianificare').html(data);
-            $('#external-events .fc-event').each(function() {
-                $(this).draggable({
-                    zIndex: 999,
-                    revert: true,
-                    revertDuration: 0
-                });
-            });
-        });
-
+		load_interventi_da_pianificare();
 
         // Comandi seleziona tutti
         $('#selectallstati').click(function(event) {
@@ -456,7 +459,7 @@ $link = pathFor('module-action', [
 
             $(this).parent().parent().find('li input[type=checkbox]').each(function(i) { // loop through each checkbox
 				this.checked = true;
-				 $.when (session_set_array( 'dashboard,idzone', this.value, 0 )).promise().then(function() {
+				$.when (session_set_array( 'dashboard,idzone', this.value, 0 )).promise().then(function() {
 						$('#calendar').fullCalendar('refetchEvents');
 				});
 
@@ -472,7 +475,7 @@ $link = pathFor('module-action', [
 
 			$(this).parent().parent().find('li input[type=checkbox]').each(function() { // loop through each checkbox
 				this.checked = false;
-				 $.when (session_set_array( 'dashboard,idstatiintervento', this.value, 1 )).promise().then(function() {
+				$.when (session_set_array( 'dashboard,idstatiintervento', this.value, 1 )).promise().then(function() {
 						$('#calendar').fullCalendar('refetchEvents');
 				});
 
@@ -486,7 +489,7 @@ $link = pathFor('module-action', [
 
 			$(this).parent().parent().find('li input[type=checkbox]').each(function() { // loop through each checkbox
 				this.checked = false;
-				 $.when (session_set_array( 'dashboard,idtipiintervento', this.value, 1 )).promise().then(function() {
+				$.when (session_set_array( 'dashboard,idtipiintervento', this.value, 1 )).promise().then(function() {
 						$('#calendar').fullCalendar('refetchEvents');
 				});
 
@@ -501,7 +504,7 @@ $link = pathFor('module-action', [
 
 			$(this).parent().parent().find('li input[type=checkbox]').each(function() { // loop through each checkbox
 				this.checked = false;
-				 $.when (session_set_array( 'dashboard,idtecnici', this.value, 1 )).promise().then(function() {
+				$.when (session_set_array( 'dashboard,idtecnici', this.value, 1 )).promise().then(function() {
 						$('#calendar').fullCalendar('refetchEvents');
 				});
 
@@ -702,7 +705,7 @@ if (setting('Utilizzare i tooltip sul calendario') == '1') {
 				element.mouseover( function(){
 				    if( !element.hasClass('tooltipstered') ){
 				        $(this).data('idintervento', event.idintervento );
-				        
+
 				        $.post("<?php echo $link; ?>", {
                             op: 'get_more_info',
                             id: $(this).data('idintervento'),

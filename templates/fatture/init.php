@@ -46,30 +46,32 @@ $fattura_accompagnatoria = ($record['tipo_doc'] == 'Fattura accompagnatoria di v
 $tipo_doc = ($fattura_accompagnatoria) ? 'Fattura accompagnatoria di vendita' : $tipo_doc;
 
 // Leggo i dati della destinazione (se 0=sede legale, se!=altra sede da leggere da tabella an_sedi)
-$sede = $dbo->fetchOne('SELECT (SELECT codice FROM an_anagrafiche WHERE idanagrafica=an_sedi.idanagrafica) AS codice, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=an_sedi.idanagrafica) AS ragione_sociale, nomesede, indirizzo, indirizzo2, cap, citta, provincia, piva, codice_fiscale FROM an_sedi WHERE idanagrafica='.prepare($id_cliente).(!empty($record['idsede']) ? ' AND id='.prepare($record['idsede']) : ''));
-
 $destinazione = '';
-if (!empty($sede['nomesede'])) {
-    $destinazione .= $sede['nomesede'].'<br/>';
-}
-if (!empty($sede['indirizzo'])) {
-    $destinazione .= $sede['indirizzo'].'<br/>';
-}
-if (!empty($sede['indirizzo2'])) {
-    $destinazione .= $sede['indirizzo2'].'<br/>';
-}
-if (!empty($sede['cap'])) {
-    $destinazione .= $sede['cap'].' ';
-}
-if (!empty($sede['citta'])) {
-    $destinazione .= $sede['citta'];
-}
-if (!empty($sede['provincia'])) {
-    $destinazione .= ' ('.$sede['provincia'].')';
-}
+if (!empty($record['idsede_destinazione'])) {
+    $sede = $dbo->fetchOne('SELECT (SELECT codice FROM an_anagrafiche WHERE idanagrafica=an_sedi.idanagrafica) AS codice, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=an_sedi.idanagrafica) AS ragione_sociale, nomesede, indirizzo, indirizzo2, cap, citta, provincia, piva, codice_fiscale FROM an_sedi WHERE idanagrafica='.prepare($id_cliente).' AND id='.prepare($record['idsede_destinazione']));
 
-$id_sede = 0;
+    $destinazione = '';
+    if (!empty($sede['nomesede'])) {
+        $destinazione .= $sede['nomesede'].'<br/>';
+    }
+    if (!empty($sede['indirizzo'])) {
+        $destinazione .= $sede['indirizzo'].'<br/>';
+    }
+    if (!empty($sede['indirizzo2'])) {
+        $destinazione .= $sede['indirizzo2'].'<br/>';
+    }
+    if (!empty($sede['cap'])) {
+        $destinazione .= $sede['cap'].' ';
+    }
+    if (!empty($sede['citta'])) {
+        $destinazione .= $sede['citta'];
+    }
+    if (!empty($sede['provincia'])) {
+        $destinazione .= ' ('.$sede['provincia'].')';
+    }
 
+    //$id_sede = 0;
+}
 // Sostituzioni specifiche
 $custom = [
     'tipo_doc' => Stringy\Stringy::create($tipo_doc)->toUpperCase(),

@@ -26,7 +26,7 @@ if (!empty($record['immagine'])) {
 				</div>
 
 				<div class="col-md-4">
-					{[ "type": "text", "label": "<?php echo tr('Codice'); ?>", "name": "codice", "required": 1, "value": "$codice$" ]}
+					{[ "type": "text", "label": "<?php echo tr('Codice'); ?>", "name": "codice", "required": 1, "value": "$codice$", "validation": "codice" ]}
 					<br>
                     {[ "type": "select", "label": "<?php echo tr('Categoria'); ?>", "name": "categoria", "required": 1, "value": "$id_categoria$", "ajax-source": "categorie" ]}
 				</div>
@@ -154,7 +154,7 @@ if (!empty($record['immagine'])) {
 
                 <div class="card-body">
 
-                    
+
                     <div class="clearfix"></div>
 
                     <div class="row">
@@ -288,56 +288,66 @@ echo '
         } else {
             echo '
             <div class="alert alert-info">
-                '.tr('Non ci sono listini caricati').'... '.Modules::link('Listini', null, tr('Crea il primo listino!')).'.
+                '.tr('Non ci sono listini caricati').'... '.Modules::link('Listini', null, tr('Crea il primo listino')).'
             </div>';
         }
 echo '
 		</div>
-	</div>
-
-
-	<div class="card card-primary">
-		<div class="card-header">
-			<h3 class="card-title">'.tr('Questo articolo è presente nei seguenti automezzi').':</h3>
-		</div>
-		<div class="card-body">';
-
-        // Quantità nell'automezzo
-        $rsa = $dbo->fetchArray('SELECT qta, (SELECT nome FROM dt_automezzi WHERE id=idautomezzo) AS nome, (SELECT targa FROM dt_automezzi WHERE id=idautomezzo) AS targa FROM mg_articoli_automezzi WHERE idarticolo='.prepare($id_record));
-
-        if (count($rsa) > 0) {
-            echo '
-            <div class="row">
-                <div class="col-md-12 col-lg-6">
-                    <table class="table table-striped table-condensed table-bordered">
-                        <tr>
-                            <th>'.tr('Nome automezzo').'</th>
-                            <th>'.tr('Targa').'</th>
-                            <th>'.tr('Q.tà').'</th>
-                        </tr>';
-
-            for ($i = 0; $i < count($rsa); ++$i) {
-                echo '
-                        <tr>
-                            <td>'.$rsa[$i]['nome'].'</td>
-                            <td>'.$rsa[$i]['targa'].'</td>
-                            <td>'.Translator::numberToLocale($rsa[$i]['qta']).' '.$rs[0]['unita_misura'].'</td>
-                        </tr>';
-            }
-
-            echo '
-                    </table>
-                </div>
-            </div>';
-        } else {
-            echo '
-            <div class="alert alert-info">
-                '.tr('Non ci sono automezzi collegati').'... '.Modules::link('Automezzi', null, tr('Collega il primo automezzo!')).'.
-            </div>';
-        }
+	</div>';
 ?>
+<?php
+
+echo '
+<div class="card card-primary">
+    <div class="card-heading">
+        <h3 class="card-title">'.tr('Prezzo medio acquisto').'</h3>
+    </div>
+
+    <div class="card-body">';
+$rs_prezzo_medio = $dbo->fetchOne('SELECT ((SUM(subtotale)-SUM(sconto))/SUM(qta)) AS prezzo FROM co_righe_documenti INNER JOIN co_documenti ON co_righe_documenti.iddocumento = co_documenti.id WHERE co_documenti.idtipodocumento IN (SELECT id FROM co_tipidocumento WHERE dir = \'uscita\')  AND idarticolo='.prepare($id_record));
+$rs_prezzo_min = $dbo->fetchOne('SELECT ((subtotale-sconto)/qta) AS prezzo, co_documenti.data FROM co_righe_documenti INNER JOIN co_documenti ON co_righe_documenti.iddocumento = co_documenti.id WHERE co_documenti.idtipodocumento IN (SELECT id FROM co_tipidocumento WHERE dir = \'uscita\')  AND idarticolo='.prepare($id_record).' ORDER BY ((subtotale-sconto)/qta) ASC');
+$rs_prezzo_max = $dbo->fetchOne('SELECT ((subtotale-sconto)/qta) AS prezzo, co_documenti.data  FROM co_righe_documenti INNER JOIN co_documenti ON co_righe_documenti.iddocumento = co_documenti.id WHERE co_documenti.idtipodocumento IN (SELECT id FROM co_tipidocumento WHERE dir = \'uscita\')  AND idarticolo='.prepare($id_record).' ORDER BY ((subtotale-sconto)/qta) DESC');
+
+if (count($rs_prezzo_min) > 0) {
+    echo '
+    <div class="row">
+        <div class="col-md-12 col-lg-6">
+            <table class="table table-striped table-condensed table-bordered">
+                <tr>
+                    <th>'.tr('Prezzo minimo').'</th>
+                    <th>'.tr('Prezzio medio').'</th>
+                    <th>'.tr('Prezzo massimo').'</th>
+                    <th>'.tr('Oscillazione').'</th>
+                    <th>'.tr('Oscillazione in %').'</th>
+                    <th>'.tr('Andamento prezzo').'</th>
+                </tr>';
+
+    echo '
+                <tr>
+                    <td>'.moneyFormat($rs_prezzo_min['prezzo']).'</td>
+                    <td>'.moneyFormat($rs_prezzo_medio['prezzo']).'</td>
+                    <td>'.moneyFormat($rs_prezzo_max['prezzo']).'</td>
+                    <td>'.moneyFormat($rs_prezzo_max['prezzo'] - $rs_prezzo_min['prezzo']).'</td>
+                    <td>'.Translator::numberToLocale(((($rs_prezzo_max['prezzo'] - $rs_prezzo_min['prezzo']) * 100) / $rs_prezzo_medio['prezzo']), '2').' %</td>
+                    <td>'.((strtotime($rs_prezzo_min['data']) == strtotime($rs_prezzo_max['data'])) ? 'N.D.' : ((strtotime($rs_prezzo_min['data']) < strtotime($rs_prezzo_max['data'])) ? 'in aumento' : 'in diminuzione')).'</td>
+                </tr>';
+
+    echo '
+                </table>
+            </div>
+        </div>';
+} else {
+    echo '
+        <div class="alert alert-info">
+            '.tr('Questo articolo non è mai stato acquistato').'
+        </div>';
+}
+
+    echo '
 		</div>
-	</div>
+	</div>';
+
+?>
 </form>
 
 {( "name": "filelist_and_upload", "id_module": "$id_module$", "id_record": "$id_record$" )}
@@ -367,7 +377,7 @@ function scorpora_iva() {
 
 $("#scorpora_iva").click( function(){
 	scorpora_iva();
-});	
+});
 
 </script>
 
@@ -430,10 +440,13 @@ if (!empty($elementi)) {
 <div class="alert alert-error">
     '.tr('Eliminando questo documento si potrebbero verificare problemi nelle altre sezioni del gestionale').'.
 </div>';
-}
-
-?>
+} else {
+    ?>
 
 <a class="btn btn-danger ask" data-backto="record-list">
     <i class="fa fa-trash"></i> <?php echo tr('Elimina'); ?>
 </a>
+
+<?php
+}
+?>

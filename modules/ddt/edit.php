@@ -7,8 +7,12 @@ if ($module['name'] == 'Ddt di vendita') {
 } else {
     $dir = 'uscita';
 }
-
+unset($_SESSION['superselect']['idanagrafica']);
+unset($_SESSION['superselect']['idsede_partenza']);
+unset($_SESSION['superselect']['idsede_destinazione']);
 $_SESSION['superselect']['idanagrafica'] = $record['idanagrafica'];
+$_SESSION['superselect']['idsede_partenza'] = $record['idsede_partenza'];
+$_SESSION['superselect']['idsede_destinazione'] = $record['idsede_destinazione'];
 
 ?>
 <form action="" method="post" id="edit-form">
@@ -94,17 +98,39 @@ $_SESSION['superselect']['idanagrafica'] = $record['idanagrafica'];
 				</div>
 			</div>
 
-			<div class="row">
-				<div class="col-md-3">
-					{[ "type": "select", "label": "<?php echo ($dir == 'uscita') ? tr('Fornitore') : tr('Destinatario'); ?>", "name": "idanagrafica", "required": 1, "value": "$idanagrafica$", "ajax-source": "clienti_fornitori", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
-				</div>
+                <?php
+                // Conteggio numero articoli ddt in uscita
+                $articolo = $dbo->fetchArray('SELECT mg_articoli.id FROM ((mg_articoli INNER JOIN dt_righe_ddt ON mg_articoli.id=dt_righe_ddt.idarticolo) INNER JOIN dt_ddt ON dt_ddt.id=dt_righe_ddt.idddt) WHERE dt_ddt.id='.prepare($id_record));
+                ?>
+                <div class="row">
+                    <div class="col-md-3">
+                        {[ "type": "select", "label": "<?php echo ($dir == 'uscita') ? tr('Fornitore') : tr('Destinatario'); ?>", "name": "idanagrafica", "required": 1, "value": "$idanagrafica$", "ajax-source": "clienti_fornitori", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
+                    </div>
 
-				<div class="col-md-3">
-					{[ "type": "select", "label": "<?php echo ($dir == 'uscita') ? tr('Partenza merce') : tr('Destinazione merce'); ?>", "name": "idsede", "ajax-source": "sedi",  "value": "$idsede$", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
-				</div>
-			</div>
+                    <?php
+                        if ($dir == 'entrata') {
+                            ?>
+                    <div class="col-md-3">
+                        {[ "type": "select", "label": "<?php echo tr('Partenza merce'); ?>", "name": "idsede_partenza", "ajax-source": "sedi_azienda",  "value": "$idsede_partenza$", "readonly": "<?php echo ($record['flag_completato'] || sizeof($articolo)) ? 1 : 0; ?>" ]}
+                    </div>
+                    <div class="col-md-3">
+                        {[ "type": "select", "label": "<?php echo tr('Destinazione merce'); ?>", "name": "idsede_destinazione", "ajax-source": "sedi",  "value": "$idsede_destinazione$", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
+                    </div>
+                    <?php
+                        } else {
+                            ?>
+                    <div class="col-md-3">
+                        {[ "type": "select", "label": "<?php echo tr('Partenza merce'); ?>", "name": "idsede_partenza", "ajax-source": "sedi",  "value": "$idsede_partenza$", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
+                    </div>
+                    <div class="col-md-3">
+                        {[ "type": "select", "label": "<?php echo tr('Destinazione merce'); ?>", "name": "idsede_destinazione", "ajax-source": "sedi_azienda",  "value": "$idsede_destinazione$", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
+                    </div>
 
-			<hr>
+                    <?php
+                        }
+                    ?>
+                </div>
+            <hr>
 
 			<div class="row">
 				<div class="col-md-3">
@@ -195,7 +221,7 @@ if ($record['flag_completato'] == 0) {
     $ordini_query = 'SELECT COUNT(*) AS tot FROM or_ordini WHERE idanagrafica='.prepare($record['idanagrafica']).' AND id_stato IN (SELECT id FROM or_statiordine WHERE descrizione IN(\'Bozza\', \'Evaso\', \'Parzialmente evaso\', \'Parzialmente fatturato\')) AND id_tipo_ordine=(SELECT id FROM or_tipiordine WHERE dir='.prepare($dir).') AND or_ordini.id IN (SELECT idordine FROM or_righe_ordini WHERE or_righe_ordini.idordine = or_ordini.id AND (qta - qta_evasa) > 0)';
     $ordini = $dbo->fetchArray($ordini_query)[0]['tot'];
     echo '
-            <a class="btn btn-primary'.(!empty($ordini) ? '' : ' disabled').'" data-href="'.$rootdir.'/modules/ddt/add_ordine.php?id_module='.$id_module.'&id_record='.$id_record.'" data-toggle="modal" data-title="Aggiungi ordine">
+            <a class="btn btn-sm btn-primary'.(!empty($ordini) ? '' : ' disabled').'" data-href="'.$rootdir.'/modules/ddt/add_ordine.php?id_module='.$id_module.'&id_record='.$id_record.'" data-toggle="modal" data-title="Aggiungi ordine">
                 <i class="fa fa-plus"></i> '.tr('Ordine').'
             </a>';
 
@@ -242,8 +268,11 @@ include $docroot.'/modules/ddt/row-list.php';
 <script>
 	$('#idanagrafica').change( function(){
 		session_set('superselect,idanagrafica', $(this).val(), 0);
-
-		$("#idsede").selectReset();
+        if('<?php echo $dir; ?>' == 'uscita'){
+		    $("#idsede_partenza").selectReset();
+        }else{
+            $("#idsede_destinazione").selectReset();
+        }
 	});
 </script>
 
@@ -295,9 +324,17 @@ if (!empty($elementi)) {
 
 ?>
 
-<a class="btn btn-danger ask" data-backto="record-list">
-    <i class="fa fa-trash"></i> <?php echo tr('Elimina'); ?>
-</a>
+<?php
+// Eliminazione ddt solo se ho accesso alla sede aziendale
+$field_name = ($dir == 'entrata') ? 'idsede_partenza' : 'idsede_destinazione';
+if (in_array($record[$field_name], $user->sedi)) {
+    ?>
+    <a class="btn btn-danger ask" data-backto="record-list">
+        <i class="fa fa-trash"></i> <?php echo tr('Elimina'); ?>
+    </a>
+<?php
+}
+?>
 
 <script>
 <?php

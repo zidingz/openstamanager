@@ -2,6 +2,12 @@
 
 use Modules\DDT\DDT;
 
+if ($module['name'] == 'Ddt di vendita') {
+    $dir = 'entrata';
+} else {
+    $dir = 'uscita';
+}
+
 if (isset($id_record)) {
     $ddt = DDT::with('tipo', 'stato')->find($id_record);
 
@@ -17,5 +23,11 @@ if (isset($id_record)) {
         $record['idporto'] = $record['idporto'] ?: $dbo->fetchOne('SELECT id FROM dt_porto WHERE predefined = 1')['id'];
         $record['idcausalet'] = $record['idcausalet'] ?: $dbo->fetchOne('SELECT id FROM dt_causalet WHERE predefined = 1')['id'];
         $record['idspedizione'] = $record['idspedizione'] ?: $dbo->fetchOne('SELECT id FROM dt_spedizione WHERE predefined = 1')['id'];
+    }
+
+    // Se la sede del ddt non è di mia competenza, blocco il ddt in modifica
+    $field_name = ($dir == 'entrata') ? 'idsede_partenza' : 'idsede_destinazione';
+    if (!in_array($record[$field_name], $user->sedi)) {
+        $record['flag_completato'] = 1;
     }
 }

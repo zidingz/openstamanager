@@ -76,6 +76,8 @@ class EmailNotification extends Notification
 
             $this->setContent($body);
             $this->setSubject($subject);
+
+            $this->includeTemplatePrints($id_record);
         }
     }
 

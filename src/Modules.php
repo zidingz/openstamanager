@@ -250,10 +250,12 @@ class Modules
      * @param string     $testo
      * @param bool       $alternativo
      * @param string     $extra
+     * @param bool       $blank
+     * @param string     $anchor
      *
      * @return string
      */
-    public static function link($modulo, $id_record = null, $testo = null, $alternativo = true, $extra = null, $blank = true)
+    public static function link($modulo, $id_record = null, $testo = null, $alternativo = true, $extra = null, $blank = true, $anchor = null)
     {
         $testo = isset($testo) ? nl2br($testo) : tr('Visualizza scheda');
         $alternativo = is_bool($alternativo) && $alternativo ? $testo : $alternativo;
@@ -275,7 +277,7 @@ class Modules
                 'module_id' => $module['id'],
             ]);
 
-            return '<a href="'.$link.'" '.$extra.'>'.$testo.'</a>';
+            return '<a href="'.$link.'#'.$anchor.'" '.$extra.'>'.$testo.'</a>';
         } else {
             return $alternativo;
         }

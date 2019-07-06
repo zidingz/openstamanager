@@ -1,11 +1,15 @@
 <?php
 
 use Plugins\ReceiptFE\Interaction;
+use Plugins\ReceiptFE\ReceiptHook;
 use Plugins\ReceiptFE\Ricevuta;
 
 switch (filter('op')) {
     case 'import':
         $list = Interaction::getReceiptList();
+
+        // Aggiornamento cache hook
+        ReceiptHook::update($list);
 
         $results = [];
         foreach ($list as $name) {

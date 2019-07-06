@@ -26,7 +26,7 @@ echo '
 		</div>
 		
 		<div class="col-md-6">
-			{[ "type": "text", "label": "'.tr('Nome').'", "name": "nome", "required": 0 ]}
+			{[ "type": "text", "label": "'.tr('Nome').'", "name": "nome", "id": "nome_", "required": 0 ]}
 		</div>
 
 		
@@ -45,11 +45,11 @@ echo '
 	    <div class="card-body">
 			<div class="row">
 				<div class="col-md-4">
-					{[ "type": "text", "label": "'.tr('Partita IVA').'", "maxlength": 13, "name": "piva", "class": "text-center alphanumeric-mask" ]}
+					{[ "type": "text", "label": "'.tr('Partita IVA').'", "maxlength": 13, "name": "piva", "class": "text-center alphanumeric-mask", "validation": "partita_iva"]}
 				</div>
 
 				<div class="col-md-4">
-					{[ "type": "text", "label": "'.tr('Codice fiscale').'", "maxlength": 16, "name": "codice_fiscale", "class": "text-center alphanumeric-mask" ]}
+					{[ "type": "text", "label": "'.tr('Codice fiscale').'", "maxlength": 16, "name": "codice_fiscale", "class": "text-center alphanumeric-mask", "validation": "codice_fiscale" ]}
 				</div>
 				
 				<div class="col-md-4">
@@ -128,22 +128,22 @@ echo
 
 <script>
     // Abilito solo ragione sociale oppure solo nome-cognome in base a cosa compilo
-    $('#nome, #cognome', '#bs-popup, #bs-popup2').blur(function(){
-        if ($('#nome', '#bs-popup, #bs-popup2').val() == '' && $('#cognome', '#bs-popup, #bs-popup2').val() == '' ){
-            $('#nome, #cognome', '#bs-popup, #bs-popup2').prop('disabled', true).prop('required', false);
+    $('#nome_, #cognome', '#bs-popup, #bs-popup2').blur(function(){
+        if ($('#nome_', '#bs-popup, #bs-popup2').val() == '' && $('#cognome', '#bs-popup, #bs-popup2').val() == '' ){
+            $('#nome_, #cognome', '#bs-popup, #bs-popup2').prop('disabled', true).prop('required', false);
             $('#ragione_sociale', '#bs-popup, #bs-popup2').prop('disabled', false).prop('required', true);
         }else{
-            $('#nome, #cognome', '#bs-popup, #bs-popup2').prop('disabled', false).prop('required', true);
+            $('#nome_, #cognome', '#bs-popup, #bs-popup2').prop('disabled', false).prop('required', true);
             $('#ragione_sociale', '#bs-popup, #bs-popup2').prop('disabled', true).prop('required', false);
         }
     });
 
     $('#ragione_sociale', '#bs-popup, #bs-popup2').blur(function(){
         if ($('#ragione_sociale', '#bs-popup, #bs-popup2').val() == '' ){
-            $('#nome, #cognome', '#bs-popup, #bs-popup2').prop('disabled', false).prop('required', true);
+            $('#nome_, #cognome', '#bs-popup, #bs-popup2').prop('disabled', false).prop('required', true);
             $('#ragione_sociale', '#bs-popup, #bs-popup2').prop('disabled', true).prop('required', false);
         }else{
-            $('#nome, #cognome', '#bs-popup, #bs-popup2').prop('disabled', true).prop('required', false);
+            $('#nome_, #cognome', '#bs-popup, #bs-popup2').prop('disabled', true).prop('required', false);
             $('#ragione_sociale', '#bs-popup, #bs-popup2').prop('disabled', false).prop('required', true);
         }
     });

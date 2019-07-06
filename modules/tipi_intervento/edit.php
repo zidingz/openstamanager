@@ -21,22 +21,22 @@
 	</div>
 
 	<div class="card card-primary">
-		<div class="card-header">
-			<h3 class="card-title"><?php echo tr('Costi unitari'); ?></h3>
+		<div class="card-heading">
+			<h3 class="card-title"><?php echo tr('Addebiti unitari al cliente'); ?></h3>
 		</div>
 
 		<div class="card-body">
 			<div class="row">
 				<div class="col-md-4">
-					{[ "type": "number", "label": "<?php echo tr('Costo orario'); ?>", "name": "costo_orario", "required": 1, "value": "$costo_orario$", "icon-after": "<i class='fa fa-euro'></i>" ]}
+					{[ "type": "number", "label": "<?php echo tr('Addebito orario'); ?>", "name": "costo_orario", "required": 1, "value": "$costo_orario$", "icon-after": "<i class='fa fa-euro'></i>" ]}
 				</div>
 
 				<div class="col-md-4">
-					{[ "type": "number", "label": "<?php echo tr('Costo km'); ?>", "name": "costo_km", "required": 1, "value": "$costo_km$", "icon-after": "<i class='fa fa-euro'></i>" ]}
+					{[ "type": "number", "label": "<?php echo tr('Addebito km'); ?>", "name": "costo_km", "required": 1, "value": "$costo_km$", "icon-after": "<i class='fa fa-euro'></i>" ]}
 				</div>
 
 				<div class="col-md-4">
-					{[ "type": "number", "label": "<?php echo tr('Diritto chiamata'); ?>", "name": "costo_diritto_chiamata", "required": 1, "value": "$costo_diritto_chiamata$", "icon-after": "<i class='fa fa-euro'></i>" ]}
+					{[ "type": "number", "label": "<?php echo tr('Addebito diritto ch.'); ?>", "name": "costo_diritto_chiamata", "required": 1, "value": "$costo_diritto_chiamata$", "icon-after": "<i class='fa fa-euro'></i>" ]}
 				</div>
 			</div>
 		</div>
@@ -44,8 +44,8 @@
 
 
 	<div class="card card-primary">
-		<div class="card-header">
-			<h3 class="card-title"><?php echo tr('Costi unitari riconosciuti al tecnico'); ?></h3>
+		<div class="card-heading">
+			<h3 class="card-title"><?php echo tr('Costi unitari del tecnico'); ?></h3>
 		</div>
 
 		<div class="card-body">
@@ -59,7 +59,7 @@
 				</div>
 
 				<div class="col-md-4">
-					{[ "type": "number", "label": "<?php echo tr('Diritto chiamata'); ?>", "name": "costo_diritto_chiamata_tecnico", "required": 1, "value": "$costo_diritto_chiamata_tecnico$", "icon-after": "<i class='fa fa-euro'></i>" ]}
+					{[ "type": "number", "label": "<?php echo tr('Costo diritto ch.'); ?>", "name": "costo_diritto_chiamata_tecnico", "required": 1, "value": "$costo_diritto_chiamata_tecnico$", "icon-after": "<i class='fa fa-euro'></i>" ]}
 				</div>
 			</div>
 		</div>

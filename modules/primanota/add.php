@@ -4,6 +4,7 @@
 	<input type="hidden" name="op" value="add">
 	<input type="hidden" name="backto" value="record-edit">
 	<input type="hidden" name="iddocumento" id="iddocumento" value="<?php echo get('iddocumento'); ?>">
+    <input type="hidden" name="idscadenza" id="idscadenza" value="<?php echo get('idscadenza'); ?>">
 	<input type="hidden" name="crea_modello" id="crea_modello" value="0">
 	<input type="hidden" name="idmastrino" id="idmastrino" value="0">
 
@@ -139,12 +140,15 @@
             $totale_avere = $importo_conto_controparte;
         }
     } else {
-        $scadenza = $dbo->fetchOne('SELECT descrizione, scadenza FROM co_scadenziario WHERE id='.prepare($idscadenza));
+        $scadenza = $dbo->fetchOne('SELECT descrizione, scadenza, SUM(da_pagare-pagato) AS pagare FROM co_scadenziario WHERE id='.prepare($idscadenza));
 
         $descrizione = tr('Pag. _OP_ del _DATE_', [
             '_OP_' => $scadenza['descrizione'],
             '_DATE_' => Translator::dateToLocale($scadenza['scadenza']),
         ]);
+
+        $importo_conto_aziendale = $scadenza['pagare'];
+        $importo_conto_controparte = $scadenza['pagare'];
     }
     ?>
 

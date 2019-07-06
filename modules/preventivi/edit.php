@@ -1,6 +1,4 @@
 <?php
-unset($_SESSION['superselect']['idanagrafica']);
-$_SESSION['superselect']['idanagrafica'] = $record['idanagrafica'];
 
 ?><form action="" method="post" id="edit-form">
 	<input type="hidden" name="backto" value="record-edit">
@@ -38,6 +36,10 @@ $_SESSION['superselect']['idanagrafica'] = $record['idanagrafica'];
 				</div>
 
 				<div class="col-md-3">
+                    <?php
+                    echo Plugins::link('Referenti', $record['idanagrafica'], null, null, 'class="pull-right"');
+                    ?>
+
 					{[ "type": "select", "label": "<?php echo tr('Referente'); ?>", "name": "idreferente", "value": "$idreferente$", "ajax-source": "referenti" ]}
 				</div>
 

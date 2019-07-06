@@ -47,7 +47,7 @@ class API extends \Util\Singleton
      */
     public function __construct()
     {
-        if (!self::isAPIRequest() || (!Auth::check() && self::getRequest()['resource'] != 'login')) {
+        if (!Auth::check() && self::getRequest()['resource'] != 'login') {
             throw new InvalidArgumentException();
         }
     }
@@ -143,6 +143,10 @@ class API extends \Util\Singleton
 
                 // Query per ottenere le informazioni
                 $query = $database->select($table, $select, $where, $order, [], true);
+
+                foreach ($where as $key => $value) {
+                    $parameters[] = $value;
+                }
             }
 
             if (!empty($query)) {

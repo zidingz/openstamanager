@@ -9,8 +9,8 @@ INSERT INTO `zz_views` (`id`, `id_module`, `name`, `query`, `order`, `search`, `
 -- Stato FE (Notifica esito)
 INSERT INTO `fe_stati_documento` (`codice`, `descrizione`, `icon`) VALUES ('NE', 'Notifica esito', 'fa fa-check text-warning');
 
--- Aggiunta data ricezione, utile per le fatture di acquisto
-ALTER TABLE `co_documenti` ADD `data_ricezione` DATE NULL AFTER `data`;
+-- Aggiunta data di registrazione, utile per le fatture di acquisto
+ALTER TABLE `co_documenti` ADD `data_registrazione` DATE NULL AFTER `data`, ADD `data_competenza` DATE NULL AFTER `data`;
 
 -- Importo marca da bollo a 2 (https://www.fiscoetasse.com/approfondimenti/12090-applicazione-della-marca-da-bollo-sulle-fatture.html)
 UPDATE `zz_settings` SET `valore` = '2' WHERE `zz_settings`.`nome` = 'Importo marca da bollo';
@@ -86,8 +86,8 @@ UPDATE `zz_views` SET `query` = 'co_movimenti.idmastrino' WHERE `name` = 'id' AN
 INSERT INTO `fe_stati_documento` (`codice`, `descrizione`, `icon`) VALUES ('AT', 'Attestazione trasmissione', 'fa fa-check text-warning');
 
 -- Aggiungo deleted_at per co_statipreventivi e co_staticontratti
-ALTER TABLE `co_statipreventivi` ADD `deleted_at` DATETIME NULL AFTER `updated_at`;
-ALTER TABLE `co_staticontratti` ADD `deleted_at` DATETIME NULL AFTER `updated_at`;
+ALTER TABLE `co_statipreventivi` ADD `deleted_at` DATETIME NULL;
+ALTER TABLE `co_staticontratti` ADD `deleted_at` DATETIME NULL;
 
 -- Aggiunto modulo per gestire gli stati dei preventivi
 INSERT INTO `zz_modules` (`id`, `name`, `title`, `directory`, `options`, `options2`, `icon`, `version`, `compatibility`, `order`, `parent`, `default`, `enabled`) VALUES (NULL, 'Stati dei preventivi', 'Stati dei preventivi','stati_preventivo', 'SELECT |select| FROM `co_statipreventivi` WHERE 1=1 AND deleted_at IS NULL HAVING 2=2', '', 'fa fa-angle-right', '2.4.9', '2.4.9', '1', (SELECT `id` FROM `zz_modules` t WHERE t.`name` = 'Preventivi'), '1', '1');
@@ -254,8 +254,10 @@ ALTER TABLE `zz_settings` CHANGE `help` `help` varchar(255);
 UPDATE `zz_settings` SET `help` = NULL WHERE `help` = '';
 
 ALTER TABLE `co_documenti` CHANGE `bollo` `bollo` decimal(12,4), CHANGE `data_stato_fe` `data_stato_fe` TIMESTAMP NULL, ADD `addebita_bollo` BOOLEAN NOT NULL DEFAULT TRUE, ADD `id_riga_bollo` int(11), ADD FOREIGN KEY (`id_riga_bollo`) REFERENCES `co_righe_documenti`(`id`) ON DELETE SET NULL;
-UPDATE `co_documenti` SET `bollo` = NULL;
-UPDATE `co_documenti` SET `data_ricezione` = NULL WHERE `data_ricezione` = '0000-00-00';
+UPDATE `co_documenti` SET `bollo` = NULL WHERE `idstatodocumento` = (SELECT `id` FROM `co_statidocumento` WHERE `descrizione` = 'Bozza');
+UPDATE `co_documenti` SET `data_registrazione` = NULL WHERE `data_registrazione` = 0000-00-00;
+UPDATE `co_documenti` SET `data_registrazione` = `data` WHERE `data_registrazione` IS NULL AND idtipodocumento IN (SELECT id FROM co_tipidocumento WHERE dir = 'uscita');
+UPDATE `co_documenti` SET `data_competenza` = `data_registrazione`;
 UPDATE `co_documenti` SET `data_stato_fe` = NULL WHERE `data_stato_fe` = '0000-00-00 00:00:00';
 
 -- Rimozione tasto di stampa scadenzario totale da dentro la scadenza
@@ -370,3 +372,8 @@ CREATE TABLE IF NOT EXISTS `zz_hook_cache` (
 INSERT INTO `zz_hooks` (`id`, `name`, `class`, `frequency`) VALUES
 (NULL, 'Ricevute', 'Plugins\\ReceiptFE\\ReceiptHook', '1 day'),
 (NULL, 'Fatture', 'Plugins\\ImportFE\\InvoiceHook', '1 day');
+
+-- Aggiunte variabili di sistema per stampa riepilogo interventi
+INSERT INTO `zz_views` (`id`, `id_module`, `name`, `query`, `order`, `search`, `slow`, `format`, `search_inside`, `order_by`, `visible`, `summable`, `default`) VALUES (NULL, (SELECT `id` FROM `zz_modules` WHERE `name` = 'Interventi'), 'richiesta', 'richiesta', '14', '1', '0', '0', '', '', '0', '0', '1');
+
+INSERT INTO `zz_views` (`id`, `id_module`, `name`, `query`, `order`, `search`, `slow`, `format`, `search_inside`, `order_by`, `visible`, `summable`, `default`) VALUES (NULL, (SELECT `id` FROM `zz_modules` WHERE `name` = 'Interventi'), 'descrizione', 'descrizione', '15', '1', '0', '0', '', '', '0', '0', '1');

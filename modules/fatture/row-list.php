@@ -391,7 +391,7 @@ if (!empty($fattura->ritenuta_acconto)) {
             <b>'.tr("Ritenuta d'acconto", [], ['upper' => true]).':</b>
         </td>
         <td align="right">
-            '.moneyFormat($fattura->ritenuta_acconto, 2).'
+            '.moneyFormat(abs($fattura->ritenuta_acconto), 2).'
         </td>
         <td></td>
     </tr>';

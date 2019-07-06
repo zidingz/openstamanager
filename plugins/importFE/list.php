@@ -1,8 +1,13 @@
 <?php
 
 use Plugins\ImportFE\Interaction;
+use Plugins\ImportFE\InvoiceHook;
 
 $list = Interaction::listToImport();
+
+// Aggiornamento cache hook
+InvoiceHook::update($list);
+
 $directory = Plugins\ImportFE\FatturaElettronica::getImportDirectory();
 
 if (!empty($list)) {
@@ -35,7 +40,7 @@ if (!empty($list)) {
         }
 
         echo '
-                <button type="button" class="btn btn-warning" '.((!extension_loaded('ssl') and strpos($element, 'p7m') !== false) ? 'disabled' : '').' onclick="download(this, \''.$element.'\')">
+                <button type="button" class="btn btn-warning" '.((!extension_loaded('openssl') and substr(strtolower($element), -4) == '.p7m') ? 'disabled' : '').' onclick="download(this, \''.$element.'\')">
                     <i class="fa fa-download"></i> '.tr('Importa').'
                 </button>
             </td>

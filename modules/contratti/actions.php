@@ -130,12 +130,13 @@ switch (post('op')) {
      // Duplica contratto
     case 'copy':
         $new = $contratto->replicate();
+        $new->numero = Contratto::getNextNumero();
         $new->idstato = 1;
         $new->save();
 
         $id_record = $new->id;
 
-        $righe = $preventivo->getRighe();
+        $righe = $contratto->getRighe();
         foreach ($righe as $riga) {
             $new_riga = $riga->replicate();
             $new_riga->setParent($new);
@@ -356,7 +357,7 @@ switch (post('op')) {
                     $id_promemoria = $dbo->lastInsertedID();
 
                     // Copia degli articoli
-                    $dbo->query('INSERT INTO co_promemoria_articoli(idarticolo, id_promemoria, idimpianto, idautomezzo, descrizione, prezzo_vendita, prezzo_acquisto, sconto, sconto_unitario, tipo_sconto, idiva, desc_iva, iva, qta, um, abilita_serial) SELECT idarticolo, :id_new, idimpianto, idautomezzo, descrizione, prezzo_vendita, prezzo_acquisto, sconto, sconto_unitario, tipo_sconto, idiva, desc_iva, iva, qta, um, abilita_serial FROM co_promemoria_articoli AS z WHERE id_promemoria = :id_old', [
+                    $dbo->query('INSERT INTO co_promemoria_articoli(idarticolo, id_promemoria, idimpianto, descrizione, prezzo_vendita, prezzo_acquisto, sconto, sconto_unitario, tipo_sconto, idiva, desc_iva, iva, qta, um, abilita_serial) SELECT idarticolo, :id_new, idimpianto, descrizione, prezzo_vendita, prezzo_acquisto, sconto, sconto_unitario, tipo_sconto, idiva, desc_iva, iva, qta, um, abilita_serial FROM co_promemoria_articoli AS z WHERE id_promemoria = :id_old', [
                         ':id_new' => $id_promemoria,
                         ':id_old' => $p['id'],
                     ]);
@@ -387,6 +388,39 @@ switch (post('op')) {
                 $id_record = $new_idcontratto;
             } else {
                 flash()->error(tr('Errore durante il rinnovo del contratto!'));
+            }
+        }
+
+        break;
+
+        case 'import':
+
+        $rs = $dbo->fetchArray('SELECT * FROM co_contratti_tipiintervento WHERE idcontratto = '.prepare(post('idcontratto')).' AND idtipointervento='.prepare(post('idtipointervento')));
+
+        // Se la riga in_tipiintervento esiste, la aggiorno...
+        if (!empty($rs)) {
+            $result = $dbo->query('UPDATE co_contratti_tipiintervento SET '
+                .' costo_ore=(SELECT costo_orario FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), '
+                .' costo_km=(SELECT costo_km FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), '
+                .' costo_dirittochiamata=(SELECT costo_diritto_chiamata FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), '
+                .' costo_ore_tecnico=(SELECT costo_orario_tecnico FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), '
+                .' costo_km_tecnico=(SELECT costo_km_tecnico FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), '
+                .' costo_dirittochiamata_tecnico=(SELECT costo_diritto_chiamata_tecnico FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).') '
+                .' WHERE idcontratto='.prepare(post('idcontratto')).' AND idtipointervento='.prepare(post('idtipointervento')));
+
+            if ($result) {
+                flash()->info(tr('Informazioni tariffe salvate correttamente!'));
+            } else {
+                flash()->error(tr("Errore durante l'importazione tariffe!"));
+            }
+        }
+
+        // ...altrimenti la creo
+        else {
+            if ($dbo->query('INSERT INTO co_contratti_tipiintervento( idcontratto, idtipointervento, costo_ore, costo_km, costo_dirittochiamata, costo_ore_tecnico, costo_km_tecnico, costo_dirittochiamata_tecnico ) VALUES( '.prepare(post('idcontratto')).', '.prepare(post('idtipointervento')).', (SELECT costo_orario FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), (SELECT costo_km FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), (SELECT costo_diritto_chiamata FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'),  (SELECT costo_orario_tecnico FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), (SELECT costo_km_tecnico FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).'), (SELECT costo_diritto_chiamata_tecnico FROM in_tipiintervento WHERE idtipointervento='.prepare(post('idtipointervento')).') )')) {
+                flash()->info(tr('Informazioni tariffe salvate correttamente!'));
+            } else {
+                flash()->error(tr("Errore durante l'importazione tariffe!"));
             }
         }
 

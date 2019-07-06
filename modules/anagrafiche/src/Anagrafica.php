@@ -43,10 +43,7 @@ class Anagrafica extends Model
         $model->nome = $nome;
         $model->cognome = $cognome;
 
-        $ultimo = database()->fetchOne('SELECT codice FROM an_anagrafiche ORDER BY CAST(codice AS SIGNED) DESC LIMIT 1');
-        $codice = Generator::generate(setting('Formato codice anagrafica'), $ultimo['codice']);
-
-        $model->codice = $codice;
+        $model->codice = static::getNextCodice();
         $model->id_ritenuta_acconto_vendite = setting("Percentuale ritenuta d'acconto");
         $model->save();
 
@@ -110,7 +107,7 @@ class Anagrafica extends Model
     public static function fixTecnico(Anagrafica $anagrafica)
     {
         // Copio già le tariffe per le varie attività
-        $result = database()->query('INSERT INTO in_tariffe(idtecnico, id_tipo_intervento, costo_ore, costo_km, costo_dirittochiamata, costo_ore_tecnico, costo_km_tecnico, costo_dirittochiamata_tecnico) SELECT '.prepare($model->id).', id, costo_orario, costo_km, costo_diritto_chiamata, costo_orario_tecnico, costo_km_tecnico, costo_diritto_chiamata_tecnico FROM in_tipiintervento');
+        $result = database()->query('INSERT INTO in_tariffe(idtecnico, id_tipo_intervento, costo_ore, costo_km, costo_dirittochiamata, costo_ore_tecnico, costo_km_tecnico, costo_dirittochiamata_tecnico) SELECT '.prepare($anagrafica->id).', id, costo_orario, costo_km, costo_diritto_chiamata, costo_orario_tecnico, costo_km_tecnico, costo_diritto_chiamata_tecnico FROM in_tipiintervento');
 
         if (!$result) {
             flash()->error(tr("Errore durante l'importazione tariffe!"));
@@ -217,7 +214,7 @@ class Anagrafica extends Model
 
     public function setCodiceDestinatarioAttribute($value)
     {
-        if (empty($this->tipo) || $this->tipo == 'Privato' || in_array($value, ['999999', '0000000']) || $this->sedeLegale->nazione->iso2 != 'IT') {
+        if ($this->tipo == 'Privato' || in_array($value, ['999999', '0000000']) || $this->sedeLegale->nazione->iso2 != 'IT') {
             $codice_destinatario = '';
         } else {
             $codice_destinatario = $value;
@@ -254,6 +251,27 @@ class Anagrafica extends Model
     public function getSedeLegaleAttribute()
     {
         return $this->sedi()->where('id', $this->id_sede_legale)->first();
+    }
+
+    // Metodi statici
+
+    /**
+     * Calcola il nuovo codice di anagrafica.
+     *
+     * @return string
+     */
+    public static function getNextCodice()
+    {
+        // Recupero maschera per le anagrafiche
+        $maschera = setting('Formato codice anagrafica');
+
+        $ultimo = Generator::getPreviousFrom($maschera, 'an_anagrafiche', 'codice', [
+            "codice != ''",
+            //'deleted_at IS NULL', // Rimozione per unicità del codice
+        ]);
+        $codice = Generator::generate($maschera, $ultimo);
+
+        return $codice;
     }
 
     protected function fixRagioneSociale()

@@ -264,6 +264,15 @@ function start_datatables() {
                         exportOptions: {
                             modifier: {
                                 selected: true
+                            },
+                            format: {
+                                body: function(data, row, column, node) {
+                                    data = $('<p>' + data + '</p>').text();
+                                    data_edit = data.replace('.', '');
+                                    data_edit = data_edit.replace(',', '.');
+
+                                    return data_edit.match(/^[0-9\.]+$/) ? data_edit : data;
+                                }
                             }
                         }
                     },
@@ -1025,6 +1034,13 @@ function message(element) {
                     crossDomain: true,
                     url: href,
                     data: data,
+                    beforeSend: function (response) {
+                        var before = window[data.before];
+
+                        if (typeof before === 'function') {
+                            before(response);
+                        }
+                    },
                     success: function (response) {
                         var callback = window[data.callback];
 
@@ -1171,4 +1187,128 @@ function ajaxError(xhr, error, thrown) {
         html: globals.translations.errorMessage + ".<br><i>" + data.message + "</i>",
         type: "error",
     })
+}
+
+function executeHook(hook, length){
+    $("#hooks").append('<li id="hook-loader-' + hook.id + '"><a href="#">' + globals.translations.hookExecuting.replace('_NAME_', hook.name) + '</a></li>');
+
+    $.ajax({
+        url: globals.rootdir + "/ajax.php",
+        type: "get",
+        data: {
+            op: "hook",
+            id: hook.id,
+        },
+        success: function(data) {
+            result = JSON.parse(data);
+
+            $("#hook-loader-" + hook.id).remove();
+
+            notification = '<li class="hook-element"><a href="' + (result.link ? result.link : "#") + '"><i class="' + result.icon + '"></i><span class="small" > ' + result.message + '</span></a></li>';
+
+            // Inserimento della notifica
+            hooks_number = $("#hooks-number");
+            number = parseInt(hooks_number.text());
+            number = isNaN(number) ? 0 : number;
+
+            if(result.notify) {
+                number++;
+
+                $("#hooks").prepend(notification);
+            } else {
+                //$("#hooks").append(notification);
+            }
+
+            hooks_number.text(number);
+
+            // Contatore dell'esecuzione degli hook
+            hooks_counter = $("#hooks-counter");
+            counter = parseInt(hooks_counter.text());
+            counter++;
+            hooks_counter.text(counter);
+
+            // Rimozione eventuale della rotella di caricamento
+            if(counter == hooks.length) {
+                $("#hooks-loading").hide();
+
+                if (number > 1){
+                    hookMessage = globals.translations.hookMultiple.replace('_NUM_', number);
+                }else if(number == 1){
+                    hookMessage = globals.translations.hookSingle;
+                }else {
+                    hookMessage = globals.translations.hookNone;
+                }
+
+                $("#hooks-header").text(hookMessage);
+            }
+        },
+    });
+}
+
+function submitAjax(form, data = {}, callback = null, errorCallback = null) {
+    valid = $(form).parsley().validate();
+
+    if(valid) {
+        $("#main_loading").show();
+
+        content_was_modified = false;
+
+        // Fix per gli id di default
+        data.id_module = data.id_module ? data.id_module : globals.id_module;
+        data.id_record = data.id_record ? data.id_record : globals.id_record;
+        data.id_plugin = data.id_plugin ? data.id_plugin : globals.id_plugin;
+
+        // Invio dei dati
+        $(form).ajaxSubmit({
+            url: globals.rootdir + "/actions.php",
+            data: data,
+            type: "post",
+            success: function (data) {
+                data = data.trim();
+
+                if (data) {
+                    response = JSON.parse(data);
+                    callback(response);
+                }
+
+                $("#main_loading").fadeOut();
+
+                // Visualizzazione messaggi
+                $.ajax({
+                    url: globals.rootdir + '/ajax.php',
+                    type: 'get',
+                    data: {
+                        op: 'flash',
+                    },
+                    success: function (flash) {
+                        messages = JSON.parse(flash);
+
+                        info = messages.info ? messages.info : {};
+                        Object.keys(info).forEach(function (element) {
+                            toastr["success"](info[element]);
+                        });
+
+                        warning = messages.warning ? messages.warning : {};
+                        Object.keys(warning).forEach(function (element) {
+                            toastr["warning"](warning[element]);
+                        });
+
+                        error = messages.error ? messages.error : {};
+                        Object.keys(error).forEach(function (element) {
+                            toastr["error"](error[element]);
+                        });
+                    }
+                });
+            },
+            error: function (data) {
+                $("#main_loading").fadeOut();
+
+                toastr["error"](data);
+
+                errorCallback(data);
+            }
+        });
+    }
+
+    return valid;
 }

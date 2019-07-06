@@ -10,7 +10,7 @@
 		</div>
 
 		<div class="col-md-4">
-			{[ "type": "number", "label": "<?php echo tr('Codice'); ?>", "name": "codice", "decimals":0, "min-value":"0", "max-value":"999", "maxlength": 3 ]}
+			{[ "type": "number", "label": "<?php echo tr('Codice'); ?>", "name": "codice", "required": 1, "decimals":0, "min-value":"0", "max-value":"999", "maxlength": 3 ]}
 		</div>
 	</div>
 

@@ -5,6 +5,7 @@ namespace Models;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Common\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Traits\StoreTrait;
 
 class Hook extends Model
@@ -13,8 +14,22 @@ class Hook extends Model
 
     protected $table = 'zz_hooks';
 
+    protected $appends = [
+        'permission',
+    ];
+
     protected $cached = null;
     protected $use_cached = null;
+
+    /**
+     * Restituisce i permessi relativi all'account in utilizzo.
+     *
+     * @return string
+     */
+    public function getPermissionAttribute()
+    {
+        return $this->module->permission;
+    }
 
     public function getIsCachedAttribute()
     {
@@ -51,24 +66,29 @@ class Hook extends Model
         } else {
             $results = $hook->manage();
 
-            // Rimozione cache precedente
-            $database = database();
-            $database->delete('zz_hook_cache', [
-                'hook_id' => $this->id,
-            ]);
-
-            // Aggiunta del risultato come cache
-            $cache = json_encode($results);
-            $database->insert('zz_hook_cache', [
-                'hook_id' => $this->id,
-                'results' => $cache,
-            ]);
-
-            $this->cached = null;
-            $this->getCacheAttribute();
+            $this->updateCache($results);
         }
 
         return $hook->response($results);
+    }
+
+    public function updateCache($results)
+    {
+        // Rimozione cache precedente
+        $database = database();
+        $database->delete('zz_hook_cache', [
+            'hook_id' => $this->id,
+        ]);
+
+        // Aggiunta del risultato come cache
+        $cache = json_encode($results);
+        $database->insert('zz_hook_cache', [
+            'hook_id' => $this->id,
+            'results' => $cache,
+        ]);
+
+        $this->cached = null;
+        $this->getCacheAttribute();
     }
 
     public function getCacheAttribute()
@@ -80,5 +100,21 @@ class Hook extends Model
         }
 
         return $this->cached;
+    }
+
+    /* Relazioni Eloquent */
+
+    public function module()
+    {
+        return $this->belongsTo(Module::class, 'id_module');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('enabled', function (Builder $builder) {
+            $builder->where('enabled', true);
+        });
     }
 }

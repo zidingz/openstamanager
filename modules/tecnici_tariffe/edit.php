@@ -2,7 +2,7 @@
 
 $tipi_interventi = $dbo->fetchArray('SELECT * FROM in_tipiintervento ORDER BY descrizione');
 
-$tecnici = $dbo->fetchArray("SELECT idanagrafica, ragione_sociale FROM an_anagrafiche WHERE idanagrafica IN (
+$tecnici = $dbo->fetchArray("SELECT idanagrafica, ragione_sociale, colore FROM an_anagrafiche WHERE idanagrafica IN (
     SELECT idanagrafica FROM an_tipianagrafiche_anagrafiche WHERE id_tipo_anagrafica IN (
         SELECT id FROM an_tipianagrafiche WHERE descrizione = 'Tecnico'
     )
@@ -12,14 +12,24 @@ if (!empty($tecnici)) {
     echo '
 <form action="" method="post" id="edit-form">
 	<input type="hidden" name="op" value="update">
-	<input type="hidden" name="backto" value="record-list">
-
-	<table class="table table-striped table-condensed">';
+	<input type="hidden" name="backto" value="record-list">';
 
     foreach ($tecnici as $tecnico) {
-        echo '
+        echo '<div class="box box-info collapsable" style="'.((strtolower($tecnico['colore']) == '#ffffff' or empty($tecnico['colore'])) ? '' : 'border-color: '.$tecnico['colore']).'">
+
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-user"></i> '.$tecnico['ragione_sociale'].'</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            </div>
+        </div>
+
+        <div class="box-body">
+
+        <table class="table table-striped table-condensed">
+
         <tr>
-            <th>'.$tecnico['ragione_sociale'].'</th>
+
             <th>'.tr('Attività').'</th>
             <th>'.tr('Addebito orario').' <span class="tip" title="'.tr('Addebito al cliente').'"><i class="fa fa-question-circle-o"></i></span></th>
             <th>'.tr('Addebito km').' <span class="tip" title="'.tr('Addebito al cliente').'"><i class="fa fa-question-circle-o"></i></span></th>
@@ -38,7 +48,7 @@ if (!empty($tecnici)) {
 
             echo '
         <tr>
-            <td></td>
+
             <td>'.$tipo_intervento['descrizione'].'</td>
 
             <td>
@@ -71,11 +81,13 @@ if (!empty($tecnici)) {
             </td>
         </tr>';
         }
+        echo '
+        </table>
+        </div>
+        </div>';
     }
 
     echo '
-    </table>
-
     <div class="float-right">
         <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> '.tr('Salva modifiche').'</button>
     </div>

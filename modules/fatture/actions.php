@@ -30,6 +30,7 @@ switch (post('op')) {
         $fattura = Fattura::build($anagrafica, $tipo, $data, $id_segment);
         $id_record = $fattura->id;
 
+        aggiorna_sedi_movimenti('documenti', $id_record);
         flash()->info(tr('Aggiunta fattura numero _NUM_!', [
             '_NUM_' => $fattura->numero,
         ]));
@@ -39,7 +40,9 @@ switch (post('op')) {
     case 'update':
         if (post('id_record') !== null) {
             $fattura->data = post('data');
-            $fattura->data_ricezione = post('data_ricezione');
+            $fattura->data_registrazione = post('data_registrazione');
+            $fattura->data_competenza = post('data_competenza');
+
             $fattura->numero_esterno = post('numero_esterno');
             $fattura->note = post('note');
             $fattura->note_aggiuntive = post('note_aggiuntive');
@@ -55,7 +58,8 @@ switch (post('op')) {
             $fattura->idporto = post('idporto');
             $fattura->idaspettobeni = post('idaspettobeni');
             $fattura->idvettore = post('idvettore');
-            $fattura->idsede = post('idsede');
+            $fattura->idsede_partenza = post('idsede_partenza');
+            $fattura->idsede_destinazione = post('idsede_destinazione');
             $fattura->idconto = post('idconto');
             $fattura->split_payment = post('split_payment') ?: 0;
             $fattura->is_fattura_conto_terzi = post('is_fattura_conto_terzi') ?: 0;
@@ -89,7 +93,8 @@ switch (post('op')) {
             // Ricalcolo inps, ritenuta e bollo (se la fattura non è stata pagata)
             ricalcola_costiagg_fattura($id_record);
 
-            $stato = $fattura->stato;
+            $stato = $dbo->select('co_statidocumento', 'descrizione', ['id' => post('idstatodocumento')])[0];
+
             // Elimino la scadenza e tutti i movimenti, poi se la fattura è emessa le ricalcolo
             if ($stato['descrizione'] == 'Bozza' or $stato['descrizione'] == 'Annullata') {
                 elimina_scadenza($id_record);
@@ -110,6 +115,8 @@ switch (post('op')) {
                 aggiungi_scadenza($id_record);
                 aggiungi_movimento($id_record, $dir);
             }
+
+            aggiorna_sedi_movimenti('documenti', $id_record);
 
             flash()->info(tr('Fattura modificata correttamente!'));
         }
@@ -207,7 +214,7 @@ switch (post('op')) {
             }
 
             // Duplicazione intestazione
-            $dbo->query('INSERT INTO co_documenti(numero, numero_esterno, data, idanagrafica, idcausalet, idspedizione, idporto, idaspettobeni, idvettore, n_colli, idsede, id_tipo_documento, id_stato, idpagamento, idconto, idrivalsainps, idritenutaacconto, rivalsainps, iva_rivalsainps, ritenutaacconto, bollo, note, note_aggiuntive, buono_ordine, id_segment) VALUES('.prepare($numero).', '.prepare($numero_esterno).', NOW(), '.prepare($rs[0]['idanagrafica']).', '.prepare($rs[0]['idcausalet']).', '.prepare($rs[0]['idspedizione']).', '.prepare($rs[0]['idporto']).', '.prepare($rs[0]['idaspettobeni']).', '.prepare($rs[0]['idvettore']).', '.prepare($rs[0]['n_colli']).', '.prepare($rs[0]['idsede']).', '.prepare($rs[0]['id_tipo_documento']).', (SELECT id FROM co_statidocumento WHERE descrizione=\'Bozza\'), '.prepare($rs[0]['idpagamento']).', '.prepare($rs[0]['idconto']).', '.prepare($rs[0]['idrivalsainps']).', '.prepare($rs[0]['idritenutaacconto']).', '.prepare($rs[0]['rivalsainps']).', '.prepare($rs[0]['iva_rivalsainps']).', '.prepare($rs[0]['ritenutaacconto']).', '.prepare($rs[0]['bollo']).', '.prepare($rs[0]['note']).', '.prepare($rs[0]['note_aggiuntive']).', '.prepare($rs[0]['buono_ordine']).', '.prepare($rs[0]['id_segment']).')');
+            $dbo->query('INSERT INTO co_documenti(numero, numero_esterno, data, idanagrafica, idcausalet, idspedizione, idporto, idaspettobeni, idvettore, n_colli, idsede_partenza, idsede_destinazione, id_tipo_documento, id_stato, idpagamento, idconto, idrivalsainps, idritenutaacconto, rivalsainps, iva_rivalsainps, ritenutaacconto, bollo, note, note_aggiuntive, buono_ordine, id_segment) VALUES('.prepare($numero).', '.prepare($numero_esterno).', NOW(), '.prepare($rs[0]['idanagrafica']).', '.prepare($rs[0]['idcausalet']).', '.prepare($rs[0]['idspedizione']).', '.prepare($rs[0]['idporto']).', '.prepare($rs[0]['idaspettobeni']).', '.prepare($rs[0]['idvettore']).', '.prepare($rs[0]['n_colli']).', '.prepare($rs[0]['idsede_partenza']).', '.prepare($rs[0]['idsede_destinazione']).', '.prepare($rs[0]['id_tipo_documento']).', (SELECT id FROM co_statidocumento WHERE descrizione=\'Bozza\'), '.prepare($rs[0]['idpagamento']).', '.prepare($rs[0]['idconto']).', '.prepare($rs[0]['idrivalsainps']).', '.prepare($rs[0]['idritenutaacconto']).', '.prepare($rs[0]['rivalsainps']).', '.prepare($rs[0]['iva_rivalsainps']).', '.prepare($rs[0]['ritenutaacconto']).', '.prepare($rs[0]['bollo']).', '.prepare($rs[0]['note']).', '.prepare($rs[0]['note_aggiuntive']).', '.prepare($rs[0]['buono_ordine']).', '.prepare($rs[0]['id_segment']).')');
             $id_record = $dbo->lastInsertedID();
 
             // TODO: sistemare la duplicazione delle righe generiche e degli articoli, ignorando interventi, ddt, ordini, preventivi
@@ -216,12 +223,13 @@ switch (post('op')) {
                 if (!empty($riga['idarticolo'])) {
                     add_articolo_infattura($id_record, $riga['idarticolo'], $riga['descrizione'], $riga['idiva'], $riga['qta'], $riga['subtotale'], $riga['sconto'], $riga['sconto_unitario'], $riga['tipo_sconto'], $riga['idintervento'], $riga['idconto'], $riga['um']);
                 } else {
-                    $dbo->query('INSERT INTO co_righe_documenti(iddocumento, idordine, idddt, idintervento, idarticolo, idpreventivo, idcontratto, is_descrizione, idtecnico, idagente, idautomezzo, idconto, idiva, desc_iva, iva, iva_indetraibile, descrizione, subtotale, sconto, sconto_unitario, tipo_sconto, idritenutaacconto, ritenutaacconto, idrivalsainps, rivalsainps, um, qta, `order`) VALUES('.prepare($id_record).', 0, 0, 0, '.prepare($riga['idarticolo']).', '.prepare($riga['idpreventivo']).', '.prepare($riga['idcontratto']).', '.prepare($riga['is_descrizione']).', '.prepare($riga['idtecnico']).', '.prepare($riga['idagente']).', '.prepare($riga['idautomezzo']).', '.prepare($riga['idconto']).', '.prepare($riga['idiva']).', '.prepare($riga['desc_iva']).', '.prepare($riga['iva']).', '.prepare($riga['iva_indetraibile']).', '.prepare($riga['descrizione']).', '.prepare($riga['subtotale']).', '.prepare($riga['sconto']).', '.prepare($riga['sconto_unitario']).', '.prepare($riga['tipo_sconto']).', '.prepare($riga['idritenutaacconto']).', '.prepare($riga['ritenutaacconto']).', '.prepare($riga['idrivalsainps']).', '.prepare($riga['rivalsainps']).', '.prepare($riga['um']).', '.prepare($riga['qta']).', (SELECT IFNULL(MAX(`order`) + 1, 0) FROM co_righe_documenti AS t WHERE iddocumento='.prepare($id_record).'))');
+                    $dbo->query('INSERT INTO co_righe_documenti(iddocumento, idordine, idddt, idintervento, idarticolo, idpreventivo, idcontratto, is_descrizione, idtecnico, idagente, idconto, idiva, desc_iva, iva, iva_indetraibile, descrizione, subtotale, sconto, sconto_unitario, tipo_sconto, idritenutaacconto, ritenutaacconto, idrivalsainps, rivalsainps, um, qta, `order`) VALUES('.prepare($id_record).', 0, 0, 0, '.prepare($riga['idarticolo']).', '.prepare($riga['idpreventivo']).', '.prepare($riga['idcontratto']).', '.prepare($riga['is_descrizione']).', '.prepare($riga['idtecnico']).', '.prepare($riga['idagente']).', '.prepare($riga['idconto']).', '.prepare($riga['idiva']).', '.prepare($riga['desc_iva']).', '.prepare($riga['iva']).', '.prepare($riga['iva_indetraibile']).', '.prepare($riga['descrizione']).', '.prepare($riga['subtotale']).', '.prepare($riga['sconto']).', '.prepare($riga['sconto_unitario']).', '.prepare($riga['tipo_sconto']).', '.prepare($riga['idritenutaacconto']).', '.prepare($riga['ritenutaacconto']).', '.prepare($riga['idrivalsainps']).', '.prepare($riga['rivalsainps']).', '.prepare($riga['um']).', '.prepare($riga['qta']).', (SELECT IFNULL(MAX(`order`) + 1, 0) FROM co_righe_documenti AS t WHERE iddocumento='.prepare($id_record).'))');
                 }
             }
 
             // Ricalcolo inps, ritenuta e bollo (se la fattura non è stata pagata)
             ricalcola_costiagg_fattura($id_record);
+            aggiorna_sedi_movimenti('documenti', $id_record);
 
             flash()->info(tr('Fattura duplicata correttamente!'));
         }
@@ -303,6 +311,7 @@ switch (post('op')) {
 
         $articolo->save();
 
+        aggiorna_sedi_movimenti('documenti', $id_record);
         if (post('idriga') != null) {
             flash()->info(tr('Articolo modificato!'));
         } else {
@@ -476,6 +485,7 @@ switch (post('op')) {
                 ricalcola_costiagg_fattura($id_record);
             }
 
+            aggiorna_sedi_movimenti('documenti', $id_record);
             flash()->info(tr('Articolo rimosso!'));
         }
         break;
@@ -766,6 +776,7 @@ switch (post('op')) {
         $ordine->save();
 
         ricalcola_costiagg_fattura($id_record);
+        aggiorna_sedi_movimenti('documenti', $id_record);
 
         flash()->info(tr('Ordine _NUM_ aggiunto!', [
             '_NUM_' => $ordine->numero,
@@ -833,6 +844,7 @@ switch (post('op')) {
         $ddt->save();
 
         ricalcola_costiagg_fattura($id_record);
+        aggiorna_sedi_movimenti('documenti', $id_record);
 
         flash()->info(tr('DDT _NUM_ aggiunto!', [
             '_NUM_' => $ddt->numero,
@@ -905,6 +917,7 @@ switch (post('op')) {
         }
 
         ricalcola_costiagg_fattura($id_record);
+        aggiorna_sedi_movimenti('documenti', $id_record);
 
         flash()->info(tr('Preventivo _NUM_ aggiunto!', [
             '_NUM_' => $preventivo->numero,
@@ -977,6 +990,7 @@ switch (post('op')) {
         }
 
         ricalcola_costiagg_fattura($id_record);
+        aggiorna_sedi_movimenti('documenti', $id_record);
 
         flash()->info(tr('Contratto _NUM_ aggiunto!', [
             '_NUM_' => $contratto->numero,
@@ -997,7 +1011,8 @@ switch (post('op')) {
         $nota->idconto = $fattura->idconto;
         $nota->idpagamento = $fattura->idpagamento;
         $nota->idbanca = $fattura->idbanca;
-        $nota->idsede = $fattura->idsede;
+        $nota->idsede_partenza = $fattura->idsede_partenza;
+        $nota->idsede_destinazione = $fattura->idsede_destinazione;
         $nota->save();
 
         $righe = $fattura->getRighe();
@@ -1023,6 +1038,7 @@ switch (post('op')) {
         }
 
         $id_record = $nota->id;
+        aggiorna_sedi_movimenti('documenti', $id_record);
 
         break;
 
@@ -1051,10 +1067,12 @@ if (get('op') == 'nota_addebito') {
     $nota->idconto = $fattura->idconto;
     $nota->idpagamento = $fattura->idpagamento;
     $nota->idbanca = $fattura->idbanca;
-    $nota->idsede = $fattura->idsede;
+    $nota->idsede_partenza = $fattura->idsede_partenza;
+    $nota->idsede_destinazione = $fattura->idsede_destinazione;
     $nota->save();
 
     $id_record = $nota->id;
+    aggiorna_sedi_movimenti('documenti', $id_record);
 }
 
 // Aggiornamento stato dei ddt presenti in questa fattura in base alle quantità totali evase

@@ -1,6 +1,4 @@
-<?php
-
-?><form action="" method="post" id="edit-form">
+<form action="" method="post" id="edit-form">
 	<input type="hidden" name="op" value="update">
 	<input type="hidden" name="backto" value="record-edit">
 	<input type="hidden" name="id_record" value="<?php echo $id_record; ?>">
@@ -22,7 +20,7 @@
 				</div>
 
 				<div class="col-md-3">
-					{[ "type": "select", "label": "<?php echo tr('Sede'); ?>", "name": "idsede","value": "$idsede$", "ajax-source": "sedi", "placeholder": "Sede legale", "readonly": "<?php echo $record['flag_completato']; ?>", "ajax-info": "idanagrafica=$idanagrafica$" ]}
+					{[ "type": "select", "label": "<?php echo tr('Sede destinazione'); ?>", "name": "idsede_destinazione","value": "$idsede_destinazione$", "ajax-source": "sedi", "placeholder": "Sede legale", "readonly": "<?php echo $record['flag_completato']; ?>", "ajax-info": "idanagrafica=$idanagrafica$" ]}
 				</div>
 
 				<div class="col-md-3">
@@ -83,7 +81,7 @@
 				<div class="col-md-3">
 					{[ "type": "timestamp", "label": "<?php echo tr('Data/ora richiesta'); ?>", "name": "data_richiesta", "required": 1, "value": "$data_richiesta$", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
 				</div>
-				
+
 				<div class="col-md-3">
 					{[ "type": "timestamp", "label": "<?php echo tr('Data/ora scadenza'); ?>", "name": "data_scadenza", "required": 0, "value": "$data_scadenza$", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
 				</div>
@@ -102,10 +100,6 @@
 
 				<div class="col-md-4">
 					{[ "type": "select", "label": "<?php echo tr('Stato'); ?>", "name": "id_stato", "required": 1, "values": "query=SELECT id, descrizione, colore AS _bgcolor_ FROM in_statiintervento WHERE deleted_at IS NULL", "value": "$id_stato$" ]}
-				</div>
-
-				<div class="col-md-4">
-					{[ "type": "select", "label": "<?php echo tr('Automezzo'); ?>", "name": "idautomezzo", "values": "query=SELECT id, CONCAT_WS( ')', CONCAT_WS( ' (', CONCAT_WS( ', ', nome, descrizione), targa ), '' ) AS descrizione FROM dt_automezzi", "help": "<?php echo tr('Se selezionato i materiali verranno presi prima dall&rsquo;automezzo e poi dal magazzino centrale.'); ?>", "value": "$idautomezzo$", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
 				</div>
 			</div>
 
@@ -205,14 +199,22 @@
 		</div>
 	</div>
 
-
+<?php
+// Conteggio numero articoli intervento per eventuale blocco della sede di partenza
+$articoli = $dbo->fetchArray('SELECT mg_articoli_interventi.id FROM mg_articoli_interventi INNER JOIN in_interventi ON in_interventi.id=mg_articoli_interventi.idintervento WHERE in_interventi.id='.prepare($id_record));
+?>
     <!-- ARTICOLI -->
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title"><?php echo tr('Materiale utilizzato'); ?></h3>
         </div>
-
         <div class="card-body">
+			<div class="row">
+				<div class="col-md-3">
+					{[ "type": "select", "label": "<?php echo tr('Partenza merce'); ?>", "name": "idsede_partenza",  "ajax-source": "sedi_azienda",  "value": "$idsede_partenza$", "readonly": "<?php echo ($record['flag_completato'] || sizeof($articoli)) ? 1 : 0; ?>", "ajax-info": "idanagrafica=$idanagrafica$" ]}
+				</div>
+			</div>
+
             <div id="articoli">
 				<?php
                     if (file_exists($docroot.'/modules/interventi/custom/ajax_articoli.php')) {
@@ -225,7 +227,7 @@
 
             <?php if (!$record['flag_completato']) {
                     ?>
-                <button type="button" class="btn btn-primary" onclick="launch_modal( '<?php echo tr('Aggiungi articolo'); ?>', '<?php echo $rootdir; ?>/modules/interventi/add_articolo.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>&idriga=0&idautomezzo='+$('#idautomezzo').find(':selected').val(), 1);"><i class="fa fa-plus"></i> <?php echo tr('Aggiungi articolo'); ?>...</button>
+                <button type="button" class="btn btn-primary" onclick="launch_modal( '<?php echo tr('Aggiungi articolo'); ?>', '<?php echo $rootdir; ?>/modules/interventi/add_articolo.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>&idriga=0', 1);"><i class="fa fa-plus"></i> <?php echo tr('Aggiungi articolo'); ?>...</button>
             <?php
                 } ?>
         </div>
@@ -363,15 +365,15 @@ include $structure->filepath('ajax_righe.php');
 			//session_set('superselect,idzona', $(this).selectData().idzona, 0);
 		}
 	});
-	
+
 	$('#codice_cig, #codice_cup').bind("keyup change", function(e) {
-		
+
 		if ($('#codice_cig').val() == '' && $('#codice_cup').val() == '' ){
 			$('#id_documento_fe').prop('required', false);
 		}else{
 			$('#id_documento_fe').prop('required', true);
 		}
-	
+
 	});
 
 </script>

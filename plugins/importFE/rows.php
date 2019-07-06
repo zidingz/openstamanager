@@ -35,7 +35,7 @@ echo '
     <div class="row" >
 		<div class="col-md-6">
 			<h4>'.
-    $ragione_sociale.' '.((empty($idanagrafica = $dbo->fetchOne('SELECT idanagrafica FROM an_anagrafiche WHERE ( codice_fiscale = '.prepare($codice_fiscale).' AND codice_fiscale != \'\' ) OR ( piva = '.prepare($partita_iva).' AND piva != \'\' ) ')['idanagrafica'])) ? '<span class="badge badge-success" >'.tr('Nuova').'</span>' : '<small>'.Modules::link('Anagrafiche', $idanagrafica, '', null, '')).'</small>'.'<br>
+    $ragione_sociale.' '.((empty($idanagrafica = $dbo->fetchOne('SELECT idanagrafica FROM an_anagrafiche WHERE ( codice_fiscale = '.prepare($codice_fiscale).' AND codice_fiscale != \'\' ) OR ( piva = '.prepare($partita_iva).' AND piva != \'\' ) ')['idanagrafica'])) ? '<span class="badge badge-success" >'.tr('Nuova anagrafica').'</span>' : '<small>'.Modules::link('Anagrafiche', $idanagrafica, '', null, '')).'</small>'.'<br>
 				<small>
 					'.(!empty($codice_fiscale) ? (tr('Codice Fiscale').': '.$codice_fiscale.'<br>') : '').'
 					'.(!empty($partita_iva) ? (tr('Partita IVA').': '.$partita_iva.'<br>') : '').'
@@ -77,6 +77,14 @@ echo '
 echo '
         <div class="col-md-6">
             {[ "type": "select", "label": "'.tr('Sezionale').'", "name": "id_segment", "required": 1, "values": "query=SELECT id, name AS descrizione FROM zz_segments WHERE id_module='.$id_module.' ORDER BY name", "value": "'.$_SESSION['module_'.$id_module]['id_segment'].'" ]}
+        </div>
+    </div>';
+
+// Data ricezione
+echo '
+    <div class="row" >
+		<div class="col-md-6">
+            {[ "type": "date", "label": "'.tr('Data ricezione').'", "name": "data_registrazione", "required": 0, "value": "" ]}
         </div>
     </div>';
 
@@ -176,9 +184,9 @@ if (!empty($righe)) {
             $riga['CodiceArticolo'][0]['CodiceTipo'] = $riga['CodiceArticolo']['CodiceTipo'];
         }
 
-        foreach ($riga['CodiceArticolo'] as $key => $item) {
-            foreach ($item as $key => $name) {
-                if ($key == 'CodiceValore') {
+        foreach ($riga['CodiceArticolo'] as $key2 => $item) {
+            foreach ($item as $key2 => $name) {
+                if ($key2 == 'CodiceValore') {
                     if (!empty($item['CodiceValore'])) {
                         $codici_articoli .= '<small>'.$item['CodiceValore'].' ('.$item['CodiceTipo'].')</small>';
 
@@ -214,7 +222,7 @@ if (!empty($righe)) {
                 {[ "type": "select", "name": "conto['.$key.']", "ajax-source": "conti-acquisti", "required": 1, "placeholder": "Conto acquisti" ]}
             </td>
             <td>
-                {[ "type": "select", "name": "articoli['.$key.']", "ajax-source": "articoli", "class": "", "icon-after": "add|'.Modules::get('Articoli')['id'].'" ]}
+                {[ "type": "select", "name": "articoli['.$key.']", "ajax-source": "articoli", "class": "", "icon-after": "add|'.Modules::get('Articoli')['id'].'|codice='.htmlentities($riga['CodiceArticolo'][0]['CodiceValore']).'&descrizione='.htmlentities($riga['Descrizione']).'" ]}
             </td>
         </tr>';
     }

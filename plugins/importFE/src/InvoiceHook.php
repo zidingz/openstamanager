@@ -17,23 +17,32 @@ class InvoiceHook extends HookManager
     public function response($results)
     {
         $count = count($results);
+        $notify = false;
 
         $module = Modules::get('Fatture di acquisto');
-        $plugin = $module->plugins->first(function ($value, $key) {
-            return $value->name == 'Fatturazione Elettronica';
-        });
+        $plugins = $module->plugins;
 
-        $link = pathFor('module', [
-            'module_id' => $module->id,
-        ]).'#tab_'.$plugin->id;
+        if (!empty($plugins)) {
+            $notify = !empty($count);
+
+            $plugin = $plugins->first(function ($value, $key) {
+                return $value->name == 'Fatturazione Elettronica';
+            });
+
+            $link = pathFor('module', [
+                'module_id' => $module->id,
+            ]).'#tab_'.$plugin->id;
+        }
+
+        $message = tr('Ci sono _NUM_ fatture passive da importare', [
+            '_NUM_' => $count,
+        ]);
 
         return [
-            'icon' => 'fa fa-file-text-o',
+            'icon' => 'fa fa-file-text-o text-yellow',
             'link' => $link,
-            'message' => tr('Ci sono _NUM_ fatture remote da importare', [
-                '_NUM_' => $count,
-            ]),
-            'notify' => !empty($count),
+            'message' => $message,
+            'notify' => $notify,
         ];
     }
 }

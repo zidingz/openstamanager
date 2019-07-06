@@ -137,15 +137,15 @@ switch (post('op')) {
         $mese = $_POST['mese'];
 
         // Righe inserite
-        $qp = "SELECT co_promemoria.id, idcontratto, richiesta, DATE_FORMAT( data_richiesta, '%m%Y') AS mese, data_richiesta, an_anagrafiche.ragione_sociale, 'promemoria' AS ref, (SELECT descrizione FROM in_tipiintervento WHERE in_tipiintervento.id=co_promemoria.id_tipo_intervento) AS tipointervento FROM (co_promemoria INNER JOIN co_contratti ON co_promemoria.idcontratto=co_contratti.id) INNER JOIN an_anagrafiche ON co_contratti.idanagrafica=an_anagrafiche.idanagrafica WHERE idcontratto IN( SELECT id FROM co_contratti WHERE id_stato IN(SELECT id FROM co_staticontratti WHERE is_pianificabile = 1) ) AND idintervento IS NULL
+        $qp = "SELECT co_promemoria.id, idcontratto, richiesta,co_contratti.nome AS nomecontratto, DATE_FORMAT( data_richiesta, '%m%Y') AS mese, data_richiesta, an_anagrafiche.ragione_sociale, 'promemoria' AS ref, (SELECT descrizione FROM in_tipiintervento WHERE in_tipiintervento.id=co_promemoria.id_tipo_intervento) AS tipointervento FROM (co_promemoria INNER JOIN co_contratti ON co_promemoria.idcontratto=co_contratti.id) INNER JOIN an_anagrafiche ON co_contratti.idanagrafica=an_anagrafiche.idanagrafica WHERE idcontratto IN( SELECT id FROM co_contratti WHERE id_stato IN(SELECT id FROM co_staticontratti WHERE is_pianificabile = 1) ) AND idintervento IS NULL
 
-        UNION SELECT co_ordiniservizio.id, idcontratto, '', DATE_FORMAT( data_scadenza, '%m%Y') AS mese, data_scadenza, an_anagrafiche.ragione_sociale, 'ordine' AS ref, (SELECT descrizione FROM in_tipiintervento WHERE id='ODS') AS tipointervento FROM (co_ordiniservizio INNER JOIN co_contratti ON co_ordiniservizio.idcontratto=co_contratti.id) INNER JOIN an_anagrafiche ON co_contratti.idanagrafica=an_anagrafiche.idanagrafica WHERE idcontratto IN( SELECT id FROM co_contratti WHERE id_stato IN(SELECT id FROM co_staticontratti WHERE is_pianificabile = 1) ) AND idintervento IS NULL
+        UNION SELECT co_ordiniservizio.id, idcontratto, '', co_contratti.nome AS nomecontratto, DATE_FORMAT( data_scadenza, '%m%Y') AS mese, data_scadenza, an_anagrafiche.ragione_sociale, 'ordine' AS ref, (SELECT descrizione FROM in_tipiintervento WHERE id='ODS') AS tipointervento FROM (co_ordiniservizio INNER JOIN co_contratti ON co_ordiniservizio.idcontratto=co_contratti.id) INNER JOIN an_anagrafiche ON co_contratti.idanagrafica=an_anagrafiche.idanagrafica WHERE idcontratto IN( SELECT id FROM co_contratti WHERE id_stato IN(SELECT id FROM co_staticontratti WHERE is_pianificabile = 1) ) AND idintervento IS NULL
 
         ORDER BY data_richiesta ASC";
 
         $rsp = $dbo->fetchArray($qp);
 
-        $interventi = $dbo->fetchArray("SELECT id, richiesta, id_contratto AS idcontratto, DATE_FORMAT(data_richiesta,'%m%Y') AS mese, data_richiesta, an_anagrafiche.ragione_sociale, 'intervento' AS ref, (SELECT descrizione FROM in_tipiintervento WHERE in_tipiintervento.id=in_interventi.id_tipo_intervento) AS tipointervento FROM in_interventi INNER JOIN an_anagrafiche ON in_interventi.idanagrafica=an_anagrafiche.idanagrafica WHERE (SELECT COUNT(*) FROM in_interventi_tecnici WHERE in_interventi_tecnici.idintervento = in_interventi.id) = 0 ORDER BY data_richiesta ASC");
+        $interventi = $dbo->fetchArray("SELECT id, richiesta, id_contratto AS idcontratto, DATE_FORMAT(data_richiesta,'%m%Y') AS mese, data_richiesta, data_scadenza, an_anagrafiche.ragione_sociale, 'intervento' AS ref, (SELECT descrizione FROM in_tipiintervento WHERE in_tipiintervento.id=in_interventi.id_tipo_intervento) AS tipointervento FROM in_interventi INNER JOIN an_anagrafiche ON in_interventi.idanagrafica=an_anagrafiche.idanagrafica WHERE (SELECT COUNT(*) FROM in_interventi_tecnici WHERE in_interventi_tecnici.idintervento = in_interventi.id) = 0 ORDER BY data_richiesta ASC");
 
         $rsp = array_merge($rsp, $interventi);
 
@@ -163,10 +163,19 @@ switch (post('op')) {
 
                     echo '
                     <div class="fc-event '.$class.'" data-id="'.$r['id'].'" data-idcontratto="'.$r['idcontratto'].'" data-ref="'.$r['ref'].'">'.(($r['ref'] == 'intervento') ? '<i class=\'fa fa-wrench float-right\'></i>' : '<i class=\'fa fa-file-text-o float-right\'></i>').'
-                        <b>'.$r['ragione_sociale'].'</b><br>'.Translator::dateToLocale($r['data_richiesta']).' ('.$r['tipointervento'].')'.(!empty($r['richiesta']) ? ' - '.$r['richiesta'] : '').'
+                        <b>'.$r['ragione_sociale'].'</b><br>'.Translator::dateToLocale($r['data_richiesta']).' ('.$r['tipointervento'].')<div class="request" >'.(!empty($r['richiesta']) ? ' - '.$r['richiesta'] : '').'</div>'.(!empty($r['nomecontratto']) ? '<br><b>Contratto:</b> '.$r['nomecontratto'] : '').
+                        (!empty($r['data_scadenza'] and $r['data_scadenza'] != '0000-00-00 00:00:00') ? '<br><small>'.tr('entro il: ').''.Translator::dateToLocale($r['data_scadenza']).'</small>' : '').'
                     </div>';
                 }
-            }
+            } ?>
+            <script type="text/javascript">
+                $(".request").shorten({
+                    moreText: '<?php echo tr('Mostra tutto'); ?>',
+                    lessText: '<?php echo tr('Comprimi'); ?>',
+                    showChars : 200
+                });
+            </script>
+            <?php
         } else {
             echo '<br><small class="form-text">'.tr('Non ci sono interventi da pianificare per questo mese').'</small>';
         }

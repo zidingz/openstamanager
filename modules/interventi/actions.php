@@ -4,6 +4,7 @@ use Modules\Anagrafiche\Anagrafica;
 use Modules\Articoli\Articolo as ArticoloOriginale;
 use Modules\Interventi\Components\Articolo;
 use Modules\Interventi\Components\Riga;
+use Modules\Interventi\Components\Sconto;
 use Modules\Interventi\Intervento;
 use Modules\Interventi\Stato;
 use Modules\Interventi\TipoSessione;
@@ -30,9 +31,9 @@ switch (post('op')) {
         $intervento->idreferente = post('idreferente');
         $intervento->id_tipo_intervento = post('idtipointervento');
 
-        $intervento->id_stato = post('idstatointervento');
-        $intervento->idsede = post('idsede');
-        $intervento->idautomezzo = post('idautomezzo');
+        $intervento->id_stato = post('id_stato');
+        $intervento->idsede_partenza = post('idsede_partenza');
+        $intervento->idsede_destinazione = post('idsede_destinazione');
         $intervento->id_preventivo = post('idpreventivo');
         $intervento->id_contratto = $idcontratto;
 
@@ -56,7 +57,7 @@ switch (post('op')) {
                 flash()->warning(tr("Errore nell'invio della notifica"));
             }
         }
-
+        aggiorna_sedi_movimenti('interventi', $id_record);
         flash()->info(tr('Informazioni salvate correttamente!'));
 
         break;
@@ -64,17 +65,19 @@ switch (post('op')) {
     case 'add':
         if (post('id_intervento') == null) {
             $idanagrafica = post('idanagrafica');
-            $idtipointervento = post('id_tipo_intervento');
-            $idstatointervento = post('id_stato_intervento');
+            $id_tipo_intervento = post('id_tipo_intervento');
+            $id_stato_intervento = post('id_stato_intervento');
             $data_richiesta = post('data_richiesta');
             $data_scadenza = post('data_scadenza');
 
             $anagrafica = Anagrafica::find($idanagrafica);
-            $tipo = TipoSessione::find($idtipointervento);
-            $stato = Stato::find($idstatointervento);
+            $tipo = TipoSessione::find($id_tipo_intervento);
+            $stato = Stato::find($id_stato_intervento);
 
             $intervento = Intervento::build($anagrafica, $tipo, $stato, $data_richiesta);
             $id_record = $intervento->id;
+
+            aggiorna_sedi_movimenti('interventi', $id_record);
 
             flash()->info(tr('Aggiunto nuovo intervento!'));
 
@@ -82,17 +85,16 @@ switch (post('op')) {
             $idpreventivo = post('idpreventivo');
             $idcontratto = post('idcontratto');
             $idcontratto_riga = post('idcontratto_riga');
-            $id_tipo_intervento = post('id_tipo_intervento');
-            $idsede = post('idsede');
+            $idsede_partenza = post('idsede_partenza');
+            $idsede_destinazione = post('idsede_destinazione');
             $richiesta = post('richiesta');
-            $idautomezzo = null;
 
             if (post('idclientefinale')) {
                 $intervento->idclientefinale = post('idclientefinale');
             }
 
-            if (post('idsede')) {
-                $intervento->idsede = post('idsede');
+            if (post('idsede_destinazione')) {
+                $intervento->idsede_destinazione = post('idsede_destinazione');
             }
 
             $intervento->id_preventivo = post('idpreventivo');
@@ -109,14 +111,14 @@ switch (post('op')) {
                     'id_tipo_intervento' => $id_tipo_intervento,
                     'data_richiesta' => $data_richiesta,
                     'richiesta' => $richiesta,
-                    'idsede' => $idsede ?: 0,
+                    'idsede_destinazione' => $idsede_destinazione ?: 0,
                 ], ['idcontratto' => $idcontratto, 'id' => $idcontratto_riga]);
 
                 //copio le righe dal promemoria all'intervento
                 $dbo->query('INSERT INTO in_righe_interventi (descrizione, qta,um,prezzo_vendita,prezzo_acquisto,idiva,desc_iva,iva,idintervento,sconto,sconto_unitario,tipo_sconto) SELECT descrizione, qta,um,prezzo_vendita,prezzo_acquisto,idiva,desc_iva,iva,'.$id_record.',sconto,sconto_unitario,tipo_sconto FROM co_promemoria_righe WHERE id_promemoria = '.$idcontratto_riga);
 
                 //copio  gli articoli dal promemoria all'intervento
-                $dbo->query('INSERT INTO mg_articoli_interventi (idarticolo, idintervento,descrizione,prezzo_acquisto,prezzo_vendita,sconto,	sconto_unitario,	tipo_sconto,idiva,desc_iva,iva,idautomezzo, qta, um, abilita_serial, idimpianto) SELECT idarticolo, '.$id_record.',descrizione,prezzo_acquisto,prezzo_vendita,sconto,sconto_unitario,tipo_sconto,idiva,desc_iva,iva,idautomezzo, qta, um, abilita_serial, idimpianto FROM co_promemoria_articoli WHERE id_promemoria = '.$idcontratto_riga);
+                $dbo->query('INSERT INTO mg_articoli_interventi (idarticolo, idintervento,descrizione,prezzo_acquisto,prezzo_vendita,sconto,	sconto_unitario,	tipo_sconto,idiva,desc_iva,iva, qta, um, abilita_serial, idimpianto) SELECT idarticolo, '.$id_record.',descrizione,prezzo_acquisto,prezzo_vendita,sconto,sconto_unitario,tipo_sconto,idiva,desc_iva,iva, qta, um, abilita_serial, idimpianto FROM co_promemoria_articoli WHERE id_promemoria = '.$idcontratto_riga);
 
                 // Copia degli allegati
                 $alleagti = Uploads::copy([
@@ -135,7 +137,7 @@ switch (post('op')) {
                 // Decremento la quantità per ogni articolo copiato
                 $rs_articoli = $dbo->fetchArray('SELECT * FROM mg_articoli_interventi WHERE idintervento = '.$id_record.' ');
                 foreach ($rs_articoli as $rs_articolo) {
-                    add_movimento_magazzino($rs_articolo['idarticolo'], -$rs_articolo['qta'], ['idautomezzo' => $rs_articolo['idautomezzo'], 'idintervento' => $id_record]);
+                    add_movimento_magazzino($rs_articolo['idarticolo'], -$rs_articolo['qta'], ['idintervento' => $id_record]);
                 }
             }
 
@@ -180,7 +182,7 @@ switch (post('op')) {
             flash()->clearMessage('info');
             flash()->clearMessage('warning');
         }
-
+        aggiorna_sedi_movimenti('interventi', $id_record);
         break;
 
     // Eliminazione intervento
@@ -197,15 +199,14 @@ switch (post('op')) {
             Riporto in magazzino gli articoli presenti nell'intervento in cancellazine
         */
         // Leggo la quantità attuale nell'intervento
-        $q = 'SELECT qta, idautomezzo, idarticolo FROM mg_articoli_interventi WHERE idintervento='.prepare($id_record);
+        $q = 'SELECT qta, idarticolo FROM mg_articoli_interventi WHERE idintervento='.prepare($id_record);
         $rs = $dbo->fetchArray($q);
 
         for ($i = 0; $i < count($rs); ++$i) {
             $qta = $rs[$i]['qta'];
-            $idautomezzo = $rs[$i]['idautomezzo'];
             $idarticolo = $rs[$i]['idarticolo'];
 
-            add_movimento_magazzino($idarticolo, $qta, ['idautomezzo' => $idautomezzo, 'idintervento' => $id_record]);
+            add_movimento_magazzino($idarticolo, $qta, ['idintervento' => $id_record]);
         }
 
         // Eliminazione associazioni tra interventi e contratti
@@ -275,15 +276,16 @@ switch (post('op')) {
 
         $dbo->query('INSERT INTO in_righe_interventi(descrizione, qta, um, prezzo_vendita, prezzo_acquisto, idiva, desc_iva, iva, sconto, sconto_unitario, tipo_sconto, idintervento) VALUES ('.prepare($descrizione).', '.prepare($qta).', '.prepare($um).', '.prepare($prezzo_vendita).', '.prepare($prezzo_acquisto).', '.prepare($idiva).', '.prepare($desc_iva).', '.prepare($iva).', '.prepare($sconto).', '.prepare($sconto_unitario).', '.prepare($tipo_sconto).', '.prepare($id_record).')');
 
+        aggiorna_sedi_movimenti('interventi', $id_record);
         break;
 
-    case 'manage_riga':
+    case 'editriga':
         $idriga = post('idriga');
         $descrizione = post('descrizione');
         $qta = post('qta', true);
         $um = post('um');
         $idiva = post('idiva');
-        $prezzo_vendita = post('prezzo', true);
+        $prezzo_vendita = post('prezzo_vendita', true);
         $prezzo_acquisto = post('prezzo_acquisto', true);
 
         $sconto_unitario = post('sconto', true);
@@ -315,6 +317,7 @@ switch (post('op')) {
             ' tipo_sconto='.prepare($tipo_sconto).
             ' WHERE id='.prepare($idriga));
 
+        aggiorna_sedi_movimenti('interventi', $id_record);
         break;
 
     case 'delriga':
@@ -325,9 +328,9 @@ switch (post('op')) {
 
     case 'manage_sconto':
         if (post('idriga') != null) {
-            $sconto = Riga::find(post('idriga'));
+            $sconto = Sconto::find(post('idriga'));
         } else {
-            $sconto = Riga::build($intervento);
+            $sconto = Sconto::build($intervento);
         }
 
         $sconto->descrizione = post('descrizione');
@@ -354,20 +357,18 @@ switch (post('op')) {
         $idriga = post('idriga');
         $idarticolo = post('idarticolo');
         $idimpianto = post('idimpianto');
-        $idautomezzo = post('idautomezzo');
 
         $idarticolo_originale = post('idarticolo_originale');
 
         // Leggo la quantità attuale nell'intervento
-        $q = 'SELECT qta, idautomezzo, idimpianto FROM mg_articoli_interventi WHERE idarticolo='.prepare($idarticolo_originale).' AND idintervento='.prepare($id_record);
+        $q = 'SELECT qta, idimpianto FROM mg_articoli_interventi WHERE idarticolo='.prepare($idarticolo_originale).' AND idintervento='.prepare($id_record);
         $rs = $dbo->fetchArray($q);
         $old_qta = $rs[0]['qta'];
         $idimpianto = $rs[0]['idimpianto'];
-        $idautomezzo = $rs[0]['idautomezzo'];
 
         $serials = array_column($dbo->select('mg_prodotti', 'serial', ['id_riga_intervento' => $idriga]), 'serial');
 
-        add_movimento_magazzino($idarticolo_originale, $old_qta, ['idautomezzo' => $idautomezzo, 'idintervento' => $id_record]);
+        add_movimento_magazzino($idarticolo_originale, $old_qta, ['idintervento' => $id_record]);
 
         // Elimino questo articolo dall'intervento
         $dbo->query('DELETE FROM mg_articoli_interventi WHERE id='.prepare($idriga));
@@ -382,7 +383,7 @@ switch (post('op')) {
     case 'addarticolo':
         $originale = ArticoloOriginale::find(post('idarticolo'));
         $intervento = Intervento::find($id_record);
-        $articolo = Articolo::build($intervento, $originale, post('idautomezzo'));
+        $articolo = Articolo::build($intervento, $originale);
 
         $articolo->qta = post('qta', true);
         $articolo->descrizione = post('descrizione');
@@ -396,8 +397,7 @@ switch (post('op')) {
 
         $articolo->save();
 
-        // Aggiorno l'automezzo dell'intervento
-        $dbo->query('UPDATE in_interventi SET idautomezzo='.prepare(post('idautomezzo')).' WHERE id='.prepare($id_record));
+        aggiorna_sedi_movimenti('interventi', $id_record);
 
         if (!empty($serials)) {
             if ($old_qta > $qta) {
@@ -418,14 +418,13 @@ switch (post('op')) {
         // Riporto la merce nel magazzino
         if (!empty($idriga) && !empty($id_record)) {
             // Leggo la quantità attuale nell'intervento
-            $q = 'SELECT qta, idautomezzo, idarticolo, idimpianto FROM mg_articoli_interventi WHERE id='.prepare($idriga);
+            $q = 'SELECT qta, idarticolo, idimpianto FROM mg_articoli_interventi WHERE id='.prepare($idriga);
             $rs = $dbo->fetchArray($q);
             $qta = $rs[0]['qta'];
             $idarticolo = $rs[0]['idarticolo'];
             $idimpianto = $rs[0]['idimpianto'];
-            $idautomezzo = $rs[0]['idautomezzo'];
 
-            add_movimento_magazzino($idarticolo, $qta, ['idautomezzo' => $idautomezzo, 'idintervento' => $id_record]);
+            add_movimento_magazzino($idarticolo, $qta, ['idintervento' => $id_record]);
 
             // Elimino questo articolo dall'intervento
             $dbo->query('DELETE FROM mg_articoli_interventi WHERE id='.prepare($idriga).' AND idintervento='.prepare($id_record));
@@ -436,7 +435,7 @@ switch (post('op')) {
             // Elimino i seriali utilizzati dalla riga
             $dbo->query('DELETE FROM `mg_prodotti` WHERE id_articolo = '.prepare($idarticolo).' AND id_riga_intervento = '.prepare($id_record));
         }
-
+        aggiorna_sedi_movimenti('interventi', $id_record);
         break;
 
     case 'add_serial':
@@ -451,7 +450,7 @@ switch (post('op')) {
         }
 
         $dbo->sync('mg_prodotti', ['id_riga_intervento' => $idriga, 'dir' => 'entrata', 'id_articolo' => $idarticolo], ['serial' => $serials]);
-
+        aggiorna_sedi_movimenti('interventi', $id_record);
         break;
 
     case 'firma':
@@ -506,10 +505,7 @@ switch (post('op')) {
     case 'add_sessione':
         $id_tecnico = post('id_tecnico');
 
-        // Verifico se l'intervento è collegato ad un contratto
-        // TODO: utilizzare campo id_contratto in in_interventi come avviene già per i preventivi (id_preventivo) dalla 2.4.2
-        $rs = $dbo->fetchArray('SELECT idcontratto FROM co_promemoria WHERE idintervento='.prepare($id_record));
-        $idcontratto = $rs[0]['idcontratto'];
+        $idcontratto = $intervento['id_contratto'];
 
         $ore = 1;
 

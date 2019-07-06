@@ -4,6 +4,7 @@ use Modules\DDT\DDT;
 
 // Info contratto
 $documento = DDT::find($id_record);
+$dir = $documento->direzione;
 
 // Impostazioni per la gestione
 $options = [

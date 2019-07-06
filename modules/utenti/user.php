@@ -33,6 +33,9 @@ if (!empty($id_utente)) {
     $username = $rs[0]['username'];
     $email = $rs[0]['email'];
     $id_anagrafica = $rs[0]['idanagrafica'];
+
+    // Lettura sedi dell'utente già impostate
+    $sedi = $dbo->fetchOne('SELECT GROUP_CONCAT(idsede) as sedi FROM zz_user_sedi WHERE id_user='.prepare($id_utente).' GROUP BY id_user')['sedi'];
 } else {
     $op = 'adduser';
     $message = tr('Aggiungi');
@@ -41,6 +44,8 @@ if (!empty($id_utente)) {
     $email = '';
     $id_anagrafica = '';
 }
+
+$_SESSION['superselect']['idanagrafica'] = $id_anagrafica;
 
 echo '
 <form action="" method="post" id="link_form">
@@ -97,14 +102,20 @@ if (!$self_edit) {
 		<div class="col-md-12">
 		{[ "type": "select", "label": "'.tr('Collega ad una anagrafica').'", "name": "idanag", "required": 1, "ajax-source": "anagrafiche_utenti", "value": "'.$id_anagrafica.'", "icon-after": "add|'.Modules::get('Anagrafiche')['id'].'|tipoanagrafica='.$nome_gruppo.'" ]}
 		</div>
-    </div>';
+	</div>';
 } else {
     echo '
     <input type="hidden" id="idanag" name="idanag" value="'.$id_anagrafica.'">';
 }
 
-echo '
+    echo '
+	<div class="row">
+		<div class="col-md-12">
+		{[ "type": "select", "label": "'.tr('Sede').'", "name": "idsede[]",  "ajax-source": "sedi", "multiple":"1", "value":"'.$sedi.'" ]}
+		</div>
+	</div>';
 
+    echo '
 	<button type="button" onclick="do_submit()" class="btn btn-primary float-right"><i class="fa fa-plus"></i> '.$message.'</button>
 	<div class="clearfix">&nbsp;</div>
 </form>
@@ -140,11 +151,15 @@ echo '
 		else
 			$("#link_form").submit();
 	}
-	
+
 	$(document).ready(function(){
-		$("#bs-popup #idanag").val("'.$id_anagrafica.'").change();
+		$("#idanag").change(function(){
+			session_set("superselect,idanagrafica", $(this).val(), 0);
+
+			$("#idsede").selectReset();
+		})
 	});
-			
+
 </script>
 
 <script src="'.ROOTDIR.'/assets/js/init.min.js"></script>';

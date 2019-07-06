@@ -2,6 +2,7 @@
 
 namespace Modules\Fatture;
 
+use Auth;
 use Common\Document;
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Fatture\Components\Riga;
@@ -34,6 +35,8 @@ class Fattura extends Document
     public static function build(Anagrafica $anagrafica, Tipo $tipo_documento, $data, $id_segment)
     {
         $model = parent::build();
+
+        $user = Auth::user();
 
         $stato_documento = Stato::where('descrizione', 'Bozza')->first();
 
@@ -83,8 +86,13 @@ class Fattura extends Document
         $model->id_segment = $id_segment;
 
         $model->idconto = $id_conto;
-        $model->idsede = $id_sede;
 
+        // Imposto, come sede aziendale, la prima sede disponibile come utente
+        if ($dir == 'entrata') {
+            $model->idsede_destinazione = $user->sedi[0];
+        } else {
+            $model->idsede_partenza = $user->sedi[0];
+        }
         $model->addebita_bollo = setting('Addebita marca da bollo al cliente');
 
         $id_ritenuta_contributi = ($tipo_documento->dir == 'entrata') ? setting('Ritenuta contributi') : null;
@@ -274,7 +282,9 @@ class Fattura extends Document
 
     public function isFE()
     {
-        return !empty($this->progressivo_invio);
+        $file = $this->uploads()->where('name', 'Fattura Elettronica')->first();
+
+        return !empty($this->progressivo_invio) and file_exists($file->filepath);
     }
 
     /**
@@ -396,12 +406,7 @@ class Fattura extends Document
     public function save(array $options = [])
     {
         // Fix dei campi statici
-        $bollo = $this->bollo;
-        if ($bollo == null) {
-            $bollo = $this->calcolaMarcaDaBollo();
-        }
-
-        $this->manageRigaMarcaDaBollo($bollo, $this->addebita_bollo);
+        $this->manageRigaMarcaDaBollo();
 
         $this->attributes['ritenutaacconto'] = $this->ritenuta_acconto;
         $this->attributes['iva_rivalsainps'] = $this->iva_rivalsa_inps;
@@ -516,8 +521,12 @@ class Fattura extends Document
         return $result;
     }
 
-    protected function calcolaMarcaDaBollo()
+    public function getBollo()
     {
+        if (isset($this->bollo)) {
+            return        $this->bollo;
+        }
+
         $righe_bollo = $this->getRighe()->filter(function ($item, $key) {
             return $item->aliquota != null && in_array($item->aliquota->codice_natura_fe, ['N1', 'N2', 'N3', 'N4']);
         });
@@ -537,9 +546,12 @@ class Fattura extends Document
         return $marca_da_bollo;
     }
 
-    protected function manageRigaMarcaDaBollo($marca_da_bollo, $addebita_bollo)
+    protected function manageRigaMarcaDaBollo()
     {
         $riga = $this->rigaBollo;
+
+        $addebita_bollo = $this->addebita_bollo;
+        $marca_da_bollo = $this->getBollo();
 
         // Rimozione riga bollo se nullo
         if (empty($addebita_bollo) || empty($marca_da_bollo)) {
