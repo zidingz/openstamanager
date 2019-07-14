@@ -4,7 +4,6 @@ namespace Managers;
 
 use Controllers\Controller;
 use HTMLBuilder\HTMLBuilder;
-use Slim\Exception\NotFoundException;
 
 class RetroController extends Controller
 {

@@ -27,9 +27,9 @@ switch (post('op')) {
                 'title' => '<b>Int. '.$r['codice'].'</b> '.$r['cliente'].'<br><b>'.tr('Tecnici').':</b> '.$r['nome_tecnico'].' '.(($r['have_attachments']) ? '<i class="fa fa-paperclip" aria-hidden="true"></i>' : ''),
                 'start' => $r['orario_inizio'],
                 'end' => $r['orario_fine'],
-                'url' =>  pathFor('module-record', [
+                'url' => pathFor('module-record', [
                     'module_id' => Modules::get('Interventi')['id'],
-                    'record_id' => $r['idintervento']
+                    'record_id' => $r['idintervento'],
                 ]),
                 'backgroundColor' => $r['colore'],
                 'textColor' => color_inverse($r['colore']),

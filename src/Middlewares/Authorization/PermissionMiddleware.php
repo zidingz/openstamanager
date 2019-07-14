@@ -3,8 +3,8 @@
 namespace Middlewares\Authorization;
 
 use Middlewares\Middleware;
-use Util\Query;
 use Slim\Exception\NotFoundException;
+use Util\Query;
 
 /**
  * Classe per il controllo sui permessi di accesso relativi alle diverse sezioni del gestionale.

@@ -1,0 +1,178 @@
+{% extends "module.twig" %}
+
+{% block module_content %}
+{% if enable_updates %}
+
+    {% if custom is not empty or tables is not empty %}
+<!-- Personalizzazioni di codice -->
+<div class="card card-outline card-warning">
+    <div class="card-header with-border">
+        <h3 class="card-title"><span class="tip" title="{{ 'Elenco delle personalizzazioni rilevabili dal gestionale'|trans }}.">
+				<i class="fa fa-edit"></i> {{ 'Personalizzazioni'|trans }}
+			</span></h3>
+    </div>
+    <div class="card-body">
+
+        {% if custom is not empty %}
+        <table class="table table-hover table-striped">
+            <tr>
+                <th width="10%">{{ 'Percorso'|trans }}</th>
+                <th width="15%">{{ 'Cartella personalizzata'|trans }}</th>
+                <th width="15%">{{ 'Database personalizzato'|trans }}</th>
+            </tr>
+
+            {% for element in custom %}
+                <tr>
+                    <td>{{ element['path'] }}</td>
+                    <td>{{ element['directory'] ? 'Si'|trans : 'No'|trans }}</td>
+                    <td>{{ element['database'] ? 'Si'|trans : 'No'|trans }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <p><strong>{{ "Si sconsiglia l'aggiornamento senza il supporto dell'assistenza ufficiale"|trans }}.</strong></p>
+        {% else %}
+        <p>{{ 'Non ci sono strutture personalizzate'|trans }}.</p>
+        {% endif %}
+
+        {% if tables is not empty %}
+
+        <div class="alert alert-warning">
+            <i class="fa fa-warning"></i>
+            <b>{{ 'Attenzione!'|trans }}</b> {{ 'Ci sono delle tabelle non previste nella versione standard del gestionale!'|trans }}: {{ rables|join(', ') }}
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+    {% endif %}
+
+    {% if alerts is not empty %}
+<div class="alert alert-warning">
+    <p>{{ 'Devi modificare il seguenti parametri del file di configurazione PHP (_FILE_) per poter caricare gli aggiornamenti'|trans({'_FILE_': '<b>php.ini</b>'}) }}:
+        <ul>
+        {% for key, value in alerts %}
+            <li><b>{{ key }}</b> = {{ value }}</li>
+        {% endfor %}
+        </ul>
+    </p>
+</div>
+    {% endif %}
+
+<script>
+    function update() {
+        if ($("#blob").val()) {
+            swal({
+                title: "{{ 'Avviare la procedura?'|trans }}",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "{{ 'Sì'|trans }}"
+            }).then(function (result) {
+                $("#update").submit();
+            })
+        } else {
+            swal({
+                title: "{{ 'Selezionare un file!'|trans }}",
+                type: "error",
+            })
+        }
+    }
+
+    function search(button) {
+        buttonLoading(button);
+
+        $.ajax({
+            url: "{{ action_link|replace({'|action|': 'check'}) }}",
+            type: "post",
+            success: function(data){
+                $("#update-search").addClass("hide");
+
+                if (data == "none") {
+                    $("#update-none").removeClass("hide");
+                } else {
+                    $("#update-version").text(data);
+                    $("#update-download").removeClass("hide");
+                }
+            }
+        });
+    }
+
+    function download(button) {
+        buttonLoading(button);
+        $("#main_loading").show();
+
+        $.ajax({
+            url: "{{ action_link|replace({'|action|': 'download'}) }}",
+            type: "post",
+            success: function(){
+                window.location.reload();
+            }
+        });
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card card-outline card-success">
+            <div class="card-header with-border">
+                <h3 class="card-title">
+                    {{ 'Carica un aggiornamento'|trans }} <span class="tip" title="{{ 'Form di caricamento aggiornamenti del gestionale e innesti di moduli e plugin'|trans }}."><i class="fa fa-question-circle-o"></i></span>
+                </h3>
+            </div>
+            <div class="card-body">
+                <form action="{{ path_for('module', {'module_id': module_id}) }}" method="post" enctype="multipart/form-data" id="update">
+                    <input type="hidden" name="op" value="upload">
+                    <input type="hidden" name="backto" value="record-list">
+
+                    {[ "type": "file", "name": "blob", "required": 1, "accept": ".zip" ]}
+
+                    <button type="button" class="btn btn-primary float-right" onclick="update()">
+                        <i class="fa fa-upload"></i> {{ 'Carica'|trans }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card card-outline card-info">
+            <div class="card-header with-border">
+                <h3 class="card-title">
+                    {{ 'Ricerca aggiornamenti'|trans }} <span class="tip" title="{{ 'Controllo automatico della presenza di aggiornamenti per il gestionale'|trans }}."><i class="fa fa-question-circle-o"></i></span>
+                </h3>
+            </div>
+            <div class="card-body">
+                <div id="update-search">
+                    <button type="button" class="btn btn-info btn-block" onclick="search(this)">
+                        <i class="fa fa-search"></i> {{ 'Ricerca'|trans }}
+                    </button>
+                </div>
+
+                <div id="update-download" class="hide">
+                    <p>{{ "E' stato individuato un nuovo aggiornamento"|trans }}: <b id="update-version"></b>.</p>
+                    <p>{{ 'Scaricalo manualmente (_LINK_) oppure in automatico'|trans({'_LINK_': '<a href="https://github.com/devcode-it/openstamanager/releases">https://github.com/devcode-it/openstamanager/releases</a>'})|raw }}:</p>
+
+                    <button type="button" class="btn btn-success btn-block" onclick="download(this)">
+                        <i class="fa fa-download"></i> {{ 'Scarica'|trans }}
+                    </button>
+                </div>
+
+                <div id="update-none" class="hide">
+                    <p>{{ 'Nessun aggiornamento presente'|trans }}.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+
+{% endif %}
+
+<hr>
+<div>
+    <h3>{{ 'Requisiti'|trans }}</h3>
+
+    {% include 'config/list.twig' with {requirements: requirements} only %}
+</div>
+{% endblock %}

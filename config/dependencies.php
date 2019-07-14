@@ -84,6 +84,17 @@ $container['twig'] = function ($container) {
         'cache' => false, //DOCROOT.'/cache/twig',
     ]);
 
+    // Aggiunta supporto moduli
+    $loader = $twig->getLoader();
+    $namespaces = require DOCROOT.'/config/namespaces.php';
+    foreach ($namespaces as $path => $namespace) {
+        $name = basename($path);
+        $path = $path.'/views';
+
+        if (file_exists($path)) {
+            $loader->addPath($path, $name);
+        }
+    }
     // Instantiate and add Slim specific extension
     $router = $container->get('router');
     $uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));

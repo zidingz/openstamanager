@@ -627,7 +627,7 @@ if (Modules::getPermission('Interventi') == 'rw') {
 
                 launch_modal('<?php echo tr('Pianifica intervento'); ?>', '<?php echo pathFor('module-add', [
                     'module_id' => Modules::get('Interventi')['id'],
-                ]) ?>?&data='+data+'&orario_inizio='+ora_dal+'&orario_fine='+ora_al+'&ref=dashboard&idcontratto=' + $(this).data('idcontratto') + '&' + name + '=' + $(this).data('id'), 1);
+                ]); ?>?&data='+data+'&orario_inizio='+ora_dal+'&orario_fine='+ora_al+'&ref=dashboard&idcontratto=' + $(this).data('idcontratto') + '&' + name + '=' + $(this).data('id'), 1);
 
                 $(this).remove();
 
@@ -644,7 +644,7 @@ if (Modules::getPermission('Interventi') == 'rw') {
 
                 launch_modal('<?php echo tr('Aggiungi intervento'); ?>', '<?php echo pathFor('module-add', [
                     'module_id' => Modules::get('Interventi')['id'],
-                ]) ?>?ref=dashboard&data='+data+'&orario_inizio='+ora_dal+'&orario_fine='+ora_al, 1 );
+                ]); ?>?ref=dashboard&data='+data+'&orario_inizio='+ora_dal+'&orario_fine='+ora_al, 1 );
 
 				$('#calendar').fullCalendar('unselect');
 			},

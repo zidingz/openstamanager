@@ -15,40 +15,7 @@
 <p>{{ 'Le estensioni e impostazioni PHP possono essere personalizzate nel file di configurazione _FILE_'|trans({'_FILE_': '<b>php.ini</b>'})|raw }}.</p>
 <hr>
 
-{% for group, elements in requirements %}
-    {% set general_status = true %}
-    {% for name, element in elements %}
-        {% set general_status = general_status and element.status %}
-    {% endfor %}
-
-<div class="card card-outline card-{{ general_status ? 'success collapsed-box' : 'danger' }}">
-    <div class="card-header with-border">
-        <h3 class="card-title">{{ group }}</h3>
-
-    {% if general_status %}
-        <div class="card-tools float-right">
-            <button type="button" class="btn btn-card-tool" onclick="$(this).closest('.box').boxWidget('toggle')">
-                <i class="fa fa-plus"></i>
-            </button>
-        </div>
-    {% endif %}
-
-    </div>
-    <div class="card-body no-padding">
-        <table class="table">
-
-        {% for name, element in elements %}
-            <tr class="{{ element.status ? 'success' : 'danger' }}">
-                <td style="width: 10px"><i class="fa fa-{{ element.status ? 'check' : 'times' }}"></i></td>
-                <td>{{ name }}</td>
-                <td>{{ element.description|raw }}</td>
-            </tr>
-        {% endfor %}
-
-        </table>
-    </div>
-</div>
-{% endfor %}
+    {% include 'config/list.twig' with {requirements: requirements} only %}
 
 <button type="button" class="btn btn-info center-block" onclick="window.location.reload()"><i class="fa fa-refresh"></i> {{ "Ricarica"|trans }}</button>
 

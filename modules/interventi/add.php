@@ -452,7 +452,7 @@ if (!empty($id_intervento)) {
 
             $.post('<?php echo pathFor('module-add', [
                 'module_id' => Modules::get('Interventi')['id'],
-            ]) ?>', $('#add-form').serialize(), function(data,response){
+            ]); ?>', $('#add-form').serialize(), function(data,response){
                 if(response=="success"){
                     // Se l'aggiunta intervento proviene dalla scheda di pianificazione ordini di servizio della dashboard, la ricarico
                     if(ref == "dashboard"){

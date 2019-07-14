@@ -5,9 +5,9 @@ namespace Controllers;
 use AJAX;
 use Models\Hook;
 use Modules;
+use Prints;
 use Translator;
 use Util\Query;
-use Prints;
 
 class AjaxController extends Controller
 {
@@ -335,7 +335,8 @@ class AjaxController extends Controller
         return $response;
     }
 
-    public function hook($request, $response, $args){
+    public function hook($request, $response, $args)
+    {
         $hook_id = $args['hook_id'];
         $hook = Hook::find($hook_id);
 

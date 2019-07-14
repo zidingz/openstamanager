@@ -2,6 +2,7 @@
 
 namespace Modules\Aggiornamenti;
 
+use Controllers\Config\RequirementsController as Requirements;
 use GuzzleHttp\Client;
 use InvalidArgumentException;
 use Models\Group;
@@ -66,6 +67,44 @@ class Aggiornamento
     public function isCoreUpdate()
     {
         return file_exists($this->directory.'/VERSION');
+    }
+
+    public function getChangelog()
+    {
+        if ($this->isCoreUpdate()) {
+            $changelog = self::readChangelog($this->getDirectory(), Update::getVersion());
+        } else {
+            $changelogs = [];
+            $elements = $this->componentUpdates();
+
+            $list = array_merge($elements['modules'], $elements['plugins']);
+            foreach ($list as $element) {
+                $changelog = self::readChangelog($element['path'], $element['version']);
+
+                if (!empty($changelog)) {
+                    $changelogs[] = '
+                <h4 class="text-center">'.$element['info']['name'].'<h4>
+                '.$changelog;
+                }
+            }
+
+            $changelog = implode('<hr>', $changelogs);
+        }
+
+        return $changelog;
+    }
+
+    public function getRequirements()
+    {
+        $file = $this->directory.'/config/requirements.php';
+        $result = Requirements::getRequirementsList($file);
+
+        return $result;
+    }
+
+    public function getVersion()
+    {
+        return Update::getFile($this->getDirectory().'/VERSION');
     }
 
     /**
@@ -296,34 +335,6 @@ class Aggiornamento
     }
 
     /**
-     * Restituisce il changelog presente nel percorso indicato a partire dalla versione specificata.
-     *
-     * @param string $path
-     * @param string $version
-     *
-     * @return string
-     */
-    public static function getChangelog($path, $version = null)
-    {
-        $result = file_get_contents($path.'/CHANGELOG.md');
-
-        $start = strpos($result, '## ');
-        $result = substr($result, $start);
-        if (!empty($version)) {
-            $last = strpos($result, '## '.$version.' ');
-
-            if ($last !== false) {
-                $result = substr($result, 0, $last);
-            }
-        }
-
-        $result = Parsedown::instance()->text($result);
-        $result = str_replace(['h4>', 'h3>', 'h2>'], ['p>', 'b>', 'h4>'], $result);
-
-        return $result;
-    }
-
-    /**
      * Restituisce i contenuti JSON dell'API del progetto.
      *
      * @return array
@@ -348,6 +359,34 @@ class Aggiornamento
             ->files();
 
         return iterator_to_array($files);
+    }
+
+    /**
+     * Restituisce il changelog presente nel percorso indicato a partire dalla versione specificata.
+     *
+     * @param string $path
+     * @param string $version
+     *
+     * @return string
+     */
+    protected static function readChangelog($path, $version = null)
+    {
+        $result = file_get_contents($path.'/CHANGELOG.md');
+
+        $start = strpos($result, '## ');
+        $result = substr($result, $start);
+        if (!empty($version)) {
+            $last = strpos($result, '## '.$version.' ');
+
+            if ($last !== false) {
+                $result = substr($result, 0, $last);
+            }
+        }
+
+        $result = Parsedown::instance()->text($result);
+        $result = str_replace(['h4>', 'h3>', 'h2>'], ['p>', 'b>', 'h4>'], $result);
+
+        return $result;
     }
 
     /**

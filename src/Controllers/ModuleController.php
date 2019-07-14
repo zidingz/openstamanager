@@ -119,10 +119,16 @@ class ModuleController extends Controller
             $record_id = $controller->update($request, $response, $args);
         }
 
-        $route = $this->router->pathFor('module-record', [
-            'module_id' => $args['module_id'],
-            'record_id' => $record_id,
-        ]);
+        if (!empty($record_id)) {
+            $route = $this->router->pathFor('module-record', [
+                'module_id' => $args['module_id'],
+                'record_id' => $record_id,
+            ]);
+        } else {
+            $route = $this->router->pathFor('module', [
+                'module_id' => $args['module_id'],
+            ]);
+        }
 
         $response = $response->withRedirect($route);
 
@@ -164,10 +170,16 @@ class ModuleController extends Controller
             $record_id = $controller->create($request, $response, $args);
         }
 
-        $route = $this->router->pathFor('module-record', [
-            'module_id' => $args['module_id'],
-            'record_id' => $record_id,
-        ]);
+        if (!empty($record_id)) {
+            $route = $this->router->pathFor('module-record', [
+                'module_id' => $args['module_id'],
+                'record_id' => $record_id,
+            ]);
+        } else {
+            $route = $this->router->pathFor('module', [
+                'module_id' => $args['module_id'],
+            ]);
+        }
 
         $response = $response->withRedirect($route);
 

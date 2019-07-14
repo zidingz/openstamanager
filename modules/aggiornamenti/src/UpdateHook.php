@@ -2,8 +2,8 @@
 
 namespace Modules\Aggiornamenti;
 
-use Managers\HookManager;
 use GuzzleHttp\Client;
+use Managers\HookManager;
 use Modules;
 use Update;
 
