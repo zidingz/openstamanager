@@ -74,39 +74,34 @@
 
 <script>
     $(document).ready(function(){
-        var html = "<p>{{ 'Se hai riscontrato un bug ricordati di specificare'|trans }}:</p>" +
-            "<ul>" +
-            "<li>{{ 'Modulo esatto (o pagina relativa) in cui questi si è verificato'|trans }};</li>" +
-            "<li>{{ 'Dopo quali specifiche operazioni hai notato il malfunzionamento'|trans }}.</li>" +
-            "</ul>" +
-            "<p>{{ 'Assicurati inoltre di controllare che il checkbox relativo ai file di log sia contrassegnato, oppure riporta qui l\'errore visualizzato'|trans }}.</p>" +
-            "<p>{{ 'Ti ringraziamo per il tuo contributo'|trans }},<br>" +
-            "{{ 'Lo staff di OSM'|trans }}</p>";
+        var editor = editors.body;
 
+        // Impostazione del messaggio
+        var html = `<p>{{ 'Se hai riscontrato un bug ricordati di specificare'|trans }}:</p>
+            <ul>
+                <li>{{ 'Modulo esatto (o pagina relativa) in cui questi si è verificato'|trans }};</li>
+                <li>{{ 'Dopo quali specifiche operazioni hai notato il malfunzionamento'|trans }}.</li>
+            </ul>
+            <p>{{ "Assicurati inoltre di controllare che il checkbox relativo ai file di log sia contrassegnato, oppure riporta qui l'errore visualizzato"|trans }}.</p>
+            <p>{{ 'Ti ringraziamo per il tuo contributo'|trans }},<br>
+            {{ 'Lo staff di OSM'|trans }}</p>`;
         var firstFocus = 1;
 
-        /*
         editor.setData(html);
-
-        CKEDITOR.instances.body.on("key", function() {
-            setTimeout(function(){
-                if(CKEDITOR.instances.body.getData() == ""){
-                    $("#send").prop("disabled", true);
-                }
-                else $("#send").prop("disabled", false);
-            }, 10);
-        });
-
-        CKEDITOR.instances.body.setData( html, function() {});
-
-        CKEDITOR.instances.body.on("focus", function() {
+        editor.editing.view.document.on('change:isFocused', ( evt, name, value ) => {
             if(firstFocus){
-                CKEDITOR.instances.body.setData("", function() {
-                    CKEDITOR.instances.body.focus();
-                });
+                editor.setData("");
                 firstFocus = 0;
             }
-        });*/
+        });
+
+        // Blocco pulsante di invio
+        editor.model.document.on('change:data', () => {
+            if(editor.getData() == ""){
+                $("#send").prop("disabled", true);
+            }
+            else $("#send").prop("disabled", false);
+        });
     });
 </script>
 {% endblock %}

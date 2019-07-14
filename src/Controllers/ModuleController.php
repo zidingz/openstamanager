@@ -134,7 +134,7 @@ class ModuleController extends Controller
         $args['query_params'] = [];
         $query = $request->getQueryParams();
         foreach ($query as $key => $value) {
-            $args['query'][$key] = get($value);
+            $args['query_params'][$key] = get($key);
         }
 
         if ($this->isRetro($args)) {
@@ -142,7 +142,7 @@ class ModuleController extends Controller
 
             $response = $controller->add($request, $response, $args);
         } else {
-            $class = $this->getRecordManager($request, $response, $args);
+            $class = $this->getModuleManager($request, $response, $args);
             $controller = new $class($this->container);
 
             $response = $controller->add($request, $response, $args);
@@ -158,7 +158,7 @@ class ModuleController extends Controller
 
             $record_id = $controller->actions($request, $response, $args);
         } else {
-            $class = $this->getRecordManager($request, $response, $args);
+            $class = $this->getModuleManager($request, $response, $args);
             $controller = new $class($this->container);
 
             $record_id = $controller->create($request, $response, $args);

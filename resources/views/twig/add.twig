@@ -51,7 +51,7 @@
 <script>
     $(document).ready(function(){
         data = {
-        {% for key, value in query %}
+        {% for key, value in query_params %}
             "{{ key }}": "{{ value }}",
         {% endfor %}
         };
@@ -63,6 +63,7 @@
                 if ($(select).val() !== undefined) {
                     $(select).selectSetNew(response.id, response.text);
                 }
+
                 $("#bs-popup2").modal("hide");
             });
 

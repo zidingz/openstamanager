@@ -201,8 +201,6 @@ UPDATE `co_contratti` SET `data_conclusione` = NULL WHERE `data_conclusione` = '
 UPDATE `co_movimenti` SET `data_documento` = NULL WHERE `data_documento` = '0000-00-00' OR `data_documento` = '0000-00-00 00:00:00';
 UPDATE `co_scadenziario` SET `data_emissione` = NULL WHERE `data_emissione` = '0000-00-00' OR `data_emissione` = '0000-00-00 00:00:00';
 UPDATE `or_righe_ordini` SET `data_evasione` = NULL WHERE `data_evasione` = '0000-00-00' OR `data_evasione` = '0000-00-00 00:00:00';
-UPDATE `dt_automezzi_tecnici` SET `data_fine` = NULL WHERE `data_fine` = '0000-00-00' OR `data_fine` = '0000-00-00 00:00:00';
-UPDATE `dt_automezzi_tecnici` SET `data_inizio` = NULL WHERE `data_inizio` = '0000-00-00' OR `data_inizio` = '0000-00-00 00:00:00';
 UPDATE `in_interventi` SET `data_invio` = NULL WHERE `data_invio` = '0000-00-00' OR `data_invio` = '0000-00-00 00:00:00';
 UPDATE `co_preventivi` SET `data_pagamento` = NULL WHERE `data_pagamento` = '0000-00-00' OR `data_pagamento` = '0000-00-00 00:00:00';
 UPDATE `co_scadenziario` SET `data_pagamento` = NULL WHERE `data_pagamento` = '0000-00-00' OR `data_pagamento` = '0000-00-00 00:00:00';

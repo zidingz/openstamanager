@@ -4,6 +4,7 @@ namespace Middlewares\Authorization;
 
 use Middlewares\Middleware;
 use Util\Query;
+use Slim\Exception\NotFoundException;
 
 /**
  * Classe per il controllo sui permessi di accesso relativi alle diverse sezioni del gestionale.
@@ -31,9 +32,9 @@ class PermissionMiddleware extends Middleware
         }
 
         if (!$permission) {
-            $response = $this->twig->render($response, 'errors\403.twig', $args);
-
-            return $response->withStatus(403);
+            //$response = $this->twig->render($response, 'errors\403.twig', $args);
+            //return $response->withStatus(403);
+            throw new NotFoundException($request, $response);
         } else {
             $response = $next($request, $response);
         }

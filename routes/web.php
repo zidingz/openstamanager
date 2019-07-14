@@ -86,7 +86,7 @@ $app->group('/ajax', function () use ($app) {
 
     // Messaggi flash
     $app->get('/flash[/]', 'Controllers\AjaxController:flash')
-        ->setName('flash');
+        ->setName('ajax-flash');
 
     // Sessioni
     $app->get('/session[/]', 'Controllers\AjaxController:sessionSet')

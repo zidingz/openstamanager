@@ -35,8 +35,8 @@
     </div>
 
     <script>
-        function togglePassword() {
-            var button = $(this);
+        function togglePassword(btn) {
+            var button = $(btn);
 
             if (button.hasClass("fa-eye")) {
                 $("#password").attr("type", "text");
@@ -94,7 +94,7 @@
             <h3 class="card-title">{{ 'Impostazioni di base'|trans }}</h3>
         </div>
 
-        <div class="card-body">
+        <div class="card-body row">
 
         {% for setting in settings %}
             <div class="col-md-6">

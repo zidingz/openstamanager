@@ -62,8 +62,8 @@
             'hooksExecuting': "{{ 'Hooks in esecuzione'|trans }}",
             'hookExecuting': '{{ 'Hook "_NAME_" in esecuzione'|trans }}',
             'hookMultiple': "{{ 'Hai _NUM_ notifiche'|trans }}",
-            'hookSingle': "{{ tr('Hai 1 notifica'|trans }}",
-            'hookNone': "{{ tr('Nessuna notifica'|trans }}",
+            'hookSingle': "{{ 'Hai 1 notifica'|trans }}",
+            'hookNone': "{{ 'Nessuna notifica'|trans }}",
         },
         locale: '{{ lang }}',
         full_locale: '{{ lang }}_{{ lang|upper }}',
@@ -81,6 +81,7 @@
         dataload_plugin_url: "{{path_for('ajax-dataload-plugin', {'plugin_id': '|id_plugin|', 'module_record_id': '|id_parent|'}) }}",
         ajax_set_url: "{{ path_for('ajax-session') }}",
         ajax_array_set_url: "{{ path_for('ajax-session-array') }}",
+        ajax_flash: "{{ path_for('ajax-flash') }}",
     };
 </script>
 
