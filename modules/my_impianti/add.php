@@ -47,8 +47,7 @@ if ($source == 'Attività') {
 $(document).ready(function(){
 
 	$('#bs-popup #idanagrafica').change( function(){
-
-		session_set('superselect,idanagrafica', $(this).val(), 0);
+        $("#bs-popup #idsede").selectInfo('idanagrafica', $(this).val());
 
         var value = !$(this).val() ? true : false;
 
@@ -62,8 +61,7 @@ $(document).ready(function(){
 	});
 
     $('#bs-popup2 #idanagrafica').change( function(){
-
-        session_set('superselect,idanagrafica', $(this).val(), 0);
+        $("#bs-popup2 #idsede").selectInfo('idanagrafica', $(this).val());
 
         var value = !$(this).val() ? true : false;
 

@@ -20,8 +20,8 @@ switch (post('op')) {
         }
 
         // Salvataggio modifiche intervento
-        $intervento->data_richiesta = post('data_richiesta');
-        $intervento->data_scadenza = post('data_scadenza');
+        $intervento->data_richiesta = post('data_richiesta', true);
+        $intervento->data_scadenza = post('data_scadenza', true);
         $intervento->richiesta = post('richiesta');
         $intervento->descrizione = post('descrizione');
         $intervento->informazioniaggiuntive = post('informazioniaggiuntive');
@@ -29,9 +29,10 @@ switch (post('op')) {
         $intervento->idanagrafica = post('idanagrafica');
         $intervento->idclientefinale = post('idclientefinale');
         $intervento->idreferente = post('idreferente');
-        $intervento->id_tipo_intervento = post('idtipointervento');
 
+        $intervento->id_tipo_intervento = post('id_tipo_intervento');
         $intervento->id_stato = post('id_stato');
+
         $intervento->idsede_partenza = post('idsede_partenza');
         $intervento->idsede_destinazione = post('idsede_destinazione');
         $intervento->id_preventivo = post('idpreventivo');
@@ -67,8 +68,8 @@ switch (post('op')) {
             $idanagrafica = post('idanagrafica');
             $id_tipo_intervento = post('id_tipo_intervento');
             $id_stato_intervento = post('id_stato_intervento');
-            $data_richiesta = post('data_richiesta');
-            $data_scadenza = post('data_scadenza');
+            $data_richiesta = post('data_richiesta', true);
+            $data_scadenza = post('data_scadenza', true);
 
             $anagrafica = Anagrafica::find($idanagrafica);
             $tipo = TipoSessione::find($id_tipo_intervento);
@@ -183,6 +184,7 @@ switch (post('op')) {
             flash()->clearMessage('warning');
         }
         aggiorna_sedi_movimenti('interventi', $id_record);
+
         break;
 
     // Eliminazione intervento

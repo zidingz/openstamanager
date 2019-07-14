@@ -462,7 +462,7 @@ class Auth
 
                 // Se l'utente non ha sedi, è come se ce le avesse tutte disponibili per retrocompatibilità
                 if (empty($sedi)) {
-                    $sedi = $database->fetchArray('SELECT "0" AS idsede UNION SELECT id AS idsede FROM an_sedi WHERE idanagrafica='.prepare($results[0]['idanagrafica']));
+                    $sedi = $database->fetchArray('SELECT id_sede_legale AS idsede FROM an_anagrafiche WHERE idanagrafica = '.prepare($results[0]['idanagrafica']).' UNION SELECT id AS idsede FROM an_sedi WHERE idanagrafica='.prepare($results[0]['idanagrafica']));
                 }
 
                 $this->user['sedi'] = array_column($sedi, 'idsede');

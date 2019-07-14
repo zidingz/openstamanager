@@ -20,7 +20,7 @@
 				</div>
 
 				<div class="col-md-3">
-					{[ "type": "select", "label": "<?php echo tr('Sede destinazione'); ?>", "name": "idsede_destinazione","value": "$idsede_destinazione$", "ajax-source": "sedi", "placeholder": "Sede legale", "readonly": "<?php echo $record['flag_completato']; ?>", "ajax-info": "idanagrafica=$idanagrafica$" ]}
+					{[ "type": "select", "label": "<?php echo tr('Sede destinazione'); ?>", "name": "idsede_destinazione", "value": "$idsede_destinazione$", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$", "placeholder": "Sede legale", "readonly": "<?php echo $record['flag_completato']; ?>", "ajax-info": "idanagrafica=$idanagrafica$" ]}
 				</div>
 
 				<div class="col-md-3">
@@ -211,7 +211,7 @@ $articoli = $dbo->fetchArray('SELECT mg_articoli_interventi.id FROM mg_articoli_
         <div class="card-body">
 			<div class="row">
 				<div class="col-md-3">
-					{[ "type": "select", "label": "<?php echo tr('Partenza merce'); ?>", "name": "idsede_partenza",  "ajax-source": "sedi_azienda",  "value": "$idsede_partenza$", "readonly": "<?php echo ($record['flag_completato'] || sizeof($articoli)) ? 1 : 0; ?>", "ajax-info": "idanagrafica=$idanagrafica$" ]}
+					{[ "type": "select", "label": "<?php echo tr('Partenza merce'); ?>", "name": "idsede_partenza", "ajax-source": "sedi_azienda", "value": "$idsede_partenza$", "readonly": "<?php echo ($record['flag_completato'] || sizeof($articoli)) ? 1 : 0; ?>", "ajax-info": "idanagrafica=$idanagrafica$" ]}
 				</div>
 			</div>
 
@@ -316,12 +316,12 @@ include $structure->filepath('ajax_righe.php');
 
 <script>
 	$('#idanagrafica').change( function(){
-        $("#idsede").selectInfo('idanagrafica', $(this).val())
-        $("#idreferente").selectInfo('idanagrafica', $(this).val())
-        $("#idcontratto").selectInfo('idanagrafica', $(this).val())
-        $("#idpreventivo").selectInfo('idanagrafica', $(this).val())
+        $("#idsede_destinazione").selectInfo('idanagrafica', $(this).val());
+        $("#idreferente").selectInfo('idanagrafica', $(this).val());
+        $("#idcontratto").selectInfo('idanagrafica', $(this).val());
+        $("#idpreventivo").selectInfo('idanagrafica', $(this).val());
 
-        $("#idsede").selectReset();
+        $("#idsede_destinazione").selectReset();
         $("#idreferente").selectReset();
 		$("#idpreventivo").selectReset();
 		$("#idcontratto").selectReset();
@@ -355,7 +355,7 @@ include $structure->filepath('ajax_righe.php');
 		session_set('superselect,marticola', $(this).val(), 0);
 	});
 
-	$('#idsede').change( function(){
+	$('#idsede_destinazione').change( function(){
 		if (($(this).val())) {
 			if (($(this).selectData().idzona)){
 				$('#idzona').val($(this).selectData().idzona).change();

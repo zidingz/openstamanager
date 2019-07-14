@@ -29,12 +29,15 @@ class SelectHandler implements HandlerInterface
         }
 
         // Informazioni aggiuntive per il select
+        $infos = [];
         if (!empty($values['ajax-info'])) {
-            $infos = explode(',', $values['ajax-info']);
+            $list = explode(',', $values['ajax-info']);
 
-            foreach ($infos as $info) {
-                list($name, $value) = explode('=', $info);
+            foreach ($list as $element) {
+                list($name, $value) = explode('=', $element);
+
                 $values['data-select-'.$name] = $value;
+                $infos[$name] = $value;
             }
 
             unset($values['ajax-info']);
@@ -50,7 +53,7 @@ class SelectHandler implements HandlerInterface
         // Gestione delle richieste AJAX (se il campo "ajax-source" è impostato)
         if (!empty($values['ajax-source'])) {
             if (!empty($values['value']) || is_numeric($values['value'])) {
-                $result .= $this->select2($values['ajax-source'], $values['value']);
+                $result .= $this->select2($values['ajax-source'], $values['value'], $infos);
             }
         } else {
             if (!in_array('multiple', $extras)) {
@@ -112,13 +115,14 @@ class SelectHandler implements HandlerInterface
      *
      * @param string $op
      * @param array  $elements
+     * @param array  $info
      *
      * @return string
      */
-    protected function select2($op, $elements)
+    protected function select2($op, $elements, $info = [])
     {
         // Richiamo del file dedicato alle richieste AJAX per ottenere il valore iniziale del select
-        $response = \AJAX::select($op, $elements);
+        $response = \AJAX::select($op, $elements, null, 0, 100, $info);
 
         $html = '';
 

@@ -26,7 +26,7 @@
 				</div>
 
 				<div class="col-md-4">
-					{[ "type": "select", "label": "<?php echo tr('Sede'); ?>", "name": "idsede", "value": "$idsede$", "ajax-source": "sedi", "placeholder": "Sede legale", "ajax-info": "idanagrafica=$idanagrafica$" ]}
+					{[ "type": "select", "label": "<?php echo tr('Sede'); ?>", "name": "idsede", "value": "$idsede$", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$", "placeholder": "Sede legale", "ajax-info": "idanagrafica=$idanagrafica$" ]}
 				</div>
 
 
@@ -45,7 +45,7 @@
                     echo Plugins::link('Referenti', $record['idanagrafica'], null, null, 'class="pull-right"');
                     ?>
 
-					{[ "type": "select", "label": "<?php echo tr('Referente'); ?>", "name": "idreferente", "value": "$idreferente$", "ajax-source": "referenti" "ajax-info": "idanagrafica=$idanagrafica$" ]}
+					{[ "type": "select", "label": "<?php echo tr('Referente'); ?>", "name": "idreferente", "value": "$idreferente$", "ajax-source": "referenti", "ajax-info": "idanagrafica=$idanagrafica$" ]}
 				</div>
 
 
@@ -427,8 +427,8 @@ if (!empty($record['idcontratto_prev'])) {
     });
 
 	$('#idanagrafica_c').change( function(){
-        $("#idsede").selectInfo('idanagrafica', $(this).val())
-        $("#idreferente").selectInfo('idanagrafica', $(this).val())
+        $("#idsede").selectInfo('idanagrafica', $(this).val());
+        $("#idreferente").selectInfo('idanagrafica', $(this).val());
 
         $("#idsede").selectReset();
         $("#idreferente").selectReset();

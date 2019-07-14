@@ -49,7 +49,7 @@ switch (post('op')) {
         $dbo->query('DELETE FROM an_zone WHERE id='.prepare($id_record).' AND `default`=0');
 
         // Reimposto a 0 tutti gli idzona su an_anagrafiche (scollego la zona da tutte le anagrafiche associate)
-        $dbo->query('UPDATE an_anagrafiche SET idzona = 0 WHERE idanagrafica='.prepare($id_record));
+        $dbo->query('UPDATE an_sedi SET idzona = NULL WHERE idzona = '.prepare($id_record));
 
         flash()->info(tr('Zona eliminata!'));
 

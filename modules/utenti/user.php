@@ -111,7 +111,7 @@ if (!$self_edit) {
     echo '
 	<div class="row">
 		<div class="col-md-12">
-		{[ "type": "select", "label": "'.tr('Sede').'", "name": "idsede[]",  "ajax-source": "sedi", "multiple":"1", "value":"'.$sedi.'" ]}
+		{[ "type": "select", "label": "'.tr('Sede').'", "name": "idsede[]",  "ajax-source": "sedi", "ajax-info": "idanagrafica='.$id_anagrafica.'", "multiple":"1", "value":"'.$sedi.'" ]}
 		</div>
 	</div>';
 
@@ -154,9 +154,7 @@ if (!$self_edit) {
 
 	$(document).ready(function(){
 		$("#idanag").change(function(){
-			session_set("superselect,idanagrafica", $(this).val(), 0);
-
-			$("#idsede").selectReset();
+            $("#idsede").selectInfo("idanagrafica", $(this).val()).selectReset();
 		})
 	});
 

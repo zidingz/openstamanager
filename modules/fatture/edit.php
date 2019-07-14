@@ -154,7 +154,7 @@ if (empty($record['is_fiscale'])) {
                 if ($dir == 'uscita') {
                     ?>
                     <div class="col-md-3">
-                        {[ "type": "select", "label": "<?php echo tr('Partenza merce'); ?>", "name": "idsede_partenza", "ajax-source": "sedi", "placeholder": "Sede legale", "value": "$idsede_partenza$", "icon-after": "add|<?php echo Modules::get('Anagrafiche')['id']; ?>|id_plugin=<?php echo Plugins::get('Sedi')['id']; ?>&id_parent=<?php echo $record['idanagrafica']; ?>||<?php echo (intval($block_edit)) ? 'disabled' : ''; ?>" ]}
+                        {[ "type": "select", "label": "<?php echo tr('Partenza merce'); ?>", "name": "idsede_partenza", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$", "placeholder": "Sede legale", "value": "$idsede_partenza$", "icon-after": "add|<?php echo Modules::get('Anagrafiche')['id']; ?>|id_plugin=<?php echo Plugins::get('Sedi')['id']; ?>&id_parent=<?php echo $record['idanagrafica']; ?>||<?php echo (intval($block_edit)) ? 'disabled' : ''; ?>" ]}
                     </div>
 
                     <div class="col-md-3">
@@ -168,7 +168,7 @@ if (empty($record['is_fiscale'])) {
                     </div>
 
                     <div class="col-md-3">
-                        {[ "type": "select", "label": "<?php echo tr('Destinazione merce'); ?>", "name": "idsede_destinazione", "ajax-source": "sedi",  "value": "$idsede_destinazione$", "readonly": "", "icon-after": "add|<?php echo Modules::get('Anagrafiche')['id']; ?>|id_plugin=<?php echo Plugins::get('Sedi')['id']; ?>&id_parent=<?php echo $record['idanagrafica']; ?>||<?php echo (intval($block_edit)) ? 'disabled' : ''; ?>" ]}
+                        {[ "type": "select", "label": "<?php echo tr('Destinazione merce'); ?>", "name": "idsede_destinazione", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$",  "value": "$idsede_destinazione$", "readonly": "", "icon-after": "add|<?php echo Modules::get('Anagrafiche')['id']; ?>|id_plugin=<?php echo Plugins::get('Sedi')['id']; ?>&id_parent=<?php echo $record['idanagrafica']; ?>||<?php echo (intval($block_edit)) ? 'disabled' : ''; ?>" ]}
                     </div>
                 <?php
                 }
@@ -182,7 +182,7 @@ if (empty($record['is_fiscale'])) {
 				<?php if ($dir == 'entrata') {
                     ?>
 				<div class="col-md-3">
-					{[ "type": "select", "label": "<?php echo tr('Agente di riferimento'); ?>", "name": "idagente", "ajax-source": "agenti", "value": "$idagente_fattura$" ]}
+					{[ "type": "select", "label": "<?php echo tr('Agente di riferimento'); ?>", "name": "idagente", "ajax-source": "agenti", "ajax-info": "idanagrafica=$idanagrafica$", "value": "$idagente_fattura$" ]}
 				</div>
 				<?php
                 } ?>
@@ -631,14 +631,11 @@ if ($dir == 'entrata') {
 
 echo '
 <script type="text/javascript">
+    var id = "'.($dir == 'entrata' ? 'idsede_destinazione' : 'idsede_partenza').'";
+
 	$("#idanagrafica").change(function(){
-        session_set("superselect,idanagrafica", $(this).val(), 0);';
-        if ($dir == 'entrata') {
-            echo '$("#idsede_destinazione").selectReset();';
-        } else {
-            echo '$("#idsede_partenza").selectReset();';
-        }
-echo '
+        $("#" + id).selectInfo("idanagrafica", $(this).val()).selectReset();
+        $("#idagente").selectInfo("idanagrafica", $(this).val()).selectReset();
 	});
 
     $("#ricalcola_scadenze").click(function(){

@@ -114,13 +114,13 @@ $_SESSION['superselect']['idsede_destinazione'] = $record['idsede_destinazione']
                         {[ "type": "select", "label": "<?php echo tr('Partenza merce'); ?>", "name": "idsede_partenza", "ajax-source": "sedi_azienda",  "value": "$idsede_partenza$", "readonly": "<?php echo ($record['flag_completato'] || sizeof($articolo)) ? 1 : 0; ?>" ]}
                     </div>
                     <div class="col-md-3">
-                        {[ "type": "select", "label": "<?php echo tr('Destinazione merce'); ?>", "name": "idsede_destinazione", "ajax-source": "sedi",  "value": "$idsede_destinazione$", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
+                        {[ "type": "select", "label": "<?php echo tr('Destinazione merce'); ?>", "name": "idsede_destinazione", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$", "value": "$idsede_destinazione$", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
                     </div>
                     <?php
                         } else {
                             ?>
                     <div class="col-md-3">
-                        {[ "type": "select", "label": "<?php echo tr('Partenza merce'); ?>", "name": "idsede_partenza", "ajax-source": "sedi",  "value": "$idsede_partenza$", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
+                        {[ "type": "select", "label": "<?php echo tr('Partenza merce'); ?>", "name": "idsede_partenza", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$", "value": "$idsede_partenza$", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
                     </div>
                     <div class="col-md-3">
                         {[ "type": "select", "label": "<?php echo tr('Destinazione merce'); ?>", "name": "idsede_destinazione", "ajax-source": "sedi_azienda",  "value": "$idsede_destinazione$", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
@@ -266,13 +266,10 @@ include $docroot.'/modules/ddt/row-list.php';
 {( "name": "log_email", "id_module": "$id_module$", "id_record": "$id_record$" )}
 
 <script>
-	$('#idanagrafica').change( function(){
-		session_set('superselect,idanagrafica', $(this).val(), 0);
-        if('<?php echo $dir; ?>' == 'uscita'){
-		    $("#idsede_partenza").selectReset();
-        }else{
-            $("#idsede_destinazione").selectReset();
-        }
+    var id = "<?php echo $dir == 'entrata' ? 'idsede_destinazione' : 'idsede_partenza'; ?>";
+
+    $("#idanagrafica").change(function(){
+        $("#" + id).selectInfo("idanagrafica", $(this).val()).selectReset();
 	});
 </script>
 

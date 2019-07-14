@@ -178,7 +178,7 @@ if (!empty($id_intervento)) {
 				</div>
 
 				<div class="col-md-4">
-                    {[ "type": "select", "label": "<?php echo tr('Sede'); ?>", "name": "idsede", "value": "<?php echo $idsede; ?>", "placheholder": "<?php echo tr('Seleziona prima un cliente'); ?>...", "ajax-source": "sedi" ]}
+                    {[ "type": "select", "label": "<?php echo tr('Sede'); ?>", "name": "idsede", "value": "<?php echo $idsede; ?>", "placheholder": "<?php echo tr('Seleziona prima un cliente'); ?>...", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$" ]}
 				</div>
 
 				<div class="col-md-4">
@@ -348,23 +348,24 @@ if (!empty($id_intervento)) {
     });
 
 	$('#bs-popup #idanagrafica').change( function(){
-		session_set('superselect,idanagrafica', $(this).val(), 0);
-
         var value = !$(this).val() ? true : false;
         var placeholder = !$(this).val() ? '<?php echo tr('Seleziona prima un cliente...'); ?>' : '<?php echo tr("-Seleziona un\'opzione-"); ?>';
 
+        $("#bs-popup #idsede").selectInfo("idanagrafica", $(this).val()).selectReset(placeholder);
+        $("#bs-popup #idpreventivo").selectInfo("idanagrafica", $(this).val()).selectReset(placeholder);
+        $("#bs-popup #idcontratto").selectInfo("idanagrafica", $(this).val()).selectReset(placeholder);
+        $("#bs-popup #idimpianti").selectInfo("idanagrafica", $(this).val()).selectReset(placeholder);
+
+		session_set('superselect,idanagrafica', $(this).val(), 0);
+
 		$("#bs-popup #idsede").prop("disabled", value);
-		$("#bs-popup #idsede").selectReset(placeholder);
 
 		$("#bs-popup #idpreventivo").prop("disabled", value);
-		$("#bs-popup #idpreventivo").selectReset(placeholder);
 
 		$("#bs-popup #idcontratto").prop("disabled", value);
-		$("#bs-popup #idcontratto").selectReset(placeholder);
 
 		$("#bs-popup #idimpianti").prop("disabled", value);
         $("#bs-popup #impianti").find("button").prop("disabled", value);
-		$("#bs-popup #idimpianti").selectReset(placeholder);
 
 		if (($(this).val())) {
 			if (($(this).selectData().idzona)){

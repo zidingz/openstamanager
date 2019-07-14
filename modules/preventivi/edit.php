@@ -21,11 +21,11 @@
                     <?php
                         echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="float-right"');
                     ?>
-					{[ "type": "select", "label": "<?php echo tr('Cliente'); ?>", "name": "idanagrafica", "required": 1, "value": "$idanagrafica$", "ajax-source": "clienti" ]}
+					{[ "type": "select", "label": "<?php echo tr('Cliente'); ?>", "name": "idanagrafica", "id": "idanagrafica_c", "required": 1, "value": "$idanagrafica$", "ajax-source": "clienti" ]}
 				</div>
 
 				<div class="col-md-4">
-					{[ "type": "select", "label": "<?php echo tr('Sede'); ?>", "name": "idsede", "value": "$idsede$", "ajax-source": "sedi", "placeholder": "Sede legale" ]}
+					{[ "type": "select", "label": "<?php echo tr('Sede'); ?>", "name": "idsede", "value": "$idsede$", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$", "placeholder": "Sede legale" ]}
 				</div>
 
 			</div>
@@ -235,8 +235,15 @@ include $docroot.'/modules/preventivi/row-list.php';
 			}else{
 				$('#id_documento_fe').prop('required', true);
 			}
-
 		});
+
+        $('#idanagrafica_c').change( function(){
+            $("#idsede").selectInfo('idanagrafica', $(this).val());
+            $("#idreferente").selectInfo('idanagrafica', $(this).val());
+
+            $("#idsede").selectReset();
+            $("#idreferente").selectReset();
+        });
 
     });
 </script>

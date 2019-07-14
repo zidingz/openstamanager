@@ -75,7 +75,7 @@ $_SESSION['superselect']['idanagrafica'] = $record['idanagrafica'];
 				</div>
                 
                 <div class="col-md-3">
-					{[ "type": "select", "label": "<?php echo tr('Sede'); ?>", "name": "idsede", "required": 1, "ajax-source": "sedi", "value": "<?php echo $record['idsede']; ?>", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
+					{[ "type": "select", "label": "<?php echo tr('Sede'); ?>", "name": "idsede", "required": 1, "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$", "value": "<?php echo $record['idsede']; ?>", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
 				</div>
 
 				<div class="col-md-3">
@@ -245,9 +245,7 @@ if ($record['flag_completato']) {
 ?>
 
 $('#idanagrafica').change( function(){
-	session_set('superselect,idanagrafica', $(this).val(), 0);
-
-	$("#idsede").selectReset();
+    $("#idsede").selectInfo("idanagrafica", $(this).val()).selectReset();
 });
 
 $(document).ready( function(){

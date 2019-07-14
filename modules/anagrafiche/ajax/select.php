@@ -228,13 +228,13 @@ switch ($resource) {
 
     case 'sedi':
         if (isset($superselect['idanagrafica'])) {
-            $query = "SELECT * FROM (SELECT '0' AS id, CONCAT_WS(' - ', 'Sede legale' , (SELECT CONCAT (citta, ' (', ragione_sociale,')') FROM an_anagrafiche |where|)) AS descrizione UNION SELECT id, CONCAT_WS(' - ', nomesede, citta) FROM an_sedi |where|) AS tab |filter| ORDER BY descrizione";
+            $query = "SELECT id, CONCAT_WS(' - ', nomesede, citta) AS descrizione FROM an_sedi |where| ORDER BY descrizione";
 
             foreach ($elements as $element) {
-                $filter[] = 'id='.prepare($element);
+                $filter[] = 'id = '.prepare($element);
             }
 
-            $where[] = 'idanagrafica='.prepare($superselect['idanagrafica']);
+            $where[] = 'idanagrafica = '.prepare($superselect['idanagrafica']);
 
             if (!empty($search)) {
                 $search_fields[] = 'nomesede LIKE '.prepare('%'.$search.'%');
@@ -244,22 +244,20 @@ switch ($resource) {
         break;
 
     case 'sedi_azienda':
-        if (isset($superselect['idanagrafica'])) {
-            $user = Auth::user();
+        $user = Auth::user();
 
-            $query = "SELECT * FROM (SELECT '0' AS id, CONCAT_WS(' - ', 'Sede legale' , (SELECT CONCAT (citta, ' (', ragione_sociale,')') FROM an_anagrafiche |where|)) AS descrizione UNION SELECT id, CONCAT_WS(' - ', nomesede, citta) FROM an_sedi |where|) AS tab |filter| ORDER BY descrizione";
+        $query = "SELECT id, CONCAT_WS(' - ', nomesede, citta) AS descrizione FROM an_sedi |where| ORDER BY descrizione";
 
-            foreach ($elements as $element) {
-                $filter[] = 'id='.prepare($element);
-            }
+        foreach ($elements as $element) {
+            $filter[] = 'id='.prepare($element);
+        }
 
-            $where[] = 'idanagrafica='.prepare($user->idanagrafica);
-            $where[] = 'id IN('.implode(',', $user->sedi).')';
+        $where[] = 'idanagrafica='.prepare($user->idanagrafica);
+        $where[] = 'id IN('.implode(',', $user->sedi).')';
 
-            if (!empty($search)) {
-                $search_fields[] = 'nomesede LIKE '.prepare('%'.$search.'%');
-                $search_fields[] = 'citta LIKE '.prepare('%'.$search.'%');
-            }
+        if (!empty($search)) {
+            $search_fields[] = 'nomesede LIKE '.prepare('%'.$search.'%');
+            $search_fields[] = 'citta LIKE '.prepare('%'.$search.'%');
         }
 
         break;

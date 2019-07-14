@@ -14,6 +14,19 @@ UPDATE `an_anagrafiche` SET `id_sede_legale` = (SELECT `id` FROM `an_sedi` WHERE
 
 ALTER TABLE `an_anagrafiche` DROP FOREIGN KEY `an_anagrafiche_ibfk_1`, DROP `indirizzo`, DROP `indirizzo2`, DROP `citta`, DROP `cap`, DROP `provincia`, DROP `km`, DROP `id_nazione`, DROP `telefono`, DROP `fax`, DROP `cellulare`, DROP `email`, DROP `idzona`, DROP `gaddress`, DROP `lat`, DROP `lng`;
 
+UPDATE `co_documenti` SET `idsede_partenza` = (SELECT `id_sede_legale` FROM `an_anagrafiche` WHERE `an_anagrafiche`.`idanagrafica` = `co_documenti`.`idanagrafica`) WHERE `idsede_partenza` = 0;
+UPDATE `co_documenti` SET `idsede_destinazione` = (SELECT `id_sede_legale` FROM `an_anagrafiche` WHERE `an_anagrafiche`.`idanagrafica` = `co_documenti`.`idanagrafica`) WHERE `idsede_destinazione` = 0;
+
+UPDATE `dt_ddt` SET `idsede_partenza` = (SELECT `id_sede_legale` FROM `an_anagrafiche` WHERE `an_anagrafiche`.`idanagrafica` = `dt_ddt`.`idanagrafica`) WHERE `idsede_partenza` = 0;
+UPDATE `dt_ddt` SET `idsede_destinazione` = (SELECT `id_sede_legale` FROM `an_anagrafiche` WHERE `an_anagrafiche`.`idanagrafica` = `dt_ddt`.`idanagrafica`) WHERE `idsede_destinazione` = 0;
+
+UPDATE `in_interventi` SET `idsede_partenza` = (SELECT `id_sede_legale` FROM `an_anagrafiche` WHERE `an_anagrafiche`.`idanagrafica` = `in_interventi`.`idanagrafica`) WHERE `idsede_partenza` = 0;
+UPDATE `in_interventi` SET `idsede_destinazione` = (SELECT `id_sede_legale` FROM `an_anagrafiche` WHERE `an_anagrafiche`.`idanagrafica` = `in_interventi`.`idanagrafica`) WHERE `idsede_destinazione` = 0;
+
+UPDATE `co_preventivi` SET `idsede` = (SELECT `id_sede_legale` FROM `an_anagrafiche` WHERE `an_anagrafiche`.`idanagrafica` = `co_preventivi`.`idanagrafica`) WHERE `idsede` = 0;
+UPDATE `co_contratti` SET `idsede` = (SELECT `id_sede_legale` FROM `an_anagrafiche` WHERE `an_anagrafiche`.`idanagrafica` = `co_contratti`.`idanagrafica`) WHERE `idsede` = 0;
+UPDATE `or_ordini` SET `idsede` = (SELECT `id_sede_legale` FROM `an_anagrafiche` WHERE `an_anagrafiche`.`idanagrafica` = `or_ordini`.`idanagrafica`) WHERE `idsede` = 0;
+
 UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM `an_anagrafiche` LEFT JOIN `an_relazioni` ON `an_anagrafiche`.`idrelazione` = `an_relazioni`.`id` LEFT JOIN `an_tipianagrafiche_anagrafiche` ON `an_tipianagrafiche_anagrafiche`.`idanagrafica` = `an_anagrafiche`.`idanagrafica` INNER JOIN `an_sedi` ON `an_sedi`.`id`=`an_anagrafiche`.`id_sede_legale` LEFT JOIN `an_tipianagrafiche` ON `an_tipianagrafiche`.`id` = `an_tipianagrafiche_anagrafiche`.`id_tipo_anagrafica` WHERE 1=1 AND `deleted_at` IS NULL GROUP BY `an_anagrafiche`.`idanagrafica` HAVING 2=2 ORDER BY TRIM(`ragione_sociale`)' WHERE `name` = 'Anagrafiche';
 
 --  TODO: definire cluausole ON DELETE
@@ -151,22 +164,32 @@ ALTER TABLE `or_ordini` ADD FOREIGN KEY (`id_stato`) REFERENCES `or_statiordine`
 UPDATE `zz_modules` SET `options` = REPLACE(`options`, 'idtipoddt', 'id_tipo_ddt'), `options2` = REPLACE(`options2`, 'idtipoddt', 'id_tipo_ddt');
 
 -- Fix vari per gli stati
-UPDATE `zz_widgets` SET `query` = REPLACE(`query`, 'idstatodocumento', 'id_stato');
+UPDATE `zz_views` SET `query` = REPLACE(`query`, 'idstatodocumento', 'id_stato');
+UPDATE `zz_views` SET `query` = REPLACE(`query`, 'in_statiintervento.idstatointervento', 'in_statiintervento.id');
 UPDATE `zz_views` SET `query` = REPLACE(`query`, 'idstatointervento', 'id_stato');
 UPDATE `zz_views` SET `query` = REPLACE(`query`, 'idstatodocumento', 'id_stato');
 UPDATE `zz_views` SET `query` = REPLACE(`query`, 'idstatoordine', 'id_stato');
 UPDATE `zz_views` SET `query` = REPLACE(`query`, 'idstatoddt', 'id_stato');
 UPDATE `zz_views` SET `query` = REPLACE(`query`, 'idstato', 'id_stato');
 
+UPDATE `zz_widgets` SET `query` = REPLACE(`query`, 'idstatodocumento', 'id_stato');
+UPDATE `zz_widgets` SET `query` = REPLACE(`query`, 'in_statiintervento.idstatointervento', 'in_statiintervento.id');
+UPDATE `zz_widgets` SET `query` = REPLACE(`query`, 'idstatointervento', 'id_stato');
+UPDATE `zz_widgets` SET `query` = REPLACE(`query`, 'idstatodocumento', 'id_stato');
+UPDATE `zz_widgets` SET `query` = REPLACE(`query`, 'idstatoordine', 'id_stato');
+UPDATE `zz_widgets` SET `query` = REPLACE(`query`, 'idstatoddt', 'id_stato');
+UPDATE `zz_widgets` SET `query` = REPLACE(`query`, 'idstato', 'id_stato');
+
+UPDATE `zz_views` SET `query` = 'id' WHERE `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Tipi di intervento') AND `name` = 'id';
 UPDATE `zz_views` SET `query` = '(SELECT descrizione FROM in_statiintervento WHERE in_statiintervento.id=in_interventi.id_stato)' WHERE `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Interventi') AND `name` = 'Stato';
 UPDATE `zz_views` SET `query` = '(SELECT colore FROM in_statiintervento WHERE in_statiintervento.id=in_interventi.id_stato)' WHERE `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Interventi') AND `name` = '_bg_';
 
-UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato, co_contratti.id, DATEDIFF( data_conclusione, NOW() ) AS giorni_rimanenti FROM co_contratti WHERE id_stato IN(SELECT id FROM co_staticontratti WHERE is_fatturabile = 1) AND rinnovabile=1 AND NOW() > DATE_ADD( data_conclusione, INTERVAL - ABS(giorni_preavviso_rinnovo) DAY) AND YEAR(data_conclusione) > 1970 AND ISNULL((SELECT id FROM co_contratti contratti WHERE contratti.idcontratto_prev=co_contratti.id )) ORDER BY giorni_rimanenti ASC' WHERE `zz_widgets`.`name` = 'Contratti in scadenza';
-UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato FROM co_promemoria WHERE idcontratto IN( SELECT id FROM co_contratti WHERE id_stato IN (SELECT id FROM co_staticontratti WHERE is_pianificabile = 1)) AND idintervento IS NULL' WHERE `zz_widgets`.`name` = 'Interventi da pianificare';
-UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato FROM co_ordiniservizio WHERE idcontratto IN( SELECT id FROM co_contratti WHERE id_stato IN(SELECT id FROM co_staticontratti WHERE is_pianificabile = 1)) AND idintervento IS NULL' WHERE `zz_widgets`.`name` = 'Ordini di servizio da impostare';
-UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato FROM co_ordiniservizio_pianificazionefatture WHERE idcontratto IN( SELECT id FROM co_contratti WHERE id_stato IN(SELECT id FROM co_staticontratti WHERE descrizione IN("Bozza", "Accettato", "In lavorazione", "In attesa di pagamento")) ) AND co_ordiniservizio_pianificazionefatture.iddocumento=0' WHERE `zz_widgets`.`name` = 'Rate contrattuali';
-UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato FROM in_interventi WHERE id NOT IN (SELECT idintervento FROM in_interventi_tecnici) AND id_stato IN (SELECT id FROM in_statiintervento WHERE completato = 0)' WHERE `zz_widgets`.`name` = 'Attività da pianificare';
-UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato FROM co_preventivi WHERE id_stato = (SELECT id FROM co_statipreventivi WHERE descrizione="In lavorazione")' WHERE `zz_widgets`.`name` = 'Preventivi in lavorazione';
+-- UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato, co_contratti.id, DATEDIFF( data_conclusione, NOW() ) AS giorni_rimanenti FROM co_contratti WHERE id_stato IN(SELECT id FROM co_staticontratti WHERE is_fatturabile = 1) AND rinnovabile=1 AND NOW() > DATE_ADD( data_conclusione, INTERVAL - ABS(giorni_preavviso_rinnovo) DAY) AND YEAR(data_conclusione) > 1970 AND ISNULL((SELECT id FROM co_contratti contratti WHERE contratti.idcontratto_prev=co_contratti.id )) ORDER BY giorni_rimanenti ASC' WHERE `zz_widgets`.`name` = 'Contratti in scadenza';
+-- UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato FROM co_promemoria WHERE idcontratto IN( SELECT id FROM co_contratti WHERE id_stato IN (SELECT id FROM co_staticontratti WHERE is_pianificabile = 1)) AND idintervento IS NULL' WHERE `zz_widgets`.`name` = 'Interventi da pianificare';
+-- UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato FROM co_ordiniservizio WHERE idcontratto IN( SELECT id FROM co_contratti WHERE id_stato IN(SELECT id FROM co_staticontratti WHERE is_pianificabile = 1)) AND idintervento IS NULL' WHERE `zz_widgets`.`name` = 'Ordini di servizio da impostare';
+-- UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato FROM co_ordiniservizio_pianificazionefatture WHERE idcontratto IN( SELECT id FROM co_contratti WHERE id_stato IN(SELECT id FROM co_staticontratti WHERE descrizione IN("Bozza", "Accettato", "In lavorazione", "In attesa di pagamento")) ) AND co_ordiniservizio_pianificazionefatture.iddocumento=0' WHERE `zz_widgets`.`name` = 'Rate contrattuali';
+-- UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato FROM in_interventi WHERE id NOT IN (SELECT idintervento FROM in_interventi_tecnici) AND id_stato IN (SELECT id FROM in_statiintervento WHERE completato = 0)' WHERE `zz_widgets`.`name` = 'Attività da pianificare';
+-- UPDATE `zz_widgets` SET `query` = 'SELECT COUNT(id) AS dato FROM co_preventivi WHERE id_stato = (SELECT id FROM co_statipreventivi WHERE descrizione="In lavorazione")' WHERE `zz_widgets`.`name` = 'Preventivi in lavorazione';
 
 -- Fix contenuti delle date (NULL al posto di 0000-00-00)
 ALTER TABLE `mg_movimenti` CHANGE `data` `data` date;

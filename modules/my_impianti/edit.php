@@ -62,7 +62,7 @@ if (!empty($record['immagine'])) {
 				</div>
 
 				<div class="col-md-4">
-					{[ "type": "select", "label": "<?php echo tr('Sede'); ?>", "name": "idsede", "value": "$idsede$", "required": "1", "ajax-source": "sedi", "placeholder": "Sede legale" ]}
+					{[ "type": "select", "label": "<?php echo tr('Sede'); ?>", "name": "idsede", "value": "$idsede$", "required": "1", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$", "placeholder": "Sede legale" ]}
 				</div>
 			</div>
 
@@ -122,14 +122,11 @@ if (!empty($record['immagine'])) {
 $(document).ready(function(){
 
 	$('#idanagrafica').change( function(){
-
-		session_set('superselect,idanagrafica', $(this).val(), 0);
+        $("#idsede").selectInfo("idanagrafica", $(this).val()).selectReset();
 
         var value = !$(this).val() ? true : false;
 
 		$("#idsede").prop("disabled", value);
-		$("#idsede").selectReset();
-
 	});
 
 	$('#idsede').change( function(){
