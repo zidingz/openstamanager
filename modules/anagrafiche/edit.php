@@ -337,7 +337,7 @@ echo '
                                 $piano_dei_conti_cliente = tr('_NAME_', [
                                     '_NAME_' => $conto['numero'].'.'.$conto['numero_conto'].' '.$conto['descrizione'],
                                 ]);
-                                echo Modules::link('Piano dei conti', null, null, null, 'class="pull-right"');
+                                echo Modules::link('Piano dei conti', null, null, null, 'class="float-right"');
                             } else {
                                 $piano_dei_conti_cliente = tr('Nessuno');
                             }
@@ -390,7 +390,7 @@ echo '
                                 $piano_dei_conti_fornitore = tr('_NAME_', [
                                     '_NAME_' => $conto['numero'].'.'.$conto['numero_conto'].' '.$conto['descrizione'],
                                 ]);
-                                echo Modules::link('Piano dei conti', null, null, null, 'class="pull-right"');
+                                echo Modules::link('Piano dei conti', null, null, null, 'class="float-right"');
                             } else {
                                 $piano_dei_conti_fornitore = tr('Nessuno');
                             }
@@ -537,7 +537,7 @@ ORDER BY `data`');
 if (!empty($elementi)) {
     echo '
 <div class="card card-outline card-warning collapsable collapsed-box">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Documenti collegati: _NUM_', [
             '_NUM_' => count($elementi),
         ]).'</h3>

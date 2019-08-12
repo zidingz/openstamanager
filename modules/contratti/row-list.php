@@ -96,8 +96,8 @@ foreach ($righe as $riga) {
                     <input type="hidden" name="idriga" value="'.$riga->id.'">
 
                     <div class="btn-group">
-                        <a class="btn btn-xs btn-warning" onclick="editRow('.$riga->id.')"><i class="fa fa-edit"></i></a>
-                        <a class="btn btn-xs btn-danger" onclick="deleteRow('.$riga->id.')"><i class="fa fa-trash"></i></a>
+                        <a class="btn btn-sm btn-warning" onclick="editRow('.$riga->id.')"><i class="fa fa-edit"></i></a>
+                        <a class="btn btn-sm btn-danger" onclick="deleteRow('.$riga->id.')"><i class="fa fa-trash"></i></a>
                     </div>
                 </form>';
     }

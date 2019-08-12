@@ -19,14 +19,11 @@
 
         <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/app.min.js"></script>
         <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/functions.min.js"></script>
-
         <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/custom.min.js"></script>
-        <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/init.min.js"></script>
 
-        <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/i18n/parsleyjs/{{ lang }}.min.js"></script>
-        <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/i18n/select2/{{ lang }}.min.js"></script>
-        <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/i18n/moment/{{ lang }}.min.js"></script>
-        <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/i18n/fullcalendar/{{ lang }}.min.js"></script>
+        {% for script in i18n %}
+            <script type="text/javascript" charset="utf-8" src="{{ base_url() }}{{ script }}"></script>
+        {% endfor %}
 
         <!-- Impostazioni di default per gli alert -->
         <script>
@@ -40,10 +37,14 @@
             globals = {
                 rootdir: '{{ base_url() }}',
 
-                {% set lang_pieces = lang|split('_') %}
+                timestamp_format: "{{ formatter.getTimestampPattern() }}",
+                date_format: "{{ formatter.getDatePattern() }}",
+                time_format: "{{ formatter.getTimePattern() }}",
+                decimals: "{{ formatter.getNumberSeparators()['decimals'] }}",
+                thousands: "{{ formatter.getNumberSeparators()['thousands'] }}",
 
-                locale: '{{ lang_pieces[0] }}',
-                full_locale: '{{ lang }}',
+                locale: '{{ lang }}',
+                full_locale: '{{ full_locale }}',
 
                 translations: {
                     password: {
@@ -100,5 +101,6 @@
 
         {% block body %}{% endblock %}
 
+        <script>$(document).ready(init)</script>
     </body>
 </html>

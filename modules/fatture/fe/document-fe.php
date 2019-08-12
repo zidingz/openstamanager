@@ -27,7 +27,7 @@ echo '
         <tr class="first-level">
             <th colspan="2">
                 2 FatturaElettronicaBody
-                <button type="submit" class="btn btn-primary pull-right">
+                <button type="submit" class="btn btn-primary float-right">
                     <i class="fa fa-edit"></i> '.tr('Salva').'
                 </button>
 			</th>

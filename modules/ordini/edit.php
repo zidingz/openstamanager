@@ -189,7 +189,7 @@ UNION SELECT `dt_ddt`.`id`, `dt_ddt`.`data`, `dt_ddt`.`numero`, `dt_ddt`.`numero
 if (!empty($elementi)) {
     echo '
 <div class="card card-outline card-warning collapsable collapsed-box">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Documenti collegati: _NUM_', [
             '_NUM_' => count($elementi),
         ]).'</h3>

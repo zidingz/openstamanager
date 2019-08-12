@@ -6,7 +6,7 @@ include_once __DIR__.'/../../../core.php';
 
 echo '
 <div class="card card-outline card-primary">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title">'.tr('Movimenti').'</h3>
     </div>
     <div class="card-body">';

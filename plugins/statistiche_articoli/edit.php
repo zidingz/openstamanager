@@ -4,13 +4,13 @@ include_once __DIR__.'/../../core.php';
 
 echo '
 <hr>
-<div class="box box-warning">
-    <div class="box-header">
-        <h4 class="box-title">
+<div class="card card-outline card-warning">
+    <div class="card-header">
+        <h4 class="card-title">
             '.tr('Periodi temporali').'
         </h4>
-        <div class="box-tools pull-right">
-            <button class="btn btn-warning btn-xs" onclick="add_calendar()">
+        <div class="card-tools float-right">
+            <button class="btn btn-warning btn-sm" onclick="add_calendar()">
                 <i class="fa fa-plus"></i> '.tr('Aggiungi periodo').'
             </button>
             <button type="button" class="btn btn-box-tool" data-widget="collapse">

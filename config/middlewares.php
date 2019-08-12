@@ -7,3 +7,6 @@ $app->add(new \Middlewares\ContentMiddleware($container));
 $app->add($container['filter']);
 
 $app->add(new \Middlewares\ConfigMiddleware($container));
+
+// Middleware per la lingua
+$app->add(new \Middlewares\LangMiddleware($container));

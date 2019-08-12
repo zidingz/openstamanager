@@ -14,6 +14,12 @@ use Util\Query;
  */
 class ContentMiddleware extends Middleware
 {
+    protected $container;
+
+    public function __construct($container) {
+        $this->container = $container;
+    }
+
     public function __invoke($request, $response, $next)
     {
         $route = $request->getAttribute('route');
@@ -22,6 +28,7 @@ class ContentMiddleware extends Middleware
         }
 
         $args = $route->getArguments();
+
         Modules::setCurrent($args['module_id']);
         Plugins::setCurrent($args['plugin_id']);
 
@@ -46,15 +53,17 @@ class ContentMiddleware extends Middleware
         $user = auth()->getUser();
         $args['user'] = $user;
 
-        $args['formatter'] = formatter()->getNumberSeparators();
+        $args['order_manager_id'] = $this->database->isInstalled() ? Modules::get('Stato dei serivizi')['id'] : null;
+        $args['is_mobile'] = isMobile();
 
+        // Versione
         $args['version'] = \Update::getVersion();
         $args['revision'] = \Update::getRevision();
 
+        // Richiesta AJAX
         $args['handle_ajax'] = $request->isXhr() && filter('ajax');
 
-        $args['order_manager_id'] = $this->database->isInstalled() ? Modules::get('Stato dei serivizi')['id'] : null;
-
+        // Calendario
         // Periodo di visualizzazione
         if (!empty($_GET['period_start'])) {
             $_SESSION['period_start'] = $_GET['period_start'];
@@ -93,21 +102,5 @@ class ContentMiddleware extends Middleware
         $request = $this->setArgs($request, $args);
 
         return $next($request, $response);
-    }
-
-    protected function setArgs($request, $args)
-    {
-        $route = $request->getAttribute('route');
-
-        // update the request with the new arguments to route
-        $route->setArguments($args);
-        $request = $request->withAttribute('route', $route);
-
-        // also update the routeInfo attribute so that we are consistent
-        $routeInfo = $request->getAttribute('routeInfo');
-        $routeInfo[2] = $args;
-        $request = $request->withAttribute('route', $route);
-
-        return $request;
     }
 }

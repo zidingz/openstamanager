@@ -19,15 +19,15 @@
 
         id_module: '{{ id_module }}',
         id_record: '{{ id_record }}',
-        is_mobile: '{{ isMobile() }}',
+        is_mobile: '{{ is_mobile }}',
 
         cifre_decimali: '{{ setting('Cifre decimali per importi') }}',
 
-        timestamp_format: "'.formatter()->getTimestampPattern() }}",
-        date_format: "'.formatter()->getDatePattern() }}",
-        time_format: "'.formatter()->getTimePattern() }}",
-        decimals: "{{ formatter()->getNumberSeparators()['decimals'] }}",
-        thousands: "{{ formatter()->getNumberSeparators()['thousands'] }}",
+        timestamp_format: "{{ formatter.getTimestampPattern() }}",
+        date_format: "{{ formatter.getDatePattern() }}",
+        time_format: "{{ formatter.getTimePattern() }}",
+        decimals: "{{ formatter.getNumberSeparators()['decimals'] }}",
+        thousands: "{{ formatter.getNumberSeparators()['thousands'] }}",
         currency: "{{ currency() }}",
 
         search: search,
@@ -105,10 +105,8 @@
             },
         },
 
-        {% set lang_pieces = lang|split('_') %}
-
-        locale: '{{ lang_pieces[0] }}',
-        full_locale: '{{ lang }}',
+        locale: '{{ lang }}',
+        full_locale: '{{ full_locale }}',
 
         start_date: '{{ calendar.start }}',
         start_date_formatted: '{{ calendar.start|date }}',
@@ -128,6 +126,7 @@
         ajax_set_url: "{{ path_for('ajax-session') }}",
         ajax_array_set_url: "{{ path_for('ajax-session-array') }}",
         ajax_flash: "{{ path_for('ajax-flash') }}",
+        ajax_hook: "{{ path_for('hook', {'hook_id': '|id|'}) }}",
     };
 </script>
 
@@ -200,29 +199,28 @@
 
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a href="https://www.openstamanager.com" class="brand-link" title="{{ "Il gestionale open source per l'assistenza tecnica e la fatturazione"|trans }}" target="_blank">
-            <img src="{{ base_url() }}/assets/img/logo.png" class="logo-image" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
+            <img src="{{ base_url() }}/assets/img/logo.png" alt="OSM Logo" class="brand-image img-circle elevation-3">
+
             <span class="brand-text">{{ 'OpenSTAManager'|trans }}</span>
         </a>
 
         <section class="sidebar">
             <!-- Sidebar user panel -->
-            <div class="user-panel text-center info" style="height: 60px">
-                <div class="info">
-                    <a href="{{ path_for('user') }}" class="d-block">
-                        <i class="fa fa-user"></i>
-                        {{ user.username }}
-                    </a>
-                    <p id="datetime"></p>
+            <a class="user-panel mt-3 pb-3 mb-3 d-flex" href="{{ path_for('user') }}" style="height: 60px">
+                <div class="image">
+                    {% if user.photo %}
+                        <img src="{{ user.photo }}" class="img-circle pull-left" alt="{{ user.username }}" />
+                    {% else %}
+                        <i class="fa fa-user-circle-o fa-3x pull-left" alt="{{ 'OpenSTAManager'|trans }}"></i>
+                    {% endif %}
                 </div>
-            </div>
 
-            <a class="image" href="'.$rootdir.'/modules/utenti/info.php">
-            {% if user.photo %}
-                <img src="{{ user.photo }}" class="img-circle pull-left" alt="{{ user.username }}" />
-            {% else %}
-                <i class="fa fa-user-circle-o fa-3x pull-left" alt="{{ 'OpenSTAManager'|trans }}"></i>
-            {% endif %}
+                <div class="info text-center" style="width: 100%; padding-top: 10px;">
+                    {{ user.username }}
+                </div>
             </a>
+
+            <p class="text-center" id="datetime"></p>
 
             <!-- search form -->
             <div class="sidebar-form">
@@ -269,6 +267,12 @@
     <!-- Hooks -->
     <script>
         $(document).ready(function() {
+            alertPush();
+
+            // Orologio
+            clock();
+
+            // Hooks
             $.ajax({
                 url: "{{ path_for('hooks') }}",
                 type: "get",

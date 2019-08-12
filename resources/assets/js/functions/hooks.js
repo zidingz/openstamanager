@@ -1,14 +1,9 @@
-
 function executeHook(hook, length){
     $("#hooks").append('<li id="hook-loader-' + hook.id + '"><a href="#">' + globals.translations.hookExecuting.replace('_NAME_', hook.name) + '</a></li>');
 
     $.ajax({
-        url: globals.rootdir + "/ajax.php",
+        url: globals.ajax_hook.replace('|id|', hook.id),
         type: "get",
-        data: {
-            op: "hook",
-            id: hook.id,
-        },
         success: function(data) {
             result = JSON.parse(data);
 

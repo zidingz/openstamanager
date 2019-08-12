@@ -17,7 +17,7 @@ foreach ($fields as $key => $field) {
 
     echo '
                 <div class="card card-outline card-'.($field['visible'] ? 'success' : 'danger').'">
-                    <div class="card-header with-border">
+                    <div class="card-header">
                         <h3 class="card-title">
                             <a data-toggle="collapse" href="#field-'.$field['id'].'">'.tr('Campo in posizione _POSITION_', [
                                 '_POSITION_' => $field['order'],
@@ -145,7 +145,7 @@ echo '
 echo '
 <form class="hide" id="template">
     <div class="card card-outline">
-        <div class="card-header with-border">
+        <div class="card-header">
             <h3 class="card-title">'.tr('Nuovo campo').'</h3>
         </div>
         <div class="card-body">

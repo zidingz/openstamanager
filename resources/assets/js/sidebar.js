@@ -1,8 +1,8 @@
 $(document).ready(function () {
     // Fix per il menu principale
-    $('.sidebar-menu').tree({
-        followLink: true,
-    });
+    //$('.sidebar-menu').tree({
+    //    followLink: true,
+    //});
 
     $('.sidebar-menu > li.treeview i.fa-angle-left').click(function (e) {
         e.preventDefault();

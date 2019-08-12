@@ -54,35 +54,41 @@ UPDATE `zz_views` SET `query` = 'id' WHERE `id_module` = (SELECT `id` FROM `zz_m
 UPDATE `zz_views` SET `search_inside` = 'idanagrafica IN(SELECT idanagrafica FROM an_tipianagrafiche_anagrafiche WHERE id_tipo_anagrafica IN (SELECT id FROM an_tipianagrafiche WHERE descrizione LIKE |search|))' WHERE `zz_views`.`id` = 3;
 
 -- Foreign keys in_tipiintervento
-ALTER TABLE `in_interventi` DROP FOREIGN KEY `in_interventi_ibfk_2`;
+ALTER TABLE `in_interventi` DROP FOREIGN KEY `in_interventi_ibfk_5`;
+ALTER TABLE `in_tariffe` DROP FOREIGN KEY `in_tariffe_ibfk_1`;
+ALTER TABLE `in_interventi_tecnici` DROP FOREIGN KEY `in_interventi_tecnici_ibfk_4`;
+ALTER TABLE `co_promemoria` DROP FOREIGN KEY `co_promemoria_ibfk_2`;
+ALTER TABLE `co_preventivi` DROP FOREIGN KEY `co_preventivi_ibfk_1`;
+ALTER TABLE `co_contratti_tipiintervento` DROP FOREIGN KEY `co_contratti_tipiintervento_ibfk_1`;
+ALTER TABLE `an_anagrafiche` DROP FOREIGN KEY `an_anagrafiche_ibfk_2`;
 
-ALTER TABLE `in_tipiintervento` CHANGE `idtipointervento` `id` VARCHAR(25) NOT NULL;
+ALTER TABLE `in_tipiintervento` CHANGE `idtipointervento` `id` INT(11) NOT NULL;
 
-ALTER TABLE `an_anagrafiche` CHANGE `idtipointervento_default` `id_tipo_intervento_default` VARCHAR(25);
+ALTER TABLE `an_anagrafiche` CHANGE `idtipointervento_default` `id_tipo_intervento_default` INT(11);
 UPDATE `an_anagrafiche` SET `id_tipo_intervento_default` = NULL WHERE `id_tipo_intervento_default` NOT IN (SELECT `id` FROM `in_tipiintervento`);
 ALTER TABLE `an_anagrafiche` ADD FOREIGN KEY (`id_tipo_intervento_default`) REFERENCES `in_tipiintervento`(`id`) ON DELETE CASCADE;
 
-ALTER TABLE `co_preventivi` CHANGE `idtipointervento` `id_tipo_intervento` VARCHAR(25);
+ALTER TABLE `co_preventivi` CHANGE `idtipointervento` `id_tipo_intervento` INT(11);
 UPDATE `co_preventivi` SET `id_tipo_intervento` = NULL WHERE `id_tipo_intervento` NOT IN (SELECT `id` FROM `in_tipiintervento`);
 ALTER TABLE `co_preventivi` ADD FOREIGN KEY (`id_tipo_intervento`) REFERENCES `in_tipiintervento`(`id`) ON DELETE CASCADE;
 
-ALTER TABLE `co_promemoria` CHANGE `idtipointervento` `id_tipo_intervento` VARCHAR(25);
+ALTER TABLE `co_promemoria` CHANGE `idtipointervento` `id_tipo_intervento` INT(11);
 UPDATE `co_promemoria` SET `id_tipo_intervento` = NULL WHERE `id_tipo_intervento` NOT IN (SELECT `id` FROM `in_tipiintervento`);
 ALTER TABLE `co_promemoria` ADD FOREIGN KEY (`id_tipo_intervento`) REFERENCES `in_tipiintervento`(`id`) ON DELETE CASCADE;
 
-ALTER TABLE `in_interventi` CHANGE `idtipointervento` `id_tipo_intervento` VARCHAR(25);
+ALTER TABLE `in_interventi` CHANGE `idtipointervento` `id_tipo_intervento` INT(11);
 UPDATE `in_interventi` SET `id_tipo_intervento` = NULL WHERE `id_tipo_intervento` NOT IN (SELECT `id` FROM `in_tipiintervento`);
 ALTER TABLE `in_interventi` ADD FOREIGN KEY (`id_tipo_intervento`) REFERENCES `in_tipiintervento`(`id`) ON DELETE CASCADE;
 
-ALTER TABLE `in_interventi_tecnici` CHANGE `idtipointervento` `id_tipo_intervento` VARCHAR(25);
+ALTER TABLE `in_interventi_tecnici` CHANGE `idtipointervento` `id_tipo_intervento` INT(11);
 UPDATE `in_interventi_tecnici` SET `id_tipo_intervento` = NULL WHERE `id_tipo_intervento` NOT IN (SELECT `id` FROM `in_tipiintervento`);
 ALTER TABLE `in_interventi_tecnici` ADD FOREIGN KEY (`id_tipo_intervento`) REFERENCES `in_tipiintervento`(`id`) ON DELETE CASCADE;
 
-ALTER TABLE `in_tariffe` CHANGE `idtipointervento` `id_tipo_intervento` VARCHAR(25);
+ALTER TABLE `in_tariffe` CHANGE `idtipointervento` `id_tipo_intervento` INT(11);
 DELETE FROM `in_tariffe` WHERE `id_tipo_intervento` NOT IN (SELECT `id` FROM `in_tipiintervento`);
 ALTER TABLE `in_tariffe` ADD FOREIGN KEY (`id_tipo_intervento`) REFERENCES `in_tipiintervento`(`id`) ON DELETE CASCADE;
 
-ALTER TABLE `co_contratti_tipiintervento` CHANGE `idtipointervento` `id_tipo_intervento` VARCHAR(25);
+ALTER TABLE `co_contratti_tipiintervento` CHANGE `idtipointervento` `id_tipo_intervento` INT(11);
 DELETE FROM `co_contratti_tipiintervento` WHERE `id_tipo_intervento` NOT IN (SELECT `id` FROM `in_tipiintervento`);
 ALTER TABLE `co_contratti_tipiintervento` ADD FOREIGN KEY (`id_tipo_intervento`) REFERENCES `in_tipiintervento`(`id`) ON DELETE CASCADE;
 
@@ -97,7 +103,6 @@ ALTER TABLE `or_ordini` ADD FOREIGN KEY (`id_tipo_ordine`) REFERENCES `or_tipior
 
 UPDATE `zz_views` SET `query` = REPLACE(`query`, 'idtipoordine', 'id_tipo_ordine');
 UPDATE `zz_modules` SET `options` = REPLACE(`options`, 'idtipoordine', 'id_tipo_ordine'), `options2` = REPLACE(`options2`, 'idtipoordine', 'id_tipo_ordine');
-
 
 -- Foreign keys dt_tipiddt
 ALTER TABLE `dt_tipiddt` CHANGE `id` `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -149,9 +154,11 @@ UPDATE `co_documenti` SET `id_stato` = NULL WHERE `id_stato` NOT IN (SELECT `id`
 ALTER TABLE `co_documenti` ADD FOREIGN KEY (`id_stato`) REFERENCES `co_statidocumento`(`id`) ON DELETE CASCADE;
 
 -- Foreign keys in_statiintervento
-ALTER TABLE `in_statiintervento` CHANGE `idstatointervento` `id` VARCHAR(10) NOT NULL;
+ALTER TABLE `in_interventi` DROP FOREIGN KEY `in_interventi_ibfk_6`;
 
-ALTER TABLE `in_interventi` CHANGE `idstatointervento` `id_stato` VARCHAR(10);
+ALTER TABLE `in_statiintervento` CHANGE `idstatointervento` `id` INT(11) NOT NULL;
+
+ALTER TABLE `in_interventi` CHANGE `idstatointervento` `id_stato` INT(11);
 UPDATE `in_interventi` SET `id_stato` = NULL WHERE `id_stato` NOT IN (SELECT `id` FROM `in_statiintervento`);
 ALTER TABLE `in_interventi` ADD FOREIGN KEY (`id_stato`) REFERENCES `in_statiintervento`(`id`) ON DELETE CASCADE;
 

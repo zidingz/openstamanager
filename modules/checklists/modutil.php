@@ -14,7 +14,7 @@ function renderChecklist($check, $level = 0)
 
     if ($level == 0) {
         $result .= '
-    <span class="handle pull-right">
+    <span class="handle float-right">
         <i class="fa fa-ellipsis-v"></i>
         <i class="fa fa-ellipsis-v"></i>
     </span>';

@@ -302,7 +302,7 @@ if (empty($record['is_fiscale'])) {
 <?php
 echo '
     <div class="card card-outline card-info">
-        <div class="card-header with-border">
+        <div class="card-header">
             <h3 class="card-title"><i class="fa fa-certificate "></i> '.tr('Marca da bollo').'</h3>
         </div>
 
@@ -336,7 +336,7 @@ echo '
 if ($tipodoc == 'Fattura accompagnatoria di vendita') {
     echo '
     <div class="card card-outline card-info">
-        <div class="card-header with-border">
+        <div class="card-header">
             <h3 class="card-title"><i class="fa fa-edit"></i> '.tr('Dati Fattura accompagnatoria').'</h3>
         </div>
 

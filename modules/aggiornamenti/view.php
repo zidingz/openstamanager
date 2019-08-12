@@ -13,7 +13,7 @@ include App::filepath('resources\views|custom|\layout', 'messages.php');
 
 echo '
 <div class="card card-outline card-center-large card-warning nav nav-tabs">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title">
             <a data-toggle="tab" href="#info">'.tr("Informazioni sull'aggiornamento").'</a>
         </h3>

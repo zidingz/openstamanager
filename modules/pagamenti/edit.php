@@ -58,7 +58,7 @@ $cont = 1;
 foreach ($results as $result) {
     echo '
 				<div class="card card-outline card-success">
-					<div class="card-header with-border">
+					<div class="card-header">
 						<h3 class="card-title">'.tr('Rata _NUMBER_', [
                             '_NUMBER_' => $cont,
                         ]).'</h3>
@@ -124,7 +124,7 @@ foreach ($results as $result) {
 </form>
 
 <div class="card card-outline card-warning card-solid text-center hide" id="wait">
-	<div class="card-header with-border">
+	<div class="card-header">
 		<h3 class="card-title"><i class="fa fa-warning"></i> <?php echo tr('Attenzione!'); ?></h3>
 	</div>
 	<div class="card-body">
@@ -139,7 +139,7 @@ foreach ($results as $result) {
 echo '
 <form class="hide" id="template">
     <div class="card card-outline card-primary">
-        <div class="card-header with-border">
+        <div class="card-header">
             <h3 class="card-title">'.tr('Nuova rata').'</h3>
         </div>
         <div class="card-body">

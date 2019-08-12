@@ -1,6 +1,6 @@
 function init() {
     // Inizializzazzione dei box AdminLTE
-    $('.box').boxWidget();
+    //$('.box').boxWidget();
 
     // Modal di default
     $('[data-href]').not('.ask, .bound').click(function () {

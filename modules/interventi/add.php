@@ -253,7 +253,7 @@ if (!empty($id_intervento)) {
 
 	<!-- DATI INTERVENTO -->
     <div class="card card-outline card-primary collapsable <?php echo get('ref') ? '' : 'collapsed-box'; ?>">
-        <div class="card-header with-border">
+        <div class="card-header">
 			<h3 class="card-title"><?php echo tr('Ore di lavoro'); ?></h3>
             <div class="card-tools float-right">
                 <button type="button" class="btn btn-card-tool" data-widget="collapse">

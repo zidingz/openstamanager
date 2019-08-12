@@ -34,12 +34,12 @@
                 <div class="col-md-3">
                     {[ "type": "email", "label": "<?php echo tr('Email mittente'); ?>", "name": "from_address", "value": "$from_address$", "required": 1 ]}
                 </div>
-			
+
 				<div class="col-md-3">
                     {[ "type": "checkbox", "label": "<?php echo tr('Non verificare il certificato SSL'); ?>", "name": "ssl_no_verify", "value": "$ssl_no_verify$" ]}
                 </div>
-				
-				
+
+
             </div>
 
             <div class="row">
@@ -85,7 +85,7 @@ $elementi = $dbo->fetchArray('SELECT `id`, `name` FROM `zz_emails` WHERE `id_smt
 if (!empty($elementi)) {
     echo '
 <div class="card card-outline card-warning collapsable collapsed-box">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Template email collegati: _NUM_', [
             '_NUM_' => count($elementi),
         ]).'</h3>

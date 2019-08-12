@@ -62,9 +62,9 @@ include_once App::filepath('include|custom|', 'top.php');
 // Controllo se è una beta e in caso mostro un warning
 if (Auth::isBrute()) {
     echo '
-    <div class="box box-danger box-center" id="brute">
-        <div class="box-header with-border text-center">
-            <h3 class="box-title">'.tr('Attenzione').'</h3>
+    <div class="card card-outline card-danger box-center" id="brute">
+        <div class="card-header with-border text-center">
+            <h3 class="card-title">'.tr('Attenzione').'</h3>
         </div>
 
         <div class="box-body text-center">
@@ -93,9 +93,9 @@ if (Auth::isBrute()) {
 }
 
 echo '
-    <form action="" method="post" class="box box-center-large box-warning" id="reset">        
-        <div class="box-header with-border text-center">
-            <h3 class="box-title">'.$pageTitle.'</h3>
+    <form action="" method="post" class="card card-outline card-center-large box-warning" id="reset">        
+        <div class="card-header with-border text-center">
+            <h3 class="card-title">'.$pageTitle.'</h3>
         </div>
 
         <div class="box-body">';

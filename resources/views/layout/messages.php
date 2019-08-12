@@ -6,7 +6,7 @@ $messages = flash()->getMessages();
 if (!Auth::check() && (!empty($messages['info']) || !empty($messages['warning']) || !empty($messages['error']))) {
     echo '
 <div class="card card-outline card-warning card-center">
-    <div class="card-header with-border text-center">
+    <div class="card-header text-center">
         <h3 class="card-title">'.tr('Informazioni').'</h3>
     </div>
 

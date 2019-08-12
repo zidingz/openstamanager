@@ -116,7 +116,7 @@ $max_execution_time = ini_get('max_execution_time');
 echo '
     <div class="col-md-4">
         <div class="card card-outline card-success">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">
                     '.tr('Ripristina backup').' <small>(upload_max_filesize: '.$upload_max_filesize.')</small> <small>(max_execution_time: '.$max_execution_time.')</small>
                 </h3>

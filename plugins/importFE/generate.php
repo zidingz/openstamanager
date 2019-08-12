@@ -231,7 +231,7 @@ if (!empty($codice_modalita_pagamento)) {
 echo '
     <div class="row" >
 		<div class="col-md-6">
-		    <button type="button" class="btn btn-info btn-sm pull-right" onclick="session_set(\'superselect,codice_modalita_pagamento_fe\', \'\', 0)">
+		    <button type="button" class="btn btn-info btn-sm float-right" onclick="session_set(\'superselect,codice_modalita_pagamento_fe\', \'\', 0)">
 		        <i class="fa fa-refresh"></i> '.tr('Reset modalità').'
             </button>
 

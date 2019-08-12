@@ -39,9 +39,9 @@ echo '
 // Creazione fattura dal documento
 if (!empty($options['create_document'])) {
     echo '
-    <div class="box box-warning">
-        <div class="box-header with-border">
-            <h3 class="box-title">'.tr('Nuovo documento').'</h3>
+    <div class="card card-outline card-warning">
+        <div class="card-header with-border">
+            <h3 class="card-title">'.tr('Nuovo documento').'</h3>
         </div>
         <div class="box-body">
 
@@ -97,9 +97,9 @@ if (in_array($final_module['name'], ['Fatture di vendita', 'Fatture di acquisto'
     }
 
     echo '
-    <div class="box box-info">
-        <div class="box-header with-border">
-            <h3 class="box-title">'.tr('Opzioni generali delle righe').'</h3>
+    <div class="card card-outline card-info">
+        <div class="card-header with-border">
+            <h3 class="card-title">'.tr('Opzioni generali delle righe').'</h3>
         </div>
         <div class="box-body">';
 
@@ -157,9 +157,9 @@ if (in_array($final_module['name'], ['Fatture di vendita', 'Fatture di acquisto'
 }
 
     echo '
-    <div class="box box-success">
-        <div class="box-header with-border">
-            <h3 class="box-title">'.tr('Righe da importare').'</h3>
+    <div class="card card-outline card-success">
+        <div class="card-header with-border">
+            <h3 class="card-title">'.tr('Righe da importare').'</h3>
         </div>
 
         <table class="box-body table table-striped table-hover table-condensed">

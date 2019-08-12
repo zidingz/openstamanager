@@ -60,12 +60,12 @@ class FileManager implements ManagerInterface
             if (!empty($rs)) {
                 $result .= '
 <div class="card card-outline card-success">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title">'.(!empty($category) ? $category : tr('Generale')).'</h3>
 
         {[ "type": "text", "class": "hide category-name", "value": "'.$category.'" ]}
 
-        <div class="card-tools pull-right">';
+        <div class="card-tools float-right">';
 
                 if (!empty($category)) {
                     $result .= '
@@ -142,7 +142,7 @@ class FileManager implements ManagerInterface
 
                     if (!$options['readonly']) {
                         $result .= '
-                <a class="btn btn-xs btn-danger ask" data-backto="record-edit" data-msg="'.tr('Vuoi eliminare questo file?').'" data-op="unlink_file" data-filename="'.$r['filename'].'" data-id_record="'.$r['id_record'].'" data-id_plugin="'.$options['id_plugin'].'" data-before="show_'.$attachment_id.'" data-callback="reload_'.$attachment_id.'">
+                <a class="btn btn-sm btn-danger ask" data-backto="record-edit" data-msg="'.tr('Vuoi eliminare questo file?').'" data-op="unlink_file" data-filename="'.$r['filename'].'" data-id_record="'.$r['id_record'].'" data-id_plugin="'.$options['id_plugin'].'" data-before="show_'.$attachment_id.'" data-callback="reload_'.$attachment_id.'">
                     <i class="fa fa-trash"></i>
                 </a>';
                     }
@@ -214,7 +214,7 @@ class FileManager implements ManagerInterface
 $(document).ready(function() {
     // Modifica categoria
     $("#'.$attachment_id.' .category-edit").click(function() {
-        var nome = $(this).parent().parent().find(".box-title");
+        var nome = $(this).parent().parent().find(".card-title");
         var save_button = $(this).parent().find(".category-save");
         var input = $(this).parent().parent().find(".category-name");
 
@@ -226,7 +226,7 @@ $(document).ready(function() {
     });
 
     $("#'.$attachment_id.' .category-save").click(function() {
-        var nome = $(this).parent().parent().find(".box-title");
+        var nome = $(this).parent().parent().find(".card-title");
         var input = $(this).parent().parent().find(".category-name");
 
         show_'.$attachment_id.'();

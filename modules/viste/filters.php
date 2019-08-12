@@ -14,7 +14,7 @@ foreach ($additionals as $num => $additional) {
 
     echo '
         <div class="card card-outline card-'.($additional['enabled'] ? 'success' : 'danger').'">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">
                     <a data-toggle="collapse" href="#additional-'.$additional['id'].'">'.tr('Filtro: _NAME_', [
 '_NAME_' => $additional['name'],
@@ -85,7 +85,7 @@ echo '
 echo '
 <form class="hide" id="template_filter">
 	<div class="card card-outline">
-		<div class="card-header with-border">
+		<div class="card-header">
 			<h3 class="card-title">'.tr('Nuovo filtro').'</h3>
 		</div>
 		<div class="card-body">

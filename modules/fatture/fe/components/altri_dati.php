@@ -11,7 +11,7 @@ echo '
 
 if ($key == 1) {
     echo '
-                <button type="button" class="btn btn-xs btn-info pull-right" onclick="add_altri_dati(this)" id="add-altri_dati">
+                <button type="button" class="btn btn-sm btn-info float-right" onclick="add_altri_dati(this)" id="add-altri_dati">
                     <i class="fa fa-plus"></i> '.tr('Aggiungi').'
                 </button>';
 }

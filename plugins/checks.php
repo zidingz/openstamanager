@@ -7,9 +7,9 @@ $checks_id = 'checklist_'.$id_module.'_'.$id_plugin;
 
 echo '
 <div id="'.$checks_id.'">
-    <div class="box box-primary">
-        <div class="box-header">
-            <h3 class="box-title">'.tr('Checklist').'</h3>
+    <div class="card card-outline card-primary">
+        <div class="card-header">
+            <h3 class="card-title">'.tr('Checklist').'</h3>
         </div>
         <div class="box-body" style="position:relative">
             <div id="loading_'.$checks_id.'" class="text-center hide component-loader">

@@ -61,7 +61,7 @@ echo '
 </script>
 
 <div class="card card-outline card-success">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title">
             '.tr('Carica un XML').'
 
@@ -88,12 +88,12 @@ echo '
 
 echo '
 <div class="card card-outline card-info">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title">
             '.tr('Fatture da importare').'</span>
         </h3>
 
-        <div class="pull-right">
+        <div class="float-right">
             <button type="button" class="btn btn-warning" onclick="importAll(this)">
                 <i class="fa fa-cloud-download"></i> '.tr('Importa in sequenza').'
             </button>';

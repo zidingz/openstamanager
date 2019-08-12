@@ -58,7 +58,7 @@ if ($flg_completato) {
 // IMPIANTI
 echo '
 <div class="card card-outline card-primary">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title">'.tr("Impianti dell'intervento").'</h3>
     </div>
     <div class="card-body">

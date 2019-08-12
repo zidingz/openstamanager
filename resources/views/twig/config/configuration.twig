@@ -89,71 +89,71 @@
     });
     </script>
 
-    <ul>
-        <span class="pull-right col-md-4">
-            <select class="form-control hide" id="language" required="1">
-    {% for code, language in languages %}
-                <option data-country="{{ language['flag'] }}" value="{{ code }}" {{ code == lang ? 'selected' : '' }}>{{ language['title'] }}</option>';
-    {% endfor %}
-            </select>
+    <span class="float-right col-md-4">
+        <select class="form-control hide" id="language" required="1">
+{% for code, language in languages %}
+            <option data-country="{{ language['flag'] }}" value="{{ code }}" {{ code == lang ? 'selected' : '' }}>{{ language['title'] }}</option>';
+{% endfor %}
+        </select>
 
-            <script>
-            var flag_link = "https://lipis.github.io/flag-icon-css/flags/4x3/|flag|.svg";
+        <script>
+        var flag_link = "https://lipis.github.io/flag-icon-css/flags/4x3/|flag|.svg";
 
-            $(document).ready(function() {
-                $.ajax({
-                    url: flag_link.replace("|flag|", "it"),
-                    success: function(){
-                        initLanguage(true);
-                    },
-                    error: function(){
-                        initLanguage(false);
-                    },
-                    timeout: 500
-                });
+        $(document).ready(function() {
+            $.ajax({
+                url: flag_link.replace("|flag|", "it"),
+                success: function(){
+                    initLanguage(true);
+                },
+                error: function(){
+                    initLanguage(false);
+                },
+                timeout: 500
+            });
+        });
+
+        function initLanguage(flag) {
+            $("#language").removeClass("hide");
+
+            $("#language").select2({
+                theme: "bootstrap",
+                templateResult: function(item) {
+                    if (!item.id || !flag) {
+                        return item.text;
+                    }
+
+                    var element = $(item.element);
+                    var img = $("<img>", {
+                        class: "img-flag",
+                        width: 26,
+                        src: flag_link.replace("|flag|", element.data("country").toLowerCase()),
+                    });
+
+                    var span = $("<span>", {
+                        text: " " + item.text
+                    });
+                    span.prepend(img);
+
+                    return span;
+                }
             });
 
-            function initLanguage(flag) {
-                $("#language").removeClass("hide");
+            $("#language").on("change", function(){
+                if ($(this).val()) {
+                    var location = window.location;
+                    var url = location.protocol + "//" + location.host + "" + location.pathname;
 
-                $("#language").select2({
-                    theme: "bootstrap",
-                    templateResult: function(item) {
-                        if (!item.id || !flag) {
-                            return item.text;
-                        }
+                    var parameters = getUrlVars();
+                    parameters.lang = $(this).val();
 
-                        var element = $(item.element);
-                        var img = $("<img>", {
-                            class: "img-flag",
-                            width: 26,
-                            src: flag_link.replace("|flag|", element.data("country").toLowerCase()),
-                        });
+                    redirect(url, parameters);
+                }
+            });
+        }
+        </script>
+    </span>
 
-                        var span = $("<span>", {
-                            text: " " + item.text
-                        });
-                        span.prepend(img);
-
-                        return span;
-                    }
-                });
-
-                $("#language").on("change", function(){
-                    if ($(this).val()) {
-                        var location = window.location;
-                        var url = location.protocol + "//" + location.host + "" + location.pathname;
-
-                        var parameters = getUrlVars();
-                        parameters.lang = $(this).val();
-
-                        redirect(url, parameters);
-                    }
-                });
-            }
-            </script>
-        </span>
-
+    <ul>
         <li><a href="#step-1">
             <h3>{{ 'Licenza'|trans }}</h3>
         </a></li>
@@ -211,7 +211,7 @@
                     </div>
                 </div>
 
-                <small>'{{ 'I formati sono impostabili attraverso lo standard previsto da PHP: _LINK_'|trans({'_LINK_': '<a href="https://www.php.net/manual/en/function.date.php#refsect1-function.date-parameters">https://www.php.net/manual/en/function.date.php#refsect1-function.date-parameters</a>'}) }}.</small>
+                <small>'{{ 'I formati sono impostabili attraverso lo standard previsto da PHP: _LINK_'|trans({'_LINK_': '<a href="https://www.php.net/manual/en/function.date.php#refsect1-function.date-parameters">https://www.php.net/manual/en/function.date.php#refsect1-function.date-parameters</a>'})|raw }}.</small>
                 <hr>
 
                 <h4>{{ 'Database'|trans }}</h4>

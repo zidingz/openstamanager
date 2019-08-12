@@ -17,7 +17,7 @@ $tables = customTables();
 if (!empty($custom) || !empty($tables)) {
     echo '
 	<div class="card card-outline card-warning">
-		<div class="card-header with-border">
+		<div class="card-header">
 			<h3 class="card-title"><span class="tip" title="'.tr('Elenco delle personalizzazioni rilevabili dal gestionale').'.">
 				<i class="fa fa-edit"></i> '.tr('Personalizzazioni').'
 			</span></h3>
@@ -166,7 +166,7 @@ function download(button) {
 <div class="row">
     <div class="col-md-8">
         <div class="card card-outline card-success">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">
                     '.tr('Carica un aggiornamento').' <span class="tip" title="'.tr('Form di caricamento aggiornamenti del gestionale e innesti di moduli e plugin').'."><i class="fa fa-question-circle-o"></i></span>
                 </h3>
@@ -190,7 +190,7 @@ function download(button) {
 
     <div class="col-md-4">
         <div class="card card-outline card-info">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">
                     '.tr('Ricerca aggiornamenti').' <span class="tip" title="'.tr('Controllo automatico della presenza di aggiornamenti per il gestionale').'."><i class="fa fa-question-circle-o"></i></span>
                 </h3>

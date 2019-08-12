@@ -10,9 +10,9 @@ echo '
 ]).'.</p>
 <br>
 
-<div class="box box-success">
-    <div class="box-header with-border">
-        <h3 class="box-title">
+<div class="card card-outline card-success">
+    <div class="card-header with-border">
+        <h3 class="card-title">
             '.tr('Carica un XML').'
 
             <span class="tip" title="'.tr('Formati supportati: XML e P7M').'.">
@@ -28,7 +28,7 @@ echo '
             </div>
 
             <div class="col-md-3">
-                <button type="button" class="btn btn-primary pull-right" onclick="upload(this)">
+                <button type="button" class="btn btn-primary float-right" onclick="upload(this)">
                     <i class="fa fa-upload"></i> '.tr('Carica ricevuta').'
                 </button>
             </div>
@@ -37,16 +37,16 @@ echo '
 </div>';
 
 echo '
-<div class="box box-info">
-    <div class="box-header with-border">
-        <h3 class="box-title">
+<div class="card card-outline card-info">
+    <div class="card-header with-border">
+        <h3 class="card-title">
             '.tr('Ricevute da importare').'</span>
         </h3>';
 
 // Ricerca automatica
 if (Interaction::isEnabled()) {
     echo '
-        <div class="pull-right">
+        <div class="float-right">
             <button type="button" class="btn btn-warning" onclick="importAll(this)">
                 <i class="fa fa-cloud-download"></i> '.tr('Importa tutte le ricevute').'
             </button>

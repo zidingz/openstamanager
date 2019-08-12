@@ -34,11 +34,11 @@ class EmailManager implements ManagerInterface
         // Codice HTML
         $result = '
 <div class="card card-outline card-info collapsable collapsed-box">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title"><i class="fa fa-envelope"></i> '.tr('Email inviate: _NUM_', [
             '_NUM_' => count($operations),
         ]).'</h3>
-        <div class="card-tools pull-right">
+        <div class="card-tools float-right">
             <button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
         </div>
     </div>

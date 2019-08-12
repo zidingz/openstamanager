@@ -311,7 +311,7 @@ $elementi = $dbo->fetchArray('SELECT `co_documenti`.*, `co_tipidocumento`.`descr
 if (!empty($elementi)) {
     echo '
 <div class="card card-outline card-warning collapsable collapsed-box">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Documenti collegati: _NUM_', [
             '_NUM_' => count($elementi),
         ]).'</h3>

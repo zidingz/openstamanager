@@ -9,13 +9,13 @@ $start = $_SESSION['period_start'];
 $end = $_SESSION['period_end'];
 
 echo '
-<div class="box box-warning">
-    <div class="box-header">
-        <h4 class="box-title">
+<div class="card card-outline card-warning">
+    <div class="card-header">
+        <h4 class="card-title">
             '.tr('Periodi temporali').'
         </h4>
-        <div class="box-tools pull-right">
-            <button class="btn btn-warning btn-xs" onclick="add_calendar()">
+        <div class="card-tools float-right">
+            <button class="btn btn-warning btn-sm" onclick="add_calendar()">
                 <i class="fa fa-plus"></i> '.tr('Aggiungi periodo').'
             </button>
             <button type="button" class="btn btn-box-tool" data-widget="collapse">
@@ -32,7 +32,7 @@ echo '
 // Fatturato
 echo '
 <div class="card card-outline card-success">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title">'.tr('Vendite e acquisti').'</h3>
 
         <div class="card-tools float-right">
@@ -135,7 +135,7 @@ echo '
 <div class="row">
     <div class="col-md-6">
         <div class="card card-outline card-warning">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">'.tr('I 20 clienti TOP').'</h3><span class="tip" title="'.tr('Valori iva esclusa').'"> <i class="fa fa-question-circle-o" aria-hidden="true"></i></span>
 
                 <div class="card-tools float-right">
@@ -183,7 +183,7 @@ $totale = $dbo->fetchArray("SELECT SUM(co_righe_documenti.qta) AS totale_qta, SU
 echo '
     <div class="col-md-6">
         <div class="card card-outline card-danger">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">'.tr('I 20 articoli più venduti').'</h3><span class="tip" title="'.tr('Valori iva esclusa').'"> <i class="fa fa-question-circle-o" aria-hidden="true"></i></span>
 
                 <div class="card-tools float-right">
@@ -249,7 +249,7 @@ foreach ($tipi as $tipo) {
 
 echo '
 <div class="card card-outline card-info">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title">'.tr('Interventi per tipologia').'</h3>
 
         <div class="card-tools float-right">

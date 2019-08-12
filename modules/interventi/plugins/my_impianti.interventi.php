@@ -5,7 +5,7 @@ include_once __DIR__.'/../../../core.php';
 // INTERVENTI ESEGUITI SU QUESTO IMPIANTO
 echo '
 <div class="card card-outline card-primary">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title">'.tr('Interventi eseguiti su questo impianto').'</h3>
     </div>
     <div class="card-body">';

@@ -16,7 +16,7 @@ foreach ($primo_livello as $conto_primo) {
     echo '
 <hr>
 <h2>'.$titolo.'</h2>
-    <div class="pull-right">
+    <div class="float-right">
         <br>'.Prints::getLink('Mastrino', $conto_primo['id'], null, tr('Stampa'), null, 'lev=1').'
     </div>
     <div class="clearfix"></div>
@@ -31,7 +31,7 @@ foreach ($primo_livello as $conto_primo) {
         // Livello 2
         echo '
         <div>
-            '.Prints::getLink('Mastrino', $conto_secondo['id'], 'btn-info btn-xs', '', null, 'lev=2').'
+            '.Prints::getLink('Mastrino', $conto_secondo['id'], 'btn-info btn-sm', '', null, 'lev=2').'
             <b>'.$conto_secondo['numero'].' '.$conto_secondo['descrizione'].'</b><br>
         </div>
 
@@ -77,7 +77,7 @@ foreach ($primo_livello as $conto_primo) {
 
             if (!empty($movimenti)) {
                 echo '
-                    <a href="javascript:;" class="btn btn-primary btn-xs plus-btn"><i class="fa fa-plus"></i></a>';
+                    <a href="javascript:;" class="btn btn-primary btn-sm plus-btn"><i class="fa fa-plus"></i></a>';
             }
 
             $id_anagrafica = $conto_terzo['id_cliente'] ?: $conto_terzo['id_fornitore'];
@@ -88,12 +88,12 @@ foreach ($primo_livello as $conto_primo) {
             // Stampa mastrino
             if (!empty($movimenti)) {
                 echo '
-                        '.Prints::getLink('Mastrino', $conto_terzo['id'], 'btn-info btn-xs', '', null, 'lev=3');
+                        '.Prints::getLink('Mastrino', $conto_terzo['id'], 'btn-info btn-sm', '', null, 'lev=3');
             }
 
             if ($numero_movimenti <= 0 && !empty($conto_terzo['can_delete'])) {
                 echo '
-                        <a class="btn btn-danger btn-xs ask" data-toggle="tooltip" title="'.tr('Elimina').'" data-backto="record-list" data-op="del" data-idconto="'.$conto_terzo['id'].'">
+                        <a class="btn btn-danger btn-sm ask" data-toggle="tooltip" title="'.tr('Elimina').'" data-backto="record-list" data-op="del" data-idconto="'.$conto_terzo['id'].'">
                             <i class="fa fa-trash"></i>
                         </a>';
             }
@@ -101,7 +101,7 @@ foreach ($primo_livello as $conto_primo) {
             // Possibilità di modificare il nome del conto livello3
             if (!empty($conto_terzo['can_edit'])) {
                 echo '
-                        <button type="button" class="btn btn-warning btn-xs" data-toggle="tooltip" title="Modifica questo conto..." onclick="launch_modal(\'Modifica conto\', \''.$structure->fileurl('edit_conto.php').'?id='.$conto_terzo['id'].'\');">
+                        <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" title="Modifica questo conto..." onclick="launch_modal(\'Modifica conto\', \''.$structure->fileurl('edit_conto.php').'?id='.$conto_terzo['id'].'\');">
                             <i class="fa fa-edit"></i>
                         </button>';
             }
@@ -125,7 +125,7 @@ foreach ($primo_livello as $conto_primo) {
 
         // Possibilità di inserire un nuovo conto
         echo '
-            <button type="button" class="btn btn-xs btn-primary" data-toggle="tooltip" title="'.tr('Aggiungi un nuovo conto...').'" onclick="add_conto('.$conto_secondo['id'].')">
+            <button type="button" class="btn btn-sm btn-primary" data-toggle="tooltip" title="'.tr('Aggiungi un nuovo conto...').'" onclick="add_conto('.$conto_secondo['id'].')">
                 <i class="fa fa-plus-circle"></i>
             </button>
 

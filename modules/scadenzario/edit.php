@@ -14,7 +14,7 @@ echo '
 		<div class="panel-heading">
 			<h3 class="panel-title">
 			    '.tr('Dettagli scadenza').'
-                <button type="button" class="btn btn-sm btn-info pull-right" id="add-scadenza">
+                <button type="button" class="btn btn-sm btn-info float-right" id="add-scadenza">
                     <i class="fa fa-plus"></i> '.tr('Aggiungi scadenza').'
                 </button>
             </h3>

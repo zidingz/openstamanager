@@ -11,7 +11,7 @@ echo '
 
 if ($key == 1) {
     echo '
-                <button type="button" class="btn btn-xs btn-info pull-right" onclick="add_blocco(this, \''.$nome.'\')">
+                <button type="button" class="btn btn-sm btn-info float-right" onclick="add_blocco(this, \''.$nome.'\')">
                     <i class="fa fa-plus"></i> '.tr('Aggiungi').'
                 </button>';
 }
@@ -36,7 +36,7 @@ foreach ($dato['riferimento_linea'] as $linea) {
 
     if ($index == 1) {
         echo '
-                <button type="button" class="btn btn-xs btn-info pull-right" onclick="add_riferimento(this, \''.$nome.'\', \''.$key.'\')">
+                <button type="button" class="btn btn-sm btn-info float-right" onclick="add_riferimento(this, \''.$nome.'\', \''.$key.'\')">
                     <i class="fa fa-plus"></i> '.tr('Aggiungi').'
                 </button>';
     }

@@ -4,9 +4,9 @@ include_once __DIR__.'/../core.php';
 
 if (!empty($notes)) {
     echo '
-        <div class="box box-warning direct-chat direct-chat-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title">'.tr('Note interne').'</h3>
+        <div class="card card-outline card-warning direct-chat direct-chat-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title">'.tr('Note interne').'</h3>
             </div>
 
             <div class="box-body">
@@ -20,7 +20,7 @@ if (!empty($notes)) {
                     <div class="direct-chat-msg '.($utente->id == $user->id ? 'right' : '').'" id="nota_'.$nota->id.'">
                         <div class="direct-chat-info clearfix">
                             <span class="direct-chat-name pull-left">'.$utente->nome_completo.'</span>
-                            <span class="direct-chat-timestamp pull-right">
+                            <span class="direct-chat-timestamp float-right">
                                 '.timestampFormat($nota->created_at).'
                             </span>
                         </div>';
@@ -36,7 +36,7 @@ if (!empty($notes)) {
 
         echo '
                         <div class="direct-chat-text">
-                            <div class="pull-right">';
+                            <div class="float-right">';
 
         if (!empty($nota->notification_date)) {
             echo '
@@ -44,14 +44,14 @@ if (!empty($notes)) {
                                     <i class="fa fa-bell"></i> '.dateFormat($nota->notification_date).'
                                 </span>
                                 
-                                <button type="button" class="btn btn-info btn-xs ask" data-op="notification_nota" data-id_nota="'.$nota->id.'" data-msg="'.tr('Rimuovere la data di notifica da questa nota?').'" data-backto="record-edit" data-button="'.tr('Rimuovi').'" data-class="btn btn-lg btn-warning">
+                                <button type="button" class="btn btn-info btn-sm ask" data-op="notification_nota" data-id_nota="'.$nota->id.'" data-msg="'.tr('Rimuovere la data di notifica da questa nota?').'" data-backto="record-edit" data-button="'.tr('Rimuovi').'" data-class="btn btn-lg btn-warning">
                                     <i class="fa fa-eye"></i>
                                 </button>';
         }
 
         if ($user->is_admin || $utente->id == $user->id) {
             echo '
-                                <button type="button" class="btn btn-danger btn-xs ask" data-op="delete_nota" data-id_nota="'.$nota->id.'" data-msg="'.tr('Rimuovere questa nota?').'" data-backto="record-edit">
+                                <button type="button" class="btn btn-danger btn-sm ask" data-op="delete_nota" data-id_nota="'.$nota->id.'" data-msg="'.tr('Rimuovere questa nota?').'" data-backto="record-edit">
                                     <i class="fa fa-trash-o"></i>
                                 </button>';
         }

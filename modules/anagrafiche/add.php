@@ -33,7 +33,7 @@ echo '
 
 echo '
     <div class="card card-outline card-info collapsed-box">
-	    <div class="card-header with-border">
+	    <div class="card-header">
 	        <h3 class="card-title">'.tr('Dati anagrafici').'</h3>
 	        <div class="card-tools float-right">
 	            <button type="button" class="btn btn-card-tool" data-widget="collapse">

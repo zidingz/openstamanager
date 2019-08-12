@@ -39,7 +39,7 @@ $block_edit = $record['is_completato'];
 			<div class="row">
                 <div class="col-md-3">
                     <?php
-                    echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="pull-right"');
+                    echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="float-right"');
                     ?>
                     {[ "type": "select", "label": "<?php echo tr('Cliente'); ?>", "name": "idanagrafica", "required": 1, "value": "$idanagrafica$", "ajax-source": "clienti" ]}
                 </div>
@@ -51,7 +51,7 @@ $block_edit = $record['is_completato'];
 				<div class="col-md-3">
                     <?php
                     if (!empty($record['idreferente'])) {
-                        echo Plugins::link('Referenti', $record['idanagrafica'], null, null, 'class="pull-right"');
+                        echo Plugins::link('Referenti', $record['idanagrafica'], null, null, 'class="float-right"');
                     }
                     ?>
 
@@ -267,7 +267,7 @@ ORDER BY `data`');
 if (!empty($elementi)) {
     echo '
 <div class="card card-outline card-warning collapsable collapsed-box">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Documenti collegati: _NUM_', [
             '_NUM_' => count($elementi),
         ]).'</h3>

@@ -119,7 +119,7 @@ if (!empty($utenti)) {
 }
 
 echo '
-			<a data-toggle="modal" data-href="'.$structure->fileurl('user.php').'?id_module='.$id_module.'&id_record='.$id_record.'" data-msg="" data-backto="record-edit" data-title="'.tr('Aggiungi utente').'" class="pull-right btn btn-primary">
+			<a data-toggle="modal" data-href="'.$structure->fileurl('user.php').'?id_module='.$id_module.'&id_record='.$id_record.'" data-msg="" data-backto="record-edit" data-title="'.tr('Aggiungi utente').'" class="float-right btn btn-primary">
 			    <i class="fa fa-plus"></i> '.tr('Aggiungi utente').'
             </a>
 		</div>
@@ -194,7 +194,7 @@ $(document).ready(function(){
     $("#email-button").remove();
 });
 
-$("li.active.header button.btn-primary").attr("data-href", $("a.pull-right").attr("data-href") );
+$("li.active.header button.btn-primary").attr("data-href", $("a.float-right").attr("data-href") );
 
 function update_permissions(id, value){
     $.get(
