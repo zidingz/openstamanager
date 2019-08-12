@@ -303,11 +303,14 @@ class Aggiornamento
         $version = ltrim($api['tag_name'], 'v');
         $current = Update::getVersion();
 
+        $result = false;
         if (version_compare($current, $version) < 0) {
-            return $version;
+            $result = $version;
         }
 
-        return false;
+        UpdateHook::update($result);
+
+        return $result;
     }
 
     /**

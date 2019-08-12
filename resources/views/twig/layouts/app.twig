@@ -19,13 +19,16 @@
 
         id_module: '{{ id_module }}',
         id_record: '{{ id_record }}',
+        is_mobile: '{{ isMobile() }}',
 
-        order_manager_id: '{{ order_manager_id }}',
+        cifre_decimali: '{{ setting('Cifre decimali per importi') }}',
 
-        cifre_decimali: {{ setting('Cifre decimali per importi') }},
-
-        decimals: "{{ formatter.decimals }}",
-        thousands: "{{ formatter.thousands }}",
+        timestamp_format: "'.formatter()->getTimestampPattern() }}",
+        date_format: "'.formatter()->getDatePattern() }}",
+        time_format: "'.formatter()->getTimePattern() }}",
+        decimals: "{{ formatter()->getNumberSeparators()['decimals'] }}",
+        thousands: "{{ formatter()->getNumberSeparators()['thousands'] }}",
+        currency: "{{ currency() }}",
 
         search: search,
         translations: {
@@ -64,18 +67,61 @@
             'hookMultiple': "{{ 'Hai _NUM_ notifiche'|trans }}",
             'hookSingle': "{{ 'Hai 1 notifica'|trans }}",
             'hookNone': "{{ 'Nessuna notifica'|trans }}",
+            'singleCalendar': "{{ "E' presente un solo periodo!"|trans }}",
+            password: {
+                "wordMinLength": "{{ 'La password è troppo corta' }}",
+                "wordMaxLength": "{{ 'La password è troppo lunga' }}",
+                "wordInvalidChar": "{{ 'La password contiene un carattere non valido' }}",
+                "wordNotEmail": "{{ 'Non usare la tua e-mail come password' }}",
+                "wordSimilarToUsername": "{{ 'La password non può contenere il tuo nome' }}",
+                "wordTwoCharacterClasses": "{{ 'Usa classi di caratteri diversi' }}",
+                "wordRepetitions": "{{ 'La password contiene ripetizioni' }}",
+                "wordSequences": "{{ 'La password contiene sequenze' }}",
+                "errorList": "{{ 'Attenzione' }}:",
+                "veryWeak": "{{ 'Molto debole' }}",
+                "weak": "{{ 'Debole' }}",
+                "normal": "{{ 'Normale' }}",
+                "medium": "{{ 'Media' }}",
+                "strong": "{{ 'Forte' }}",
+                "veryStrong": "{{ 'Molto forte' }}",
+            },
+            datatables: {
+                "emptyTable": "{{ 'Nessun dato presente nella tabella' }}",
+                "info": "{{ 'Vista da _START_ a _END_ di _TOTAL_ elementi' }}",
+                "infoEmpty": "{{ 'Vista da 0 a 0 di 0 elementi' }}",
+                "infoFiltered": "({{ 'filtrati da _MAX_ elementi totali' }})",
+                "infoPostFix": "",
+                "lengthMenu": "{{ 'Visualizza _MENU_ elementi' }}",
+                "loadingRecords": " ",
+                "processing": "{{ 'Elaborazione' }}...",
+                "search": "{{ 'Cerca' }}:",
+                "zeroRecords": "{{ 'La ricerca non ha portato alcun risultato' }}.",
+                "paginate": {
+                    "first": "{{ 'Inizio' }}",
+                    "previous": "{{ 'Precedente' }}",
+                    "next": "{{ 'Successivo' }}",
+                    "last": "{{ 'Fine' }}"
+                },
+            },
         },
-        locale: '{{ lang }}',
-        full_locale: '{{ lang }}_{{ lang|upper }}',
 
-        start_date: '{{ calendar.start|date }}',
-        end_date: '{{ calendar.end|date }}',
+        {% set lang_pieces = lang|split('_') %}
+
+        locale: '{{ lang_pieces[0] }}',
+        full_locale: '{{ lang }}',
+
+        start_date: '{{ calendar.start }}',
+        start_date_formatted: '{{ calendar.start|date }}',
+        end_date: '{{ calendar.end }}',
+        end_date_formatted: '{{ calendar.end|date }}',
 
         ckeditorToolbar: [
             "heading", "|", "bold", "italic", "link", "bulletedList", "numberedList", "imageUpload", "blockQuote", "insertTable", "mediaEmbed", "|", "undo", "redo"
         ],
 
+        order_manager_id: '{{ order_manager_id }}',
         tempo_attesa_ricerche: {{ setting('Tempo di attesa ricerche in secondi') }},
+        dataload_page_buffer: '{{ setting('Lunghezza in pagine del buffer Datatables') }}',
         select_url: "{{ path_for('ajax-select') }}",
         dataload_module_url: "{{ path_for('ajax-dataload-module', {'module_id': '|id_module|'}) }}",
         dataload_plugin_url: "{{path_for('ajax-dataload-plugin', {'plugin_id': '|id_plugin|', 'module_record_id': '|id_parent|'}) }}",
@@ -146,21 +192,21 @@
                 <i class="fa fa-info"></i>
             </a></li>
 
-            <li><a href="{{ path_for('logout') }}" class="nav-link btn-danger text-white tip" title="{{ 'Esci'|trans }}">
+            <li><a href="{{ path_for('logout') }}" class="nav-link btn-danger text-white tip" onclick="sessionStorage.clear()" title="{{ 'Esci'|trans }}">
                 <i class="fa fa-power-off"></i>
             </a></li>
-        </ul>
+        </div>
     </nav>
 
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a href="https://www.openstamanager.com" class="brand-link" title="{{ "Il gestionale open source per l'assistenza tecnica e la fatturazione"|trans }}" target="_blank">
-            <img src="{{ base_url() }}/assets/img/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
+            <img src="{{ base_url() }}/assets/img/logo.png" class="logo-image" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
             <span class="brand-text">{{ 'OpenSTAManager'|trans }}</span>
         </a>
 
         <section class="sidebar">
             <!-- Sidebar user panel -->
-            <div class="user-panel text-center">
+            <div class="user-panel text-center info" style="height: 60px">
                 <div class="info">
                     <a href="{{ path_for('user') }}" class="d-block">
                         <i class="fa fa-user"></i>
@@ -169,6 +215,14 @@
                     <p id="datetime"></p>
                 </div>
             </div>
+
+            <a class="image" href="'.$rootdir.'/modules/utenti/info.php">
+            {% if user.photo %}
+                <img src="{{ user.photo }}" class="img-circle pull-left" alt="{{ user.username }}" />
+            {% else %}
+                <i class="fa fa-user-circle-o fa-3x pull-left" alt="{{ 'OpenSTAManager'|trans }}"></i>
+            {% endif %}
+            </a>
 
             <!-- search form -->
             <div class="sidebar-form">

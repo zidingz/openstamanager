@@ -27,6 +27,17 @@ class ConfigurationController extends Controller
         $this->permission($request, $response);
 
         $args['license'] = file_get_contents(DOCROOT.'/LICENSE');
+        $args['languages'] = [
+            'it_IT' => [
+                'title' => tr('Italiano'),
+                'flag' => 'IT',
+            ],
+            'en_GB' => [
+                'title' => tr('Inglese'),
+                'flag' => 'GB',
+            ],
+        ];
+
         $response = $this->twig->render($response, 'config\configuration.twig', $args);
 
         return $response;
@@ -48,24 +59,25 @@ class ConfigurationController extends Controller
         }
 
         // Impostazioni di configurazione strettamente necessarie al funzionamento del progetto
-        $backup_config = '<?php
+        $new_config = file_get_contents(DOCROOT.'/config.example.php');
 
-$backup_dir = __DIR__.\'/backup/\';
-
-$db_host = \'|host|\';
-$db_username = \'|username|\';
-$db_password = \'|password|\';
-$db_name = \'|database|\';
-
-';
-
-        $new_config = (file_exists(DOCROOT.'/config.example.php')) ? file_get_contents(DOCROOT.'/config.example.php') : $backup_config;
+        $decimals = post('decimal_separator');
+        $thousands = post('thousand_separator');
+        $decimals = $decimals == 'dot' ? '.' : ',';
+        $thousands = $thousands == 'dot' ? '.' : $thousands;
+        $thousands = $thousands == 'comma' ? ',' : $thousands;
 
         $values = [
             '|host|' => $host,
             '|username|' => $username,
             '|password|' => $password,
             '|database|' => $database_name,
+            '|lang|' => post('lang'),
+            '|timestamp|' => post('timestamp_format'),
+            '|date|' => post('date_format'),
+            '|time|' => post('time_format'),
+            '|decimals|' => $decimals,
+            '|thousands|' => $thousands,
         ];
         $new_config = str_replace(array_keys($values), $values, $new_config);
 
@@ -82,6 +94,30 @@ $db_name = \'|database|\';
 
             $response = $this->twig->render($response, 'config\messages\writing.twig', $args);
         } else {
+            // Creazione manifest.json
+            $manifest = '{
+    "dir" : "ltr",
+    "lang" : "it-IT",
+    "name" : "OpenSTAManager",
+    "scope" : "'.ROOTDIR.'",
+    "display" : "fullscreen",
+    "start_url" : "'.ROOTDIR.'",
+    "short_name" : "OSM",
+    "theme_color" : "transparent",
+    "description" : "OpenSTAManager",
+    "orientation" : "any",
+    "background_color" : "transparent",
+    "generated" : "true",
+    "icons" : [
+        {
+            "src": "assets/dist/img/logo.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ]
+}';
+            file_put_contents('manifest.json', $manifest);
+
             $response = $response->withRedirect($this->router->pathFor('login'));
         }
 

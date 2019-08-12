@@ -14,7 +14,7 @@ use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
 
 $handlers = [];
-if (!API::isAPIRequest()) {
+if (!API\Response::isAPIRequest()) {
     // File di log di base (logs/error.log, logs/setup.log)
     $handlers[] = new StreamHandler($docroot.'/logs/error.log', Monolog\Logger::ERROR);
     $handlers[] = new StreamHandler($docroot.'/logs/setup.log', Monolog\Logger::EMERGENCY);

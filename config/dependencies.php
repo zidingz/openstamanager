@@ -9,14 +9,14 @@ $container['auth'] = function ($container) {
 $container['translator'] = function ($container) {
     $config = $container->settings['config'];
 
-    $lang = !empty($config['lang']) ? $config['lang'] : 'it';
+    $lang = !empty($config['lang']) ? $config['lang'] : $_GET['lang'];
     $formatter = !empty($config['formatter']) ? $config['formatter'] : [];
 
     $translator = new Translator();
     $translator->addLocalePath(DOCROOT.'/resources/locale');
     $translator->addLocalePath(DOCROOT.'/modules/*/locale');
 
-    $translator->setLocale($lang);
+    $translator->setLocale($lang, $formatter);
 
     return $translator;
 };

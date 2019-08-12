@@ -2,18 +2,14 @@
 
 namespace Modules\Aggiornamenti;
 
-use GuzzleHttp\Client;
 use Managers\HookManager;
 use Modules;
-use Update;
 
 class UpdateHook extends HookManager
 {
-    protected static $client = null;
-
     public function manage()
     {
-        $result = self::isAvailable();
+        $result = Aggiornamento::isAvailable();
 
         return $result;
     }
@@ -33,54 +29,5 @@ class UpdateHook extends HookManager
             'message' => $message,
             'notify' => !empty($update),
         ];
-    }
-
-    /**
-     * Controlla se è disponibile un aggiornamento nella repository GitHub.
-     *
-     * @return string|bool
-     */
-    public static function isAvailable()
-    {
-        $api = self::getAPI();
-
-        $version = ltrim($api['tag_name'], 'v');
-        $current = Update::getVersion();
-
-        if (version_compare($current, $version) < 0) {
-            return $version;
-        }
-
-        return false;
-    }
-
-    /**
-     * Restituisce l'oggetto per la connessione all'API del progetto.
-     *
-     * @return Client
-     */
-    protected static function getClient()
-    {
-        if (!isset(self::$client)) {
-            self::$client = new Client([
-                'base_uri' => 'https://api.github.com/repos/devcode-it/openstamanager/',
-                'verify' => false,
-            ]);
-        }
-
-        return self::$client;
-    }
-
-    /**
-     * Restituisce i contenuti JSON dell'API del progetto.
-     *
-     * @return array
-     */
-    protected static function getAPI()
-    {
-        $response = self::getClient()->request('GET', 'releases');
-        $body = $response->getBody();
-
-        return json_decode($body, true)[0];
     }
 }

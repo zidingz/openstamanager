@@ -29,6 +29,16 @@ trait RowTrait
         $result = $this->prepareAdd($documento, $options);
         $result['id_ritenuta_acconto'] = $options['id_ritenuta_acconto_anagrafica'] ?: $result['id_ritenuta_acconto'];
 
+        // Aggiunta sconto di default da listino per le vendite
+        if ($documento->direzione == 'entrata' && $type == 'articolo') {
+            $listino = database()->fetchOne('SELECT prc_guadagno FROM an_anagrafiche INNER JOIN mg_listini ON an_anagrafiche.idlistino_vendite=mg_listini.id WHERE idanagrafica='.prepare($documento['idanagrafica']));
+
+            if (!empty($listino['prc_guadagno'])) {
+                $result['sconto_unitario'] = $listino['prc_guadagno'];
+                $result['tipo_sconto'] = 'PRC';
+            }
+        }
+
         return $this->render($type, $options, $result, $response, $args);
     }
 
@@ -77,7 +87,7 @@ trait RowTrait
             'dir' => $documento->direzione,
             'conti' => $documento->direzione == 'entrata' ? 'conti-vendite' : 'conti-acquisti',
             'idanagrafica' => $documento['idanagrafica'],
-            'imponibile_scontato' => $documento->imponibile_scontato,
+            'totale_imponibile' => $documento->totale_imponibile,
             'show-ritenuta-contributi' => !empty($documento['id_ritenuta_contributi']),
             'show-conto' => false,
             'id_ritenuta_acconto_anagrafica' => $id_ritenuta_acconto_anagrafica,

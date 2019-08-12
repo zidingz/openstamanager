@@ -3,8 +3,6 @@
 use Modules\Aggiornamenti\Aggiornamento;
 use Modules\Aggiornamenti\DowngradeException;
 
-use Modules\Aggiornamenti\UpdateHook;
-
 $id = post('id');
 
 switch (filter('op')) {

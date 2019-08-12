@@ -9,6 +9,7 @@
         <meta name="robots" content="noindex,nofollow">
 
         <link href="{{ base_url() }}/assets/img/favicon.png" rel="icon" type="image/x-icon" />
+        <link rel="manifest" href="{{ base_url() }}/manifest.json">
 
         <link rel="stylesheet" type="text/css" media="all" href="{{ base_url() }}/assets/css/app.min.css"/>
         <link rel="stylesheet" type="text/css" media="all" href="{{ base_url() }}/assets/css/style.min.css"/>
@@ -38,9 +39,31 @@
 
             globals = {
                 rootdir: '{{ base_url() }}',
-                locale: '{{ lang }}',
-                full_locale: '{{ lang }}_{{ lang|upper }}',
-                translations: {},
+
+                {% set lang_pieces = lang|split('_') %}
+
+                locale: '{{ lang_pieces[0] }}',
+                full_locale: '{{ lang }}',
+
+                translations: {
+                    password: {
+                        "wordMinLength": "{{ 'La password è troppo corta' }}",
+                        "wordMaxLength": "{{ 'La password è troppo lunga' }}",
+                        "wordInvalidChar": "{{ 'La password contiene un carattere non valido' }}",
+                        "wordNotEmail": "{{ 'Non usare la tua e-mail come password' }}",
+                        "wordSimilarToUsername": "{{ 'La password non può contenere il tuo nome' }}",
+                        "wordTwoCharacterClasses": "{{ 'Usa classi di caratteri diversi' }}",
+                        "wordRepetitions": "{{ 'La password contiene ripetizioni' }}",
+                        "wordSequences": "{{ 'La password contiene sequenze' }}",
+                        "errorList": "{{ 'Attenzione' }}:",
+                        "veryWeak": "{{ 'Molto debole' }}",
+                        "weak": "{{ 'Debole' }}",
+                        "normal": "{{ 'Normale' }}",
+                        "medium": "{{ 'Media' }}",
+                        "strong": "{{ 'Forte' }}",
+                        "veryStrong": "{{ 'Molto forte' }}",
+                    },
+                },
             };
 
             // Aggiunta dell'ingranaggio all'unload della pagina

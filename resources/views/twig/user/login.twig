@@ -5,7 +5,7 @@
 {% block box_class %}card-warning text-center login-box{% endblock %}
 {% block box_header %}
     <h3 class="card-title">
-        <img src="{{ base_url() }}/assets/img/logo.png" alt="{{ 'OSM Logo'|trans }}">
+        <img src="{{ base_url() }}/assets/img/logo.png" class="logo-image" alt="{{ 'OSM Logo'|trans }}">
         {{ "OpenSTAManager"|trans }}
     </h3>
 {% endblock %}
@@ -66,10 +66,15 @@
         <span class="input-group-prepend input-group-text"><i class="fa fa-user"></i></span>
         <input type="text" name="username" autocomplete="username" class="form-control" placeholder="{{ 'Nome utente'|trans }}" value="{{ username }}">
     </div>
-    <div class="form-group input-group">
-        <span class="input-group-prepend input-group-text"><i class="fa fa-lock"></i></span>
-        <input type="password" name="password" autocomplete="current-password" class="form-control" placeholder="{{ 'Password'|trans }}">
+
+    {[ "type": "password", "name": "password", "autocomplete": "current-password", "placeholder": "{{ 'Password'|trans }}", "icon-before": "<i class=\"fa fa-lock\"></i>" ]}
+
+    <div class="text-right">
+        <a href="'.ROOTDIR.'/reset.php">{{ 'Dimenticata la password?'|trans }}</a>
     </div>
+
+    <hr>
+
     <div class="form-group">
         <input type="checkbox" name="keep_alive" {{ keep_alive ? 'checked' : '' }}/> {{ 'Mantieni attiva la sessione'|trans }}
     </div>

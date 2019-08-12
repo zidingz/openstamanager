@@ -21,7 +21,7 @@ $_SESSION['superselect']['idanagrafica'] = $record['idanagrafica'];
 	<!-- INTESTAZIONE -->
 	<div class="card card-primary">
 		<div class="card-header">
-			<h3 class="card-title"><?php echo tr('Intestazione') ?></h3>
+			<h3 class="card-title"><?php echo tr('Intestazione'); ?></h3>
 		</div>
 
 		<div class="card-body">

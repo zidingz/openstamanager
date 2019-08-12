@@ -8,7 +8,6 @@ use Modules\Anagrafiche\Anagrafica;
 class Tipo extends Model
 {
     protected $table = 'in_tipiintervento';
-    protected $primaryKey = 'idtipointervento';
 
     /**
      * Crea un nuovo tipo di intervento.

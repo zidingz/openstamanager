@@ -142,6 +142,7 @@ class AjaxController extends Controller
         // Informazioni fondamentali
         $columns = filter('columns');
         $order = filter('order')[0];
+        $draw_numer = intval(filter('draw'));
 
         $order['column'] = $order['column'] - 1;
         array_shift($columns);
@@ -167,6 +168,7 @@ class AjaxController extends Controller
             'recordsTotal' => 0,
             'recordsFiltered' => 0,
             'summable' => [],
+            'draw' => $draw_numer,
         ];
 
         $query = Query::getQuery($structure);
@@ -188,7 +190,9 @@ class AjaxController extends Controller
             $results['recordsFiltered'] = $data['count'];
 
             // SOMME
-            $results['summable'] = Query::getSums($structure, $search);
+            if ($draw_numer == 1) {
+                $results['summable'] = Query::getSums($structure, $search);
+            }
 
             // Allineamento delle righe
             $align = [];

@@ -4,7 +4,7 @@
 
 {% block box_class %}card-warning{% endblock %}
 {% block box_header %}
-<img src="{{ base_url() }}/assets/img/logo.png" alt="{{ 'OSM Logo'|trans }}">
+<img src="{{ base_url() }}/assets/img/logo.png" class="logo-image" alt="{{ 'OSM Logo'|trans }}">
 <h3 class="card-title">{{ "Configurazione per l'installazione"|trans }}</h3>
 {% endblock %}
 
@@ -90,6 +90,70 @@
     </script>
 
     <ul>
+        <span class="pull-right col-md-4">
+            <select class="form-control hide" id="language" required="1">
+    {% for code, language in languages %}
+                <option data-country="{{ language['flag'] }}" value="{{ code }}" {{ code == lang ? 'selected' : '' }}>{{ language['title'] }}</option>';
+    {% endfor %}
+            </select>
+
+            <script>
+            var flag_link = "https://lipis.github.io/flag-icon-css/flags/4x3/|flag|.svg";
+
+            $(document).ready(function() {
+                $.ajax({
+                    url: flag_link.replace("|flag|", "it"),
+                    success: function(){
+                        initLanguage(true);
+                    },
+                    error: function(){
+                        initLanguage(false);
+                    },
+                    timeout: 500
+                });
+            });
+
+            function initLanguage(flag) {
+                $("#language").removeClass("hide");
+
+                $("#language").select2({
+                    theme: "bootstrap",
+                    templateResult: function(item) {
+                        if (!item.id || !flag) {
+                            return item.text;
+                        }
+
+                        var element = $(item.element);
+                        var img = $("<img>", {
+                            class: "img-flag",
+                            width: 26,
+                            src: flag_link.replace("|flag|", element.data("country").toLowerCase()),
+                        });
+
+                        var span = $("<span>", {
+                            text: " " + item.text
+                        });
+                        span.prepend(img);
+
+                        return span;
+                    }
+                });
+
+                $("#language").on("change", function(){
+                    if ($(this).val()) {
+                        var location = window.location;
+                        var url = location.protocol + "//" + location.host + "" + location.pathname;
+
+                        var parameters = getUrlVars();
+                        parameters.lang = $(this).val();
+
+                        redirect(url, parameters);
+                    }
+                });
+            }
+            </script>
+        </span>
+
         <li><a href="#step-1">
             <h3>{{ 'Licenza'|trans }}</h3>
         </a></li>
@@ -130,6 +194,27 @@
 
             <!-- Form dei parametri -->
             <form action="" method="post" id="config-form">
+                <input type="hidden" name="lang" value="{{ lang}}">
+
+                <h4>{{ 'Formato date'|trans }}</h4>
+                <div class="row">
+                    <div class="col-md-4">
+                        {[ "type": "text", "label": "{{ 'Formato data lunga'|trans }}", "name": "timestamp_format", "value": "d/m/Y H:i", "required": 1 ]}
+                    </div>
+
+                    <div class="col-md-4">
+                        {[ "type": "text", "label": "{{ 'Formato data corta'|trans }}", "name": "date_format", "value": "d/m/Y", "required": 1 ]}
+                    </div>
+
+                    <div class="col-md-4">
+                        {[ "type": "text", "label": "{{ 'Formato orario'|trans }}", "name": "time_format", "value": "H:i", "required": 1 ]}
+                    </div>
+                </div>
+
+                <small>'{{ 'I formati sono impostabili attraverso lo standard previsto da PHP: _LINK_'|trans({'_LINK_': '<a href="https://www.php.net/manual/en/function.date.php#refsect1-function.date-parameters">https://www.php.net/manual/en/function.date.php#refsect1-function.date-parameters</a>'}) }}.</small>
+                <hr>
+
+                <h4>{{ 'Database'|trans }}</h4>
                 <div class="row">
 
                     <!-- db_host -->
@@ -142,17 +227,17 @@
 
                     <!-- db_username -->
                     <div class="col-md-4">
-                        {[ "type": "text", "label": "{{ "Username dell'utente MySQL"|trans }}", "name": "username", "placeholder": "{{ "Username dell'utente MySQL"|trans }}", "value": "{{ username }}", "help": "{{ 'Esempio'|trans }}: root", "show-help": 0, "required": 1 ]}
+                        {[ "type": "text", "label": "{{ "Username dell'utente MySQL"|trans }}", "name": "username", "placeholder": "{{ "Username"|trans }}", "value": "{{ username }}", "help": "{{ 'Esempio'|trans }}: root", "show-help": 0, "required": 1 ]}
                     </div>
 
                     <!-- db_password -->
                     <div class="col-md-4">
-                        {[ "type": "password", "label": "{{ "Password dell'utente MySQL"|trans }}", "name": "password", "placeholder": "{{ "Password dell'utente MySQL"|trans }}", "value": "{{ password }}", "help": "{{ 'Esempio'|trans }}: mysql", "show-help": 0 ]}
+                        {[ "type": "password", "label": "{{ "Password dell'utente MySQL"|trans }}", "name": "password", "placeholder": "{{ "Password"|trans }}", "value": "{{ password }}", "help": "{{ 'Esempio'|trans }}: mysql", "show-help": 0 ]}
                     </div>
 
                     <!-- db_name -->
                     <div class="col-md-4">
-                        {[ "type": "text", "label": "{{ 'Nome del database'|trans }}", "name": "database_name", "placeholder": "{{ 'Nome del database'|trans }}", "value": "{{ database_name }}", "help": "{{ 'Esempio'|trans }}: openstamanager", "show-help": 0, "required": 1 ]}
+                        {[ "type": "text", "label": "{{ 'Nome del database'|trans }}", "name": "database_name", "placeholder": "{{ 'Database'|trans }}", "value": "{{ database_name }}", "help": "{{ 'Esempio'|trans }}: openstamanager", "show-help": 0, "required": 1 ]}
                     </div>
                 </div>
 

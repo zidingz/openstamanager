@@ -31,6 +31,7 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
             'Conto predefinito fatture di acquisto' => true,
             "Percentuale ritenuta d'acconto" => false,
             "Causale ritenuta d'acconto" => false,
+            'Valuta' => true,
         ];
 
             if (!empty(setting("Percentuale ritenuta d'acconto"))) {
