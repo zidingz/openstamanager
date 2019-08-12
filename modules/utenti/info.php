@@ -5,7 +5,7 @@ $pageTitle = tr('Utente');
 
 include_once App::filepath('resources\views|custom|\layout', 'top.php');
 
-if (post('op') == 'change_pwd') {
+if (post('op') == 'self_update') {
     include_once __DIR__.'/actions.php';
 }
 
@@ -19,34 +19,53 @@ if (!empty($rs)) {
 }
 
 $api = BASEURL.'/api/?token='.$token;
+$module = Modules::get('Utenti e permessi');
 
 echo '
-<div class="card card-outline card-primary">
-    <div class="card-header">
-        <h3 class="card-title">'.tr('Account').'</h3>
+<div class="box box-widget widget-user">
+    <div class="widget-user-header bg-'.(($theme != 'default') ? $theme : 'primary').'">
+      <h3 class="widget-user-username">'.$user['username'].'</h3>
+      <h5 class="widget-user-desc">'.$user['gruppo'].'</h5>
     </div>
 
-    <div class="card-body">';
+    <div class="widget-user-image">';
 
-// Cambio password e nome utente
-echo '
-        <div>'.
-            '<p>'.tr('Utente').': <b>'.$user['username'].'</b></p>'.
-            '<p>'.tr('Gruppo').': <b>'.$user['gruppo'].'</b></p>';
-
-if (!empty($anagrafica)) {
+$user_photo = $user->photo;
+if ($user_photo) {
     echo '
-            <p>'.tr('Anagrafica associata').': <b>'.$anagrafica['ragione_sociale'].'</b></p>';
+        <img src="'.$user_photo.'" class="img-circle" alt="'.$user['username'].'" />';
+} else {
+    echo '
+        <i class="fa fa-user-circle-o fa-4x pull-left" alt="'.tr('OpenSTAManager').'"></i>';
 }
 
 echo '
+    </div>
+    <div class="box-footer">
+        <div class="row">
+            <div class="col-sm-4 border-right">
+                <div class="description-block">
+                    <h5 class="description-header">'.tr('Anagrafica associata').'</h5>
+                    <span class="description-text">'.(!empty($anagrafica) ? $anagrafica['ragione_sociale'] : tr('Nessuna')).'</span>
+                </div>
+            </div>
 
-            <a class="btn btn-info col-md-4 tip '.((!empty(Modules::get('Utenti e permessi'))) ? '' : 'disabled').'" data-href="'.$rootdir.'/modules/'.Modules::get('Utenti e permessi')['directory'].'/user.php" data-toggle="modal" data-title="Cambia password">
-                <i class="fa fa-unlock-alt"></i> '.tr('Cambia password').'
-            </a>
-        </div>';
+            <div class="col-sm-4 border-right">
+                <div class="description-block">
+                    <a class="btn btn-info btn-block tip" data-href="'.$module->fileurl('self.php').'?id_module='.$module->id.'&resource=photo" data-toggle="modal" data-title="'.tr('Cambia foto utente').'">
+                        <i class="fa fa-picture-o"></i> '.tr('Cambia foto utente').'
+                    </a>
+                </div>
+            </div>
 
-    echo '
+            <div class="col-sm-4 border-right">
+                <div class="description-block">
+                    <a class="btn btn-warning btn-block tip" data-href="'.$module->fileurl('self.php').'?id_module='.$module->id.'&resource=password" data-toggle="modal" data-title="'.tr('Cambia password').'">
+                        <i class="fa fa-unlock-alt"></i> '.tr('Cambia password').'
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>';
 

@@ -33,6 +33,14 @@ if (empty($idriga)) {
     $prezzo_vendita = '0';
     $sconto_unitario = 0;
 
+    // Aggiunta sconto di default da listino per le vendite
+    $listino = $dbo->fetchOne('SELECT prc_guadagno FROM an_anagrafiche INNER JOIN mg_listini ON an_anagrafiche.idlistino_vendite=mg_listini.id WHERE idanagrafica='.prepare($idanagrafica));
+
+    if (!empty($listino['prc_guadagno'])) {
+        $sconto_unitario = $listino['prc_guadagno'];
+        $tipo_sconto = 'PRC';
+    }
+
     $idimpianto = 0;
     $idiva = setting('Iva predefinita');
 } else {
@@ -200,7 +208,7 @@ echo '
 </form>';
 
 echo '
-	<script src="'.ROOTDIR.'/assets/js/init.min.js"></script>';
+<script>$(document).ready(init)</script>';
 
 ?>
 
@@ -210,8 +218,8 @@ echo '
             success: function(){
                 $('#bs-popup').modal('hide');
 
-                // Ricarico gli articoli
-                $('#articoli').load(globals.rootdir + '/modules/interventi/ajax_articoli.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');
+                // Ricarico le righe
+                $('#righe').load(globals.rootdir + '/modules/interventi/ajax_righe.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');
 
                 // Ricarico la tabella dei costi
                 $('#costi').load(globals.rootdir + '/modules/interventi/ajax_costi.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');

@@ -11,12 +11,16 @@ if ($module['name'] == 'Ddt di vendita') {
 if (isset($id_record)) {
     $ddt = DDT::with('tipo', 'stato')->find($id_record);
 
-    $record = $dbo->fetchOne('SELECT *, dt_ddt.note, dt_ddt.idpagamento, dt_ddt.id AS idddt, dt_statiddt.descrizione AS `stato`, dt_tipiddt.descrizione AS `descrizione_tipodoc`,
-        (SELECT completato FROM dt_statiddt WHERE dt_statiddt.id=dt_ddt.id_stato) AS flag_completato
+    $record = $dbo->fetchOne('SELECT dt_ddt.*,
+        dt_ddt.id AS idddt,
+        dt_statiddt.descrizione AS `stato`,
+        dt_statiddt.completato AS `flag_completato`,
+        dt_tipiddt.descrizione AS `descrizione_tipodoc`,
+        an_anagrafiche.tipo AS tipo_anagrafica
     FROM dt_ddt
-    LEFT OUTER JOIN dt_statiddt ON dt_ddt.id_stato=dt_statiddt.id
-    INNER JOIN an_anagrafiche ON dt_ddt.idanagrafica=an_anagrafiche.idanagrafica
-    INNER JOIN dt_tipiddt ON dt_ddt.id_tipo_ddt=dt_tipiddt.id
+        LEFT OUTER JOIN dt_statiddt ON dt_ddt.id_stato=dt_statiddt.id
+        INNER JOIN an_anagrafiche ON dt_ddt.idanagrafica=an_anagrafiche.idanagrafica
+        INNER JOIN dt_tipiddt ON dt_ddt.id_tipo_ddt=dt_tipiddt.id
     WHERE dt_ddt.id='.prepare($id_record));
 
     if (!empty($record)) {
@@ -27,7 +31,7 @@ if (isset($id_record)) {
 
     // Se la sede del ddt non è di mia competenza, blocco il ddt in modifica
     $field_name = ($dir == 'entrata') ? 'idsede_partenza' : 'idsede_destinazione';
-    if (!in_array($record[$field_name], $user->sedi)) {
+    if (!Auth::admin() && !in_array($record[$field_name], $user->sedi)) {
         $record['flag_completato'] = 1;
     }
 }

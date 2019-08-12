@@ -26,7 +26,7 @@ class HTMLWrapper implements WrapperInterface
 
         if (!empty($values['icon-before']) || !empty($values['icon-after']) || !empty($values['validation'])) {
             $result .= '
-    <div class="input-group">';
+    <div class="input-group has-feedback">';
 
             if (!empty($values['icon-before'])) {
                 $result .= '
@@ -52,7 +52,7 @@ class HTMLWrapper implements WrapperInterface
 
             if (!empty($values['validation'])) {
                 $result .= '
-                <span class="input-group-addon" id="'.$pseudo_id.'_validation">
+                <span class="input-group-addon after" id="'.$pseudo_id.'_validation">
                     <span class="tip" title="'.tr('Validazione').'"><i class="fa fa-question-circle "></i></span>
                 </span>';
             }
@@ -85,49 +85,67 @@ class HTMLWrapper implements WrapperInterface
         }
 
         if (!empty($values['validation'])) {
+            $values['valid'] = '1';
+
+            $value = explode('|', $values['validation']);
+            $name = $value[0];
+            $id_module = $value[1] ?: '$id_module$';
+            $id_record = $value[2] ?: '$id_record$';
+
             $result .= '
     <script>
         var container = $("#'.$pseudo_id.'_validation");
         
         container.closest(".input-group").find("input").on("change", function(){
-            value = $(this).val();
+            var input = $(this);
+            var value = input.val();
  
-            container = $("#'.$pseudo_id.'_validation");
-            parent = container.closest(".input-group");
-            message = container.find("span");
-            icon = container.find("i");
+            var container = $("#'.$pseudo_id.'_validation");
+            var parent = container.closest(".input-group");
+            var message = container.find("span");
+            var icon = container.find("i");
         
             icon.attr("class", "fa fa-spinner fa-spin");
             
             $.ajax({
                 url: globals.rootdir + "/actions.php",
-                type: "get",
+                type: "post",
                 data: {
-                    id_module: "$id_module$",
-                    id_record: "$id_record$",
-                    name: "'.$values['validation'].'",
+                    id_module: "'.$id_module.'",
+                    id_record: "'.$id_record.'",
+                    name: "'.$name.'",
                     value: value,
                     op: "validate",
                 },
                 success: function(data) {
                     data = JSON.parse(data);
-            
-                    if(data.result) {
-                        icon.attr("class", "fa fa-check");
-                        parent.addClass("has-success").removeClass("has-error");
-                    } else {
-                        icon.attr("class", "fa fa-close");
-                        parent.addClass("has-error").removeClass("has-success");
+                    
+                    if (value == ""){
+                        parent.removeClass("has-success").removeClass("has-error");
+                        icon.attr("class", "fa fa-question-circle");
+                        message.tooltipster("content", "'.tr('Validazione').'");
                     }
+                    else{
+
+                        if(data.result) {
+                            icon.attr("class", "fa fa-check");
+                            parent.addClass("has-success").removeClass("has-error");
+                        } else {
+                            icon.attr("class", "fa fa-close");
+                            parent.addClass("has-error").removeClass("has-success");
+                        }
+                        
+                        message.tooltipster("content", data.message);
+                        input.attr("valid", +(data.result));
                     
-                    message.tooltipster("content", data.message);
-                    
-                    if (data.fields) {
-                        fields = data.fields;
-            
-                        Object.keys(fields).forEach(function(element) {
-                            $("[name=" + element + "]").val(fields[element]);
-                        });
+                        if (data.fields) {
+                            fields = data.fields;
+                
+                            Object.keys(fields).forEach(function(element) {
+                                $("[name=" + element + "]").val(fields[element]);
+                            });
+                        }
+
                     }
                 }
             });

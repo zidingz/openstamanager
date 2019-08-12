@@ -50,7 +50,6 @@ switch ($resource) {
                 mg_articoli.idconto_acquisto, 
                 mg_articoli.prezzo_vendita, 
                 mg_articoli.prezzo_acquisto,
-                SUM(mg_movimenti.qta)AS qta,
                 categoria.`nome` AS categoria,
                 sottocategoria.`nome` AS sottocategoria,
                 co_iva.descrizione AS iva_vendita,
@@ -84,7 +83,7 @@ switch ($resource) {
 
         // Filtro articolo solo per documenti di vendita
         if ($superselect['dir'] == 'entrata' && isset($superselect['idsede_partenza'])) {
-            $where[] = 'idsede_azienda='.prepare($superselect['idsede_partenza']);
+            $where[] = '(idsede_azienda IS NULL AND idsede_controparte IS NULL) OR (idsede_azienda='.prepare($superselect['idsede_partenza']).' OR idsede_controparte='.prepare($superselect['idsede_partenza']).')';
         }
 
         if (!empty($search)) {
@@ -125,12 +124,24 @@ switch ($resource) {
         }
 
         // IVA da impostazioni
-        $idiva_predefinita = get_var('Iva predefinita');
+        $idiva_predefinita = setting('Iva predefinita');
         $iva_predefinita = $dbo->fetchOne('SELECT descrizione FROM co_iva WHERE id='.prepare($idiva_predefinita))['descrizione'];
 
         $previous_category = -1;
         $previous_subcategory = -1;
         foreach ($rs as $r) {
+            // Lettura movimenti delle mie sedi
+            $qta_azienda = $dbo->fetchOne("SELECT SUM(mg_movimenti.qta) AS qta, IF(mg_movimenti.idsede_azienda= 0,'Sede legale',(CONCAT_WS(' - ',an_sedi.nomesede,an_sedi.citta))) as sede FROM mg_movimenti LEFT JOIN an_sedi ON an_sedi.id = mg_movimenti.idsede_azienda WHERE mg_movimenti.idarticolo=".prepare($r['id']).' AND idsede_azienda='.prepare($superselect['idsede_partenza']).' GROUP BY idsede_azienda');
+
+            // Lettura eventuali movimenti ad una propria sede (nel caso di movimenti fra sedi della mia azienda) per il calcolo corretto delle quantità
+            if ($superselect['idsede_partenza'] != 0) {
+                $qta_controparte = $dbo->fetchOne("SELECT SUM(mg_movimenti.qta) AS qta, IF(mg_movimenti.idsede_controparte= 0,'Sede legale',(CONCAT_WS(' - ',an_sedi.nomesede,an_sedi.citta))) as sede FROM mg_movimenti LEFT JOIN an_sedi ON an_sedi.id = mg_movimenti.idsede_controparte WHERE mg_movimenti.idarticolo=".prepare($r['id']).' AND idsede_controparte='.prepare($superselect['idsede_partenza']).' GROUP BY idsede_controparte');
+            } else {
+                $qta_controparte = $dbo->fetchOne("SELECT SUM(mg_movimenti.qta) AS qta, IF(mg_movimenti.idsede_controparte= 0,'Sede legale',(CONCAT_WS(' - ',an_sedi.nomesede,an_sedi.citta))) as sede FROM ((( mg_movimenti LEFT JOIN an_sedi ON an_sedi.id = mg_movimenti.idsede_controparte ) LEFT JOIN dt_ddt ON mg_movimenti.idddt = dt_ddt.id ) LEFT JOIN co_documenti ON mg_movimenti.iddocumento = co_documenti.id ) WHERE mg_movimenti.idarticolo=".prepare($r['id']).' AND idsede_controparte='.prepare($superselect['idsede_partenza']).' AND IFNULL( dt_ddt.idanagrafica, co_documenti.idanagrafica ) = '.prepare(setting('Azienda predefinita')).' GROUP BY idsede_controparte');
+            }
+
+            $qta = $qta_azienda['qta'] - $qta_controparte['qta'];
+
             if ($previous_category != $r['categoria'] || $previous_subcategory != $r['sottocategoria']) {
                 $previous_category = $r['categoria'];
                 $previous_subcategory = $r['sottocategoria'];
@@ -162,7 +173,7 @@ switch ($resource) {
 
             $results[count($results) - 1]['children'][] = [
                 'id' => $r['id'],
-                'text' => $r['codice'].' - '.$r['descrizione'].' ('.Translator::numberToLocale($r['qta']).(!empty($r['um']) ? ' '.$r['um'] : '').')',
+                'text' => $r['codice'].' - '.$r['descrizione'].' ('.Translator::numberToLocale($qta).(!empty($r['um']) ? ' '.$r['um'] : '').')',
                 'codice' => $r['codice'],
                 'descrizione' => $r['descrizione'],
                 'qta' => $r['qta'],

@@ -318,5 +318,3 @@ elseif (get('lev') == '1') {
     $body .= "		</tbody>
                 </table>\n";
 }
-
-$report_name = 'mastrino.pdf';

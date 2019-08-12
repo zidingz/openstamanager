@@ -2,8 +2,8 @@
 
 use Modules\Fatture\Fattura;
 
-$fattura = Fattura::find($id_record);
-$banca = $fattura->getBanca();
+$documento = Fattura::find($id_record);
+$banca = $documento->getBanca();
 
 // Lettura info fattura
 $record = $dbo->fetchOne('SELECT *,
@@ -31,7 +31,7 @@ $bic_banca = $banca['bic'];
 $module_name = ($record['dir'] == 'entrata') ? 'Fatture di vendita' : 'Fatture di acquisto';
 
 $id_cliente = $record['idanagrafica'];
-$id_sede = $record['idsede'];
+$id_sede = $record['idsede_partenza'];
 
 $tipo_doc = $record['tipo_doc'];
 $numero = !empty($record['numero_esterno']) ? $record['numero_esterno'] : $record['numero'];
@@ -72,10 +72,11 @@ if (!empty($record['idsede_destinazione'])) {
 
     //$id_sede = 0;
 }
+
 // Sostituzioni specifiche
 $custom = [
     'tipo_doc' => Stringy\Stringy::create($tipo_doc)->toUpperCase(),
-    'numero_doc' => $numero,
+    'numero' => $numero,
     'data' => Translator::dateToLocale($record['data']),
     'pagamento' => $record['tipo_pagamento'],
     'c_destinazione' => $destinazione,

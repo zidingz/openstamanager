@@ -1,15 +1,4 @@
-<?php
-
-$img = null;
-if (!empty($record['immagine'])) {
-    $fileinfo = Uploads::fileInfo($record['immagine']);
-
-    $default_img = '/'.Uploads::getDirectory($id_module).'/'.$fileinfo['filename'].'_thumb600.'.$fileinfo['extension'];
-
-    $img = file_exists(DOCROOT.$default_img) ? ROOTDIR.$default_img : ROOTDIR.'/'.Uploads::getDirectory($id_module).'/'.$record['immagine'];
-}
-
-?><form action="" method="post" id="edit-form" enctype="multipart/form-data">
+<form action="" method="post" id="edit-form" enctype="multipart/form-data">
 	<input type="hidden" name="backto" value="record-edit">
 	<input type="hidden" name="op" value="update">
 
@@ -22,7 +11,7 @@ if (!empty($record['immagine'])) {
 		<div class="card-body">
 			<div class="row">
 				<div class="col-md-3">
-					{[ "type": "image", "label": "<?php echo tr('Immagine'); ?>", "name": "immagine", "class": "img-thumbnail", "value": "<?php echo $img; ?>" ]}
+					{[ "type": "image", "label": "<?php echo tr('Immagine'); ?>", "name": "immagine", "class": "img-thumbnail", "value": "<?php echo $articolo->image; ?>" ]}
 				</div>
 
 				<div class="col-md-4">
@@ -84,15 +73,8 @@ if (!empty($record['immagine'])) {
 					{[ "type": "select", "label": "<?php echo tr('Unità di misura'); ?>", "name": "um", "value": "$um$", "ajax-source": "misure", "icon-after": "add|<?php echo Modules::get('Unità di misura')['id']; ?>" ]}
 				</div>
 
-				<?php
-                $record['abilita_serial'] = ($record['serial'] > 0) ? 1 : $record['abilita_serial'];
-                if (empty($record['abilita_serial'])) {
-                    $plugin = $dbo->fetchArray("SELECT id FROM zz_plugins WHERE name='Serial'");
-                    echo '<script>$("#link-tab_'.$plugin[0]['id'].'").addClass("disabled");</script>';
-                }
-                ?>
 
-				  <div class="col-md-4">
+                <div class="col-md-4">
 					{[ "type": "checkbox", "label": "<?php echo tr('Abilita serial number'); ?>", "name": "abilita_serial", "value": "$abilita_serial$", "help": "<?php echo tr('Abilita serial number in fase di aggiunta articolo in fattura o ddt'); ?>", "placeholder": "<?php echo tr('Serial number'); ?>", "extra": "<?php echo ($record['serial'] > 0) ? 'readonly' : ''; ?>" ]}
                 </div>
 
@@ -294,59 +276,6 @@ echo '
 echo '
 		</div>
 	</div>';
-?>
-<?php
-
-echo '
-<div class="card card-primary">
-    <div class="card-heading">
-        <h3 class="card-title">'.tr('Prezzo medio acquisto').'</h3>
-    </div>
-
-    <div class="card-body">';
-$rs_prezzo_medio = $dbo->fetchOne('SELECT ((SUM(subtotale)-SUM(sconto))/SUM(qta)) AS prezzo FROM co_righe_documenti INNER JOIN co_documenti ON co_righe_documenti.iddocumento = co_documenti.id WHERE co_documenti.idtipodocumento IN (SELECT id FROM co_tipidocumento WHERE dir = \'uscita\')  AND idarticolo='.prepare($id_record));
-$rs_prezzo_min = $dbo->fetchOne('SELECT ((subtotale-sconto)/qta) AS prezzo, co_documenti.data FROM co_righe_documenti INNER JOIN co_documenti ON co_righe_documenti.iddocumento = co_documenti.id WHERE co_documenti.idtipodocumento IN (SELECT id FROM co_tipidocumento WHERE dir = \'uscita\')  AND idarticolo='.prepare($id_record).' ORDER BY ((subtotale-sconto)/qta) ASC');
-$rs_prezzo_max = $dbo->fetchOne('SELECT ((subtotale-sconto)/qta) AS prezzo, co_documenti.data  FROM co_righe_documenti INNER JOIN co_documenti ON co_righe_documenti.iddocumento = co_documenti.id WHERE co_documenti.idtipodocumento IN (SELECT id FROM co_tipidocumento WHERE dir = \'uscita\')  AND idarticolo='.prepare($id_record).' ORDER BY ((subtotale-sconto)/qta) DESC');
-
-if (count($rs_prezzo_min) > 0) {
-    echo '
-    <div class="row">
-        <div class="col-md-12 col-lg-6">
-            <table class="table table-striped table-condensed table-bordered">
-                <tr>
-                    <th>'.tr('Prezzo minimo').'</th>
-                    <th>'.tr('Prezzio medio').'</th>
-                    <th>'.tr('Prezzo massimo').'</th>
-                    <th>'.tr('Oscillazione').'</th>
-                    <th>'.tr('Oscillazione in %').'</th>
-                    <th>'.tr('Andamento prezzo').'</th>
-                </tr>';
-
-    echo '
-                <tr>
-                    <td>'.moneyFormat($rs_prezzo_min['prezzo']).'</td>
-                    <td>'.moneyFormat($rs_prezzo_medio['prezzo']).'</td>
-                    <td>'.moneyFormat($rs_prezzo_max['prezzo']).'</td>
-                    <td>'.moneyFormat($rs_prezzo_max['prezzo'] - $rs_prezzo_min['prezzo']).'</td>
-                    <td>'.Translator::numberToLocale(((($rs_prezzo_max['prezzo'] - $rs_prezzo_min['prezzo']) * 100) / $rs_prezzo_medio['prezzo']), '2').' %</td>
-                    <td>'.((strtotime($rs_prezzo_min['data']) == strtotime($rs_prezzo_max['data'])) ? 'N.D.' : ((strtotime($rs_prezzo_min['data']) < strtotime($rs_prezzo_max['data'])) ? 'in aumento' : 'in diminuzione')).'</td>
-                </tr>';
-
-    echo '
-                </table>
-            </div>
-        </div>';
-} else {
-    echo '
-        <div class="alert alert-info">
-            '.tr('Questo articolo non è mai stato acquistato').'
-        </div>';
-}
-
-    echo '
-		</div>
-	</div>';
-
 ?>
 </form>
 

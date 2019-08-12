@@ -15,8 +15,6 @@ if (Auth::check()) {
 			</footer>
 
             <div id="modals">
-                <div class="modal fade" id="bs-popup" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="true"></div>
-                <div class="modal fade" id="bs-popup2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="true"></div>
             </div>';
 }
 echo '
@@ -54,33 +52,48 @@ if (Auth::check()) {
 
     // Hooks
     echo '
-    <script>
-    $(document).ready(function() {
-        $.ajax({
-            url: globals.rootdir + "/ajax.php",
-            type: "get",
-            data: {
-                op: "hooks",
-            },
-            success: function(data) {
-                hooks = JSON.parse(data);
+        <script>
+        $(document).ready(function() {
+            alertPush();
 
-                $("#hooks-header").text(globals.translations.hooksExecuting);
+            // Orologio
+            clock();
 
-                if (hooks.length == 0) {
-                    $("#hooks-loading").hide();
-                    $("#hooks-number").text(0);
-                    $("#hooks-header").text(globals.translations.hookNone);
-                }
-                
-                hooks.forEach(function(item, index){
-                    executeHook(item, hooks.length);
-                });
-            },
+            $.ajax({
+                url: globals.rootdir + "/ajax.php",
+                type: "get",
+                data: {
+                    op: "hooks",
+                },
+                success: function(data) {
+                    hooks = JSON.parse(data);
+
+                    $("#hooks-header").text(globals.translations.hooksExecuting);
+
+                    if (hooks.length == 0) {
+                        $("#hooks-loading").hide();
+                        $("#hooks-number").text(0);
+                        $("#hooks-header").text(globals.translations.hookNone);
+                    }
+
+                    hooks.forEach(function(item, index){
+                        executeHook(item, hooks.length);
+                    });
+                },
+            });
         });
-    });
-    
-    </script>';
+        </script>';
 }
 
-include App::filepath('resources\views|custom|\layout', 'footer.php');
+echo '
+        <script>$(document).ready(init)</script>';
+echo '
+	</body>
+</html>';
+
+// Retrocompatibilità
+if (!empty($id_record) || basename($_SERVER['PHP_SELF']) == 'controller.php' || basename($_SERVER['PHP_SELF']) == 'index.php') {
+    unset($_SESSION['infos']);
+    unset($_SESSION['errors']);
+    unset($_SESSION['warnings']);
+}

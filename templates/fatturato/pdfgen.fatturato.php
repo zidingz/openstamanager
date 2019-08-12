@@ -66,5 +66,3 @@ $body .= "	<td class='table_cell text-right cell-padded'><b>".moneyFormat($total
 $body .= "</tr>\n";
 
 $body .= "</table>\n";
-
-$report_name = 'fatturato.pdf';

@@ -5,10 +5,12 @@ namespace Models;
 use App;
 use Common\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Modules\Checklists\Traits\ChecklistTrait;
+use Traits\Components\NoteTrait;
+use Traits\Components\UploadTrait;
 use Traits\ManagerTrait;
 use Traits\PermissionTrait;
 use Traits\StoreTrait;
-use Traits\UploadTrait;
 
 class Plugin extends Model
 {
@@ -16,10 +18,12 @@ class Plugin extends Model
     use UploadTrait {
         getUploadDirectoryAttribute as protected defaultUploadDirectory;
     }
+    use NoteTrait;
+    use ChecklistTrait;
 
     protected $table = 'zz_plugins';
     protected $main_folder = 'plugins';
-    protected $upload_identifier = 'id_plugin';
+    protected $component_identifier = 'id_plugin';
 
     protected $appends = [
         'permission',

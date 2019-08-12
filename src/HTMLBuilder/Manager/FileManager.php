@@ -62,8 +62,24 @@ class FileManager implements ManagerInterface
 <div class="card card-outline card-success">
     <div class="card-header with-border">
         <h3 class="card-title">'.(!empty($category) ? $category : tr('Generale')).'</h3>
-        <div class="card-tools pull-right">
-            <button type="button" class="btn btn-card-tool" data-widget="collapse">
+
+        {[ "type": "text", "class": "hide category-name", "value": "'.$category.'" ]}
+
+        <div class="card-tools pull-right">';
+
+                if (!empty($category)) {
+                    $result .= '
+            <button type="button" class="btn btn-box-tool category-save hide">
+                <i class="fa fa-check"></i>
+            </button>
+
+            <button type="button" class="btn btn-box-tool category-edit">
+                <i class="fa fa-edit"></i>
+            </button>';
+                }
+
+                $result .= '
+            <button type="button" class="btn btn-box-tool" data-widget="collapse">
                 <i class="fa fa-minus"></i>
             </button>
         </div>
@@ -74,7 +90,7 @@ class FileManager implements ManagerInterface
         <tr>
             <th scope="col" >'.tr('Nome').'</th>
             <th scope="col" width="15%" >'.tr('Data').'</th>
-            <th scope="col" width="15%" class="text-right"></th>
+            <th scope="col" width="10%" class="text-center">#</th>
         </tr>
 	  </thead>
 	  <tbody>';
@@ -84,13 +100,29 @@ class FileManager implements ManagerInterface
 
                     $result .= '
         <tr>
-            <td align="left">
+            <td align="left">';
+
+                    if ($file->user && $file->user->photo) {
+                        $result .= '
+                <img class="attachment-img tip" src="'.$file->user->photo.'" title="'.$file->user->nome_completo.'">';
+                    } else {
+                        $result .= '
+
+                <i class="fa fa-user-circle-o attachment-img tip" title="'.tr('OpenSTAManager').'"></i>';
+                    }
+
+                    $result .= '
+
                 <a href="'.ROOTDIR.'/view.php?file_id='.$r['id'].'" target="_blank">
                     <i class="fa fa-external-link"></i> '.$r['name'].'
-                </a><small> ('.$file->extension.')'.((!empty($file->size)) ? ' ('.\Util\FileSystem::formatBytes($file->size).')' : '').'</small>'.'
+                </a>
+
+                <small> ('.$file->extension.')'.((!empty($file->size)) ? ' ('.\Util\FileSystem::formatBytes($file->size).')' : '').'</small>'.'
             </td>
+
             <td>'.\Translator::timestampToLocale($r['created_at']).'</td>
-            <td class="text-right">
+
+            <td class="text-center">
                 <a class="btn btn-sm btn-primary" href="'.ROOTDIR.'/actions.php?id_module='.$options['id_module'].'&op=download_file&id='.$r['id'].'&filename='.$r['filename'].'" target="_blank">
                     <i class="fa fa-download"></i>
                 </a>';
@@ -176,10 +208,65 @@ class FileManager implements ManagerInterface
         $source = array_clean(array_column($categories, 'category'));
 
         $result .= '
-<script src="'.ROOTDIR.'/assets/js/init.min.js"></script>
+<script>$(document).ready(init)</script>
 
 <script>
-$(document).ready(function(){
+$(document).ready(function() {
+    // Modifica categoria
+    $("#'.$attachment_id.' .category-edit").click(function() {
+        var nome = $(this).parent().parent().find(".box-title");
+        var save_button = $(this).parent().find(".category-save");
+        var input = $(this).parent().parent().find(".category-name");
+
+        nome.hide();
+        $(this).hide();
+
+        input.removeClass("hide");
+        save_button.removeClass("hide");
+    });
+
+    $("#'.$attachment_id.' .category-save").click(function() {
+        var nome = $(this).parent().parent().find(".box-title");
+        var input = $(this).parent().parent().find(".category-name");
+
+        show_'.$attachment_id.'();
+
+        $.ajax({
+            url: globals.rootdir + "/actions.php",
+            cache: false,
+            type: "POST",
+            data: {
+                id_module: "'.$options['id_module'].'",
+                id_plugin: "'.$options['id_plugin'].'",
+                id_record: "'.$options['id_record'].'",
+                op: "upload_category",
+                category: nome.text(),
+                name: input.val(),
+            },
+            success: function(data) {
+                reload_'.$attachment_id.'();
+            },
+            error: function(data) {
+                reload_'.$attachment_id.'();
+            }
+        });
+    });
+
+    // Autocompletamento nome
+    $("#'.$attachment_id.' #blob").change(function(){
+        var nome = $("#'.$attachment_id.' #nome_allegato");
+
+        if (!nome.val()) {
+            var fullPath = $(this).val();
+
+            var startIndex = Math.max(fullPath.lastIndexOf("\\\\"), fullPath.lastIndexOf("/")) + 1;
+            var filename = fullPath.substring(startIndex);
+
+            nome.val(filename);
+        }
+    });
+
+    // Autocompletamento categoria
     $("#'.$attachment_id.' #categoria").autocomplete({
         source: '.json_encode($source).',
         minLength: 0
@@ -187,13 +274,14 @@ $(document).ready(function(){
         $(this).autocomplete("search", $(this).val())
     });
 
-    data = {
+    var data = {
         op: "link_file",
         id_module: "'.$options['id_module'].'",
         id_plugin: "'.$options['id_plugin'].'",
         id_record: "'.$options['id_record'].'",
     };
 
+    // Upload
     $("#'.$attachment_id.' #upload").click(function(){
         $form = $("#'.$attachment_id.' #upload-form");
 
@@ -229,7 +317,6 @@ function show_'.$attachment_id.'() {
 }
 
 function reload_'.$attachment_id.'() {
-
     $("#'.$attachment_id.'").load(globals.rootdir + "/ajax.php?op=list_attachments&id_module='.$options['id_module'].'&id_record='.$options['id_record'].'&id_plugin='.$options['id_plugin'].'", function() {
         $("#loading_'.$attachment_id.'").addClass("hide");
     });

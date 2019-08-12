@@ -8,7 +8,13 @@ use Illuminate\Database\Eloquent\Builder;
 
 abstract class Description extends Model
 {
+    use MorphTrait;
+
     protected $guarded = [];
+
+    protected $appends = [
+        'max_qta',
+    ];
 
     public static function build(Document $document, $bypass = false)
     {
@@ -24,6 +30,17 @@ abstract class Description extends Model
         return $model;
     }
 
+    public function getMaxQtaAttribute()
+    {
+        if (!$this->hasOriginal()) {
+            return null;
+        }
+
+        $original = $this->getOriginal();
+
+        return $original->qta_rimanente + $this->qta;
+    }
+
     /**
      * Modifica la quantità dell'elemento.
      *
@@ -36,9 +53,23 @@ abstract class Description extends Model
         $previous = $this->qta;
         $diff = $value - $previous;
 
+        if ($this->hasOriginal()) {
+            $original = $this->getOriginal();
+
+            if ($original->qta_rimanente < $diff) {
+                $diff = $original->qta_rimanente;
+                $value = $previous + $diff;
+            }
+        }
+
         $this->attributes['qta'] = $value;
 
-        $this->evasione($diff);
+        if ($this->hasOriginal()) {
+            $original = $this->getOriginal();
+
+            $original->qta_evasa += $diff;
+            $original->save();
+        }
 
         return $diff;
     }
@@ -53,11 +84,30 @@ abstract class Description extends Model
         return $this->qta - $this->qta_evasa;
     }
 
+    public function canDelete()
+    {
+        return true;
+    }
+
     public function delete()
     {
-        $this->evasione(-$this->qta);
+        if (!$this->canDelete()) {
+            throw new \InvalidArgumentException();
+        }
 
-        return parent::delete();
+        if ($this->hasOriginal()) {
+            $original = $this->getOriginal();
+        }
+
+        $this->qta = 0;
+        $result = parent::delete();
+
+        // Fix stato automatico
+        if ($this->hasOriginal()) {
+            $original->parent->fixStato($this);
+        }
+
+        return $result;
     }
 
     /**
@@ -98,6 +148,9 @@ abstract class Description extends Model
         // Attributi dell'oggetto da copiare
         $attributes = $this->getAttributes();
         unset($attributes['id']);
+        unset($attributes['original_id']);
+        unset($attributes['original_type']);
+        unset($attributes['order']);
 
         if ($qta !== null) {
             $attributes['qta'] = $qta;
@@ -107,6 +160,15 @@ abstract class Description extends Model
 
         // Creazione del nuovo oggetto
         $model = new $object();
+
+        // Rimozione attributo in conflitto
+        unset($attributes[$model->getParentID()]);
+
+        $model->original_id = $this->id;
+        $model->original_type = $current;
+
+        // Impostazione del genitore
+        $model->setParent($document);
 
         // Azioni specifiche di inizalizzazione
         $model->customInitCopiaIn($this);
@@ -123,17 +185,10 @@ abstract class Description extends Model
         $attributes = array_intersect_key($attributes, $accepted);
         $model->fill($attributes);
 
-        // Impostazione del genitore
-        $model->setParent($document);
-
         // Azioni specifiche successive
         $model->customAfterDataCopiaIn($this);
 
         $model->save();
-
-        // Rimozione quantità evasa
-        $this->qta_evasa = $this->qta_evasa + abs($attributes['qta']);
-        $this->save();
 
         return $model;
     }
@@ -162,8 +217,18 @@ abstract class Description extends Model
         return $this instanceof Article;
     }
 
-    protected function evasione($diff)
+    public function save(array $options = [])
     {
+        $result = parent::save($options);
+
+        // Fix stato automatico
+        if ($this->hasOriginal()) {
+            $original = $this->getOriginal();
+
+            $original->parent->fixStato($this);
+        }
+
+        return $result;
     }
 
     /**
@@ -199,13 +264,15 @@ abstract class Description extends Model
     {
         parent::boot();
 
+        $table = parent::getTableName();
+
         if (!$bypass) {
-            static::addGlobalScope('descriptions', function (Builder $builder) {
-                $builder->where('is_descrizione', '=', 1);
+            static::addGlobalScope('descriptions', function (Builder $builder) use ($table) {
+                $builder->where($table.'.is_descrizione', '=', 1);
             });
         } else {
-            static::addGlobalScope('not_descriptions', function (Builder $builder) {
-                $builder->where('is_descrizione', '=', 0);
+            static::addGlobalScope('not_descriptions', function (Builder $builder) use ($table) {
+                $builder->where($table.'.is_descrizione', '=', 0);
             });
         }
     }

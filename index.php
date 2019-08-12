@@ -111,6 +111,21 @@ foreach ($list as $file) {
     include_once $file;
 }
 
+// Inclusione dei file vendor/autoload.php di Composer
+$files = glob(__DIR__.'/{modules,plugins}/*/vendor/autoload.php', GLOB_BRACE);
+$custom_files = glob(__DIR__.'/{modules,plugins}/*/custom/vendor/autoload.php', GLOB_BRACE);
+foreach ($custom_files as $key => $value) {
+    $index = array_search(str_replace('custom/', '', $value), $files);
+    if ($index !== false) {
+        unset($files[$index]);
+    }
+}
+
+$list = array_merge($files, $custom_files);
+foreach ($list as $file) {
+    include_once $file;
+}
+
 // Run application
 $response = $app->run(true);
 $html = $response->getBody()->__toString();

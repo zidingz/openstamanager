@@ -5,6 +5,8 @@ Tutti i maggiori cambiamenti di questo progetto saranno documentati in questo fi
 Il formato utilizzato è basato sulle linee guida di [Keep a Changelog](http://keepachangelog.com/), e il progetto segue il [Semantic Versioning](http://semver.org/) per definire le versioni delle release.
 
 - [2.5](#25)
+- [2.4.11 (2019-)](#2411-2019-)
+- [2.4.10 (2019-07-23)](#2410-2019-07-23)
 - [2.4.9 (2019-05-17)](#249-2019-05-17)
 - [2.4.8 (2019-03-01)](#248-2019-03-01)
 - [2.4.7 (2019-02-21)](#247-2019-02-21)
@@ -20,7 +22,6 @@ Il formato utilizzato è basato sulle linee guida di [Keep a Changelog](http://k
 - [2.2 (2016-11-10)](#22-2016-11-10)
 - [2.1 (2015-04-02)](#21-2015-04-02)
 
-
 ## 2.5
 
 ### Aggiunto (Added)
@@ -33,6 +34,78 @@ Il formato utilizzato è basato sulle linee guida di [Keep a Changelog](http://k
  - Miglioramenti della struttura del database
  - Miglioramento della procedura semplificata di aggiornamento
  - Inversione del comportamento della classe **Filter** e degli helper *post*, *get* e *filter* (il secondo parametro restituisce il valore formattato)
+
+## 2.4.11 (2019-)
+
+### Aggiunto (Added)
+
+ - Nuova sezione *Note interne* nei moduli **Anagrafiche**, **Attività**, **Preventivi**, **Contratti**, **Fatture di vendita**, **Fatture di acquisto**, **Scadenzario**, **Ordini cliente**, **Ordini fornitore**, **Articoli**, **DDT di uscita**, **DDT di entrata** e **MyImpianti**
+ - Nuova sezione *Checklist* nei moduli **Attività** e **MyImpianti**
+ - Nuova procedura di ripristino password via email
+ - Supporto a multiple versioni dell'API interna, per mantenere la compatibilità con servizi esterni collegati a seguito di aggiornamenti e nuove funzionalità
+ - Possibilità di registrare contabilmente in modo massivo le fatture in **Fatture di vendita** e le scadenze in **Scadenzario**
+ - Possibilità di importare in sequenza tutte le *Fatture Elettroniche* presenti, con supporto alle relazioni delle **Fatture di acquisto** con le *Note di credito/debito* e le *Parcelle*
+ - Supporto al footer solo nell'ultima pagina per le stampe (**Fatture di vendita** e **DDT di uscita**)  tramite l'opzione *last-page-footer*
+ - Informazioni più complete sulle *Fatture Elettroniche* da importare per gli utenti con servizio di importazione automatica
+ - Possibilità di indicare una foto per l'utente, visualizzata nelle *Note interne* e nei futuri allegati che verranno caricati
+ - Possibilità di modificare il nome delle categorie degli allegati
+ - Stampe dei consuntivi interni (i prezzi sono sostituiti dai costi)
+ - Supporto all'inserimento manuale di maggiori attributi per le *Fatture Elettroniche*, tramite gli appositi pulsanti "Attributi avanzati" all'interno delle **Fatture di vendita**
+ - Aggiunto Identificativo documento, Num Item, codici CIG e CUP in **DDT di uscita**
+
+### Modificato (Changed)
+
+ - Aggiornamento delle stampe di *Riepilogo intervento*, *Consuntivo contratto* e *Consuntivo preventivo*
+ - Correzione dell'importazione delle *Fatture Elettroniche* per supportare Ritenuta d'Acconto (dove indicata), Rivalsa INPS (su tutto il documento) e Ritenuta contributi (su tutto il documento)
+ - Miglioramento del sistema di evasione delle quantità nel passaggio tra documenti, ora integrato nelle classi Eloquent e completamente automatico
+ - Correzione delle diciure generali *Imponibile scontato* in *Totale imponibile* e *Sconto* in *Sconto/maggiorazione*
+
+### Rimosso (Removed)
+ - Funzione *get_costi_intervento* del modulo **Attività**, a causa dell'aggiornamento della maggior parte del sistema di gestione degli **Attività** con le classi Eloquent
+ - Funzione *aggiorna_scadenziario* del modulo **Prima Nota**
+
+### Fixed
+
+ -
+
+## 2.4.10 (2019-07-23)
+
+### Aggiunto (Added)
+
+ - Possibilità di gestire più magazzini attraverso la sezione delle sedi nelle **Anagrafiche** (gli **Automezzi** sono stati trasformati in **Sedi**, con possibilità di tracciamento di partenza e destinazione tra le sedi)
+ - Modulo **Tipi scadenze** (in **Strumenti** -> **Tabelle**) per gestire i tipi di scadenze
+ - Prima versione della traduzione parziale in inglese del gestionale
+ - Validazione AJAX dei campi (*partita iva*, *codice fiscale* e *codice* in **Anagrafiche**, *codice* in **Articoli**)
+ - Possibilità di ripristinare gli elementi eliminati dove l'eliminazione avviene a livello virtuale (**Anagrafiche**)
+ - Plugin **Rinnovi** in **Contratti**
+ - Caricamento del **Piano dei conti** attraverso AJAX
+ - Plugin *Statistiche* in **Articoli**, con visualizzazione del *Prezzo medio acquisto* in periodi personalizzabili
+ - Supporto ai select come **Campi personalizzati**
+ - Possibilità di generazione massiva delle fatture elettroniche
+
+### Modificato (Changed)
+
+ - Miglioramento grafica degli hook, con gestione automatica degli aggiornamenti delle informazioni causati da altre componente del gestionale
+ - Le tariffe dei tecnici sono state standardizzate nel seguente modo:
+    - Il modulo **Tipi di attività** permette di definire le tariffe standard per i nuovi tecnici
+    - Il modulo **Tecnici e tariffe** permette di definire le tariffe personalizzate per i diversi tecnici in relazione ai tipi di attività
+    - Il modulo **Contratti** permette di definire le tariffe personalizzate per le *nuove sessioni* delle attività collegate
+    - La sezione di modifica delle sessioni permette la modifica manuale delle tariffe interessate; il cambiamento del tipo di sessione provoca l'utilizzo delle tariffe definite da **Tecnici e tariffe**
+ - Ottimizzazione delle stampe **Scadenzario** e **Registro IVA**, e della tabella principale del modulp **Fatture di vendita**
+ - Miglioramento della plugin *Statistiche* in **Anagrafiche**,con visualizzazione dei dati in periodi personalizzabili
+ - Miglioramento del sistema di importazione delle ricevute delle Fatture Elettroniche, per permetterne il caricamento manuale
+ - Standardizzazione dei nomi predefiniti delle stampa e dei relativi file generati
+
+### Rimosso (Removed)
+ - Supporto ai raggruppamenti di **Contratti** e **Preventivi** nelle **Fatture**
+
+### Fixed
+
+ - Fix export delle tabelle principali in Excel
+ - Fix bug della configurazione iniziale nella selezione della nazione
+ - Fix delle somme filtrate sulle tabelle principali
+ - Fix per includere le stampe previste nelle notifiche
+ - Risolti alcuni bug generali
 
 ## 2.4.9 (2019-05-17)
 

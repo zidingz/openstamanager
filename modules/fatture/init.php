@@ -9,7 +9,7 @@ if ($module['name'] == 'Fatture di vendita') {
 if (isset($id_record)) {
     $fattura = Modules\Fatture\Fattura::with('tipo', 'stato')->find($id_record);
 
-    $record = $dbo->fetchOne('SELECT *,
+    $record = $dbo->fetchOne('SELECT co_documenti.*,
         co_tipidocumento.reversed AS is_reversed,
         co_documenti.idagente AS idagente_fattura,
         co_documenti.note,
@@ -19,6 +19,7 @@ if (isset($id_record)) {
 		co_documenti.split_payment AS split_payment,
         co_statidocumento.descrizione AS `stato`,
         co_tipidocumento.descrizione AS `descrizione_tipodoc`,
+        co_pagamenti.riba AS `riba`,
         (SELECT is_fiscale FROM zz_segments WHERE id = id_segment) AS is_fiscale,
         (SELECT descrizione FROM co_ritenutaacconto WHERE id=idritenutaacconto) AS ritenutaacconto_desc,
         (SELECT descrizione FROM co_rivalse WHERE id=idrivalsainps) AS rivalsainps_desc,

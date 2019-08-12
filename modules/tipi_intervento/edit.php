@@ -7,7 +7,7 @@
 
 	<div class="row">
 		<div class="col-md-4">
-			{[ "type": "span", "label": "<?php echo tr('Codice'); ?>", "name": "id_tipo_intervento", "value": "$id_tipo_intervento$" ]}
+			{[ "type": "span", "label": "<?php echo tr('Codice'); ?>", "name": "codice", "value": "$codice$" ]}
 		</div>
 
 		<div class="col-md-6">
@@ -66,10 +66,6 @@
 	</div>
 </form>
 
-<a class="btn btn-danger ask" data-backto="record-list">
-    <i class="fa fa-trash"></i> <?php echo tr('Elimina'); ?>
-</a>
-
 <?php
 
 $interventi = $dbo->fetchArray('SELECT COUNT(*) AS tot_interventi FROM in_interventi WHERE id_tipo_intervento='.prepare($id_record));
@@ -81,6 +77,10 @@ if ($tot_interventi > 0) {
         '.tr('Ci sono _NUM_ interventi collegati', [
             '_NUM_' => $tot_interventi,
         ]).'.
-        '.tr('Eliminando questo tipo di attività, vengono rimossi anche gli interventi collegati!').'
     </div>';
+} else {
+    echo '
+<a class="btn btn-danger ask" data-backto="record-list">
+    <i class="fa fa-trash"></i> '.tr('Elimina').'
+</a>';
 }

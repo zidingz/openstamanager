@@ -1,5 +1,11 @@
 <?php
 
+include_once __DIR__.'/core.php';
+
+use Models\Note;
+use Modules\Checklists\Check;
+use Modules\Checklists\Checklist;
+
 if (empty($structure) || empty($structure['enabled'])) {
     die(tr('Accesso negato'));
 }
@@ -72,6 +78,18 @@ elseif (filter('op') == 'download_file') {
     download($upload_dir.'/'.$rs[0]['filename'], $rs[0]['original']);
 }
 
+// Modifica nome della categoria degli allegati
+elseif (filter('op') == 'upload_category') {
+    $category = post('category');
+    $name = post('name');
+
+    $uploads = $structure->uploads($id_record)->where('category', $category);
+    foreach ($uploads as $upload) {
+        $upload->category = $name;
+        $upload->save();
+    }
+}
+
 // Validazione dati
 elseif (filter('op') == 'validate') {
     // Lettura informazioni di base
@@ -89,6 +107,100 @@ elseif (filter('op') == 'validate') {
     echo json_encode($response);
 
     return;
+}
+
+// Aggiunta nota interna
+elseif (filter('op') == 'add_nota') {
+    $contenuto = post('contenuto');
+    $data_notifica = post('data_notifica') ?: null;
+
+    $nota = Note::build($user, $structure, $id_record, $contenuto, $data_notifica);
+
+    flash()->info(tr('Nota interna aggiunta correttamente!'));
+}
+
+// Rimozione data di notifica dalla nota interna
+elseif (filter('op') == 'notification_nota') {
+    $id_nota = post('id_nota');
+    $nota = Note::find($id_nota);
+
+    $nota->notification_date = null;
+    $nota->save();
+
+    flash()->info(tr('Data di notifica rimossa dalla nota interna!'));
+}
+
+// Rimozione nota interna
+elseif (filter('op') == 'delete_nota') {
+    $id_nota = post('id_nota');
+    $nota = Note::find($id_nota);
+
+    $nota->delete();
+
+    flash()->info(tr('Nota interna aggiunta correttamente!'));
+}
+
+// Clonazione di una checklist
+elseif (filter('op') == 'clone_checklist') {
+    $content = post('content');
+    $checklist_id = post('checklist');
+
+    $users = post('assigned_users');
+    $users = array_clean($users);
+
+    $group_id = post('group_id');
+
+    $checklist = Checklist::find($checklist_id);
+    $checklist->copia($user, $id_record, $users, $group_id);
+}
+
+// Aggiunta check alla checklist
+elseif (filter('op') == 'add_check') {
+    $content = post('content');
+    $parent_id = post('parent') ?: null;
+
+    $users = post('assigned_users');
+    $users = array_clean($users);
+
+    $group_id = post('group_id');
+
+    $check = Check::build($user, $structure, $id_record, $content, $parent_id);
+    $check->setAccess($users, $group_id);
+}
+
+// Rimozione di un check della checklist
+elseif (filter('op') == 'delete_check') {
+    $check_id = post('check_id');
+    $check = Check::find($check_id);
+
+    if (!empty($check) && $check->user->id == $user->id) {
+        $check->delete();
+    } else {
+        flash()->error(tr('Impossibile eliminare il check!'));
+    }
+}
+
+// Gestione check per le checklist
+elseif (filter('op') == 'toggle_check') {
+    $check_id = post('check_id');
+    $check = Check::find($check_id);
+
+    if (!empty($check) && $check->assignedUsers->pluck('id')->search($user->id) !== false) {
+        $check->toggleCheck($user);
+    } else {
+        flash()->error(tr('Impossibile cambiare lo stato del check!'));
+    }
+}
+
+// Gestione ordine per le checklist
+elseif (filter('op') == 'sort_checks') {
+    $ids = explode(',', $_POST['order']);
+    $order = 0;
+
+    foreach ($ids as $id) {
+        $dbo->query('UPDATE `zz_checks` SET `order` = '.prepare($order).' WHERE id = '.prepare($id));
+        ++$order;
+    }
 }
 
 // Invio email

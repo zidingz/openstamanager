@@ -8,7 +8,7 @@ $id_fornitore = $dbo->fetchArray("SELECT id FROM an_tipianagrafiche WHERE descri
 $id_tecnico = $dbo->fetchArray("SELECT id FROM an_tipianagrafiche WHERE descrizione='Tecnico'")[0]['id'];
 
 if (isset($id_record)) {
-    $anagrafica = Anagrafica::find($id_record);
+    $anagrafica = Anagrafica::withTrashed()->find($id_record);
 
     $record = $dbo->fetchOne('SELECT *,
         (SELECT GROUP_CONCAT(an_tipianagrafiche.id) FROM an_tipianagrafiche INNER JOIN an_tipianagrafiche_anagrafiche ON an_tipianagrafiche.id=an_tipianagrafiche_anagrafiche.id_tipo_anagrafica WHERE idanagrafica=an_anagrafiche.idanagrafica) AS idtipianagrafica,

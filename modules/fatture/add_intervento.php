@@ -26,7 +26,7 @@ echo '
 ]).'</p>
 
 <form action="'.$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'" method="post">
-    <input type="hidden" name="op" value="addintervento">
+    <input type="hidden" name="op" value="add_intervento">
     <input type="hidden" name="backto" value="record-edit">
     <input type="hidden" name="dir" value="'.$dir.'">';
 
@@ -44,8 +44,15 @@ $rs = $dbo->fetchArray('SELECT
         AND in_interventi.id_preventivo IS NULL
         AND NOT in_interventi.id IN (SELECT idintervento FROM co_promemoria WHERE idintervento IS NOT NULL)');
 foreach ($rs as $key => $value) {
-    $rs[$key]['prezzo'] = Translator::numberToLocale(get_costi_intervento($value['id'])['totale']);
+    $intervento = \Modules\Interventi\Intervento::find($value['id']);
+    $prezzo = $intervento->totale;
+
+    $rs[$key]['prezzo'] = Translator::numberToLocale($prezzo);
     $rs[$key]['descrizione_intervento'] = strip_tags($rs[$key]['descrizione_intervento']);
+
+    if ($prezzo <= 0) {
+        unset($rs[$key]);
+    }
 }
 
 // Intervento
@@ -116,4 +123,4 @@ echo '
 </form>';
 
 echo '
-	<script src="'.ROOTDIR.'/assets/js/init.min.js"></script>';
+<script>$(document).ready(init)</script>';

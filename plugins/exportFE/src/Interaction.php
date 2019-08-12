@@ -2,14 +2,16 @@
 
 namespace Plugins\ExportFE;
 
+use API\Services;
+
 /**
  * Classe per l'interazione con API esterne.
  *
  * @since 2.4.3
  */
-class Interaction extends Connection
+class Interaction extends Services
 {
-    public static function sendXML($id_record)
+    public static function sendInvoice($id_record)
     {
         try {
             $fattura = new FatturaElettronica($id_record);

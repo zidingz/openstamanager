@@ -11,6 +11,15 @@ echo '
     <i class="fa fa-copy"></i> '.tr('Duplica fattura').'
 </button>';
 
+if ($module->name == 'Fatture di vendita') {
+    $attributi_visibili = $record['stato'] != 'Emessa' && $record['stato'] != 'Parzialmente pagato' && $record['stato'] != 'Pagato';
+
+    echo '
+<a class="btn btn-info '.($attributi_visibili ? '' : 'disabled').'" data-toggle="modal" data-title="'.tr('Dati Fattura Elettronica').'" data-href="'.$structure->fileurl('fe/document-fe.php').'?id_module='.$id_module.'&id_record='.$id_record.'" '.($attributi_visibili ? '' : 'disabled').'>
+    <i class="fa fa-file-code-o"></i> '.tr('Attributi avanzati').'
+</a>';
+}
+
 if ($dir == 'entrata') {
     echo '
 <div class="btn-group">
@@ -32,7 +41,8 @@ if ($dir == 'entrata') {
 }
 
 if (empty($record['is_fiscale'])) {
-    $msg = '{[ "type": "select", "label": "'.tr('Sezionale').'", "name": "id_segment", "required": 1, "values": "query=SELECT id, name AS descrizione FROM zz_segments WHERE id_module=\''.$id_module.'\' AND is_fiscale = 1 ORDER BY name" ]}';
+    $msg = '<br>{[ "type": "select", "label": "'.tr('Sezionale').'", "name": "id_segment", "required": 1, "values": "query=SELECT id, name AS descrizione FROM zz_segments WHERE id_module=\''.$id_module.'\' AND is_fiscale = 1 ORDER BY name" ]}
+    {[ "type": "date", "label": "'.tr('Data').'", "name": "data", "required": 1, "value": "-now-" ]}';
 
     echo '
     <button type="button" class="btn btn-warning ask" data-msg="'.tr('Vuoi trasformare questa fattura pro-forma in una di tipo fiscale?').'<br>'.prepareToField(\HTMLBuilder\HTMLBuilder::replace($msg)).'" data-op="transform" data-button="'.tr('Trasforma').'" data-class="btn btn-lg btn-warning" data-backto="record-edit">
@@ -48,7 +58,7 @@ if (!empty($record['is_fiscale'])) {
     //Aggiunta insoluto
     if (!empty($record['riba']) && ($record['stato'] == 'Emessa' || $record['stato'] == 'Parzialmente pagato' || $record['stato'] == 'Pagato') && $dir == 'entrata') {
         ?>
-                    <button type="button" class="btn btn-primary" onclick="launch_modal( '<?php echo tr('Registra insoluto'); ?>', '<?php echo $rootdir; ?>/add.php?id_module=<?php echo Modules::get('Prima nota')['id']; ?>&iddocumento=<?php echo $id_record; ?>&dir=<?php echo $dir; ?>&insoluto=1', 1 );"><i class="fa fa-euro"></i> <?php echo tr('Registra insoluto'); ?>...</button>
+                    <button type="button" class="btn btn-primary" onclick="launch_modal( '<?php echo tr('Registra insoluto'); ?>', '<?php echo $rootdir; ?>/add.php?id_module=<?php echo Modules::get('Prima nota')['id']; ?>&id_documenti=<?php echo $id_record; ?>&single=1&is_insoluto=1');"><i class="fa fa-euro"></i> <?php echo tr('Registra insoluto'); ?>...</button>
     <?php
     }
 
@@ -61,14 +71,14 @@ if (!empty($record['is_fiscale'])) {
 
     if (($n2 <= 0 && $record['stato'] == 'Emessa') || $differenza != 0) {
         ?>
-					<button type="button" class="btn btn-primary <?php echo (!empty(Modules::get('Prima nota'))) ? '' : 'disabled'; ?>" onclick="launch_modal( '<?php echo tr('Aggiungi prima nota'); ?>', '<?php echo $rootdir; ?>/add.php?id_module=<?php echo Modules::get('Prima nota')['id']; ?>&iddocumento=<?php echo $id_record; ?>&dir=<?php echo $dir; ?>', 1 );"><small><i class="fa fa-euro"></i> <?php echo tr('Registra contabile pagamento'); ?>...</small></button>
+					<button type="button" class="btn btn-primary <?php echo (!empty(Modules::get('Prima nota'))) ? '' : 'disabled'; ?>" onclick="launch_modal( '<?php echo tr('Aggiungi prima nota'); ?>', '<?php echo $rootdir; ?>/add.php?id_module=<?php echo Modules::get('Prima nota')['id']; ?>&id_documenti=<?php echo $id_record; ?>&single=1');"><small><i class="fa fa-euro"></i> <?php echo tr('Registra contabile pagamento'); ?>...</small></button>
 <?php
     }
 
     if ($record['stato'] == 'Pagato') {
-        ?>
-					<button type="button" class="btn btn-primary tip" onclick="if( confirm('<?php echo tr('Se riapri questa fattura verrà azzerato lo scadenzario e la prima nota. Continuare?'); ?>') ){ $.post( '<?php echo $rootdir; ?>/editor.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>', { id_module: '<?php echo $id_module; ?>', id_record: '<?php echo $id_record; ?>', op: 'reopen' }, function(){ location.href='<?php echo $rootdir; ?>/editor.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>'; } ); }" title="<?php echo tr('Riporta la fattura in stato bozza e ne elimina i movimenti contabili.'); ?>" ><i class="fa fa-folder-open"></i> <?php echo tr('Riapri fattura'); ?>...</button>
-<?php
+        echo '
+        <button type="button" class="btn btn-primary ask tip" data-msg="'.tr('Se riapri questa fattura verrà azzerato lo scadenzario e la prima nota. Continuare?').'" data-method="post" data-op="reopen" data-backto="record-edit" data-title="'.tr('Riaprire la fattura?').'" title="'.tr('Riporta la fattura in stato bozza e ne elimina i movimenti contabili').'">
+            <i class="fa fa-folder-open"></i> '.tr('Riapri fattura').'...
+        </button>';
     }
 }
-?>

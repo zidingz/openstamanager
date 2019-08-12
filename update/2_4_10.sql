@@ -28,7 +28,7 @@ INSERT INTO `zz_hooks` (`id`, `name`, `class`, `frequency`, `id_module`) VALUES
 (NULL, 'Ricevute', 'Modules\\Aggiornamenti\\UpdateHook', '7 day', (SELECT `id` FROM `zz_modules` WHERE `name` = 'Aggiornamenti'));
 
 --
--- Aggiunta nuovi campi per tracciamento sedi 
+-- Aggiunta nuovi campi per tracciamento sedi
 --
 ALTER TABLE `mg_movimenti` ADD `idsede_azienda` INT NOT NULL AFTER `idautomezzo`, ADD `idsede_controparte` INT NOT NULL AFTER `idsede_azienda`;
 
@@ -89,9 +89,6 @@ UPDATE `mg_movimenti` SET `idsede_azienda` = (SELECT `idsede_partenza` FROM `dt_
 UPDATE `mg_movimenti` SET `idsede_controparte` = (SELECT `idsede_destinazione` FROM `co_documenti` WHERE `co_documenti`.`id` = `mg_movimenti`.`iddocumento`) WHERE `iddocumento`!=0;
 UPDATE `mg_movimenti` SET `idsede_azienda` = (SELECT `idsede_destinazione` FROM `co_documenti` WHERE `co_documenti`.`id` = `mg_movimenti`.`iddocumento`) WHERE `iddocumento`!=0;
 
--- Aggiungo LEFT e INNER JOIN per ottimizzare la query del modulo Fatture di vendita
-UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM `co_documenti` INNER JOIN `co_tipidocumento` ON `co_documenti`.`idtipodocumento` = `co_tipidocumento`.`id` LEFT OUTER JOIN ( SELECT `zz_emails`.`name`,  `zz_operations`.`id_record` FROM `zz_operations` INNER JOIN `zz_emails` ON `zz_operations`.`id_email` = `zz_emails`.`id` INNER JOIN `zz_modules` ON `zz_operations`.`id_module` = `zz_modules`.`id` AND `zz_modules`.`name` = \'Fatture di vendita\' AND `zz_operations`.`op` = \'send-email\' LIMIT 1) AS `email` ON `email`.`id_record` = `co_documenti`.`id` WHERE 1=1 AND `dir` = \'entrata\' |segment| AND `data` >= \'|period_start|\' AND `data` <= \'|period_end|\' HAVING 2=2 ORDER BY `data` DESC, CAST(numero_esterno AS UNSIGNED) DESC' WHERE `zz_modules`.`name` = 'Fatture di vendita';
-
 -- Sistemo vista per icon_Inviata modulo Fatture di vendita
 UPDATE `zz_views` SET `query` = 'IF(`email`.`name` IS NOT NULL, \'fa fa-envelope text-success\', \'\')' WHERE `zz_views`.`name` = 'icon_Inviata' AND `id_module` =  (SELECT `id` FROM `zz_modules` WHERE `name` = 'Fatture di vendita') ;
 
@@ -109,7 +106,7 @@ UPDATE `zz_views` SET `query` = 'CONCAT_WS(co_movimenti_modelli.nome, co_movimen
 
 UPDATE `co_movimenti_modelli` SET `nome` = `descrizione` WHERE `nome` = '';
 
--- Rimuovo le interruzioni di riga per descrizioni vuote 
+-- Rimuovo le interruzioni di riga per descrizioni vuote
 -- UPDATE `in_interventi` SET `descrizione` = REPLACE(`descrizione`, '\n', '') where `descrizione` LIKE '%\n';
 
 -- Aggiunto tabella co_tipi_scadenze
@@ -135,3 +132,142 @@ INSERT INTO `zz_views` (`id_module`, `name`, `query`, `order`, `search`, `slow`,
 
 -- Aggiungo possibilità di vedere la descrizione per le scadenze generiche
 UPDATE `zz_views` SET `query` = 'IF(an_anagrafiche.ragione_sociale IS NULL, co_scadenziario.descrizione, an_anagrafiche.ragione_sociale)' WHERE `zz_views`.`name` = 'Anagrafica' AND `zz_views`.`id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Scadenzario');
+
+-- Plugin rinnovi per Contratti
+INSERT INTO `zz_plugins` (`id`, `name`, `title`, `idmodule_from`, `idmodule_to`, `position`, `script`, `enabled`, `default`, `order`, `compatibility`, `version`, `options2`, `options`, `directory`, `help`) VALUES (NULL, 'Rinnovi', 'Rinnovi', (SELECT `id` FROM `zz_modules` WHERE `name` = 'Contratti'), (SELECT `id` FROM `zz_modules` WHERE `name` = 'Contratti'), 'tab', '', 1, 0, 0, '', '', NULL, 'custom', 'rinnovi_contratti', '');
+
+-- Aggiornamento Tecnici e tariffe
+UPDATE `zz_modules` SET `options` = '
+SELECT |select| FROM an_anagrafiche WHERE idanagrafica IN (
+    SELECT idanagrafica FROM an_tipianagrafiche_anagrafiche WHERE idtipoanagrafica IN (
+        SELECT idtipoanagrafica FROM an_tipianagrafiche WHERE descrizione = ''Tecnico''
+    )
+) AND deleted_at IS NULL AND 1=1 HAVING 2=2 ORDER BY ragione_sociale' WHERE `name` = 'Tecnici e tariffe';
+
+INSERT INTO `zz_views` (`id_module`, `name`, `query`, `order`, `search`, `slow`, `default`, `visible`) VALUES
+((SELECT `id` FROM `zz_modules` WHERE `name` = 'Tecnici e tariffe'), '_bg_', 'colore', 3, 1, 0, 0, 0),
+((SELECT `id` FROM `zz_modules` WHERE `name` = 'Tecnici e tariffe'), 'Nome', 'ragione_sociale', 2, 1, 0, 0, 1),
+((SELECT `id` FROM `zz_modules` WHERE `name` = 'Tecnici e tariffe'), 'id', 'idanagrafica', 1, 1, 0, 0, 0);
+
+-- Correzione primary key
+ALTER TABLE `in_interventi` DROP FOREIGN KEY `in_interventi_ibfk_2`;
+ALTER TABLE `in_tipiintervento` DROP PRIMARY KEY;
+ALTER TABLE `in_tipiintervento` CHANGE `idtipointervento` `codice` VARCHAR(25) NOT NULL, ADD `idtipointervento` INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT;
+
+UPDATE `in_interventi` INNER JOIN `in_tipiintervento` ON `in_interventi`.`idtipointervento` = `in_tipiintervento`.`codice` SET `in_interventi`.`idtipointervento` = `in_tipiintervento`.`idtipointervento`;
+ALTER TABLE `in_interventi` CHANGE `idtipointervento` `idtipointervento` INT(11) NOT NULL, ADD FOREIGN KEY (`idtipointervento`) REFERENCES `in_tipiintervento`(`idtipointervento`);
+
+ALTER TABLE `in_statiintervento` DROP PRIMARY KEY;
+ALTER TABLE `in_statiintervento` CHANGE `idstatointervento` `codice` VARCHAR(25) NOT NULL, ADD `idstatointervento` INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT;
+
+UPDATE `in_interventi` INNER JOIN `in_statiintervento` ON `in_interventi`.`idstatointervento` = `in_statiintervento`.`codice` SET `in_interventi`.`idstatointervento` = `in_statiintervento`.`idstatointervento`;
+ALTER TABLE `in_interventi` CHANGE `idstatointervento` `idstatointervento` INT(11) NOT NULL, ADD FOREIGN KEY (`idstatointervento`) REFERENCES `in_statiintervento`(`idstatointervento`);
+
+UPDATE `an_anagrafiche` INNER JOIN `in_tipiintervento` ON `an_anagrafiche`.`idtipointervento_default` = `in_tipiintervento`.`codice` SET `an_anagrafiche`.`idtipointervento_default` = `in_tipiintervento`.`idtipointervento`;
+ALTER TABLE `an_anagrafiche` CHANGE `idtipointervento_default` `idtipointervento_default` varchar(25);
+UPDATE `an_anagrafiche` SET `idtipointervento_default` = NULL WHERE `idtipointervento_default` NOT IN (SELECT `idtipointervento` FROM `in_tipiintervento`);
+ALTER TABLE `an_anagrafiche` CHANGE `idtipointervento_default` `idtipointervento_default` INT(11), ADD FOREIGN KEY (`idtipointervento_default`) REFERENCES `in_tipiintervento`(`idtipointervento`);
+
+UPDATE `co_contratti_tipiintervento` INNER JOIN `in_tipiintervento` ON `co_contratti_tipiintervento`.`idtipointervento` = `in_tipiintervento`.`codice` SET `co_contratti_tipiintervento`.`idtipointervento` = `in_tipiintervento`.`idtipointervento`;
+DELETE `co_contratti_tipiintervento` WHERE `idtipointervento` NOT IN (SELECT `idtipointervento` FROM `in_tipiintervento`);
+ALTER TABLE `co_contratti_tipiintervento` CHANGE `idtipointervento` `idtipointervento` INT(11) NOT NULL, ADD FOREIGN KEY (`idtipointervento`) REFERENCES `in_tipiintervento`(`idtipointervento`);
+
+UPDATE `co_preventivi` INNER JOIN `in_tipiintervento` ON `co_preventivi`.`idtipointervento` = `in_tipiintervento`.`codice` SET `co_preventivi`.`idtipointervento` = `in_tipiintervento`.`idtipointervento`;
+UPDATE `co_preventivi`  SET `idtipointervento` = NULL WHERE `idtipointervento` NOT IN (SELECT `idtipointervento` FROM `in_tipiintervento`);
+ALTER TABLE `co_preventivi` CHANGE `idtipointervento` `idtipointervento` INT(11) NOT NULL, ADD FOREIGN KEY (`idtipointervento`) REFERENCES `in_tipiintervento`(`idtipointervento`);
+
+UPDATE `co_promemoria` INNER JOIN `in_tipiintervento` ON `co_promemoria`.`idtipointervento` = `in_tipiintervento`.`codice` SET `co_promemoria`.`idtipointervento` = `in_tipiintervento`.`idtipointervento`;
+ALTER TABLE `co_promemoria` CHANGE `idtipointervento` `idtipointervento` INT(11) NOT NULL, ADD FOREIGN KEY (`idtipointervento`) REFERENCES `in_tipiintervento`(`idtipointervento`);
+
+UPDATE `in_interventi_tecnici` INNER JOIN `in_tipiintervento` ON `in_interventi_tecnici`.`idtipointervento` = `in_tipiintervento`.`codice` SET `in_interventi_tecnici`.`idtipointervento` = `in_tipiintervento`.`idtipointervento`;
+UPDATE `in_interventi_tecnici`  SET `idtipointervento` = NULL WHERE `idtipointervento` NOT IN (SELECT `idtipointervento` FROM `in_tipiintervento`);
+ALTER TABLE `in_interventi_tecnici` CHANGE `idtipointervento` `idtipointervento` INT(11) NOT NULL, ADD FOREIGN KEY (`idtipointervento`) REFERENCES `in_tipiintervento`(`idtipointervento`);
+
+UPDATE `in_tariffe` INNER JOIN `in_tipiintervento` ON `in_tariffe`.`idtipointervento` = `in_tipiintervento`.`codice` SET `in_tariffe`.`idtipointervento` = `in_tipiintervento`.`idtipointervento`;
+DELETE FROM `in_tariffe` WHERE `idtipointervento` NOT IN (SELECT `idtipointervento` FROM `in_tipiintervento`);
+ALTER TABLE `in_tariffe` CHANGE `idtipointervento` `idtipointervento` INT(11) NOT NULL, ADD FOREIGN KEY (`idtipointervento`) REFERENCES `in_tipiintervento`(`idtipointervento`);
+
+-- Ottimizzazione query Fatture
+UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM `co_documenti`
+    INNER JOIN `an_anagrafiche` ON `co_documenti`.`idanagrafica` = `an_anagrafiche`.`idanagrafica`
+    INNER JOIN `co_tipidocumento` ON `co_documenti`.`idtipodocumento` = `co_tipidocumento`.`id`
+    INNER JOIN `co_statidocumento` ON `co_documenti`.`idstatodocumento` = `co_statidocumento`.`id`
+    LEFT JOIN `fe_stati_documento` ON `co_documenti`.`codice_stato_fe` = `fe_stati_documento`.`codice`
+    LEFT JOIN (SELECT `numero_esterno`, `id_segment` FROM `co_documenti` WHERE `co_documenti`.`idtipodocumento` IN(SELECT `id` FROM `co_tipidocumento` WHERE `dir` = ''entrata'') AND `co_documenti`.`data` >= ''2019-01-01'' AND `co_documenti`.`data` <= ''2019-12-31'' GROUP BY `id_segment`, `numero_esterno` HAVING COUNT(`numero_esterno`) > 1) dup ON `co_documenti`.`numero_esterno` = `dup`.`numero_esterno` AND `dup`.`id_segment` = `co_documenti`.`id_segment`
+    LEFT OUTER JOIN (SELECT `zz_emails`.`name`, `zz_operations`.`id_record` FROM `zz_operations` INNER JOIN `zz_emails` ON `zz_operations`.`id_email` = `zz_emails`.`id` INNER JOIN `zz_modules` ON `zz_operations`.`id_module` = `zz_modules`.`id` AND `zz_modules`.`name` = ''Fatture di vendita'' AND `zz_operations`.`op` = ''send-email'' LIMIT 1) AS `email` ON `email`.`id_record` = `co_documenti`.`id`
+WHERE 1=1 AND `dir` = ''entrata'' |segment(co_documenti.id_segment)| AND `co_documenti`.`data` >= ''|period_start|'' AND `co_documenti`.`data` <= ''|period_end|''
+HAVING 2=2
+ORDER BY `co_documenti`.`data` DESC, CAST(`co_documenti`.`numero_esterno` AS UNSIGNED) DESC' WHERE `name` = 'Fatture di vendita';
+
+UPDATE `zz_views` SET `query` = 'IF(`dup`.`numero_esterno` IS NULL, '''', ''red'')' WHERE `name` = '_bg_' AND `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Fatture di vendita');
+UPDATE `zz_views` SET `query` = 'an_anagrafiche.idanagrafica' WHERE `name` = 'idanagrafica' AND `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Fatture di vendita');
+UPDATE `zz_views` SET `query` = 'IF(co_documenti.numero_esterno='''', co_documenti.numero, co_documenti.numero_esterno)', `order_by` ='CAST(co_documenti.numero_esterno AS UNSIGNED)' WHERE `name` = 'Numero' AND `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Fatture di vendita');
+UPDATE `zz_views` SET `query` = 'co_documenti.data' WHERE `name` = 'Data' AND `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Fatture di vendita');
+UPDATE `zz_views` SET `query` = 'an_anagrafiche.ragione_sociale' WHERE `name` = 'Ragione sociale' AND `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Fatture di vendita');
+UPDATE `zz_views` SET `query` = '(SELECT SUM(subtotale - sconto + iva + rivalsainps - ritenutaacconto) FROM co_righe_documenti WHERE co_righe_documenti.iddocumento=co_documenti.id GROUP BY iddocumento) + co_documenti.iva_rivalsainps' WHERE `name` = 'Totale' AND `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Fatture di vendita');
+UPDATE `zz_views` SET `query` = 'co_statidocumento.icona' WHERE `name` = 'icon_Stato' AND `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Fatture di vendita');
+UPDATE `zz_views` SET `query` = 'co_statidocumento.descrizione' WHERE `name` = 'icon_title_Stato' AND `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Fatture di vendita');
+UPDATE `zz_views` SET `query` = '`fe_stati_documento`.`icon`' WHERE `name` = 'icon_FE' AND `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Fatture di vendita');
+UPDATE `zz_views` SET `query` = '`fe_stati_documento`.`descrizione`' WHERE `name` = 'icon_title_FE' AND `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Fatture di vendita');
+
+-- Impostazione per la lunghezza delle pagine Datatables
+INSERT INTO `zz_settings` (`id`, `nome`, `valore`, `tipo`, `editable`, `sezione`, `order`) VALUES (NULL, 'Lunghezza in pagine del buffer Datatables', '10', 'decimal', 0, 'Generali', 1);
+
+-- Miglioramento query Scadenzario
+UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM `co_scadenziario`
+    LEFT JOIN `co_documenti`  ON `co_scadenziario`.`iddocumento` = `co_documenti`.`id`
+    LEFT JOIN `an_anagrafiche` ON `co_documenti`.`idanagrafica` = `an_anagrafiche`.`idanagrafica`
+    LEFT JOIN `co_pagamenti` ON `co_documenti`.`idpagamento` = `co_pagamenti`.`id`
+    LEFT JOIN `co_tipidocumento` ON `co_documenti`.`idtipodocumento` = `co_tipidocumento`.`id`
+    LEFT JOIN `co_statidocumento` ON `co_documenti`.`idstatodocumento` = `co_statidocumento`.`id`
+WHERE 1=1 AND ABS(`co_scadenziario`.`pagato`) < ABS(`co_scadenziario`.`da_pagare`) AND `co_statidocumento`.`descrizione` IN(''Emessa'',''Parzialmente pagato'')
+HAVING 2=2
+ORDER BY `scadenza` ASC' WHERE `name` = 'Scadenzario';
+
+-- Plugin Statistiche per Articoli
+INSERT INTO `zz_plugins` (`id`, `name`, `title`, `idmodule_from`, `idmodule_to`, `position`, `script`, `enabled`, `default`, `order`, `compatibility`, `version`, `options2`, `options`, `directory`, `help`) VALUES (NULL, 'Statistiche', 'Statistiche', (SELECT `id` FROM `zz_modules` WHERE `name` = 'Articoli'), (SELECT `id` FROM `zz_modules` WHERE `name` = 'Articoli'), 'tab', '', 1, 0, 0, '', '', NULL, 'custom', 'statistiche_articoli', '');
+
+-- Aggiunta nome file per le stampe
+ALTER TABLE `zz_prints` ADD `filename` VARCHAR(255) NOT NULL AFTER `title`;
+UPDATE `zz_prints` SET `filename` = 'Fattura num. {numero} del {data}' WHERE `name` = 'Fattura di vendita';
+UPDATE `zz_prints` SET `filename` = 'Fatturato'  WHERE `name` = 'Fatturato';
+UPDATE `zz_prints` SET `filename` = 'DDT num. {numero} del {data}' WHERE `name` = 'Ddt di vendita (senza costi)';
+UPDATE `zz_prints` SET `filename` = 'DDT num. {numero} del {data}' WHERE `name` = 'Ddt di vendita';
+UPDATE `zz_prints` SET `filename` = 'Ordine fornitore num. {numero} del {data}' WHERE `name` = 'Ordine fornitore (senza costi)';
+UPDATE `zz_prints` SET `filename` = 'Ordine cliente num. {numero} del {data}' WHERE `name` = 'Ordine cliente (senza costi)';
+UPDATE `zz_prints` SET `filename` = 'Ordine fornitore num. {numero} del {data}' WHERE `name` = 'Ordine fornitore';
+UPDATE `zz_prints` SET `filename` = 'Ordine cliente num. {numero} del {data}' WHERE `name` = 'Ordine cliente';
+UPDATE `zz_prints` SET `filename` = 'Ordine cliente num. {numero} del {data}' WHERE `name` = 'Ordine cliente';
+UPDATE `zz_prints` SET `filename` = 'Contratto num. {numero} del {data}' WHERE `name` = 'Contratto (senza costi)';
+UPDATE `zz_prints` SET `filename` = 'Contratto num. {numero} del {data}' WHERE `name` = 'Contratto';
+UPDATE `zz_prints` SET `filename` = 'Intervento num. {numero} del {data}' WHERE `name` = 'Intervento (senza costi)';
+UPDATE `zz_prints` SET `filename` = 'Intervento num. {numero} del {data}' WHERE `name` = 'Intervento';
+UPDATE `zz_prints` SET `filename` = 'Preventivo num. {numero} del {data}' WHERE `name` = 'Preventivo (senza costi)';
+UPDATE `zz_prints` SET `filename` = 'Preventivo num. {numero} del {data}' WHERE `name` = 'Preventivo';
+UPDATE `zz_prints` SET `filename` = 'Registro IVA {tipo}' WHERE `name` = 'Registro IVA';
+UPDATE `zz_prints` SET `filename` = 'Scadenzario' WHERE `name` = 'Scadenzario';
+UPDATE `zz_prints` SET `filename` = 'Spesometro' WHERE `name` = 'Spesometro';
+UPDATE `zz_prints` SET `filename` = 'Mastrino' WHERE `name` = 'Mastrino';
+UPDATE `zz_prints` SET `filename` = 'Inventario' WHERE `name` = 'Inventario magazzino';
+UPDATE `zz_prints` SET `filename` = 'Riepilogo interventi' WHERE `name` = 'Riepilogo interventi';
+UPDATE `zz_prints` SET `filename` = 'Consuntivo contratto num. {numero} del {data}' WHERE `name` = 'Consuntivo contratto (senza costi)';
+UPDATE `zz_prints` SET `filename` = 'Consuntivo contratto num. {numero} del {data}' WHERE `name` = 'Consuntivo contratto';
+UPDATE `zz_prints` SET `filename` = 'Consuntivo preventivo num. {numero} del {data}' WHERE `name` = 'Consuntivo preventivo (senza costi)';
+UPDATE `zz_prints` SET `filename` = 'Consuntivo preventivo num. {numero} del {data}' WHERE `name` = 'Consuntivo preventivo';
+UPDATE `zz_prints` SET `filename` = 'Stampa calendario {periodo}' WHERE `name` = 'Stampa calendario';
+
+-- Aggiornamento Statistiche delle Anagrafiche
+UPDATE `zz_plugins` SET `options` = 'custom', `directory` = 'statistiche_anagrafiche', `script` = '' WHERE `name` = 'Statistiche' AND `idmodule_from` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Anagrafiche');
+
+-- Fix sconti globali
+UPDATE `co_righe_documenti` SET `sconto` = -`subtotale`, `sconto_unitario` = -`subtotale` WHERE `is_sconto` = 1 AND `subtotale` != 0;
+UPDATE `co_righe_preventivi` SET `sconto` = -`subtotale`, `sconto_unitario` = -`subtotale` WHERE `is_sconto` = 1 AND `subtotale` != 0;
+UPDATE `co_righe_contratti` SET `sconto` = -`subtotale`, `sconto_unitario` = -`subtotale` WHERE `is_sconto` = 1 AND `subtotale` != 0;
+UPDATE `or_righe_ordini` SET `sconto` = -`subtotale`, `sconto_unitario` = -`subtotale` WHERE `is_sconto` = 1 AND `subtotale` != 0;
+UPDATE `dt_righe_ddt` SET `sconto` = -`subtotale`, `sconto_unitario` = -`subtotale` WHERE `is_sconto` = 1 AND `subtotale` != 0;
+
+UPDATE `co_righe_documenti` SET `subtotale` = 0 WHERE `is_sconto` = 1 AND `subtotale` != 0;
+UPDATE `co_righe_preventivi` SET `subtotale` = 0 WHERE `is_sconto` = 1 AND `subtotale` != 0;
+UPDATE `co_righe_contratti` SET `subtotale` = 0 WHERE `is_sconto` = 1 AND `subtotale` != 0;
+UPDATE `or_righe_ordini` SET `subtotale` = 0 WHERE `is_sconto` = 1 AND `subtotale` != 0;
+UPDATE `dt_righe_ddt` SET `subtotale` = 0 WHERE `is_sconto` = 1 AND `subtotale` != 0;

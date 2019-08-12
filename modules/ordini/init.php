@@ -3,11 +3,6 @@
 if (isset($id_record)) {
     $ordine = Modules\Ordini\Ordine::with('tipo', 'stato')->find($id_record);
 
-    // Aggiornamento stato di questo ordine (?)
-    if (!empty(get_stato_ordine($id_record)) && setting('Cambia automaticamente stato ordini fatturati')) {
-        $dbo->query('UPDATE or_ordini SET id_stato=(SELECT id FROM or_statiordine WHERE descrizione="'.get_stato_ordine($id_record).'") WHERE id='.prepare($id_record));
-    }
-
     $record = $dbo->fetchOne('SELECT *,
         or_ordini.note,
         or_ordini.idpagamento,

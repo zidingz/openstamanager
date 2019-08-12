@@ -65,12 +65,10 @@ function srcJS() {
         .pipe(gulp.dest(config.production + '/' + config.paths.js));
 
     var indip = gulp.src([
-            config.development + '/' + config.paths.js + '/independent/*.js',
+            config.development + '/' + config.paths.js + '/functions/*.js',
         ])
+        .pipe(concat('functions.min.js'))
         .pipe(minifyJS())
-        .pipe(gulpIf('!*.min.*', rename({
-            suffix: '.min'
-        })))
         .pipe(gulp.dest(config.production + '/' + config.paths.js));
 
     return merge(js, indip);
@@ -205,6 +203,15 @@ function colorpicker() {
         ])
         .pipe(flatten())
         .pipe(gulp.dest(config.production + '/' + config.paths.images + '/bootstrap-colorpicker'));
+};
+
+function password_strength(){
+    return gulp.src([
+        config.main.bowerDirectory + '/pwstrength-bootstrap/dist/*.js',
+    ])
+        .pipe(concat('password.min.js'))
+        .pipe(minifyJS())
+        .pipe(gulp.dest(config.production + '/password-strength'));
 };
 
 function chartjs() {
@@ -367,7 +374,7 @@ function clean() {
 };
 
 // Operazioni di default per la generazione degli assets
-const bower = gulp.series(clean, gulp.parallel(JS, CSS, images, fonts, phpDebugBar, ckeditor, colorpicker, i18n, pdfjs, chartjs, csrf));
+const bower = gulp.series(clean, gulp.parallel(JS, CSS, images, fonts, phpDebugBar, ckeditor, colorpicker, i18n, pdfjs, chartjs, password_strength, csrf));
 
 exports.bower = bower;
 exports.release = release;

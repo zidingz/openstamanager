@@ -7,17 +7,10 @@ $smtp = Mail::get($template['id_smtp']);
 $body = $template['body'];
 $subject = $template['subject'];
 
-$variables = Mail::getTemplateVariables($template['id'], $id_record);
-$email = $variables['email'];
+$body = $module->replacePlaceholders($id_record, $template['body']);
+$subject = $module->replacePlaceholders($id_record, $template['subject']);
 
-// Sostituzione delle variabili di base
-$replaces = [];
-foreach ($variables as $key => $value) {
-    $replaces['{'.$key.'}'] = $value;
-}
-
-$body = str_replace(array_keys($replaces), array_values($replaces), $body);
-$subject = str_replace(array_keys($replaces), array_values($replaces), $subject);
+$email = $module->replacePlaceholders($id_record, '{email}');
 
 // Campi mancanti
 $campi_mancanti = [];
@@ -171,8 +164,8 @@ echo '
     function aggiungi_destinatario(){
         var last = $("#lista-destinatari input").last();
 
-        if(last.val()){
-            $("#destinatari_input").find(".select2").remove()
+        if (last.val()) {
+            cleanup_inputs();
 
             $("#lista-destinatari").append($("#destinatari_input").html());
 
@@ -180,10 +173,10 @@ echo '
                 $(this).autocomplete({source: emails});
             });
 
-            start_superselect();
+            restart_inputs();
         }
     }
 </script>';
 
 echo '
-	<script src="'.ROOTDIR.'/assets/js/init.min.js"></script>';
+<script>$(document).ready(init)</script>';

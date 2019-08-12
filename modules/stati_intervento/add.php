@@ -6,7 +6,7 @@
 
 	<div class="row">
 		<div class="col-md-2">
-			{[ "type": "text", "label": "<?php echo tr('Codice'); ?>", "name": "id_stato", "maxlength": 10, "class": "alphanumeric-mask", "required": 1 ]}
+			{[ "type": "text", "label": "<?php echo tr('Codice'); ?>", "name": "codice", "maxlength": 10, "class": "alphanumeric-mask", "required": 1 ]}
 		</div>
 
 		<div class="col-md-6">

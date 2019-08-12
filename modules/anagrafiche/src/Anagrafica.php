@@ -3,7 +3,9 @@
 namespace Modules\Anagrafiche;
 
 use Common\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Fatture\Fattura;
+use Modules\TipiIntervento\Tipo as TipoSessione;
 use Settings;
 use Traits\RecordTrait;
 use Util\Generator;
@@ -11,6 +13,7 @@ use Util\Generator;
 class Anagrafica extends Model
 {
     use RecordTrait;
+    use SoftDeletes;
 
     protected $table = 'an_anagrafiche';
     protected $primaryKey = 'idanagrafica';
@@ -57,6 +60,17 @@ class Anagrafica extends Model
         $model->save();
 
         return $model;
+    }
+
+    public static function fromTipo($type)
+    {
+        $tipologia = Tipo::where('descrizione', 'Tecnico')->first();
+
+        $anagrafiche = self::whereHas('tipi', function ($query) use ($tipologia) {
+            $query->where('an_tipianagrafiche.idtipoanagrafica', '=', $tipologia->id);
+        });
+
+        return $anagrafiche;
     }
 
     public static function fixAzienda(Anagrafica $anagrafica)
@@ -106,11 +120,24 @@ class Anagrafica extends Model
 
     public static function fixTecnico(Anagrafica $anagrafica)
     {
-        // Copio già le tariffe per le varie attività
-        $result = database()->query('INSERT INTO in_tariffe(idtecnico, id_tipo_intervento, costo_ore, costo_km, costo_dirittochiamata, costo_ore_tecnico, costo_km_tecnico, costo_dirittochiamata_tecnico) SELECT '.prepare($anagrafica->id).', id, costo_orario, costo_km, costo_diritto_chiamata, costo_orario_tecnico, costo_km_tecnico, costo_diritto_chiamata_tecnico FROM in_tipiintervento');
+        $database = database();
 
-        if (!$result) {
-            flash()->error(tr("Errore durante l'importazione tariffe!"));
+        $presenti = $database->fetchArray('SELECT id_tipo_intervento AS id FROM in_tariffe WHERE idtecnico = '.prepare($anagrafica->id));
+
+        // Aggiunta associazioni costi unitari al contratto
+        $tipi = TipoSessione::whereNotIn('id_tipo_intervento', array_column($presenti, 'id'))->get();
+
+        foreach ($tipi as $tipo) {
+            $database->insert('in_tariffe', [
+                'idtecnico' => $anagrafica->id,
+                'id_tipo_intervento' => $tipo->id,
+                'costo_ore' => $tipo->costo_orario,
+                'costo_km' => $tipo->costo_km,
+                'costo_dirittochiamata' => $tipo->costo_diritto_chiamata,
+                'costo_ore_tecnico' => $tipo->costo_orario_tecnico,
+                'costo_km_tecnico' => $tipo->costo_km_tecnico,
+                'costo_dirittochiamata_tecnico' => $tipo->costo_diritto_chiamata_tecnico,
+            ]);
         }
     }
 
@@ -171,16 +198,6 @@ class Anagrafica extends Model
     public function getIdAttribute()
     {
         return $this->idanagrafica;
-    }
-
-    public function setCodiceAttribute($value)
-    {
-        if (self::where([
-            ['codice', $value],
-            [$this->primaryKey, '<>', $this->id],
-        ])->count() == 0) {
-            $this->attributes['codice'] = $value;
-        }
     }
 
     public function getPartitaIvaAttribute()
@@ -253,6 +270,13 @@ class Anagrafica extends Model
         return $this->sedi()->where('id', $this->id_sede_legale)->first();
     }
 
+    public function delete()
+    {
+        if (!$this->isAzienda()) {
+            return parent::delete();
+        }
+    }
+
     // Metodi statici
 
     /**
@@ -267,7 +291,7 @@ class Anagrafica extends Model
 
         $ultimo = Generator::getPreviousFrom($maschera, 'an_anagrafiche', 'codice', [
             "codice != ''",
-            //'deleted_at IS NULL', // Rimozione per unicità del codice
+            'deleted_at IS NULL',
         ]);
         $codice = Generator::generate($maschera, $ultimo);
 

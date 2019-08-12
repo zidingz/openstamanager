@@ -63,7 +63,7 @@ echo '
 	<input type="hidden" name="id_plugin" value="'.$id_plugin.'">
     <input type="hidden" name="id_parent" value="'.$id_parent.'">
     <input type="hidden" name="id_record" value="'.$id_record.'">
-	
+
 	<input type="hidden" name="backto" value="record-edit">
     <input type="hidden" name="op" value="'.(!empty($is_add) ? 'edit-promemoria' : 'pianificazione').'">';
 
@@ -168,11 +168,11 @@ echo '
             </div-->
 
             <div class="row">
-			
+
 				<div class="col-md-4">
                     {[ "type": "checkbox", "label": "'.tr('Promemoria ciclico').'", "name": "pianifica_promemoria", "value": "0", "placeholder": "'.tr('Pianificare promemoria ciclici').'", "help": "'.tr('Pianificare ciclicamente altri promemoria identici a questo').'" ]}
                 </div>
-				
+
                 <div class="col-md-2">
                     {[ "type": "number", "label": "'.tr('Intervallo').'", "name": "intervallo", "decimals": 0, "required": 1, "icon-after": "GG",  "min-value": "1", "maxlength": "3", "disabled": "1"  ]}
                 </div>
@@ -180,7 +180,7 @@ echo '
                 <div class="col-md-3">
                     {[ "type": "date", "label": "'.tr('Inizio pianificazione').'", "help": "'.tr('Intervallo compreso dalla data accettazione contratto fino alla data di conclusione').'", "name": "data_inizio", "value": "'.$data_accettazione.'", "disabled": "1", "min-date": "'.$data_accettazione.'", "max-date": "'.$data_conclusione.'" ]}
                 </div>
-				
+
                 <div class="col-md-3">
                     {[ "type": "date", "label": "'.tr('Fine pianificazione').'", "help": "'.tr('Data conclusione contratto').'", "name": "data_conclusione", "extra": "readonly", "value": "'.$data_conclusione.'" ]}
                 </div>
@@ -231,7 +231,7 @@ echo '
 </form>';
 
 echo '
-<script src="'.ROOTDIR.'/assets/js/init.min.js"></script>';
+<script>$(document).ready(init)</script>';
 
 echo '
 <script>
@@ -251,14 +251,14 @@ echo '
                 $("#bs-popup .btn-primary").hide();
             }
         });
-		
-		
+
+
 		$("#pianifica_promemoria").click(function() {
             if ($(this).is(":checked")){
                 $("#intervallo").removeAttr("disabled");
                 $("#data_inizio").removeAttr("disabled");
 				$("#pianifica_intervento").removeAttr("disabled");
-				
+
 				$("#bs-popup .btn-primary").removeAttr("disabled");
             } else {
                 $("#intervallo").prop("disabled", true);
@@ -266,17 +266,17 @@ echo '
 				$("#pianifica_intervento").prop("checked", false);
 				$("#pianifica_intervento").prop("disabled", true);
 				$("#bs-popup .btn-primary").prop("disabled", true);
-				
+
 				$("#idtecnico").prop("disabled", true);
                 $("#idtecnico").removeAttr("required");
                 $("#orario_inizio").prop("disabled", true);
                 $("#orario_fine").prop("disabled", true);
                 $("#orario_inizio").removeAttr("required");
                 $("#orario_fine").removeAttr("required");
-				
+
             }
         });
-		
+
 
         $("#pianifica_intervento").click(function() {
             if ($(this).is(":checked")){

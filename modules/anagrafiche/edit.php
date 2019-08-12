@@ -1,7 +1,8 @@
 <?php
 
-$fornitore = in_array($id_fornitore, $tipi_anagrafica);
-$cliente = in_array($id_cliente, $tipi_anagrafica);
+$is_fornitore = in_array($id_fornitore, $tipi_anagrafica);
+$is_cliente = in_array($id_cliente, $tipi_anagrafica);
+$is_tecnico = in_array($id_tecnico, $tipi_anagrafica);
 
 $google = setting('Google Maps API key');
 
@@ -10,7 +11,7 @@ if (!empty($google)) {
 <script src="//maps.googleapis.com/maps/api/js?libraries=places&key='.$google.'"></script>';
 }
 
-if (!$cliente) {
+if (!$is_cliente) {
     $ignore = $dbo->fetchArray("SELECT id FROM zz_plugins WHERE name='Impianti del cliente' OR name='Ddt del cliente'");
 
     foreach ($ignore as $plugin) {
@@ -23,8 +24,8 @@ if (!$cliente) {
 
 ?>
 
-<form action="" method="post" id="edit-form" >
-	<fieldset  <?php echo (empty($record['deleted_at'])) ? '' : 'disabled'; ?> >
+<form action="" method="post" id="edit-form"  autocomplete="<?php echo setting('Autocompletamento form'); ?>" >
+	<fieldset>
 		<input type="hidden" name="backto" value="record-edit">
 		<input type="hidden" name="op" value="update">
 
@@ -37,7 +38,7 @@ if (!$cliente) {
 			<div class="card-body">
 				<div class="row">
 					<div class="col-md-6">
-						{[ "type": "text", "label": "<?php echo tr('Denominazione'); ?>", "name": "ragione_sociale", "required": 1, "value": "$ragione_sociale$", "extra": "autocomplete=\"off\"" ]}
+						{[ "type": "text", "label": "<?php echo tr('Denominazione'); ?>", "name": "ragione_sociale", "required": 1, "value": "$ragione_sociale$", "extra": "" ]}
 					</div>
 
 					<div class="col-md-3">
@@ -52,11 +53,11 @@ if (!$cliente) {
 				<div class="row">
 
 					<div class="col-md-4">
-							{[ "type": "text", "label": "<?php echo tr('Cognome'); ?>", "name": "cognome", "required": 0, "value": "$cognome$", "extra": "autocomplete=\"off\"" ]}
+							{[ "type": "text", "label": "<?php echo tr('Cognome'); ?>", "name": "cognome", "required": 0, "value": "$cognome$", "extra": "" ]}
 					</div>
 
 					<div class="col-md-4">
-							{[ "type": "text", "label": "<?php echo tr('Nome'); ?>", "name": "nome", "required": 0, "value": "$nome$", "extra": "autocomplete=\"off\"" ]}
+							{[ "type": "text", "label": "<?php echo tr('Nome'); ?>", "name": "nome", "required": 0, "value": "$nome$", "extra": "" ]}
 					</div>
 
 					<div class="col-md-4">
@@ -141,9 +142,6 @@ if (!$cliente) {
             </div>
 
             <div class="row">
-
-
-
                 <div class="col-md-3">
                     {[ "type": "text", "label": "<?php echo tr('Provincia'); ?>", "name": "provincia", "maxlength": 2, "class": "text-center text-uppercase", "value": "$provincia$", "extra": "onkeyup=\"this.value = this.value.toUpperCase();\"" ]}
                 </div>
@@ -224,160 +222,200 @@ if (!empty($google)) {
             </div>';
 }
 
-?>
+echo '
         </div>
-    </div>
+    </div>';
 
-	<?php
+echo '
 
-    if ($cliente || $fornitore) {
-        ?>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">'.tr('Informazioni per tipo di anagrafica').'</h3>
+        </div>
 
-		<div class = "row">
-		<div class="col-md-6">
+        <div class="panel-body">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs nav-justified">
+                    <li '.($is_cliente || $is_fornitore ? 'class="active"' : '').'><a href="#cliente_fornitore" data-toggle="tab" class="'.($is_cliente || $is_fornitore ? '' : 'disabled').'" '.($is_cliente || $is_fornitore ? '' : 'disabled').'>'.tr('Cliente e fornitore').'</a></li>
+                    <li><a href="#cliente" data-toggle="tab" class="'.($is_cliente ? '' : 'disabled').'" '.($is_cliente ? '' : 'disabled').'>'.tr('Cliente').'</a></li>
+                    <li><a href="#fornitore" data-toggle="tab" class="'.($is_fornitore ? '' : 'disabled').'" '.($is_fornitore ? '' : 'disabled').'>'.tr('Fornitore').'</a></li>
+                    <li '.(!$is_cliente && !$is_fornitore && $is_tecnico ? 'class="active"' : '').'><a href="#tecnico" data-toggle="tab" class="'.($is_tecnico ? '' : 'disabled').'" '.($is_tecnico ? '' : 'disabled').'>'.tr('Tecnico').'</a></li>
+                </ul>
 
-        <!-- ACQUISTI -->
-        <div  class="card card-primary">
-			<div class="card-header">
-				<h3 class="card-title"><?php echo tr('Acquisti'); ?></h3>
-			</div>
+                <div class="tab-content '.(!$is_cliente && !$is_fornitore && !$is_tecnico ? 'hide' : '').'">
+                    <div class="tab-pane '.($is_cliente || $is_fornitore ? 'active' : '').''.(!$is_cliente && !$is_fornitore ? ' hide' : '').'" id="cliente_fornitore">
+                        <div class="row">
+                             <div class="col-md-3">
+                                 {[ "type": "text", "label": "'.tr('Appoggio bancario').'", "name": "appoggiobancario", "value": "$appoggiobancario$" ]}
+                             </div>
 
-			<div class="card-body">
+                             <div class="col-md-3">
+                                 {[ "type": "text", "label": "'.tr('Filiale banca').'", "name": "filiale", "value": "$filiale$" ]}
+                             </div>
 
-				<div class="row">
-					<div class="col-md-6">
-						{[ "type": "select", "label": "<?php echo tr('Pagamento predefinito'); ?>", "name": "idpagamento_acquisti", "values": "query=SELECT id, descrizione FROM co_pagamenti GROUP BY descrizione ORDER BY descrizione ASC", "value": "$idpagamento_acquisti$", "extra": "<?php echo ($fornitore) ? '' : 'readonly'; ?>" ]}
-					</div>
+                             <div class="col-md-3">
+                                 {[ "type": "text", "label": "'.tr('Codice IBAN').'", "name": "codiceiban", "value": "$codiceiban$" ]}
+                             </div>
 
-					<div class="col-md-6">
-						{[ "type": "select", "label": "<?php echo tr('Banca predefinita'); ?>", "name": "idbanca_acquisti", "values": "query=SELECT id, nome AS descrizione FROM co_banche ORDER BY nome ASC", "value": "$idbanca_acquisti$", "extra": "<?php echo ($fornitore) ? '' : 'readonly'; ?>", "icon-after": "add|<?php echo Modules::get('Banche')['id']; ?>|||<?php echo ($fornitore) ? '' : 'disabled'; ?>" ]}
-					</div>
-                </div>
+                             <div class="col-md-3">
+                                 {[ "type": "text", "label": "'.tr('Codice BIC').'", "name": "bic", "value": "$bic$" ]}
+                             </div>
+                         </div>
 
-				<div class="row">
-					<div class="col-md-6">
-						{[ "type": "select", "label": "<?php echo tr('Iva predefinita'); ?>", "name": "idiva_acquisti", "ajax-source": "iva", "value": "$idiva_acquisti$", "extra": "<?php echo ($fornitore) ? '' : 'readonly'; ?>" ]}
-					</div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                {[ "type": "checkbox", "label": "'.tr('Abilitare lo split payment').'", "name": "split_payment", "value": "$split_payment$", "help": "'.tr('Lo split payment è disponibile per le anagrafiche di tipologia \"Ente pubblico\" o \"Azienda\" (iscritta al Dipartimento Finanze - Scissione dei pagamenti) ed <strong>&egrave; obbligatorio</strong> per:<ul><li>Stato;</li><li>organi statali ancorch&eacute; dotati di personalit&agrave; giuridica;</li><li>enti pubblici territoriali e dei consorzi tra essi costituiti;</li><li>Camere di Commercio;</li><li>Istituti universitari;</li><li>ASL e degli enti ospedalieri;</li><li>enti pubblici di ricovero e cura aventi prevalente carattere scientifico;</li><li>enti pubblici di assistenza e beneficienza;</li><li>enti di previdenza;</li><li>consorzi tra questi costituiti.</li></ul>').'", "placeholder": "'.tr('Split payment').'", "extra" : "'.($record['tipo'] == 'Ente pubblico' || $record['tipo'] == 'Azienda' ? '' : 'disabled').'" ]}
+                            </div>
 
-                    <div class="col-md-6">
-                        {[ "type": "select", "label": "<?php echo tr('Ritenuta d\'acconto predefinita'); ?>", "name": "id_ritenuta_acconto_acquisti", "values": "query=SELECT id, descrizione FROM co_ritenutaacconto ORDER BY descrizione ASC", "value": "$id_ritenuta_acconto_acquisti$", "extra": "<?php echo ($fornitore) ? '' : 'readonly'; ?>" ]}
-                    </div>
-                </div>
+                            <div class="col-md-9">
+                                {[ "type": "text", "label": "'.tr('Dicitura fissa in fattura').'", "name": "diciturafissafattura", "value": "$diciturafissafattura$" ]}
+                            </div>
+                        </div>
+                    </div>';
 
-				<div class="row">
-					<div class="col-md-6">
-						{[ "type": "select", "label": "<?php echo tr('Listino articoli'); ?>", "name": "idlistino_acquisti", "values": "query=SELECT id, nome AS descrizione FROM mg_listini ORDER BY nome ASC", "value": "$idlistino_acquisti$", "extra": "<?php echo ($fornitore) ? '' : 'readonly'; ?>" ]}
-					</div>
-                    <div class="col-md-6">
+        echo '
+                    <div class="tab-pane'.(!$is_cliente ? ' hide' : '').'" id="cliente">
+                        <div class="row">
+                            <div class="col-md-6">
+                                {[ "type": "select", "label": "'.tr('Agenti secondari').'", "multiple": "1", "name": "idagenti[]", "values": "query=SELECT an_anagrafiche.idanagrafica AS id, IF(deleted_at IS NOT NULL, CONCAT(ragione_sociale, \' (Eliminato)\'), ragione_sociale ) AS descrizione FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.idtipoanagrafica=an_tipianagrafiche.idtipoanagrafica) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE (descrizione=\'Agente\' AND deleted_at IS NULL AND an_anagrafiche.idanagrafica NOT IN (SELECT idagente FROM an_anagrafiche WHERE  idanagrafica = '.prepare($record['idanagrafica']).')) OR (an_anagrafiche.idanagrafica IN (SELECT idagente FROM an_anagrafiche_agenti WHERE idanagrafica = '.prepare($record['idanagrafica']).') ) ORDER BY ragione_sociale", "value": "$idagenti$" ]}
+                            </div>
 
+                            <div class="col-md-6">
+                                    {[ "type": "select", "label": "'.tr('Relazione con il cliente').'", "name": "idrelazione", "values": "query=SELECT id, descrizione, colore AS _bgcolor_ FROM an_relazioni ORDER BY descrizione", "value": "$idrelazione$" ]}
+                            </div>
+                        </div>
 
-<?php
+                        <div class="row">
+                            <div class="col-md-6">
+                                {[ "type": "select", "label": "'.tr('Pagamento predefinito').'", "name": "idpagamento_vendite", "values": "query=SELECT id, descrizione FROM co_pagamenti GROUP BY descrizione ORDER BY descrizione ASC", "value": "$idpagamento_vendite$" ]}
+                            </div>
 
-// Collegamento con il conto
+                            <div class="col-md-6">
+                                {[ "type": "select", "label": "'.tr('Banca predefinita').'", "name": "idbanca_vendite", "values": "query=SELECT id, nome AS descrizione FROM co_banche ORDER BY nome ASC", "value": "$idbanca_vendite$", "icon-after": "add|'.Modules::get('Banche')['id'].'", "help": "'.tr('Banca predefinita su cui accreditare i pagamenti.').'" ]}
+                            </div>
+                        </div>
 
-    $conto = $dbo->fetchOne('SELECT co_pianodeiconti2.numero as numero, co_pianodeiconti3.numero as numero_conto, co_pianodeiconti3.descrizione as descrizione FROM co_pianodeiconti3 INNER JOIN co_pianodeiconti2 ON co_pianodeiconti3.idpianodeiconti2=co_pianodeiconti2.id WHERE co_pianodeiconti3.id = '.prepare($record['idconto_fornitore']));
+                        <div class="row">
+                            <div class="col-md-6">
+                                {[ "type": "select", "label": "'.tr('Iva predefinita').'", "name": "idiva_vendite", "ajax-source": "iva", "value": "$idiva_vendite$" ]}
+                            </div>
 
-        /*echo '
-                     <p>'.tr('Piano dei conti collegato: _NAME_', [
-                         '_NAME_' => $conto['numero'].'.'.$conto['numero_conto'].' '.$conto['descrizione'],
-                     ]).Modules::link('Piano dei conti', null, '').'</p>';*/
-        if (!empty($conto['numero_conto'])) {
-            $piano_dei_conti_fornitore = tr('_NAME_', [
-                    '_NAME_' => $conto['numero'].'.'.$conto['numero_conto'].' '.$conto['descrizione'],
-                ]);
-            echo Modules::link('Piano dei conti', null, null, null, 'class="float-right"');
-        } else {
-            $piano_dei_conti_fornitore = tr('Nessuno');
-        } ?>
+                            <div class="col-md-6">
+                                {[ "type": "select", "label": "'.tr("Ritenuta d'acconto predefinita").'", "name": "id_ritenuta_acconto_vendite", "values": "query=SELECT id, descrizione FROM co_ritenutaacconto ORDER BY descrizione ASC", "value": "$id_ritenuta_acconto_vendite$" ]}
+                            </div>
+                        </div>
 
-            {[ "type": "select", "label": "<?php echo tr('Piano dei conti fornitore'); ?>", "name": "piano_dei_conti_fornitore", "values": "list=\"\": \"<?php echo $piano_dei_conti_fornitore; ?>\"", "readonly": 1, "value": "", "extra": "" ]}
+                        <div class="row">
+                            <div class="col-md-6">
+                                {[ "type": "select", "label": "'.tr('Listino articoli').'", "name": "idlistino_vendite", "values": "query=SELECT id, nome AS descrizione FROM mg_listini ORDER BY nome ASC", "value": "$idlistino_vendite$" ]}
+                            </div>
 
+                            <div class="col-md-6">
+                                {[ "type": "select", "label": "'.tr('Indirizzo di fatturazione').'", "name": "idsede_fatturazione", "values": "query=SELECT id, IF(citta = \'\', nomesede, CONCAT_WS(\', \', nomesede, citta)) AS descrizione FROM an_sedi WHERE idanagrafica='.prepare($id_record).' UNION SELECT \'0\' AS id, \'Sede legale\' AS descrizione ORDER BY descrizione", "value": "$idsede_fatturazione$"  ]}
+                            </div>
+                        </div>
 
+                        <div class="row">
+                            <div class="col-md-6">
+                                {[ "type": "select", "label": "'.tr('Tipo attività predefinita').'", "name": "id_tipo_intervento_default", "values": "query=SELECT id, descrizione FROM in_tipiintervento ORDER BY descrizione ASC", "value": "$id_tipo_intervento_default$" ]}
+                            </div>
+
+                            <div class="col-md-6">
+                              {[ "type": "select", "label": "'.tr('Agente principale').'", "name": "idagente", "values": "query=SELECT an_anagrafiche.idanagrafica AS id, IF(deleted_at IS NOT NULL, CONCAT(ragione_sociale, \' (Eliminato)\'), ragione_sociale ) AS descrizione FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.id_tipo_anagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE (descrizione=\'Agente\' AND deleted_at IS NULL)'.(isset($record['idagente']) ? 'OR (an_anagrafiche.idanagrafica = '.prepare($record['idagente']).' AND deleted_at IS NOT NULL) ' : '').'ORDER BY ragione_sociale", "value": "$idagente$" ]}
+                            </div>
+                        </div>';
+
+            // Collegamento con il conto
+            $conto = $dbo->fetchOne('SELECT co_pianodeiconti2.numero as numero, co_pianodeiconti3.numero as numero_conto, co_pianodeiconti3.descrizione as descrizione FROM co_pianodeiconti3 INNER JOIN co_pianodeiconti2 ON co_pianodeiconti3.idpianodeiconti2=co_pianodeiconti2.id WHERE co_pianodeiconti3.id = '.prepare($record['idconto_cliente']));
+
+                echo '
+                        <div class="row">
+                            <div class="col-md-6">
+                ';
+
+                            if (!empty($conto['numero_conto'])) {
+                                $piano_dei_conti_cliente = tr('_NAME_', [
+                                    '_NAME_' => $conto['numero'].'.'.$conto['numero_conto'].' '.$conto['descrizione'],
+                                ]);
+                                echo Modules::link('Piano dei conti', null, null, null, 'class="pull-right"');
+                            } else {
+                                $piano_dei_conti_cliente = tr('Nessuno');
+                            }
+
+                echo '
+                                {[ "type": "select", "label": "'.tr('Piano dei conti cliente').'", "name": "piano_dei_conti_cliente", "values": "list=\"\": \"'.$piano_dei_conti_cliente.'\"", "readonly": 1 ]}
+                            </div>
+                        </div>
+                    </div>';
+
+        echo '
+                    <div class="tab-pane'.(!$is_fornitore ? ' hide' : '').'" id="fornitore">
+                        <div class="row">
+                            <div class="col-md-6">
+                                {[ "type": "select", "label": "'.tr('Pagamento predefinito').'", "name": "idpagamento_acquisti", "values": "query=SELECT id, descrizione FROM co_pagamenti GROUP BY descrizione ORDER BY descrizione ASC", "value": "$idpagamento_acquisti$" ]}
+                            </div>
+
+                            <div class="col-md-6">
+                                {[ "type": "select", "label": "'.tr('Banca predefinita').'", "name": "idbanca_acquisti", "values": "query=SELECT id, nome AS descrizione FROM co_banche ORDER BY nome ASC", "value": "$idbanca_acquisti$", "icon-after": "add|'.Modules::get('Banche')['id'].'" ]}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                {[ "type": "select", "label": "'.tr('Iva predefinita').'", "name": "idiva_acquisti", "ajax-source": "iva", "value": "$idiva_acquisti$" ]}
+                            </div>
+
+                            <div class="col-md-6">
+                                {[ "type": "select", "label": "'.tr("Ritenuta d'acconto predefinita").'", "name": "id_ritenuta_acconto_acquisti", "values": "query=SELECT id, descrizione FROM co_ritenutaacconto ORDER BY descrizione ASC", "value": "$id_ritenuta_acconto_acquisti$" ]}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                {[ "type": "select", "label": "'.tr('Listino articoli').'", "name": "idlistino_acquisti", "values": "query=SELECT id, nome AS descrizione FROM mg_listini ORDER BY nome ASC", "value": "$idlistino_acquisti$" ]}
+                            </div>';
+
+                echo '
+                            <div class="col-md-6">';
+
+                            /*echo '
+                            <p>'.tr('Piano dei conti collegato: _NAME_', [
+                                '_NAME_' => $conto['numero'].'.'.$conto['numero_conto'].' '.$conto['descrizione'],
+                            ]).Modules::link('Piano dei conti', null, '').'</p>';*/
+
+                            // Collegamento con il conto
+                            $conto = $dbo->fetchOne('SELECT co_pianodeiconti2.numero as numero, co_pianodeiconti3.numero as numero_conto, co_pianodeiconti3.descrizione as descrizione FROM co_pianodeiconti3 INNER JOIN co_pianodeiconti2 ON co_pianodeiconti3.idpianodeiconti2=co_pianodeiconti2.id WHERE co_pianodeiconti3.id = '.prepare($record['idconto_fornitore']));
+
+                            if (!empty($conto['numero_conto'])) {
+                                $piano_dei_conti_fornitore = tr('_NAME_', [
+                                    '_NAME_' => $conto['numero'].'.'.$conto['numero_conto'].' '.$conto['descrizione'],
+                                ]);
+                                echo Modules::link('Piano dei conti', null, null, null, 'class="pull-right"');
+                            } else {
+                                $piano_dei_conti_fornitore = tr('Nessuno');
+                            }
+
+                echo '
+                                {[ "type": "select", "label": "'.tr('Piano dei conti fornitore').'", "name": "piano_dei_conti_fornitore", "values": "list=\"\": \"'.$piano_dei_conti_fornitore.'\"", "readonly": 1 ]}
+                            </div>
+                        </div>
+                    </div>';
+
+        echo '
+                    <div class="tab-pane'.(!$is_cliente && !$is_fornitore && $is_tecnico ? ' active' : '').''.(!$is_tecnico ? ' hide' : '').'" id="tecnico">
+                        <div class="row">
+                            <div class="col-md-6">
+                                {[ "type": "text", "label": "'.tr('Colore').'", "name": "colore", "class": "colorpicker text-center", "value": "$colore$", "extra": "maxlength=\'7\'", "icon-after": "<div class=\'img-circle square\'></div>" ]}
+                            </div>
+                        </div>
+                    </div>';
+
+        echo '
                 </div>
             </div>
-		</div>
-		</div>
-		</div>
-
-		<div class="col-md-6">
-		<!-- VENDITE -->
-		<div  class="card card-primary">
-			<div class="card-header">
-				<h3 class="card-title"><?php echo tr('Vendite'); ?></h3>
-			</div>
-
-			<div class="card-body">
-
-				<div class="row">
-					<div class="col-md-6">
-						{[ "type": "select", "label": "<?php echo tr('Pagamento predefinito'); ?>", "name": "idpagamento_vendite", "values": "query=SELECT id, descrizione FROM co_pagamenti GROUP BY descrizione ORDER BY descrizione ASC", "value": "$idpagamento_vendite$", "extra": "<?php echo ($cliente) ? '' : 'readonly'; ?>" ]}
-					</div>
-
-					<div class="col-md-6">
-						{[ "type": "select", "label": "<?php echo tr('Banca predefinita'); ?>", "name": "idbanca_vendite", "values": "query=SELECT id, nome AS descrizione FROM co_banche ORDER BY nome ASC", "value": "$idbanca_vendite$", "extra": "<?php echo ($cliente) ? '' : 'readonly'; ?>", "icon-after": "add|<?php echo Modules::get('Banche')['id']; ?>|||<?php echo ($cliente) ? '' : 'disabled'; ?>", "help": "<?php echo tr('Banca predefinita su cui accreditare i pagamenti.'); ?>" ]}
-					</div>
-                </div>
-
-				<div class="row">
-					<div class="col-md-6">
-                        {[ "type": "select", "label": "<?php echo tr('Iva predefinita'); ?>", "name": "idiva_vendite", "ajax-source": "iva", "value": "$idiva_vendite$", "extra": "<?php echo ($cliente) ? '' : 'readonly'; ?>" ]}
-                    </div>
-
-                    <div class="col-md-6">
-                        {[ "type": "select", "label": "<?php echo tr('Ritenuta d\'acconto predefinita'); ?>", "name": "id_ritenuta_acconto_vendite", "values": "query=SELECT id, descrizione FROM co_ritenutaacconto ORDER BY descrizione ASC", "value": "$id_ritenuta_acconto_vendite$", "extra": "<?php echo ($cliente) ? '' : 'readonly'; ?>" ]}
-                    </div>
-                </div>
-
-				<div class="row">
-					<div class="col-md-6">
-						{[ "type": "select", "label": "<?php echo tr('Listino articoli'); ?>", "name": "idlistino_vendite", "values": "query=SELECT id, nome AS descrizione FROM mg_listini ORDER BY nome ASC", "value": "$idlistino_vendite$", "extra": "<?php echo ($cliente) ? '' : 'readonly'; ?>" ]}
-					</div>
-
-                    <div class="col-md-6">
-                        {[ "type": "select", "label": "<?php echo tr('Indirizzo di fatturazione'); ?>", "name": "idsede_fatturazione", "values": "query=SELECT id, IF(citta = '', nomesede, CONCAT_WS(', ', nomesede, citta)) AS descrizione FROM an_sedi WHERE idanagrafica='<?php echo $id_record; ?>' UNION SELECT '0' AS id, 'Sede legale' AS descrizione ORDER BY descrizione", "value": "$idsede_fatturazione$" , "extra": "<?php echo ($cliente) ? '' : 'readonly'; ?>" ]}
-                    </div>
-                </div>
-
-				<div class="row">
-					<div class="col-md-6">
-						{[ "type": "select", "label": "<?php echo tr('Tipo attività predefinita'); ?>", "name": "id_tipo_intervento_default", "values": "query=SELECT id, descrizione FROM in_tipiintervento ORDER BY descrizione ASC", "value": "$id_tipo_intervento_default$", "extra": "<?php echo ($cliente) ? '' : 'readonly'; ?>" ]}
-					</div>
-
-					<div class="col-md-6">
-                        {[ "type": "select", "label": "<?php echo tr('Agente principale'); ?>", "name": "idagente", "values": "query=SELECT an_anagrafiche.idanagrafica AS id, IF(deleted_at IS NOT NULL, CONCAT(ragione_sociale, ' (Eliminato)'), ragione_sociale ) AS descrizione FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.id_tipo_anagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE (descrizione='Agente' AND deleted_at IS NULL)<?php echo isset($record['idagente']) ? 'OR (an_anagrafiche.idanagrafica = '.prepare($record['idagente']).' AND deleted_at IS NOT NULL) ' : ''; ?>ORDER BY ragione_sociale", "value": "$idagente$", "extra": "<?php echo ($cliente) ? '' : 'readonly'; ?>" ]}
-					</div>
-                </div>
-
-
-                <div class="row">
-                    <div class="col-md-6">
-                <?php
-
-                // Collegamento con il conto
-                $conto = $dbo->fetchOne('SELECT co_pianodeiconti2.numero as numero, co_pianodeiconti3.numero as numero_conto, co_pianodeiconti3.descrizione as descrizione FROM co_pianodeiconti3 INNER JOIN co_pianodeiconti2 ON co_pianodeiconti3.idpianodeiconti2=co_pianodeiconti2.id WHERE co_pianodeiconti3.id = '.prepare($record['idconto_cliente']));
-
-        if (!empty($conto['numero_conto'])) {
-            $piano_dei_conti_cliente = tr('_NAME_', [
-                        '_NAME_' => $conto['numero'].'.'.$conto['numero_conto'].' '.$conto['descrizione'],
-                    ]);
-            echo Modules::link('Piano dei conti', null, null, null, 'class="float-right"');
-        } else {
-            $piano_dei_conti_cliente = tr('Nessuno');
-        } ?>
-
-                    {[ "type": "select", "label": "<?php echo tr('Piano dei conti cliente'); ?>", "name": "piano_dei_conti_cliente", "values": "list=\"\": \"<?php echo $piano_dei_conti_cliente; ?>\"", "readonly": 1, "value": "", "extra": "" ]}
-                </div>
-            </div>
-
-
-			</div>
-		  </div>
-	    </div>
         </div>
-	<div class="clearfix" ></div>
+    </div>';
 
-	<?php
-    }
     ?>
 
 		<div class="card card-primary">
@@ -423,53 +461,6 @@ if (!empty($google)) {
 					</div>
 				</div>
 
-				<?php
-                //se non è l'anagrafica azienda, ma cliente o fornitore
-                 if (!in_array($id_azienda, $tipi_anagrafica) and (($cliente or $fornitore))) {
-                     ?>
-				<div class="row">
-					<div class="col-md-3">
-						{[ "type": "text", "label": "<?php echo tr('Appoggio bancario'); ?>", "name": "appoggiobancario", "value": "$appoggiobancario$" ]}
-					</div>
-
-					<div class="col-md-3">
-						{[ "type": "text", "label": "<?php echo tr('Filiale banca'); ?>", "name": "filiale", "value": "$filiale$" ]}
-					</div>
-
-					<div class="col-md-3">
-						{[ "type": "text", "label": "<?php echo tr('Codice IBAN'); ?>", "name": "codiceiban", "value": "$codiceiban$" ]}
-					</div>
-
-					<div class="col-md-3">
-						{[ "type": "text", "label": "<?php echo tr('Codice BIC'); ?>", "name": "bic", "value": "$bic$" ]}
-					</div>
-				</div>
-
-				<?php
-                 }
-                ?>
-
-				<?php
-                //se non è l'anagrafica azienda, ma cliente o fornitore
-                 if ($cliente or $fornitore) {
-                     ?>
-
-				<div class="row">
-
-					<div class="col-md-3">
-                        {[ "type": "checkbox", "label": "<?php echo tr('Abilitare lo split payment'); ?>", "name": "split_payment", "value": "$split_payment$", "help": "<?php echo tr('Lo split payment è disponibile per le anagrafiche di tipologia \"Ente pubblico\" o \"Azienda\" (iscritta al Dipartimento Finanze - Scissione dei pagamenti) ed <strong>&egrave; obbligatorio</strong> per:<ul><li>Stato;</li><li>organi statali ancorch&eacute; dotati di personalit&agrave; giuridica;</li><li>enti pubblici territoriali e dei consorzi tra essi costituiti;</li><li>Camere di Commercio;</li><li>Istituti universitari;</li><li>ASL e degli enti ospedalieri;</li><li>enti pubblici di ricovero e cura aventi prevalente carattere scientifico;</li><li>enti pubblici di assistenza e beneficienza;</li><li>enti di previdenza;</li><li>consorzi tra questi costituiti.</li></ul>'); ?>", "placeholder": "<?php echo tr('Split payment'); ?>", "extra" : "<?php echo ($record['tipo'] == 'Ente pubblico' or $record['tipo'] == 'Azienda') ? '' : 'disabled'; ?>" ]}
-                    </div>
-
-					<div class="col-md-9">
-						{[ "type": "text", "label": "<?php echo tr('Dicitura fissa in fattura'); ?>", "name": "diciturafissafattura", "value": "$diciturafissafattura$" ]}
-					</div>
-				</div>
-
-
-				<?php
-                 }
-                ?>
-
 				<div class="row">
 					<div class="col-md-3">
 						{[ "type": "text", "label": "<?php echo tr('Settore merceologico'); ?>", "name": "settore", "value": "$settore$" ]}
@@ -488,7 +479,6 @@ if (!empty($google)) {
 					</div>
 				</div>
 
-
 				<div class="row">
 					<div class="col-md-12">
 						{[ "type": "select", "multiple": "1", "label": "<?php echo tr('Tipo di anagrafica'); ?>", "name": "id_tipo_anagrafica[]", "values": "query=SELECT id, descrizione FROM an_tipianagrafiche WHERE id NOT IN (SELECT DISTINCT(x.id_tipo_anagrafica) FROM an_tipianagrafiche_anagrafiche x INNER JOIN an_tipianagrafiche t ON x.id_tipo_anagrafica = t.id INNER JOIN an_anagrafiche ON an_anagrafiche.idanagrafica = x.idanagrafica WHERE t.descrizione = 'Azienda' AND deleted_at IS NULL) ORDER BY descrizione", "value": "$idtipianagrafica$" ]}
@@ -499,28 +489,6 @@ if (!empty($google)) {
                         }
                         ?>
 					</div>
-				</div>
-				<div class="row">
-					<?php
-                    if (in_array('Tecnico', explode(',', $record['tipianagrafica']))) {
-                        ?>
-					<div class="col-md-3">
-						{[ "type": "text", "label": "<?php echo tr('Colore'); ?>", "name": "colore", "class": "colorpicker text-center", "value": "$colore$", "extra": "maxlength='7'", "icon-after": "<div class='img-circle square'></div>" ]}
-					</div>
-					<?php
-                    } ?>
-					<?php
-                    if (in_array('Cliente', explode(',', $record['tipianagrafica']))) {
-                        ?>
-						<div class="col-md-6">
-							{[ "type": "select", "label": "Agenti secondari", "multiple": "1", "name": "idagenti[]", "values": "query=SELECT an_anagrafiche.idanagrafica AS id, IF(deleted_at IS NOT NULL, CONCAT(ragione_sociale, ' (Eliminato)'), ragione_sociale ) AS descrizione FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.id_tipo_anagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE (descrizione='Agente' AND deleted_at IS NULL AND an_anagrafiche.idanagrafica NOT IN (SELECT idagente FROM an_anagrafiche WHERE  idanagrafica = <?php echo prepare($record['idanagrafica']); ?> )) OR (an_anagrafiche.idanagrafica IN (SELECT idagente FROM an_anagrafiche_agenti WHERE idanagrafica =  <?php echo prepare($record['idanagrafica']); ?> ) ) ORDER BY ragione_sociale", "value": "$idagenti$" ]}
-						</div>
-
-						<div class="col-md-3">
-							{[ "type": "select", "label": "<?php echo tr('Relazione con il cliente'); ?>", "name": "idrelazione", "values": "query=SELECT id, descrizione, colore AS _bgcolor_ FROM an_relazioni ORDER BY descrizione", "value": "$idrelazione$" ]}
-						</div>
-					<?php
-                    } ?>
 				</div>
 
 				<div class="row">
@@ -544,25 +512,25 @@ if (setting('Azienda predefinita') == $id_record) {
 
 // Collegamenti diretti
 // Fatture, ddt, preventivi, contratti, ordini, interventi, utenti collegati a questa anagrafica
-$elementi = $dbo->fetchArray('SELECT `co_documenti`.`id`, `co_documenti`.`data`, `co_documenti`.`numero`, `co_documenti`.`numero_esterno`, `co_tipidocumento`.`descrizione` AS tipo_documento, `co_tipidocumento`.`dir` FROM `co_documenti` JOIN `co_tipidocumento` ON `co_tipidocumento`.`id` = `co_documenti`.`id_tipo_documento` WHERE `co_documenti`.`idanagrafica` = '.prepare($id_record).'
+$elementi = $dbo->fetchArray('SELECT `co_documenti`.`id`, `co_documenti`.`data`, `co_documenti`.`numero`, `co_documenti`.`numero_esterno`, `co_tipidocumento`.`descrizione` AS tipo_documento, `co_tipidocumento`.`dir`, NULL AS `deleted_at` FROM `co_documenti` JOIN `co_tipidocumento` ON `co_tipidocumento`.`id` = `co_documenti`.`id_tipo_documento` WHERE `co_documenti`.`idanagrafica` = '.prepare($id_record).'
 
 UNION
-SELECT `zz_users`.`id`, `zz_users`.`created_at` AS data, `zz_users`.`username` AS numero, 0 AS `numero_esterno`, "Utente" AS tipo_documento, 0 AS `dir` FROM `zz_users` WHERE `zz_users`.`idanagrafica` = '.prepare($id_record).'
+SELECT `zz_users`.`id`, `zz_users`.`created_at` AS data, `zz_users`.`username` AS numero, 0 AS `numero_esterno`, "Utente" AS tipo_documento, 0 AS `dir`, NULL AS `deleted_at` FROM `zz_users` WHERE `zz_users`.`idanagrafica` = '.prepare($id_record).'
 
 UNION
-SELECT `or_ordini`.`id`, `or_ordini`.`data`, `or_ordini`.`numero`, `or_ordini`.`numero_esterno`, `or_tipiordine`.`descrizione` AS tipo_documento, `or_tipiordine`.`dir` FROM `or_ordini` JOIN `or_tipiordine` ON `or_tipiordine`.`id` = `or_ordini`.`id_tipo_ordine` WHERE `or_ordini`.`idanagrafica` = '.prepare($id_record).'
+SELECT `or_ordini`.`id`, `or_ordini`.`data`, `or_ordini`.`numero`, `or_ordini`.`numero_esterno`, `or_tipiordine`.`descrizione` AS tipo_documento, `or_tipiordine`.`dir`, NULL AS `deleted_at` FROM `or_ordini` JOIN `or_tipiordine` ON `or_tipiordine`.`id` = `or_ordini`.`id_tipo_ordine` WHERE `or_ordini`.`idanagrafica` = '.prepare($id_record).'
 
 UNION
-SELECT `dt_ddt`.`id`, `dt_ddt`.`data`, `dt_ddt`.`numero`, `dt_ddt`.`numero_esterno`, `dt_tipiddt`.`descrizione` AS tipo_documento, `dt_tipiddt`.`dir` FROM `dt_ddt` JOIN `dt_tipiddt` ON `dt_tipiddt`.`id` = `dt_ddt`.`id_tipo_ddt` WHERE `dt_ddt`.`idanagrafica` = '.prepare($id_record).'
+SELECT `dt_ddt`.`id`, `dt_ddt`.`data`, `dt_ddt`.`numero`, `dt_ddt`.`numero_esterno`, `dt_tipiddt`.`descrizione` AS tipo_documento, `dt_tipiddt`.`dir`, NULL AS `deleted_at` FROM `dt_ddt` JOIN `dt_tipiddt` ON `dt_tipiddt`.`id` = `dt_ddt`.`id_tipo_ddt` WHERE `dt_ddt`.`idanagrafica` = '.prepare($id_record).'
 
 UNION
-SELECT `in_interventi`.`id`, `in_interventi`.`data_richiesta`, `in_interventi`.`codice` AS numero, 0 AS numero_esterno, "Intervento" AS tipo_documento, 0 AS dir FROM `in_interventi` LEFT JOIN `in_interventi_tecnici` ON `in_interventi`.`id` = `in_interventi_tecnici`.`idintervento` WHERE `in_interventi`.`id` IN (SELECT `idintervento` FROM `in_interventi_tecnici` WHERE `idtecnico` = '.prepare($id_record).') OR `in_interventi`.`idanagrafica` = '.prepare($id_record).'
+SELECT `in_interventi`.`id`, `in_interventi`.`data_richiesta`, `in_interventi`.`codice` AS numero, 0 AS numero_esterno, "Intervento" AS tipo_documento, 0 AS dir, in_interventi.deleted_at AS `deleted_at` FROM `in_interventi` LEFT JOIN `in_interventi_tecnici` ON `in_interventi`.`id` = `in_interventi_tecnici`.`idintervento` WHERE `in_interventi`.`id` IN (SELECT `idintervento` FROM `in_interventi_tecnici` WHERE `idtecnico` = '.prepare($id_record).') OR `in_interventi`.`idanagrafica` = '.prepare($id_record).'
 
 UNION
-SELECT `co_contratti`.`id`, `co_contratti`.`data_bozza`, `co_contratti`.`numero`, 0 AS numero_esterno , "Contratto" AS tipo_documento, 0 AS dir FROM `co_contratti` WHERE `co_contratti`.`idanagrafica` = '.prepare($id_record).'
+SELECT `co_contratti`.`id`, `co_contratti`.`data_bozza`, `co_contratti`.`numero`, 0 AS numero_esterno , "Contratto" AS tipo_documento, 0 AS dir, NULL AS `deleted_at` FROM `co_contratti` WHERE `co_contratti`.`idanagrafica` = '.prepare($id_record).'
 
 UNION
-SELECT `co_preventivi`.`id`, `co_preventivi`.`data_bozza`, `co_preventivi`.`numero`, 0 AS numero_esterno , "Preventivo" AS tipo_documento, 0 AS dir FROM `co_preventivi` WHERE `co_preventivi`.`idanagrafica` = '.prepare($id_record).'
+SELECT `co_preventivi`.`id`, `co_preventivi`.`data_bozza`, `co_preventivi`.`numero`, 0 AS numero_esterno , "Preventivo" AS tipo_documento, 0 AS dir, NULL AS `deleted_at` FROM `co_preventivi` WHERE `co_preventivi`.`idanagrafica` = '.prepare($id_record).'
 
 ORDER BY `data`');
 
@@ -581,10 +549,11 @@ if (!empty($elementi)) {
         <ul>';
 
     foreach ($elementi as $elemento) {
-        $descrizione = tr('_DOC_  _NUM_ del _DATE_', [
+        $descrizione = tr('_DOC_  _NUM_ del _DATE_ _DELETED_AT_', [
         '_DOC_' => $elemento['tipo_documento'],
         '_NUM_' => !empty($elemento['numero_esterno']) ? $elemento['numero_esterno'] : $elemento['numero'],
         '_DATE_' => Translator::dateToLocale($elemento['data']),
+        '_DELETED_AT_' => (!empty($elemento['deleted_at']) ? tr('Eliminato il:').' '.Translator::dateToLocale($elemento['deleted_at']) : ''),
     ]);
 
         //se non è un preventivo è un ddt o una fattura

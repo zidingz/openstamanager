@@ -5,7 +5,10 @@ include_once __DIR__.'/../../../core.php';
 switch ($resource) {
     case 'clienti':
             $query = "SELECT an_anagrafiche.idanagrafica AS id,
-                CONCAT(ragione_sociale, IF(citta IS NULL OR citta = '', '', CONCAT(' (', citta, ')'))) AS descrizione,
+                CONCAT(ragione_sociale,
+                    IF(citta IS NULL OR citta = '', '', CONCAT(' (', citta, ')')),
+                    IF(deleted_at IS NULL, '', ' (".tr('eliminata').")')
+                ) AS descrizione,
                 id_tipo_intervento_default
             FROM an_anagrafiche
             INNER JOIN `an_sedi` ON `an_sedi`.`id`=`an_anagrafiche`.`id_sede_legale`
@@ -32,7 +35,12 @@ switch ($resource) {
         break;
 
     case 'fornitori':
-            $query = "SELECT an_anagrafiche.idanagrafica AS id, CONCAT(ragione_sociale, IF(citta IS NULL OR citta = '', '', CONCAT(' (', citta, ')'))) AS descrizione, id_tipo_intervento_default
+            $query = "SELECT an_anagrafiche.idanagrafica AS id,
+                CONCAT(ragione_sociale,
+                    IF(citta IS NULL OR citta = '', '', CONCAT(' (', citta, ')')),
+                    IF(deleted_at IS NULL, '', ' (".tr('eliminata').")')
+                ) AS descrizione,
+                id_tipo_intervento_default
             FROM an_anagrafiche
             INNER JOIN `an_sedi` ON `an_sedi`.`id`=`an_anagrafiche`.`id_sede_legale`
             INNER JOIN an_tipianagrafiche_anagrafiche ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica
@@ -58,7 +66,12 @@ switch ($resource) {
         break;
 
     case 'vettori':
-            $query = "SELECT an_anagrafiche.idanagrafica AS id, CONCAT(ragione_sociale, IF(citta IS NULL OR citta = '', '', CONCAT(' (', citta, ')'))) AS descrizione, id_tipo_intervento_default
+            $query = "SELECT an_anagrafiche.idanagrafica AS id,
+                CONCAT(ragione_sociale,
+                    IF(citta IS NULL OR citta = '', '', CONCAT(' (', citta, ')')),
+                    IF(deleted_at IS NULL, '', ' (".tr('eliminata').")')
+                ) AS descrizione,
+                id_tipo_intervento_default
                 FROM an_anagrafiche
                 INNER JOIN `an_sedi` ON `an_sedi`.`id`=`an_anagrafiche`.`id_sede_legale`
                 INNER JOIN an_tipianagrafiche_anagrafiche ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica
@@ -84,7 +97,12 @@ switch ($resource) {
         break;
 
     case 'agenti':
-            $query = "SELECT an_anagrafiche.idanagrafica AS id, CONCAT(ragione_sociale, IF(citta IS NULL OR citta = '', '', CONCAT(' (', citta, ')'))) AS descrizione, id_tipo_intervento_default FROM an_anagrafiche
+            $query = "SELECT an_anagrafiche.idanagrafica AS id,
+                CONCAT(ragione_sociale,
+                    IF(citta IS NULL OR citta = '', '', CONCAT(' (', citta, ')')),
+                    IF(deleted_at IS NULL, '', ' (".tr('eliminata').")')
+                ) AS descrizione,
+                id_tipo_intervento_default FROM an_anagrafiche
             INNER JOIN `an_sedi` ON `an_sedi`.`id`=`an_anagrafiche`.`id_sede_legale`
             INNER JOIN an_tipianagrafiche_anagrafiche ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica
             INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.id_tipo_anagrafica=an_tipianagrafiche.id |where| ORDER BY ragione_sociale";
@@ -122,7 +140,12 @@ switch ($resource) {
         break;
 
     case 'tecnici':
-            $query = "SELECT an_anagrafiche.idanagrafica AS id, CONCAT(ragione_sociale, IF(citta IS NULL OR citta = '', '', CONCAT(' (', citta, ')'))) AS descrizione, id_tipo_intervento_default FROM an_anagrafiche
+            $query = "SELECT an_anagrafiche.idanagrafica AS id,
+                CONCAT(ragione_sociale,
+                    IF(citta IS NULL OR citta = '', '', CONCAT(' (', citta, ')')),
+                    IF(deleted_at IS NULL, '', ' (".tr('eliminata').")')
+                ) AS descrizione,
+                id_tipo_intervento_default FROM an_anagrafiche
             INNER JOIN `an_sedi` ON `an_sedi`.`id`=`an_anagrafiche`.`id_sede_legale`
             INNER JOIN an_tipianagrafiche_anagrafiche ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica
             INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.id_tipo_anagrafica=an_tipianagrafiche.id |where| ORDER BY ragione_sociale";

@@ -29,7 +29,10 @@ if (!empty($idanagrafica)) {
     $rs = $dbo->fetchArray('SELECT id_tipo_intervento_default, idzona FROM an_anagrafiche WHERE idanagrafica='.prepare($idanagrafica));
     $id_tipo_intervento = $rs[0]['id_tipo_intervento_default'];
     $idzona = $rs[0]['idzona'];
-    $id_stato_intervento = 'WIP';
+
+    $stato = $dbo->fetchArray("SELECT * FROM in_statiintervento WHERE descrizione = 'In programmazione'");
+    $idstatointervento = $stato['id'];
+
     $richiesta = filter('richiesta');
 }
 
@@ -100,8 +103,8 @@ elseif (!empty($idcontratto) && !empty($idcontratto_riga)) {
     }
 
     // Seleziono "In programmazione" come stato
-    $rs = $dbo->fetchArray("SELECT * FROM in_statiintervento WHERE id='WIP'");
-    $id_stato_intervento = $rs[0]['id_stato'];
+    $rs = $dbo->fetchArray("SELECT * FROM in_statiintervento WHERE descrizione = 'In programmazione'");
+    $idstatointervento = $rs[0]['id'];
 }
 
 // Intervento senza sessioni
@@ -287,6 +290,8 @@ if (!empty($id_intervento)) {
 	</div>
 </form>
 
+<script>$(document).ready(init)</script>
+
 <script type="text/javascript">
 	$(document).ready(function(){
         if(!$("#bs-popup #idanagrafica").val()){
@@ -334,7 +339,8 @@ if (!empty($id_intervento)) {
 
 		// Quando modifico orario inizio, allineo anche l'orario fine
         $("#bs-popup #orario_inizio").on("dp.change", function (e) {
-			$("#bs-popup #orario_fine").data("DateTimePicker").minDate(e.date).format(globals.timestampFormat);
+            $("#bs-popup #orario_fine").data("DateTimePicker").minDate(e.date);
+            $("#bs-popup #orario_fine").change();
         });
 
         // Refresh modulo dopo la chiusura di una pianificazione attività derivante dalle attività
@@ -349,7 +355,7 @@ if (!empty($id_intervento)) {
 
 	$('#bs-popup #idanagrafica').change( function(){
         var value = !$(this).val() ? true : false;
-        var placeholder = !$(this).val() ? '<?php echo tr('Seleziona prima un cliente...'); ?>' : '<?php echo tr("-Seleziona un\'opzione-"); ?>';
+        var placeholder = !$(this).val() ? "<?php echo tr('Seleziona prima un cliente...'); ?>" : "<?php echo tr("Seleziona un'opzione"); ?>";
 
         $("#bs-popup #idsede").selectInfo("idanagrafica", $(this).val()).selectReset(placeholder);
         $("#bs-popup #idpreventivo").selectInfo("idanagrafica", $(this).val()).selectReset(placeholder);
@@ -424,9 +430,9 @@ if (!empty($id_intervento)) {
 		if ($(this).selectData() && (($(this).selectData().tempo_standard)>0) && ('<?php echo filter('orario_fine'); ?>' == '')){
 			tempo_standard = $(this).selectData().tempo_standard;
 
-			data = moment($('#bs-popup #orario_inizio').val(), globals.timestampFormat);
+			data = moment($('#bs-popup #orario_inizio').val(), globals.timestamp_format);
 			orario_fine = data.add(tempo_standard, 'hours');
-			$('#bs-popup #orario_fine').val(orario_fine.format(globals.timestampFormat));
+			$('#bs-popup #orario_fine').val(orario_fine.format(globals.timestamp_format));
 		}
 
 	});

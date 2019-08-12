@@ -6,7 +6,6 @@ use Common\Model;
 
 class Stato extends Model
 {
-    public $incrementing = false;
     protected $table = 'in_statiintervento';
 
     public function interventi()

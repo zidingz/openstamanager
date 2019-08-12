@@ -108,7 +108,7 @@ echo '
 </form>';
 
 echo '
-<script src="'.ROOTDIR.'/assets/js/init.min.js"></script>';
+<script>$(document).ready(init)</script>';
 
 ?>
 
