@@ -169,10 +169,10 @@ switch (post('op')) {
         break;
 
     case 'add':
-        $idtipoanagrafica = post('id_tipo_anagrafica');
+        $id_tipo_anagrafica = post('id_tipo_anagrafica');
         $ragione_sociale = post('ragione_sociale');
 
-        $anagrafica = Anagrafica::build($ragione_sociale, post('nome'), post('cognome'), $idtipoanagrafica);
+        $anagrafica = Anagrafica::build($ragione_sociale, post('nome'), post('cognome'), $id_tipo_anagrafica);
         $id_record = $anagrafica->id;
 
         // Blocco il salvataggio del codice fiscale se già presente
@@ -218,7 +218,7 @@ switch (post('op')) {
             }
         }
 
-        $idagente = ($agente_is_logged && in_array($id_cliente, $idtipoanagrafica)) ? $user['idanagrafica'] : 0;
+        $idagente = ($agente_is_logged && in_array($id_cliente, $id_tipo_anagrafica)) ? $user['idanagrafica'] : 0;
 
         $anagrafica->nome = post('nome');
         $anagrafica->cognome = post('cognome');

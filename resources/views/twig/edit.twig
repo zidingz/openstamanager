@@ -61,7 +61,7 @@
             var form = $("#module-edit").find("form").first();
 
             // Aggiunta del submit
-            form.prepend('<button type="submit" id="submit" class="hide"></button>');
+            form.prepend('<button type="submit" id="submit" class="d-none"></button>');
 
             $("#save").click(function(){
                 //submitAjax(form);
@@ -70,7 +70,7 @@
             });
 
             // Pulsanti dinamici
-            if (!isMobile()) {
+            if (!globals.is_mobile) {
                 //$("#pulsanti").affix({
                 //    offset: {
                 //        top: 200
@@ -108,11 +108,11 @@
     </div>
 
     <!-- Campi personalizzati -->
-    <div class="hide" id="custom_fields_top-edit">
+    <div class="d-none" id="custom_fields_top-edit">
         {( "name": "custom_fields", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}", "position": "top" )}
     </div>
 
-    <div class="hide" id="custom_fields_bottom-edit">
+    <div class="d-none" id="custom_fields_bottom-edit">
         {( "name": "custom_fields", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}" )}
     </div>
 

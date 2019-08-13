@@ -13,7 +13,7 @@
 
         {% if structure.hasAddFile() and structure.permission == 'rw' %}
         <!-- Pulsante "Aggiungi" solo se la struttura lo supporta -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-title="{{ 'Aggiungi'|trans }}..." data-href="{{ path_for('plugin-add', {'plugin_id': plugin_id, 'module_record_id': record_id}) }}"><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-title="{{ 'Aggiungi'|trans }}..." data-href="{{ path_for('module-add', {'module_id': plugin_id, 'reference_id': record_id}) }}"><i class="fa fa-plus"></i></button>
         {% endif %}
     </h4>
 {% endif %}
@@ -46,7 +46,7 @@
 </script>
     {% endif %}
 
-<table data-idmodule="{{ module_id }}" data-idplugin="{{ plugin_id }}" data-idparent="{{ record_id }}" id="{{ table_id }}" width="100%" class="main-records table table-condensed table-bordered">
+<table data-module_id="{{ module_id }}" data-reference_id="{{ reference_id }}" id="{{ table_id }}" width="100%" class="main-records table table-condensed table-bordered">
     <thead>
     <tr>
         <th id="th_selector"></th>

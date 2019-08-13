@@ -137,7 +137,7 @@ foreach ($results as $result) {
 </a>
 <?php
 echo '
-<form class="hide" id="template">
+<form class="d-none" id="template">
     <div class="card card-outline card-primary">
         <div class="card-header">
             <h3 class="card-title">'.tr('Nuova rata').'</h3>

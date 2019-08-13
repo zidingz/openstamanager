@@ -1,45 +1,51 @@
 <?php
 
-namespace Managers;
+namespace Controllers\Retro;
 
 use Controllers\Controller;
 use HTMLBuilder\HTMLBuilder;
+use Managers\ControllerManager;
 
-class RetroController extends Controller
+class RetroController extends ControllerManager
 {
-    public function controller($request, $response, $args)
+    public function getReferenceID($args)
     {
-        $result = $this->oldController($args);
-        $args = array_merge($args, $result);
-        $args['custom_content'] = $args['content'];
+        return null;
+    }
+
+    protected function controller($request, $response, $args)
+    {
+        extract($args);
+
+        $dbo = $database = $this->database;
+
+        if ($args['structure']->option == 'custom') {
+            // Lettura risultato query del modulo
+            $init = $args['structure']->filepath('init.php');
+            if (!empty($init)) {
+                include $init;
+            }
+
+            $args['record'] = $record;
+
+            $content = $args['structure']->filepath('edit.php');
+            if (!empty($content)) {
+                ob_start();
+                include $content;
+                $content = ob_get_clean();
+            }
+        }
+
+        $args = array_merge($args, [
+            'content' => $content,
+            'plugins_content' => $this->plugins($args),
+        ]);
+        $args['custom_content'] = $content;
 
         return $this->twig->render($response, 'old/controller.twig', $args);
     }
 
-    public function editor($request, $response, $args)
-    {
-        $result = $this->oldEditor($args);
-        $args = array_merge($args, $result);
-
-        return $this->twig->render($response, 'old/editor.twig', $args);
-    }
-
-    public function actions($request, $response, $args)
-    {
-        $record_id = $this->oldActions($args);
-
-        return $record_id;
-    }
-
-    public function add($request, $response, $args)
-    {
-        $result = $this->oldAdd($args);
-        $args = array_merge($args, $result);
-
-        return $this->twig->render($response, 'old/add.twig', $args);
-    }
-
-    protected function oldEditor($args)
+    protected function editor($request, $response, $args)
     {
         extract($args);
 
@@ -74,15 +80,17 @@ class RetroController extends Controller
         $module_bulk = empty($module_bulk) ? [] : include $module_bulk;
         $module_bulk = empty($module_bulk) ? [] : $module_bulk;
 
-        return [
+        $args = array_merge($args, [
             'buttons' => $buttons,
             'editor_content' => $content,
             'bulk' => $module_bulk,
-            'plugins_content' => $this->oldPlugins($args),
-        ];
+            'plugins_content' => $this->plugins($args),
+        ]);
+
+        return $this->twig->render($response, 'old/editor.twig', $args);
     }
 
-    protected function oldActions($args)
+    protected function actions($request, $response, $args)
     {
         extract($args);
 
@@ -105,7 +113,33 @@ class RetroController extends Controller
         return $id_record;
     }
 
-    protected function oldPlugins($args)
+    protected function add($request, $response, $args)
+    {
+        extract($args);
+
+        $dbo = $database = $this->database;
+
+        // Lettura risultato query del modulo
+        $init = $args['structure']->filepath('init.php');
+        if (!empty($init)) {
+            include $init;
+        }
+
+        $content = $args['structure']->getAddFile();
+        if (!empty($content)) {
+            ob_start();
+            include $content;
+            $content = ob_get_clean();
+        }
+
+        $args = array_merge($args, [
+            'content' => $content,
+        ]);
+
+        return $this->twig->render($response, 'old/add.twig', $args);
+    }
+
+    protected function plugins($args)
     {
         extract($args);
 
@@ -140,58 +174,5 @@ class RetroController extends Controller
         }
 
         return $plugins_content;
-    }
-
-    protected function oldController($args)
-    {
-        extract($args);
-
-        $dbo = $database = $this->database;
-
-        if ($args['structure']->option == 'custom') {
-            // Lettura risultato query del modulo
-            $init = $args['structure']->filepath('init.php');
-            if (!empty($init)) {
-                include $init;
-            }
-
-            $args['record'] = $record;
-
-            $content = $args['structure']->filepath('edit.php');
-            if (!empty($content)) {
-                ob_start();
-                include $content;
-                $content = ob_get_clean();
-            }
-        }
-
-        return [
-            'content' => $content,
-            'plugins_content' => $this->oldPlugins($args),
-        ];
-    }
-
-    protected function oldAdd($args)
-    {
-        extract($args);
-
-        $dbo = $database = $this->database;
-
-        // Lettura risultato query del modulo
-        $init = $args['structure']->filepath('init.php');
-        if (!empty($init)) {
-            include $init;
-        }
-
-        $content = $args['structure']->getAddFile();
-        if (!empty($content)) {
-            ob_start();
-            include $content;
-            $content = ob_get_clean();
-        }
-
-        return [
-            'content' => $content,
-        ];
     }
 }

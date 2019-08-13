@@ -105,7 +105,7 @@ echo '
 
 foreach ($documenti as $nome => $info) {
     echo '
-<table class="hide" id="'.$nome.'-templace">';
+<table class="d-none" id="'.$nome.'-templace">';
     $dato = [];
     $key = '-id-';
 
@@ -114,7 +114,7 @@ foreach ($documenti as $nome => $info) {
     echo '
 </table>
 
-<table class="hide">
+<table class="d-none">
     <tbody id="riferimento_'.$nome.'-templace">
         <tr class="fifth-level" title="RiferimentoNumeroLinea-'.$nome.'--id-">
             <td style="vertical-align: middle;">

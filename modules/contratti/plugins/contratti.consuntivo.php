@@ -90,7 +90,7 @@ if (!empty($rsi)) {
 
         // Riga con dettagli
         echo '
-    <tr class="hide" id="dettagli_'.$int['id'].'">
+    <tr class="d-none" id="dettagli_'.$int['id'].'">
         <td colspan="6">';
 
         /**

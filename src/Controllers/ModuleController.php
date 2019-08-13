@@ -2,31 +2,47 @@
 
 namespace Controllers;
 
-use Managers\RetroController;
+use Controllers\Retro\ActionManager;
 use Slim\Exception\NotFoundException;
 
 class ModuleController extends Controller
 {
+    /**
+     * Gestione della pagina principale del modulo.
+     *
+     * @param $request
+     * @param $response
+     * @param $args
+     *
+     * @throws NotFoundException
+     *
+     * @return mixed
+     */
     public function module($request, $response, $args)
     {
         // Elenco dei plugin
-        $plugins = $args['module']->plugins()->where('position', 'tab_main')->get()->sortBy('order');
-        $args['plugins'] = $plugins;
+        $args['plugins'] = $args['module']->children()->where('type', 'plugin_module')->get()->sortBy('order');
 
-        if ($this->isRetro($args)) {
-            $controller = new RetroController($this->container);
+        $controller = $this->getModuleManager($request, $response, $args);
 
-            $response = $controller->controller($request, $response, $args);
-        } else {
-            $class = $this->getModuleManager($request, $response, $args);
-            $controller = new $class($this->container);
+        $args['reference_record'] = $controller->getReferenceRecord($args);
 
-            $response = $controller->page($request, $response, $args);
-        }
+        $response = $controller->page($request, $response, $args);
 
         return $response;
     }
 
+    /**
+     * Gestione della pagine del record.
+     *
+     * @param $request
+     * @param $response
+     * @param $args
+     *
+     * @throws NotFoundException
+     *
+     * @return mixed
+     */
     public function edit($request, $response, $args)
     {
         // Rimozione record precedenti sulla visita della pagina
@@ -89,35 +105,33 @@ class ModuleController extends Controller
         $args['include_operations'] = true;
 
         // Elenco dei plugin
-        $plugins = $args['module']->plugins()->where('position', 'tab')->get()->sortBy('order');
-        $args['plugins'] = $plugins;
+        $args['plugins'] = $args['module']->children()->where('type', 'plugin_record')->get()->sortBy('order');
 
-        if ($this->isRetro($args)) {
-            $controller = new RetroController($this->container);
+        $controller = $this->getRecordManager($request, $response, $args);
 
-            $response = $controller->editor($request, $response, $args);
-        } else {
-            $class = $this->getRecordManager($request, $response, $args);
-            $controller = new $class($this->container);
+        $args['reference_record'] = $controller->getReferenceRecord($args);
 
-            $response = $controller->page($request, $response, $args);
-        }
+        $response = $controller->page($request, $response, $args);
 
         return $response;
     }
 
+    /**
+     * Gestione del salvataggio delle informazioni del record.
+     *
+     * @param $request
+     * @param $response
+     * @param $args
+     *
+     * @throws NotFoundException
+     *
+     * @return mixed
+     */
     public function editRecord($request, $response, $args)
     {
-        if ($this->isRetro($args)) {
-            $controller = new RetroController($this->container);
+        $controller = $this->getRecordManager($request, $response, $args);
 
-            $record_id = $controller->actions($request, $response, $args);
-        } else {
-            $class = $this->getRecordManager($request, $response, $args);
-            $controller = new $class($this->container);
-
-            $record_id = $controller->update($request, $response, $args);
-        }
+        $record_id = $controller->update($request, $response, $args);
 
         if (!empty($record_id)) {
             $route = $this->router->pathFor('module-record', [
@@ -135,6 +149,17 @@ class ModuleController extends Controller
         return $response;
     }
 
+    /**
+     * Gestione della pagina di creazione nuovo record.
+     *
+     * @param $request
+     * @param $response
+     * @param $args
+     *
+     * @throws NotFoundException
+     *
+     * @return mixed
+     */
     public function add($request, $response, $args)
     {
         $args['query_params'] = [];
@@ -143,32 +168,31 @@ class ModuleController extends Controller
             $args['query_params'][$key] = get($key);
         }
 
-        if ($this->isRetro($args)) {
-            $controller = new RetroController($this->container);
+        $controller = $this->getModuleManager($request, $response, $args);
 
-            $response = $controller->add($request, $response, $args);
-        } else {
-            $class = $this->getModuleManager($request, $response, $args);
-            $controller = new $class($this->container);
+        $args['reference_record'] = $controller->getReferenceRecord($args);
 
-            $response = $controller->add($request, $response, $args);
-        }
+        $response = $controller->add($request, $response, $args);
 
         return $response;
     }
 
+    /**
+     * Gestione del salvataggio delle informazioni del nuovo record.
+     *
+     * @param $request
+     * @param $response
+     * @param $args
+     *
+     * @throws NotFoundException
+     *
+     * @return mixed
+     */
     public function addRecord($request, $response, $args)
     {
-        if ($this->isRetro($args)) {
-            $controller = new RetroController($this->container);
+        $controller = $this->getModuleManager($request, $response, $args);
 
-            $record_id = $controller->actions($request, $response, $args);
-        } else {
-            $class = $this->getModuleManager($request, $response, $args);
-            $controller = new $class($this->container);
-
-            $record_id = $controller->create($request, $response, $args);
-        }
+        $record_id = $controller->create($request, $response, $args);
 
         if (!empty($record_id)) {
             $route = $this->router->pathFor('module-record', [
@@ -186,68 +210,99 @@ class ModuleController extends Controller
         return $response;
     }
 
+    /**
+     * Azioni personalizzate sul record.
+     *
+     * @param $request
+     * @param $response
+     * @param $args
+     *
+     * @throws NotFoundException
+     *
+     * @return mixed
+     */
     public function recordAction($request, $response, $args)
     {
-        $class = $this->getRecordActionsManager($request, $response, $args);
-        $controller = new $class($this->container);
+        $controller = $this->getRecordActionsManager($request, $response, $args);
 
-        return $controller->manage($args['action'], $request, $response, $args);
+        return $this->action($request, $response, $args, $controller);
     }
 
+    /**
+     * Azioni personalizzate sul modulo.
+     *
+     * @param $request
+     * @param $response
+     * @param $args
+     *
+     * @throws NotFoundException
+     *
+     * @return mixed
+     */
     public function moduleAction($request, $response, $args)
     {
-        $class = $this->getModuleActionsManager($request, $response, $args);
+        $class = self::getModuleActionsManager($request, $response, $args);
         $controller = new $class($this->container);
 
-        return $controller->manage($args['action'], $request, $response, $args);
+        return $this->action($request, $response, $args, $controller);
     }
 
-    protected function getRecordManager($request, $response, $args)
+    public function getRecordManager($request, $response, $args)
     {
-        $class = $args['structure']->namespace.'\Record';
+        return $this->getController($request, $response, $args['structure'], 'Record');
+    }
 
-        if (!class_exists($class)) {
+    public function getModuleManager($request, $response, $args)
+    {
+        return $this->getController($request, $response, $args['structure'], 'Module');
+    }
+
+    public function getModuleActionsManager($request, $response, $args)
+    {
+        return $this->getController($request, $response, $args['structure'], 'ModuleActions');
+    }
+
+    public function getRecordActionsManager($request, $response, $args)
+    {
+        return $this->getController($request, $response, $args['structure'], 'RecordActions');
+    }
+
+    public function getController($request, $response, $module, $name)
+    {
+        $class = self::getControllerClass($module, $name);
+
+        if (empty($class)) {
             throw new NotFoundException($request, $response);
         }
 
+        $controller = new $class($this->container);
+
+        return $controller;
+    }
+
+    public static function getControllerClass($module, $name)
+    {
+        $class = $module->namespace.'\\'.$name;
+
+        if (!class_exists($class)) {
+            return null;
+        }
+
         return $class;
     }
 
-    protected function getModuleManager($request, $response, $args)
+    protected function action($request, $response, $args, $controller)
     {
-        $class = $args['structure']->namespace.'\Module';
+        $action = str_replace(['-', '_'], [' ', ' '], $args['action']);
+        $action = lcfirst(ucwords($action));
+        $action = str_replace(' ', '', $action);
 
-        if (!class_exists($class)) {
+        if (!method_exists($controller, $action) && !$controller instanceof ActionManager) {
             throw new NotFoundException($request, $response);
         }
 
-        return $class;
-    }
+        $response = $controller->{$action}($request, $response, $args);
 
-    protected function getModuleActionsManager($request, $response, $args)
-    {
-        $class = $args['structure']->namespace.'\ModuleActions';
-
-        if (!class_exists($class)) {
-            return $this->getModuleManager($request, $response, $args);
-        }
-
-        return $class;
-    }
-
-    protected function getRecordActionsManager($request, $response, $args)
-    {
-        $class = $args['structure']->namespace.'\RecordActions';
-
-        if (!class_exists($class)) {
-            return $this->getRecordManager($request, $response, $args);
-        }
-
-        return $class;
-    }
-
-    protected function isRetro($args)
-    {
-        return empty($args['structure']->namespace);
+        return $response;
     }
 }

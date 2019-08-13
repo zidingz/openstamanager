@@ -120,7 +120,7 @@ echo '
 </form>';
 
 echo '
-<div id="destinatari_input" class="hide">
+<div id="destinatari_input" class="d-none">
     <div class="col-md-12">
         {[ "type": "email", "name": "destinatari[]", "icon-before": "choice|email|cc", "extra": "onkeyup=\'aggiungi_destinatario();\'", "class": "destinatari" ]}
     </div>

@@ -83,7 +83,7 @@ echo '
 </form>';
 
 echo '
-<form class="hide" id="template_filter">
+<form class="d-none" id="template_filter">
 	<div class="card card-outline">
 		<div class="card-header">
 			<h3 class="card-title">'.tr('Nuovo filtro').'</h3>

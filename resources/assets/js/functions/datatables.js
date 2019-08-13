@@ -27,12 +27,10 @@ function start_datatables() {
 
         // Controlla che la tabella non sia già inizializzata
         if (!$.fn.DataTable.isDataTable('#' + $this.attr('id'))) {
-            var id_module = $this.data('idmodule');
-            var id_plugin = $this.data('idplugin');
-            var id_parent = $this.data('idparent');
+            var id_module = $this.data('module_id');
+            var reference_id = $this.data('reference_id');
 
-            var dataload_url = id_plugin ? globals.dataload_plugin_url : globals.dataload_module_url;
-            dataload_url = dataload_url.replace('|id_module|', id_module).replace('|id_plugin|', id_plugin).replace('|id_parent|', id_parent);
+            var dataload_url = globals.dataload_url.replace('|module_id|', id_module).replace('|reference_id|', reference_id);
 
             // Parametri di ricerca da url o sessione
             var search = getTableSearch();
@@ -73,10 +71,10 @@ function start_datatables() {
                 retrieve: true,
                 stateSave: true,
                 stateSaveCallback: function (settings, data) {
-                    sessionStorage.setItem('DataTables_' + id_module + '-' + id_plugin + '-' + id_parent, JSON.stringify(data));
+                    sessionStorage.setItem('DataTables_' + id_module + '-' + reference_id, JSON.stringify(data));
                 },
                 stateLoadCallback: function (settings) {
-                    return JSON.parse(sessionStorage.getItem('DataTables_' + id_module + '-' + id_plugin + '-' + id_parent));
+                    return JSON.parse(sessionStorage.getItem('DataTables_' + id_module + '-' + reference_id));
                 },
                 columnDefs: [{
                     searchable: false,

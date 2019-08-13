@@ -14,7 +14,7 @@ use Translator;
 class Query
 {
     protected static $segments = true;
-    protected static $module_record_id;
+    protected static $reference_id;
 
     /**
      * Imposta l'utilizzo o meno dei segmenti per le query.
@@ -48,7 +48,7 @@ class Query
 
     public static function setModuleRecord($value)
     {
-        self::$module_record_id = $value;
+        self::$reference_id = $value;
     }
 
     /**
@@ -60,7 +60,7 @@ class Query
      */
     public static function replacePlaceholder($query)
     {
-        $id_parent = self::$module_record_id;
+        $id_parent = self::$reference_id;
 
         $id_module = Modules::getCurrent()['id'];
         $segment = !empty(self::$segments) ? $_SESSION['module_'.$id_module]['id_segment'] : null;

@@ -23,7 +23,8 @@ abstract class Middleware
 
     abstract public function __invoke($request, $response, $next);
 
-    protected function addArgs($request, $new){
+    protected function addArgs($request, $new)
+    {
         $route = $request->getAttribute('route');
         if (!$route) {
             return $request;
@@ -49,5 +50,11 @@ abstract class Middleware
         $request = $request->withAttribute('route', $route);
 
         return $request;
+    }
+
+    protected function addVariable($name, $content)
+    {
+        $twig = $this->container['twig'];
+        $twig->offsetSet($name, $content);
     }
 }

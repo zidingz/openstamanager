@@ -225,7 +225,7 @@ switch ($resource) {
 
         break;
 
-    // Nota Bene: nel campo id viene specificato idtipoanagrafica-idanagrafica -> modulo Utenti e permessi, creazione nuovo utente
+    // Nota Bene: nel campo id viene specificato id_tipo_anagrafica-idanagrafica -> modulo Utenti e permessi, creazione nuovo utente
     case 'anagrafiche':
             $query = "SELECT CONCAT(an_tipianagrafiche.id, '-', an_anagrafiche.idanagrafica) AS id, CONCAT_WS('', ragione_sociale, ' (', citta, ' ', provincia, ')') AS descrizione, id_tipo_intervento_default FROM an_anagrafiche
             INNER JOIN `an_sedi` ON `an_sedi`.`id`=`an_anagrafiche`.`id_sede_legale`

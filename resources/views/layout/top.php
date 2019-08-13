@@ -175,7 +175,7 @@ if (Auth::check()) {
                 dataload_page_buffer: '.setting('Lunghezza in pagine del buffer Datatables').',
                 tempo_attesa_ricerche: '.setting('Tempo di attesa ricerche in secondi').',
                 dataload_module: "'.pathFor('ajax-dataload-module', ['module_id' => '|id_module|']).'",
-                dataload_plugin: "'.pathFor('ajax-dataload-plugin', ['plugin_id' => '|id_plugin|', 'module_record_id' => '|id_parent|']).'",
+                dataload_plugin: "'.pathFor('ajax-dataload-plugin', ['plugin_id' => '|id_plugin|', 'reference_id' => '|id_parent|']).'",
             };
 		</script>';
 } else {
@@ -275,7 +275,7 @@ if (Auth::check()) {
                                     <span class="label label-warning">
                                         <span id="hooks-loading"><i class="fa fa-spinner fa-spin"></i></span>
                                         <span id="hooks-number"></span>
-                                        <span id="hooks-counter" class="hide">0</span>
+                                        <span id="hooks-counter" class="d-none">0</span>
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu">

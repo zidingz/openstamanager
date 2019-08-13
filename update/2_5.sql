@@ -4,6 +4,10 @@ UPDATE `zz_modules` SET `namespace` = 'Modules\\Fatture\\Controllers' WHERE `nam
 UPDATE `zz_modules` SET `namespace` = 'Modules\\Fatture\\Controllers' WHERE `name` = 'Fatture di acquisto';
 UPDATE `zz_modules` SET `namespace` = 'Modules\\Dashboard\\Controllers' WHERE `name` = 'Dashboard';
 UPDATE `zz_modules` SET `namespace` = 'Modules\\Aggiornamenti\\Controllers' WHERE `name` = 'Aggiornamenti';
+UPDATE `zz_modules` SET `namespace` = 'Modules\\Anagrafiche\\Controllers' WHERE `name` = 'Anagrafiche';
+
+ALTER TABLE `zz_modules` ADD `type` ENUM('module', 'plugin_module', 'plugin_record') NOT NULL DEFAULT 'module';
+INSERT INTO `zz_modules` (`id`, `name`, `title`, `type`, `enabled`, `default`, `options`, `directory`, `parent`) VALUES (NULL, 'Sedi', 'Sedi', 'plugin_module', '1', '1', '{ \"main_query\": [ { \"type\": \"table\", \"fields\": \"Nome, Indirizzo, Città, CAP, Provincia, Referente\", \"query\": \"SELECT an_sedi.id, an_sedi.nomesede AS Nome, an_sedi.indirizzo AS Indirizzo, an_sedi.citta AS Città, an_sedi.cap AS CAP, an_sedi.provincia AS Provincia, an_referenti.nome AS Referente FROM an_sedi LEFT OUTER JOIN an_referenti ON idsede = an_sedi.id WHERE 1=1 AND an_sedi.idanagrafica=|id_parent| HAVING 2=2 ORDER BY an_sedi.id DESC\"} ]}', 'sedi', '2');
 
 -- Standardizzazione tabelle
 

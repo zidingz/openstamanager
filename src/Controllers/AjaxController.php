@@ -214,7 +214,7 @@ class AjaxController extends Controller
             // Creazione della tabella
             foreach ($rows as $i => $r) {
                 $result = [
-                    '<span class="hide" data-id="'.$r['id'].'"></span>', // Colonna ID
+                    '<span class="d-none" data-id="'.$r['id'].'"></span>', // Colonna ID
                 ];
 
                 foreach ($total['fields'] as $pos => $field) {
@@ -283,21 +283,13 @@ class AjaxController extends Controller
                         }
 
                         // Link per i moduli
-                        if (empty($id_plugin)) {
-                            $column['data-link'] = pathFor('module-record', [
-                                'module_id' => $id_module,
-                                'record_id' => $id_record,
-                            ]).$hash;
-                        }
+                        $column['data-link'] = pathFor('module-record', [
+                            'module_id' => $id_module,
+                            'record_id' => $id_record,
+                            'reference_id' => $reference_id,
+                        ]).$hash;
 
-                        // Link per i plugin
-                        else {
-                            $column['data-link'] = pathFor('plugin-record', [
-                                'plugin_id' => $id_plugin,
-                                'module_record_id' => $module_record_id,
-                                'record_id' => $id_record,
-                            ]).$hash;
-
+                        if (!empty($reference_id)) {
                             $column['data-type'] = 'dialog';
                         }
                     }

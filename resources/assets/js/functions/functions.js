@@ -32,12 +32,12 @@ function openModal(title, href, generate_id) {
     var content =  '<div class="modal-dialog modal-lg">\
     <div class="modal-content">\
         <div class="modal-header bg-light-blue">\
-            <button type="button" class="close" data-dismiss="modal">\
-                <span aria-hidden="true">&times;</span><span class="sr-only">' + globals.translations.close + '</span>\
-            </button>\
             <h4 class="modal-title">\
                 <i class="fa fa-pencil"></i> ' + title + '\
             </h4>\
+            <button type="button" class="close" data-dismiss="modal">\
+                <span aria-hidden="true">&times;</span><span class="sr-only">' + globals.translations.close + '</span>\
+            </button>\
         </div>\
         <div class="modal-body">|data|</div>\
     </div>\
@@ -503,7 +503,7 @@ function alertPush() {
 }
 
 function ajaxError(xhr, error, thrown) {
-    data = xhr.responseJSON;
+    data = xhr.responseJSON.error ? xhr.responseJSON.error : xhr.responseJSON.exception;
 
     swal({
         title: globals.translations.errorTitle,

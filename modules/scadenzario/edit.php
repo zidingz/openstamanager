@@ -184,7 +184,7 @@ if ($records[0]['iddocumento'] == 0) {
                         }
 
 echo '
-<table class="hide">
+<table class="d-none">
     <tbody id="scadenza-template">
         <tr class="danger">
             <input type="hidden" name="nuova[-id-]" value="1">

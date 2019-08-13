@@ -4,7 +4,7 @@ if (!isset($user['idanagrafica'])) {
     $user['idanagrafica'] = '';
 }
 
-switch (post('op')) {
+switch (filter('op')) {
     // Lettura calendario tecnici
     case 'get_current_month':
         $start = post('start');

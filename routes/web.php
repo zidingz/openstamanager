@@ -18,156 +18,139 @@ $app->get('/', 'Controllers\BaseController:index')
     ->setName('login');
 $app->post('/', 'Controllers\BaseController:loginAction')
     ->add(GuestMiddleware::class);
-$app->get('/logout[/]', 'Controllers\BaseController:logout')
+$app->get('/logout/', 'Controllers\BaseController:logout')
     ->setName('logout')
     ->add(UserMiddleware::class);
 
 // Configurazione iniziale
 $app->group('', function () use ($app) {
-    $app->get('/requirements[/]', 'Controllers\Config\RequirementsController:requirements')
+    $app->get('/requirements/', 'Controllers\Config\RequirementsController:requirements')
         ->setName('requirements');
 
-    $app->get('/configuration[/]', 'Controllers\Config\ConfigurationController:configuration')
+    $app->get('/configuration/', 'Controllers\Config\ConfigurationController:configuration')
         ->setName('configuration');
-    $app->post('/configuration[/]', 'Controllers\Config\ConfigurationController:configurationSave')
+    $app->post('/configuration/', 'Controllers\Config\ConfigurationController:configurationSave')
         ->setName('configuration-save');
 
-    $app->post('/configuration/test[/]', 'Controllers\Config\ConfigurationController:configurationTest')
+    $app->post('/configuration/test/', 'Controllers\Config\ConfigurationController:configurationTest')
         ->setName('configuration-test');
 
-    $app->get('/init[/]', 'Controllers\Config\InitController:init')
+    $app->get('/init/', 'Controllers\Config\InitController:init')
         ->setName('init');
-    $app->post('/init[/]', 'Controllers\Config\InitController:initSave')
+    $app->post('/init/', 'Controllers\Config\InitController:initSave')
         ->setName('init-save');
 
-    $app->get('/update[/]', 'Controllers\Config\UpdateController:update')
+    $app->get('/update/', 'Controllers\Config\UpdateController:update')
         ->setName('update');
-    $app->get('/update/progress[/]', 'Controllers\Config\UpdateController:updateProgress')
+    $app->get('/update/progress/', 'Controllers\Config\UpdateController:updateProgress')
         ->setName('update-progress');
 })->add(GuestMiddleware::class);
 
 $app->group('', function () use ($app) {
     // Informazioni su OpenSTAManager
-    $app->get('/info[/]', 'Controllers\InfoController:info')
+    $app->get('/info/', 'Controllers\InfoController:info')
         ->setName('info');
 
     // Segnalazione bug
-    $app->get('/bug[/]', 'Controllers\InfoController:bug')
+    $app->get('/bug/', 'Controllers\InfoController:bug')
         ->setName('bug');
-    $app->post('/bug[/]', 'Controllers\InfoController:bugSend');
+    $app->post('/bug/', 'Controllers\InfoController:bugSend');
 
     // Log di accesso
-    $app->get('/logs[/]', 'Controllers\InfoController:logs')
+    $app->get('/logs/', 'Controllers\InfoController:logs')
         ->setName('logs');
 
     // Informazioni sull'utente
-    $app->get('/user[/]', 'Controllers\InfoController:user')
+    $app->get('/user/', 'Controllers\InfoController:user')
         ->setName('user');
 
-    $app->get('/password[/]', 'Controllers\InfoController:password')
+    $app->get('/password/', 'Controllers\InfoController:password')
         ->setName('user-password');
-    $app->post('/password[/]', 'Controllers\InfoController:passwordPost');
+    $app->post('/password/', 'Controllers\InfoController:passwordPost');
 })->add(UserMiddleware::class);
 
 // Operazioni Ajax
 $app->group('/ajax', function () use ($app) {
-    $app->get('/select[/]', 'Controllers\AjaxController:select')
+    $app->get('/select/', 'Controllers\AjaxController:select')
         ->setName('ajax-select');
-    $app->get('/complete[/]', 'Controllers\AjaxController:complete')
+    $app->get('/complete/', 'Controllers\AjaxController:complete')
         ->setName('ajax-complete');
-    $app->get('/search[/]', 'Controllers\AjaxController:search')
+    $app->get('/search/', 'Controllers\AjaxController:search')
         ->setName('ajax-search');
 
     // Hooks
-    $app->get('/hooks[/]', 'Controllers\AjaxController:hooks')
+    $app->get('/hooks/', 'Controllers\AjaxController:hooks')
         ->setName('hooks');
-    $app->get('/hook/{hook_id:[0-9]+}[/]', 'Controllers\AjaxController:hook')
+    $app->get('/hook/{hook_id:[0-9]+}/', 'Controllers\AjaxController:hook')
         ->setName('hook');
 
     // Messaggi flash
-    $app->get('/flash[/]', 'Controllers\AjaxController:flash')
+    $app->get('/flash/', 'Controllers\AjaxController:flash')
         ->setName('ajax-flash');
 
     // Sessioni
-    $app->get('/session[/]', 'Controllers\AjaxController:sessionSet')
+    $app->get('/session/', 'Controllers\AjaxController:sessionSet')
         ->setName('ajax-session');
-    $app->get('/session-array[/]', 'Controllers\AjaxController:sessionSetArray')
+    $app->get('/session-array/', 'Controllers\AjaxController:sessionSetArray')
         ->setName('ajax-session-array');
 
     // Dataload
-    $app->group('/dataload', function () use ($app) {
-        $app->get('/{module_id:[0-9]+}[/]', 'Controllers\AjaxController:dataLoad')
-            ->setName('ajax-dataload-module');
-
-        $app->get('/{plugin_id:[0-9]+}/{module_record_id:[0-9]+}[/]', 'Controllers\AjaxController:dataLoad')
-            ->setName('ajax-dataload-plugin');
-    })->add(PermissionMiddleware::class);
+    $app->get('/dataload/{module_id:[0-9]+}/[reference/{reference_id}/]', 'Controllers\AjaxController:dataLoad')
+        ->setName('ajax-dataload')
+        ->add(PermissionMiddleware::class);
 })->add(UserMiddleware::class);
 
 // Moduli
 $app->group('/module/{module_id:[0-9]+}', function () use ($app) {
-    $app->get('[/]', 'Controllers\ModuleController:module')
+    $app->get('/[reference/{reference_id}/]', 'Controllers\ModuleController:module')
         ->setName('module');
 
-    $app->map(['GET', 'POST'], '/action/{action}[/{params:.*}[/]]', 'Controllers\ModuleController:moduleAction')
+    $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id}/]', 'Controllers\ModuleController:moduleAction')
         ->setName('module-action');
 
     $app->group('/edit/{record_id:[0-9]+}', function () use ($app) {
-        $app->get('[/]', 'Controllers\ModuleController:edit')
+        $app->get('/[reference/{reference_id}/]', 'Controllers\ModuleController:edit')
             ->setName('module-record');
-        $app->post('[/]', 'Controllers\ModuleController:editRecord');
+        $app->post('/[reference/{reference_id}/]', 'Controllers\ModuleController:editRecord');
 
-        $app->map(['GET', 'POST'], '/action/{action}[/{params:.*}[/]]', 'Controllers\ModuleController:recordAction')
+        $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id}/]', 'Controllers\ModuleController:recordAction')
             ->setName('module-record-action');
     });
 
-    $app->get('/add[/]', 'Controllers\ModuleController:add')
+    $app->get('/add/[reference/{reference_id}/]', 'Controllers\ModuleController:add')
         ->setName('module-add');
-    $app->post('/add[/]', 'Controllers\ModuleController:addRecord');
-    $app->post('[/]', 'Controllers\ModuleController:addRecord');
+    $app->post('/add/[reference/{reference_id}/]', 'Controllers\ModuleController:addRecord');
 })->add(UserMiddleware::class)->add(PermissionMiddleware::class);
-
-// Plugin
-$app->group('/plugin/{plugin_id:[0-9]+}/{module_record_id}', function () use ($app) {
-    $app->get('/edit/{record_id:[0-9]+}[/]', 'Controllers\PluginController:edit')
-        ->setName('plugin-record');
-    $app->post('/edit/{record_id:[0-9]+}[/]', 'Controllers\PluginController:saveRecord');
-
-    $app->get('/add[/]', 'Controllers\ModuleController:add')
-        ->setName('plugin-add');
-    $app->post('/add[/]', 'Controllers\PluginController:addRecord');
-    $app->post('[/]', 'Controllers\PluginController:addRecord');
-})->add(UserMiddleware::class);
 
 // Stampe
 $app->group('/print', function () use ($app) {
-    $app->get('/{print_id:[0-9]+}[/{record_id:[0-9]+}[/]]', 'Controllers\PrintController:view')
+    $app->get('/{print_id:[0-9]+}/[{record_id:[0-9]+}/]', 'Controllers\PrintController:view')
         ->setName('print');
 
-    $app->get('/open/{print_id:[0-9]+}[/{record_id:[0-9]+}[/]]', 'Controllers\PrintController:open')
+    $app->get('/open/{print_id:[0-9]+}/[{record_id:[0-9]+}/]', 'Controllers\PrintController:open')
         ->setName('print-open');
 })->add(UserMiddleware::class);
 
 // Moduli
 $app->group('/upload', function () use ($app) {
-    $app->get('/{upload_id:[0-9]+}[/]', 'Controllers\UploadController:view')
+    $app->get('/{upload_id:[0-9]+}/', 'Controllers\UploadController:view')
         ->setName('upload-view');
 
-    $app->get('/open/{upload_id:[0-9]+}[/]', 'Controllers\UploadController:open')
+    $app->get('/open/{upload_id:[0-9]+}/', 'Controllers\UploadController:open')
         ->setName('upload-open');
 
-    $app->get('/download/{upload_id:[0-9]+}[/]', 'Controllers\UploadController:download')
+    $app->get('/download/{upload_id:[0-9]+}/', 'Controllers\UploadController:download')
         ->setName('upload-download');
 
-    $app->get('/add/{module_id:[0-9]+}/{plugin_id:[0-9]+}/{record_id:[0-9]+}[/]', 'Controllers\UploadController:index')
+    $app->get('/add/{module_id:[0-9]+}/{record_id:[0-9]+}/', 'Controllers\UploadController:index')
         ->setName('upload');
 
-    $app->get('/remove/{upload_id:[0-9]+}[/]', 'Controllers\UploadController:remove')
+    $app->get('/remove/{upload_id:[0-9]+}/', 'Controllers\UploadController:remove')
         ->setName('upload-remove');
 })->add(UserMiddleware::class);
 
 // E-mail
-$app->get('/mail/{mail_id:[0-9]+}[/]', 'MailController:index')
+$app->get('/mail/{mail_id:[0-9]+}/', 'MailController:index')
     ->setName('mail')
     ->add(UserMiddleware::class);
 

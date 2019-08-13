@@ -3,7 +3,6 @@
 namespace Middlewares;
 
 use Modules;
-use Plugins;
 use Update;
 use Util\Query;
 
@@ -14,12 +13,6 @@ use Util\Query;
  */
 class ContentMiddleware extends Middleware
 {
-    protected $container;
-
-    public function __construct($container) {
-        $this->container = $container;
-    }
-
     public function __invoke($request, $response, $next)
     {
         $route = $request->getAttribute('route');
@@ -30,56 +23,30 @@ class ContentMiddleware extends Middleware
         $args = $route->getArguments();
 
         Modules::setCurrent($args['module_id']);
-        Plugins::setCurrent($args['plugin_id']);
-
-        Query::setModuleRecord($args['module_record_id']);
+        Query::setModuleRecord($args['reference_id']);
 
         // Variabili fondamentali
         $module = Modules::getCurrent();
-        $plugin = Plugins::getCurrent();
-        $structure = isset($plugin) ? $plugin : $module;
 
         $id_module = $module['id'];
-        $id_plugin = $plugin['id'];
-
         $args['id_module'] = $id_module;
-        $args['id_plugin'] = $id_plugin;
         $args['id_record'] = $args['record_id'];
 
-        $args['structure'] = $structure;
-        $args['plugin'] = $plugin;
+        $args['structure'] = $module;
         $args['module'] = $module;
 
         $user = auth()->getUser();
         $args['user'] = $user;
 
-        $args['order_manager_id'] = $this->database->isInstalled() ? Modules::get('Stato dei serivizi')['id'] : null;
-        $args['is_mobile'] = isMobile();
+        $this->addVariable('order_manager_id', $this->database->isInstalled() ? Modules::get('Stato dei serivizi')['id'] : null);
+        $this->addVariable('is_mobile', isMobile());
 
         // Versione
-        $args['version'] = \Update::getVersion();
-        $args['revision'] = \Update::getRevision();
+        $this->addVariable('version', \Update::getVersion());
+        $this->addVariable('revision', \Update::getRevision());
 
         // Richiesta AJAX
-        $args['handle_ajax'] = $request->isXhr() && filter('ajax');
-
-        // Calendario
-        // Periodo di visualizzazione
-        if (!empty($_GET['period_start'])) {
-            $_SESSION['period_start'] = $_GET['period_start'];
-            $_SESSION['period_end'] = $_GET['period_end'];
-        }
-        // Dal 01-01-yyy al 31-12-yyyy
-        elseif (!isset($_SESSION['period_start'])) {
-            $_SESSION['period_start'] = date('Y').'-01-01';
-            $_SESSION['period_end'] = date('Y').'-12-31';
-        }
-
-        $args['calendar'] = [
-            'start' => $_SESSION['period_start'],
-            'end' => $_SESSION['period_end'],
-            'is_current' => ($_SESSION['period_start'] != date('Y').'-01-01' || $_SESSION['period_end'] != date('Y').'-12-31'),
-        ];
+        $this->addVariable('handle_ajax', $request->isXhr() && filter('ajax'));
 
         // Argomenti di ricerca dalla sessione
         $search = [];
@@ -93,10 +60,10 @@ class ContentMiddleware extends Middleware
                 }
             }
         }
-        $args['search'] = $search;
+        $this->addVariable('search', $search);
 
         // Menu principale
-        $args['main_menu'] = Modules::getMainMenu();
+        $this->addVariable('main_menu', Modules::getMainMenu());
 
         // Impostazione degli argomenti
         $request = $this->setArgs($request, $args);

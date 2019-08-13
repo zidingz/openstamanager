@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Fatture\Controllers;
+namespace Plugins\Sedi\Controllers;
 
 use Controllers\Retro\RecordController;
 

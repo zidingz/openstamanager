@@ -151,21 +151,21 @@ echo '
             <button type="button" class="btn btn-sm btn-info btn-block disabled" onclick="$(\'#prezzi\').toggleClass(\'hide\'); $(\'#prezzi\').load(\''.$rootdir."/ajax_complete.php?module=Articoli&op=get_prezzi&idarticolo=' + $('#idarticolo option:selected').val() + '&idanagrafica=".$idanagrafica.'\');" disabled>
                 <i class="fa fa-search"></i> '.tr('Visualizza ultimi prezzi (cliente)').'
             </button>
-            <div id="prezzi" class="hide"></div>
+            <div id="prezzi" class="d-none"></div>
         </div>
 
         <div class="col-md-4 text-center">
             <button type="button" class="btn btn-sm btn-info btn-block disabled" onclick="$(\'#prezziacquisto\').toggleClass(\'hide\'); $(\'#prezziacquisto\').load(\''.$rootdir."/ajax_complete.php?module=Articoli&op=get_prezzi_acquisto&idarticolo=' + $('#idarticolo option:selected').val() + '&idanagrafica=".$idanagrafica.'\');" disabled>
                 <i class="fa fa-search"></i> '.tr('Visualizza ultimi prezzi (acquisto)').'
             </button>
-            <div id="prezziacquisto" class="hide"></div>
+            <div id="prezziacquisto" class="d-none"></div>
         </div>
 
         <div class="col-md-4 text-center">
             <button type="button" class="btn btn-sm btn-info btn-block disabled" onclick="$(\'#prezzivendita\').toggleClass(\'hide\'); $(\'#prezzivendita\').load(\''.$rootdir."/ajax_complete.php?module=Articoli&op=get_prezzi_vendita&idarticolo=' + $('#idarticolo option:selected').val() + '&idanagrafica=".$idanagrafica.'\');" disabled>
                 <i class="fa fa-search"></i> '.tr('Visualizza ultimi prezzi (vendita)').'
             </button>
-            <div id="prezzivendita" class="hide"></div>
+            <div id="prezzivendita" class="d-none"></div>
         </div>
     </div>
     <br>';

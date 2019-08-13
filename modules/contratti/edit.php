@@ -219,7 +219,7 @@ if (!empty($rs)) {
 
 echo '
                     <button type="button" onclick="$(this).next().toggleClass(\'hide\');" class="btn btn-info btn-sm"><i class="fa fa-th-list"></i> '.tr('Mostra tipi di attività non modificati').'</button>
-					<div class="hide">';
+					<div class="d-none">';
 
 //Loop fra i tipi di attività e i relativi costi del tipo intervento (quelli a 0)
 $rs = $dbo->fetchArray('SELECT * FROM co_contratti_tipiintervento INNER JOIN in_tipiintervento ON in_tipiintervento.id = co_contratti_tipiintervento.id_tipo_intervento WHERE co_contratti_tipiintervento.id_tipo_intervento NOT IN('.implode(',', $idtipiintervento).') AND idcontratto='.prepare($id_record).' ORDER BY descrizione');

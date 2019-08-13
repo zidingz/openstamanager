@@ -131,7 +131,7 @@ function add_altri_dati(btn){
 };
 </script>
 
-<table class="hide" id="altri_dati-templace">';
+<table class="d-none" id="altri_dati-templace">';
 $dato = [];
 $key = '-id-';
 

@@ -99,7 +99,7 @@ class SelectHandler implements HandlerInterface
         // Ulteriore gestione della proprietà "readonly" (per rendere il select utilizzabile dopo il submit)
         if (in_array('readonly', $extras) && empty($values['ajax-source'])) {
             $result .= '
-	<select class="hide" name="'.prepareToField($values['name']).'"'.((in_array('multiple', $extras)) ? ' multiple' : '').'>';
+	<select class="d-none" name="'.prepareToField($values['name']).'"'.((in_array('multiple', $extras)) ? ' multiple' : '').'>';
 
             foreach ($values['value'] as $value) {
                 $result .= '

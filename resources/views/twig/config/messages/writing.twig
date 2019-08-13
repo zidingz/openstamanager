@@ -11,7 +11,7 @@
 <p>{{  'Sembra che non ci siano i permessi di scrittura sul file _FILE_'|trans({'_FILE_': '<b>config.inc.php</b>'})|raw }}</p>
 
 <form action="{{ path_for('configuration') }}" method="post">
-    <div class="hide">
+    <div class="d-none">
         <input type="hidden" name="database_name" value="{{ database_name }}">
         <input type="hidden" name="username" value="{{ username }}">
         <input type="hidden" name="password" value="{{ password }}">

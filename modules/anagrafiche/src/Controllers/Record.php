@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Fatture\Controllers;
+namespace Modules\Anagrafiche\Controllers;
 
 use Controllers\Retro\RecordController;
 

@@ -143,7 +143,7 @@ echo '
 </form>';
 
 echo '
-<form class="hide" id="template">
+<form class="d-none" id="template">
     <div class="card card-outline">
         <div class="card-header">
             <h3 class="card-title">'.tr('Nuovo campo').'</h3>

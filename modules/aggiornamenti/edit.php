@@ -205,7 +205,7 @@ function download(button) {
                 </button>
             </div>
 
-            <div id="update-download" class="hide">
+            <div id="update-download" class="d-none">
                 <p>'.tr("E' stato individuato un nuovo aggiornamento").': <b id="update-version"></b>.</p>
                 <p>'.tr('Scaricalo manualmente (_LINK_) oppure in automatico', [
                     '_LINK_' => "<a href='https://github.com/devcode-it/openstamanager/releases'>https://github.com/devcode-it/openstamanager/releases</a>",
@@ -216,7 +216,7 @@ function download(button) {
                 </button>
             </div>
 
-            <div id="update-none" class="hide">
+            <div id="update-none" class="d-none">
                 <p>'.tr('Nessun aggiornamento presente').'.</p>
             </div>';
     } else {

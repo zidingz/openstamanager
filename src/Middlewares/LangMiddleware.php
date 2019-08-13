@@ -1,8 +1,9 @@
 <?php
 
 namespace Middlewares;
-use Translator;
+
 use Intl\Formatter;
+use Translator;
 
 /**
  * Middlware per la gestione della lingua del progetto.
@@ -11,55 +12,6 @@ use Intl\Formatter;
  */
 class LangMiddleware extends Middleware
 {
-    protected function getTranslator($locale){
-        $translator = new Translator();
-
-        $translator->addLocalePath(DOCROOT.'/resources/locale');
-        $translator->addLocalePath(DOCROOT.'/modules/*/locale');
-
-        $translator->setLocale($locale);
-
-        return $translator;
-    }
-
-    protected function getFormatter($locale, $options){
-        $formatter = new Formatter(
-            $locale,
-            empty($options['timestamp']) ? 'd/m/Y H:i' : $options['timestamp'],
-            empty($options['date']) ? 'd/m/Y' : $options['date'],
-            empty($options['time']) ? 'H:i' : $options['time']
-        );
-
-        $formatter->setPrecision(auth()->check() ? setting('Cifre decimali per importi') : 2);
-
-        return $formatter;
-    }
-
-    protected function addFilters($twig){
-        $list = [
-            'timestamp' => 'timestampFormat',
-            'date' => 'dateFormat',
-            'time' => 'timeFormat',
-            'money' => 'moneyFormat',
-        ];
-
-        foreach ($list as $name => $function){
-            $filter = new \Twig\TwigFilter($name, $function);
-            $twig->getEnvironment()->addFilter($filter);
-        }
-    }
-
-    protected function addFunctions($twig){
-        $list = [
-            'currency' => 'currency',
-        ];
-
-        foreach ($list as $name => $function){
-            $function = new \Twig\TwigFunction($name, $function);
-            $twig->getEnvironment()->addFunction($function);
-        }
-    }
-
     public function __invoke($request, $response, $next)
     {
         $config = $this->container['config'];
@@ -81,14 +33,13 @@ class LangMiddleware extends Middleware
         $this->container['translator'] = $translator;
 
         // Regostrazione informazioni per i template
-        $args = [];
-        $args['formatter'] = $formatter;
+        $this->addVariable('formatter', $formatter);
 
         $full_locale = $translator->getCurrentLocale();
         $locale = explode('_', $full_locale)[0];
 
-        $args['locale'] = $locale;
-        $args['full_locale'] = $full_locale;
+        $this->addVariable('locale', $locale);
+        $this->addVariable('full_locale', $full_locale);
 
         // Traduzioni JS
         $i18n = [
@@ -106,25 +57,75 @@ class LangMiddleware extends Middleware
             str_replace('_', '-', $lang),
             str_replace('_', '-', strtolower($lang)),
         ];
-        $args['i18n'] = [];
 
-        foreach ($i18n as $element){
+        $list = [];
+        foreach ($i18n as $element) {
             $element = '/assets/js/i18n/'.$element.'/|lang|.min.js';
 
             foreach ($lang_replace as $replace) {
                 $file = str_replace('|lang|', $replace, $element);
 
                 if (file_exists(DOCROOT.'/public'.$file)) {
-                    $args['i18n'][] = $file;
+                    $list[] = $file;
                     break;
                 }
             }
         }
-
-        // Impostazione degli argomenti
-        $request = $this->addArgs($request, $args);
+        $this->addVariable('i18n', $list);
 
         return $next($request, $response);
     }
 
+    protected function getTranslator($locale)
+    {
+        $translator = new Translator();
+
+        $translator->addLocalePath(DOCROOT.'/resources/locale');
+        $translator->addLocalePath(DOCROOT.'/modules/*/locale');
+
+        $translator->setLocale($locale);
+
+        return $translator;
+    }
+
+    protected function getFormatter($locale, $options)
+    {
+        $formatter = new Formatter(
+            $locale,
+            empty($options['timestamp']) ? 'd/m/Y H:i' : $options['timestamp'],
+            empty($options['date']) ? 'd/m/Y' : $options['date'],
+            empty($options['time']) ? 'H:i' : $options['time']
+        );
+
+        $formatter->setPrecision(auth()->check() ? setting('Cifre decimali per importi') : 2);
+
+        return $formatter;
+    }
+
+    protected function addFilters($twig)
+    {
+        $list = [
+            'timestamp' => 'timestampFormat',
+            'date' => 'dateFormat',
+            'time' => 'timeFormat',
+            'money' => 'moneyFormat',
+        ];
+
+        foreach ($list as $name => $function) {
+            $filter = new \Twig\TwigFilter($name, $function);
+            $twig->getEnvironment()->addFilter($filter);
+        }
+    }
+
+    protected function addFunctions($twig)
+    {
+        $list = [
+            'currency' => 'currency',
+        ];
+
+        foreach ($list as $name => $function) {
+            $function = new \Twig\TwigFunction($name, $function);
+            $twig->getEnvironment()->addFunction($function);
+        }
+    }
 }

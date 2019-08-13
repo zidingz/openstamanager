@@ -1,12 +1,22 @@
 <?php
 
+use Middlewares\CalendarMiddleware;
+use Middlewares\ConfigMiddleware;
+use Middlewares\ContentMiddleware;
+use Middlewares\LangMiddleware;
+use Middlewares\PluginMiddleware;
+
+$app->add(new CalendarMiddleware($container));
+
+$app->add(new PluginMiddleware($container));
+
 // Middleware per i contenuti di base
-$app->add(new \Middlewares\ContentMiddleware($container));
+$app->add(new ContentMiddleware($container));
 
 // Middleware per l'input
 $app->add($container['filter']);
 
-$app->add(new \Middlewares\ConfigMiddleware($container));
+$app->add(new ConfigMiddleware($container));
 
 // Middleware per la lingua
-$app->add(new \Middlewares\LangMiddleware($container));
+$app->add(new LangMiddleware($container));

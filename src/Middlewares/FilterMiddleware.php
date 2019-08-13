@@ -17,11 +17,6 @@ class FilterMiddleware extends Middleware
     /** @var array Elenco dei contenuti inviati via GET */
     protected $get = [];
 
-    public function __construct($container)
-    {
-        parent::__construct($container);
-    }
-
     public function __invoke($request, $response, $next)
     {
         $post = $request->getParsedBody();
