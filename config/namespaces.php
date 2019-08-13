@@ -28,7 +28,7 @@ return [
     'modules/stato_servizi' => 'Modules\StatoServizi',
     'modules/tipi_intervento' => 'Modules\TipiIntervento',
     'plugins/exportFE' => 'Plugins\ExportFE',
-    'plugins/sedi' => 'Plugins\Sedi',
+    'modules/sedi' => 'Plugins\Sedi',
     'plugins/importFE' => 'Plugins\ImportFE',
     'plugins/receiptFE' => 'Plugins\ReceiptFE',
     'plugins/statistiche_articoli' => 'Plugins\StatisticheArticoli',

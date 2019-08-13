@@ -9,16 +9,16 @@ class RecordController extends RetroController implements RecordInterface
 {
     public function page($request, $response, $args)
     {
-        $response = $this->editor($request, $response, $args);
+        $args = $this->editor($args);
 
-        return $response;
+        return $this->twig->render($response, 'old/editor.twig', $args);
     }
 
-    public function dialog($request, $response, $args)
+    public function content($request, $response, $args)
     {
-        $response = $this->controller($request, $response, $args);
+        $args = $this->editor($args);
 
-        return $response;
+        return $response->write($args['editor_content']);
     }
 
     public function data($id_record)
@@ -49,6 +49,6 @@ class RecordController extends RetroController implements RecordInterface
 
     public function update($request, $response, $args)
     {
-        return $this->actions($request, $response, $args);
+        return $this->actions($args);
     }
 }

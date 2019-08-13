@@ -13,7 +13,7 @@ class RetroController extends ControllerManager
         return null;
     }
 
-    protected function controller($request, $response, $args)
+    protected function controller($args)
     {
         extract($args);
 
@@ -42,10 +42,10 @@ class RetroController extends ControllerManager
         ]);
         $args['custom_content'] = $content;
 
-        return $this->twig->render($response, 'old/controller.twig', $args);
+        return $args;
     }
 
-    protected function editor($request, $response, $args)
+    protected function editor($args)
     {
         extract($args);
 
@@ -87,10 +87,10 @@ class RetroController extends ControllerManager
             'plugins_content' => $this->plugins($args),
         ]);
 
-        return $this->twig->render($response, 'old/editor.twig', $args);
+        return $args;
     }
 
-    protected function actions($request, $response, $args)
+    protected function actions($args)
     {
         extract($args);
 
@@ -136,7 +136,7 @@ class RetroController extends ControllerManager
             'content' => $content,
         ]);
 
-        return $this->twig->render($response, 'old/add.twig', $args);
+        return $args;
     }
 
     protected function plugins($args)

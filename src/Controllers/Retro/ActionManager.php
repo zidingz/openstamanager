@@ -17,7 +17,7 @@ class ActionManager extends RetroController implements ActionInterface
         }
 
         ob_start();
-        $this->actions($arguments[0], $arguments[1], $arguments[2]);
+        $this->actions($arguments[2]);
         $result = ob_get_clean();
 
         $arguments[1]->write($result);

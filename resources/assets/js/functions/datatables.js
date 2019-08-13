@@ -30,7 +30,8 @@ function start_datatables() {
             var id_module = $this.data('module_id');
             var reference_id = $this.data('reference_id');
 
-            var dataload_url = globals.dataload_url.replace('|module_id|', id_module).replace('|reference_id|', reference_id);
+            var dataload_url = reference_id ? globals.dataload_url_plugin : globals.dataload_url;
+            dataload_url = dataload_url.replace('|module_id|', id_module).replace('|reference_id|', reference_id);
 
             // Parametri di ricerca da url o sessione
             var search = getTableSearch();
@@ -265,7 +266,7 @@ function start_datatables() {
                     $("[data-link]").each(function () {
                         var $link = $(this);
                         $(this).parent().not('.bound').addClass('bound').click(function (event) {
-                            if ($link.data('type') == 'dialog') {
+                            if ($link.data('type') == 'modal') {
                                 launch_modal(globals.translations.details, $link.data('link'));
                             } else {
                                 openLink(event, $link.data('link'))

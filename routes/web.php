@@ -95,31 +95,33 @@ $app->group('/ajax', function () use ($app) {
         ->setName('ajax-session-array');
 
     // Dataload
-    $app->get('/dataload/{module_id:[0-9]+}/[reference/{reference_id}/]', 'Controllers\AjaxController:dataLoad')
+    $app->get('/dataload/{module_id:[0-9]+}/[reference/{reference_id:[0-9]+}/]', 'Controllers\AjaxController:dataLoad')
         ->setName('ajax-dataload')
         ->add(PermissionMiddleware::class);
 })->add(UserMiddleware::class);
 
 // Moduli
 $app->group('/module/{module_id:[0-9]+}', function () use ($app) {
-    $app->get('/[reference/{reference_id}/]', 'Controllers\ModuleController:module')
+    $app->get('/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:module')
         ->setName('module');
 
-    $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id}/]', 'Controllers\ModuleController:moduleAction')
+    $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:moduleAction')
         ->setName('module-action');
 
     $app->group('/edit/{record_id:[0-9]+}', function () use ($app) {
-        $app->get('/[reference/{reference_id}/]', 'Controllers\ModuleController:edit')
+        $app->get('/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:edit')
             ->setName('module-record');
-        $app->post('/[reference/{reference_id}/]', 'Controllers\ModuleController:editRecord');
+        $app->get('/content/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:editContent')
+            ->setName('module-record-content');
+        $app->post('/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:editRecord');
 
-        $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id}/]', 'Controllers\ModuleController:recordAction')
+        $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:recordAction')
             ->setName('module-record-action');
     });
 
-    $app->get('/add/[reference/{reference_id}/]', 'Controllers\ModuleController:add')
+    $app->get('/add/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:add')
         ->setName('module-add');
-    $app->post('/add/[reference/{reference_id}/]', 'Controllers\ModuleController:addRecord');
+    $app->post('/add/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:addRecord');
 })->add(UserMiddleware::class)->add(PermissionMiddleware::class);
 
 // Stampe

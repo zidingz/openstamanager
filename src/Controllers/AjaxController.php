@@ -282,16 +282,22 @@ class AjaxController extends Controller
                             unset($id_plugin);
                         }
 
-                        // Link per i moduli
-                        $column['data-link'] = pathFor('module-record', [
+                        // Link per il record
+                        $info = [
                             'module_id' => $id_module,
                             'record_id' => $id_record,
-                            'reference_id' => $reference_id,
-                        ]).$hash;
+                        ];
 
                         if (!empty($reference_id)) {
-                            $column['data-type'] = 'dialog';
+                            $column['data-type'] = 'modal';
+                            $info['reference_id'] = $reference_id;
+
+                            $link = pathFor('module-record-content', $info);
+                        } else {
+                            $link = pathFor('module-record', $info);
                         }
+
+                        $column['data-link'] = $link.$hash;
                     }
 
                     $attributes = [];

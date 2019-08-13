@@ -310,7 +310,7 @@ class Modules
      */
     protected static function sidebarMenu($element, $actual = null, $max_depth = 3, $actual_depth = 0)
     {
-        if ($actual_depth >= $max_depth) {
+        if ($actual_depth >= $max_depth || $element['type'] != 'module') {
             return '';
         }
 

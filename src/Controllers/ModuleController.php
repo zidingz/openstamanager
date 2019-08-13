@@ -117,6 +117,28 @@ class ModuleController extends Controller
     }
 
     /**
+     * Gestione della pagine del record.
+     *
+     * @param $request
+     * @param $response
+     * @param $args
+     *
+     * @throws NotFoundException
+     *
+     * @return mixed
+     */
+    public function editContent($request, $response, $args)
+    {
+        $controller = $this->getRecordManager($request, $response, $args);
+
+        $args['reference_record'] = $controller->getReferenceRecord($args);
+
+        $response = $controller->content($request, $response, $args);
+
+        return $response;
+    }
+
+    /**
      * Gestione del salvataggio delle informazioni del record.
      *
      * @param $request

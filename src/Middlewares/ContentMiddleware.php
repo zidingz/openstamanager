@@ -2,6 +2,7 @@
 
 namespace Middlewares;
 
+use Models\Module;
 use Modules;
 use Update;
 use Util\Query;
@@ -22,11 +23,11 @@ class ContentMiddleware extends Middleware
 
         $args = $route->getArguments();
 
-        Modules::setCurrent($args['module_id']);
+        Module::setCurrent($args['module_id']);
         Query::setModuleRecord($args['reference_id']);
 
         // Variabili fondamentali
-        $module = Modules::getCurrent();
+        $module = Module::getCurrent();
 
         $id_module = $module['id'];
         $args['id_module'] = $id_module;
