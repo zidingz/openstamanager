@@ -3,6 +3,8 @@
 namespace Controllers\Config;
 
 use Controllers\Controller;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Update;
 
 class UpdateController extends Controller
@@ -10,7 +12,7 @@ class UpdateController extends Controller
     protected static $updateRate = 20;
     protected static $scriptValue = 100;
 
-    public function update($request, $response, $args)
+    public function update(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $this->permission($request, $response);
 
@@ -52,7 +54,7 @@ class UpdateController extends Controller
         return $response;
     }
 
-    public function updateProgress($request, $response, $args)
+    public function updateProgress(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $this->permission($request, $response);
 

@@ -76,7 +76,7 @@ class Ricevuta
     public static function getImportDirectory()
     {
         if (!isset(self::$directory)) {
-            $plugin = Plugins::get('Ricevute FE');
+            $plugin = Modules::get('Ricevute FE');
 
             self::$directory = DOCROOT.'/'.$plugin->upload_directory;
         }

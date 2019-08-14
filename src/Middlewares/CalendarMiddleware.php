@@ -2,6 +2,9 @@
 
 namespace Middlewares;
 
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+
 /**
  * Middleware per l'implementazione del periodo temporale.
  *
@@ -9,7 +12,7 @@ namespace Middlewares;
  */
 class CalendarMiddleware extends Middleware
 {
-    public function __invoke($request, $response, $next)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         // Calendario
         // Periodo di visualizzazione

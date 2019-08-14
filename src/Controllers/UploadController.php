@@ -4,11 +4,13 @@ namespace Controllers;
 
 use DOMDocument;
 use Models\Upload;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use XSLTProcessor;
 
 class UploadController extends Controller
 {
-    public function view($request, $response, $args)
+    public function view(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $file = Upload::find($args['upload_id']);
 
@@ -65,7 +67,7 @@ class UploadController extends Controller
         return $response;
     }
 
-    public function open($request, $response, $args)
+    public function open(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $file = Upload::find($args['upload_id']);
 
@@ -85,21 +87,21 @@ class UploadController extends Controller
         return $response;
     }
 
-    public function upload($request, $response, $args)
+    public function upload(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $response = $this->twig->render($response, 'uploads\editor.twig', $args);
 
         return $response;
     }
 
-    public function remove($request, $response, $args)
+    public function remove(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $response = $this->twig->render($response, 'uploads\actions.twig', $args);
 
         return $response;
     }
 
-    public function download($request, $response, $args)
+    public function download(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $file = Upload::find($args['upload_id']);
 
@@ -112,7 +114,7 @@ class UploadController extends Controller
         return $response;
     }
 
-    public function list($request, $response, $args)
+    public function list(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $response = $this->twig->render($response, 'uploads\actions.twig', $args);
 

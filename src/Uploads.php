@@ -132,8 +132,7 @@ class Uploads
         $database = database();
 
         $uploads = $database->select('zz_files', '*', [
-            'id_module' => !empty($data['id_module']) && empty($data['id_plugin']) ? $data['id_module'] : null,
-            'id_plugin' => !empty($data['id_plugin']) ? $data['id_plugin'] : null,
+            'id_module' => $data['id_module'],
             'id_record' => $data['id_record'],
         ]);
 
@@ -172,7 +171,7 @@ class Uploads
         $extension = strtolower(self::fileInfo($source)['extension']);
         $ok = self::isSupportedType($extension);
 
-        $directory = DOCROOT.'/'.self::getDirectory($data['id_module'], $data['id_plugin']);
+        $directory = DOCROOT.'/'.self::getDirectory($data['id_module']);
 
         do {
             $filename = random_string().'.'.$extension;
@@ -195,7 +194,7 @@ class Uploads
         $original = isset($source['name']) ? $source['name'] : basename($source);
 
         $filename = self::getName($original, $data);
-        $directory = DOCROOT.'/'.self::getDirectory($data['id_module'], $data['id_plugin']);
+        $directory = DOCROOT.'/'.self::getDirectory($data['id_module']);
 
         // Creazione file fisico
         if (
@@ -232,8 +231,7 @@ class Uploads
             'filename' => !empty($data['filename']) ? $data['filename'] : $data['original'],
             'original' => $data['original'],
             'category' => !empty($data['category']) ? $data['category'] : null,
-            'id_module' => !empty($data['id_module']) && empty($data['id_plugin']) ? $data['id_module'] : null,
-            'id_plugin' => !empty($data['id_plugin']) ? $data['id_plugin'] : null,
+            'id_module' => $data['id_module'],
             'id_record' => $data['id_record'],
             'size' => $data['size'],
             'created_by' => auth()->getUser()->id,
@@ -254,13 +252,12 @@ class Uploads
 
         $name = $database->selectOne('zz_files', ['name'], [
             'filename' => $filename,
-            'id_module' => !empty($data['id_module']) && empty($data['id_plugin']) ? $data['id_module'] : null,
-            'id_plugin' => !empty($data['id_plugin']) ? $data['id_plugin'] : null,
+            'id_module' => $data['id_module'],
             'id_record' => $data['id_record'],
         ])['name'];
 
         $fileinfo = self::fileInfo($filename);
-        $directory = DOCROOT.'/'.self::getDirectory($data['id_module'], $data['id_plugin']);
+        $directory = DOCROOT.'/'.self::getDirectory($data['id_module']);
 
         $files = [
             $directory.'/'.$fileinfo['basename'],
@@ -272,8 +269,7 @@ class Uploads
         if (delete($files)) {
             $database->delete('zz_files', [
                 'filename' => $fileinfo['basename'],
-                'id_module' => !empty($data['id_module']) && empty($data['id_plugin']) ? $data['id_module'] : null,
-                'id_plugin' => !empty($data['id_plugin']) ? $data['id_plugin'] : null,
+                'id_module' => $data['id_module'],
                 'id_record' => $data['id_record'],
             ]);
 
@@ -349,8 +345,8 @@ class Uploads
     {
         $attachments = self::get($from);
 
-        $directory = DOCROOT.'/'.self::getDirectory($to['id_module'], $to['id_plugin']);
-        $directory_from = DOCROOT.'/'.self::getDirectory($from['id_module'], $from['id_plugin']);
+        $directory = DOCROOT.'/'.self::getDirectory($to['id_module']);
+        $directory_from = DOCROOT.'/'.self::getDirectory($from['id_module']);
 
         foreach ($attachments as $attachment) {
             $data = array_merge($attachment, $to);
@@ -376,7 +372,7 @@ class Uploads
 
     protected static function processOptions($data, $options)
     {
-        $directory = DOCROOT.'/'.self::getDirectory($data['id_module'], $data['id_plugin']);
+        $directory = DOCROOT.'/'.self::getDirectory($data['id_module']);
 
         if (!empty($options['thumbnails'])) {
             self::thumbnails($directory.'/'.$data['filename'], $directory);

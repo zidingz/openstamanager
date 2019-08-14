@@ -2,7 +2,7 @@
 
 echo '
 <form action="" method="post" role="form">
-    <input type="hidden" name="id_parent" value="'.$id_parent.'">
+    <input type="hidden" name="id_parent" value="'.$reference_id.'">
     <input type="hidden" name="backto" value="record-edit">
 	<input type="hidden" name="op" value="addreferente">
 
@@ -28,7 +28,7 @@ echo '
 
 	<div class="row">
 		<div class="col-md-12">
-			{[ "type": "select", "label": "'.tr('Sede').'", "name": "idsede", "values": "query=SELECT 0 AS id, \'Sede legale\' AS descrizione UNION SELECT id, CONCAT_WS(\' - \', nomesede, citta) AS descrizione FROM an_sedi WHERE idanagrafica='.$id_parent.'", "value": "0", "required": 1 ]}
+			{[ "type": "select", "label": "'.tr('Sede').'", "name": "idsede", "values": "query=SELECT 0 AS id, \'Sede legale\' AS descrizione UNION SELECT id, CONCAT_WS(\' - \', nomesede, citta) AS descrizione FROM an_sedi WHERE idanagrafica='.$reference_id.'", "value": "0", "required": 1 ]}
 		</div>
 	</div>
 

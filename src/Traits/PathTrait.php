@@ -4,6 +4,9 @@ namespace Traits;
 
 use App;
 
+/**
+ * @deprecated 2.5
+ */
 trait PathTrait
 {
     /**

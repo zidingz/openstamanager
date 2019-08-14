@@ -186,45 +186,6 @@ function get_client_ip()
 }
 
 /**
- * Traduce il template semplificato in componenti HTML.
- *
- * @since 2.3
- */
-function translateTemplate()
-{
-    $id_record = filter('id_record');
-    $id_parent = filter('id_parent');
-    $id_email = filter('id_email');
-
-    $id_module = Modules::getCurrent()['id'];
-    $id_plugin = Plugins::getCurrent()['id'];
-
-    $template = ob_get_clean();
-
-    $template = str_replace('$id_module$', $id_module, $template);
-    $template = str_replace('$id_plugin$', $id_plugin, $template);
-    $template = str_replace('$id_record$', $id_record, $template);
-
-    $template = \HTMLBuilder\HTMLBuilder::replace($template);
-
-    $template = str_replace('$id_module$', $id_module, $template);
-    $template = str_replace('$id_plugin$', $id_plugin, $template);
-    $template = str_replace('$id_record$', $id_record, $template);
-
-    // Informazioni estese sulle azioni dell'utente
-    if (!empty(post('op')) && post('op') != 'send-email') {
-        operationLog(post('op'));
-    }
-
-    // Annullo le notifiche (AJAX)
-    if (isAjaxRequest()) {
-        //flash()->clearMessage('info');
-    }
-
-    echo $template;
-}
-
-/**
  * Restituisce il percorso del filesystem in modo indipendente dal sistema operativo.
  *
  * @param string $string Percorso da correggere
@@ -348,7 +309,7 @@ function searchFieldName($field)
  * @param int    $id_record
  * @param int    $id_module
  * @param int    $id_plugin
- * @param int    $id_parent
+ * @param int    $reference_id
  * @param int    $id_email
  * @param array  $options
  */
@@ -359,9 +320,7 @@ function operationLog($operation, array $ids = [], array $options = [])
     }
 
     $ids['id_module'] = $ids['id_module'] ?: Modules::getCurrent()['id'];
-    $ids['id_plugin'] = $ids['id_plugin'] ?: Plugins::getCurrent()['id'];
     $ids['id_record'] = $ids['id_record'] ?: filter('id_record');
-    //$ids['id_parent'] = $ids['id_parent'] ?: filter('id_parent');
 
     database()->insert('zz_operations', array_merge($ids, [
         'op' => $operation,

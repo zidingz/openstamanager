@@ -123,15 +123,15 @@ switch (post('op')) {
                 $dbo->query('INSERT INTO mg_articoli_interventi (idarticolo, idintervento,descrizione,prezzo_acquisto,prezzo_vendita,sconto,	sconto_unitario,	tipo_sconto,idiva,desc_iva,iva, qta, um, abilita_serial, idimpianto) SELECT idarticolo, '.$id_record.',descrizione,prezzo_acquisto,prezzo_vendita,sconto,sconto_unitario,tipo_sconto,idiva,desc_iva,iva, qta, um, abilita_serial, idimpianto FROM co_promemoria_articoli WHERE id_promemoria = '.$idcontratto_riga);
 
                 // Copia degli allegati
-                $alleagti = Uploads::copy([
-                    'id_plugin' => Plugins::get('Pianificazione interventi')['id'],
+                $allegati = Uploads::copy([
+                    'id_module' => Modules::get('Pianificazione interventi')['id'],
                     'id_record' => $idcontratto_riga,
                 ], [
                     'id_module' => $id_module,
                     'id_record' => $id_record,
                 ]);
 
-                if (!$alleagti) {
+                if (!$allegati) {
                     $errors = error_get_last();
                     flash()->warning(tr('Errore durante la copia degli allegati'));
                 }

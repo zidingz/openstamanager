@@ -53,7 +53,7 @@ $block_edit = $record['is_completato'];
 
 				<div class="col-md-3">
                     <?php
-                    echo Plugins::link('Referenti', $record['idanagrafica'], null, null, 'class="float-right"');
+                    echo Modules::link('Referenti', $record['idanagrafica'], null, null, 'class="float-right"');
                     ?>
 
 					{[ "type": "select", "label": "<?php echo tr('Referente'); ?>", "name": "idreferente", "value": "$idreferente$", "ajax-source": "referenti", "ajax-info": "idanagrafica=$idanagrafica$" ]}

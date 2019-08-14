@@ -2,6 +2,10 @@
 
 namespace Middlewares;
 
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Container\ContainerInterface;
+
 /**
  * @since 2.5
  */
@@ -9,7 +13,7 @@ abstract class Middleware
 {
     protected $container;
 
-    public function __construct($container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
@@ -21,9 +25,9 @@ abstract class Middleware
         }
     }
 
-    abstract public function __invoke($request, $response, $next);
+    abstract public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next);
 
-    protected function addArgs($request, $new)
+    protected function addArgs(ServerRequestInterface $request, $new)
     {
         $route = $request->getAttribute('route');
         if (!$route) {
@@ -36,7 +40,7 @@ abstract class Middleware
         return $this->setArgs($request, $args);
     }
 
-    protected function setArgs($request, $args)
+    protected function setArgs(ServerRequestInterface $request, $args)
     {
         $route = $request->getAttribute('route');
 

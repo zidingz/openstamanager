@@ -3,13 +3,15 @@
 namespace Controllers\Config;
 
 use Controllers\Controller;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Util\FileSystem;
 
 class RequirementsController extends Controller
 {
     protected static $requirements;
 
-    public function requirements($request, $response, $args)
+    public function requirements(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $args['requirements'] = self::getRequirementsList();
         $response = $this->twig->render($response, 'config\requirements.twig', $args);

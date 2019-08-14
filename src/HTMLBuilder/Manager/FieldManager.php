@@ -24,13 +24,7 @@ class FieldManager implements ManagerInterface
             $query .= ' LEFT JOIN `zz_field_record` ON `zz_fields`.`id` = `zz_field_record`.`id_field`  AND `zz_field_record`.`id_record` = '.prepare($options['id_record']);
         }
 
-        $query .= ' WHERE ';
-
-        if (!empty($options['id_plugin'])) {
-            $query .= '`id_plugin` = '.prepare($options['id_plugin']);
-        } else {
-            $query .= '`id_module` = '.prepare($options['id_module']);
-        }
+        $query .= ' WHERE `id_module` = '.prepare($options['id_module']);
 
         if (isset($options['place']) && $options['place'] == 'add') {
             $query .= ' AND `on_add` = 1';

@@ -60,7 +60,7 @@ class Query
      */
     public static function replacePlaceholder($query)
     {
-        $id_parent = self::$reference_id;
+        $reference_id = self::$reference_id;
 
         $id_module = Modules::getCurrent()['id'];
         $segment = !empty(self::$segments) ? $_SESSION['module_'.$id_module]['id_segment'] : null;
@@ -97,7 +97,7 @@ class Query
             // Identificatori
             '|id_anagrafica|' => prepare($user['idanagrafica']),
             '|id_utente|' => prepare($user['id']),
-            '|id_parent|' => prepare($id_parent),
+            '|id_parent|' => prepare($reference_id),
 
             // Filtro temporale
             '|'.$date_filter.'|' => $date_query,

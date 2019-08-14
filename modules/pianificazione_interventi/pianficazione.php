@@ -1,13 +1,11 @@
 <?php
 
-$plugin = Plugins::get($id_plugin);
-
 $id_module = Modules::get('Contratti')['id'];
 $is_add = filter('add') ? true : false;
 
 // Informazioni contratto
 $contratto = $dbo->fetchOne('SELECT * FROM `co_contratti` WHERE `id` = :id', [
-    ':id' => $id_parent,
+    ':id' => $reference_id,
 ]);
 $data_accettazione = $contratto['data_accettazione'];
 $data_conclusione = $contratto['data_conclusione'];
@@ -15,7 +13,7 @@ $id_anagrafica = $contratto['idanagrafica'];
 
 // Impianti del contratto
 $impianti = $dbo->fetchArray('SELECT `idimpianto` FROM `my_impianti_contratti` WHERE `idcontratto` = :id', [
-    ':id' => $id_parent,
+    ':id' => $reference_id,
 ]);
 $id_impianti = array_column($impianti, 'idimpianto');
 
@@ -61,7 +59,7 @@ echo '
 <form id="add_form" action="'.$rootdir.'/controller.php" method="post" role="form">
 
 	<input type="hidden" name="id_plugin" value="'.$id_plugin.'">
-    <input type="hidden" name="id_parent" value="'.$id_parent.'">
+    <input type="hidden" name="id_parent" value="'.$reference_id.'">
     <input type="hidden" name="id_record" value="'.$id_record.'">
 
 	<input type="hidden" name="backto" value="record-edit">
@@ -92,7 +90,7 @@ echo '
 			   </div>
 
 				<div class="col-md-6">
-                    {[ "type": "select", "multiple": "1", "label": "'.tr('Impianti a contratto').'", "name": "idimpianti[]", "help": "'.tr('Impianti sede selezionata').'", "values": "query=SELECT my_impianti.id AS id, my_impianti.nome AS descrizione FROM my_impianti_contratti INNER JOIN my_impianti ON my_impianti_contratti.idimpianto = my_impianti.id  WHERE my_impianti_contratti.idcontratto = '.$id_parent.' ORDER BY descrizione", "value": "'.implode(',', $id_impianti).'", "readonly": '.intval(empty($is_add)).' ]}
+                    {[ "type": "select", "multiple": "1", "label": "'.tr('Impianti a contratto').'", "name": "idimpianti[]", "help": "'.tr('Impianti sede selezionata').'", "values": "query=SELECT my_impianti.id AS id, my_impianti.nome AS descrizione FROM my_impianti_contratti INNER JOIN my_impianti ON my_impianti_contratti.idimpianto = my_impianti.id  WHERE my_impianti_contratti.idcontratto = '.$reference_id.' ORDER BY descrizione", "value": "'.implode(',', $id_impianti).'", "readonly": '.intval(empty($is_add)).' ]}
 				</div>
 			</div>
 
@@ -114,14 +112,14 @@ echo '
         <div class="card-body">
             <div id="articoli">';
 
-include $plugin->filepath('ajax_articoli.php');
+include $module->filepath('ajax_articoli.php');
 
 echo '
             </div>';
 
 if (!empty($is_add)) {
     echo '
-            <button type="button" class="btn btn-primary" data-title="'.tr('Aggiungi articolo').'" data-target="#bs-popup2" data-toggle="modal" data-href="'.$plugin->fileurl('add_articolo.php').'?id_plugin='.$id_plugin.'&id_record='.$id_record.'&add='.$is_add.'" ><i class="fa fa-plus"></i> '.tr('Aggiungi articolo').'...</button>';
+            <button type="button" class="btn btn-primary" data-title="'.tr('Aggiungi articolo').'" data-target="#bs-popup2" data-toggle="modal" data-href="'.$module->fileurl('add_articolo.php').'?id_plugin='.$id_plugin.'&id_record='.$id_record.'&add='.$is_add.'" ><i class="fa fa-plus"></i> '.tr('Aggiungi articolo').'...</button>';
 }
 
 echo '
@@ -138,14 +136,14 @@ echo '
             <div class="card-body">
                 <div id="righe">';
 
-include $plugin->filepath('ajax_righe.php');
+include $module->filepath('ajax_righe.php');
 
 echo '
                 </div>';
 
 if (!empty($is_add)) {
     echo '
-                <button type="button" class="btn btn-primary"  data-title="'.tr('Aggiungi altre spese').'" data-target="#bs-popup2" data-toggle="modal" data-href="'.$plugin->fileurl('add_righe.php').'?id_plugin='.$id_plugin.'&id_record='.$id_record.'&add='.$is_add.'"><i class="fa fa-plus"></i> '.tr('Aggiungi altre spese').'...</button>';
+                <button type="button" class="btn btn-primary"  data-title="'.tr('Aggiungi altre spese').'" data-target="#bs-popup2" data-toggle="modal" data-href="'.$module->fileurl('add_righe.php').'?id_plugin='.$id_plugin.'&id_record='.$id_record.'&add='.$is_add.'"><i class="fa fa-plus"></i> '.tr('Aggiungi altre spese').'...</button>';
 }
 
 echo '
@@ -299,10 +297,10 @@ echo '
     });
 
     function refreshArticoli(id){
-        $("#articoli").load("'.$plugin->fileurl('ajax_articoli.php').'?id_plugin='.$id_plugin.'&id_record=" + id + "&add='.$is_add.'");
+        $("#articoli").load("'.$module->fileurl('ajax_articoli.php').'?id_plugin='.$id_plugin.'&id_record=" + id + "&add='.$is_add.'");
     }
 
     function refreshRighe(id){
-        $("#righe").load("'.$plugin->fileurl('ajax_righe.php').'?id_plugin='.$id_plugin.'&id_record=" + id + "&add='.$is_add.'");
+        $("#righe").load("'.$module->fileurl('ajax_righe.php').'?id_plugin='.$id_plugin.'&id_record=" + id + "&add='.$is_add.'");
     }
 </script>';

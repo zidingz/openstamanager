@@ -2,33 +2,56 @@
 
 namespace Controllers\Retro;
 
+use App;
 use Controllers\Controller;
 use HTMLBuilder\HTMLBuilder;
 use Managers\ControllerManager;
+use \ReflectionClass;
 
 class RetroController extends ControllerManager
 {
     public function getReferenceID($args)
     {
-        return null;
+        return $args['reference_id'];
+    }
+
+    protected function getDirectory(){
+        $class_info = new ReflectionClass($this);
+        $file = $class_info->getFileName();
+
+        $directory = dirname($file);
+        $current_directory = dirname($directory);
+        while (!ends_with($current_directory, 'modules')){
+            $directory = $current_directory;
+            $current_directory = dirname($directory);
+        }
+
+        return $directory;
+    }
+
+    protected function filepath($file){
+        $directory = $this->getDirectory();
+
+        return App::filepath($directory.'|custom|', $file);
     }
 
     protected function controller($args)
     {
+        $directory = $this->getDirectory();
         extract($args);
 
         $dbo = $database = $this->database;
 
         if ($args['structure']->option == 'custom') {
             // Lettura risultato query del modulo
-            $init = $args['structure']->filepath('init.php');
+            $init = $this->filepath('init.php');
             if (!empty($init)) {
                 include $init;
             }
 
             $args['record'] = $record;
 
-            $content = $args['structure']->filepath('edit.php');
+            $content = $this->filepath('edit.php');
             if (!empty($content)) {
                 ob_start();
                 include $content;
@@ -113,14 +136,14 @@ class RetroController extends ControllerManager
         return $id_record;
     }
 
-    protected function add($request, $response, $args)
+    protected function add($args)
     {
         extract($args);
 
         $dbo = $database = $this->database;
 
         // Lettura risultato query del modulo
-        $init = $args['structure']->filepath('init.php');
+        $init = $this->filepath('init.php');
         if (!empty($init)) {
             include $init;
         }
@@ -162,7 +185,7 @@ class RetroController extends ControllerManager
                 include $plugin->getEditFile();
                 $content = ob_get_clean();
             } else {
-                $bulk = $args['structure']->filepath('bulk.php');
+                $bulk = $this->filepath('bulk.php');
                 $bulk = empty($bulk) ? [] : include $bulk;
                 $bulk = empty($bulk) ? [] : $bulk;
             }

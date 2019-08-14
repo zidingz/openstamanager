@@ -27,6 +27,9 @@ UPDATE `zz_modules` SET `namespace` = 'Modules\\Dashboard\\Controllers' WHERE `n
 UPDATE `zz_modules` SET `namespace` = 'Modules\\Aggiornamenti\\Controllers' WHERE `name` = 'Aggiornamenti';
 UPDATE `zz_modules` SET `namespace` = 'Modules\\Anagrafiche\\Controllers' WHERE `name` = 'Anagrafiche';
 
+-- Aggiornamento allegati
+UPDATE `zz_files` SET `id_module` = (SELECT `id` FROM `zz_modules` WHERE `title` = (SELECT `title` FROM `zz_plugins` WHERE `id` = `zz_files`.`id_plugin`) AND `parent` = (SELECT `idmodule_to` FROM `zz_plugins` WHERE `id` = `zz_files`.`id_plugin`))  WHERE `id_plugin` IS NOT NULL;
+
 -- Standardizzazione tabelle
 
 -- Separazione sedi dalle anagrafiche

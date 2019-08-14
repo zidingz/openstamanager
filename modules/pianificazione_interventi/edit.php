@@ -1,7 +1,6 @@
 <?php
 
-$id_module = Modules::get('Contratti')['id'];
-$plugin = Plugins::get($id_plugin);
+$module->parent = Modules::get('Contratti')['id'];
 
 $contratto = $dbo->fetchOne('SELECT * FROM co_contratti WHERE id = :id', [
     ':id' => $id_record,
@@ -136,7 +135,7 @@ if (!empty($records)) {
                 <td>'.$info_allegati.'</td>
                 <td align="right">
 
-                <button type="button" class="btn btn-warning btn-sm" title="Pianifica..." data-toggle="tooltip" onclick="launch_modal(\'Pianifica\', \''.$plugin->fileurl('pianficazione.php').'?id_module='.$id_module.'&id_plugin='.$plugin['id'].'&id_parent='.$id_record.'&id_record='.$record['id'].'\');"'.((!empty($pianificabile)) ? '' : ' disabled').'>
+                <button type="button" class="btn btn-warning btn-sm" title="Pianifica..." data-toggle="tooltip" onclick="launch_modal(\'Pianifica\', \''.$module->fileurl('pianficazione.php').'?id_module='.$module->parent.'&id_plugin='.$module['id'].'&id_parent='.$id_record.'&id_record='.$record['id'].'\');"'.((!empty($pianificabile)) ? '' : ' disabled').'>
                     <i class="fa fa-clock-o"></i>
                 </button>
 
@@ -173,7 +172,7 @@ if (!empty($records)) {
     //TODO: terminare con gestione swal standard, prevedere salvataggio ajax e possibilità di lanciare pop-up
     /*$msg = '{[ "type": "select", "label": "'.tr('Tipo intervento').'", "name": "idtipointervento", "required": 1, "values": "query=SELECT co_contratti_tipiintervento.idtipointervento AS id, in_tipiintervento.descrizione AS descrizione FROM in_tipiintervento INNER JOIN co_contratti_tipiintervento ON in_tipiintervento.idtipointervento=co_contratti_tipiintervento.idtipointervento WHERE idcontratto='.prepare($id_record).' AND (co_contratti_tipiintervento.costo_ore!=0 OR co_contratti_tipiintervento.costo_km!=0 OR co_contratti_tipiintervento.costo_dirittochiamata!=0) ORDER BY in_tipiintervento.descrizione" ]}';
     echo '
-    <button type="button" title="Aggiungi un nuovo promemoria da pianificare." class="btn btn-primary ask tip" data-title="'.tr('Vuoi aggiungere un nuovo promemoria?').'" data-msg="'.prepareToField(\HTMLBuilder\HTMLBuilder::replace($msg)).'" data-op="add-promemoria" data-id_plugin="'.$plugin['id'].'" data-id_parent="'.$id_record.'"  data-data_richiesta="'.date('Y-m-d').'" data-button="'.tr('Aggiungi').'" data-class="btn btn-lg btn-primary" data-backto="record-edit">
+    <button type="button" title="Aggiungi un nuovo promemoria da pianificare." class="btn btn-primary ask tip" data-title="'.tr('Vuoi aggiungere un nuovo promemoria?').'" data-msg="'.prepareToField(\HTMLBuilder\HTMLBuilder::replace($msg)).'" data-op="add-promemoria" data-id_plugin="'.$module['id'].'" data-id_parent="'.$id_record.'"  data-data_richiesta="'.date('Y-m-d').'" data-button="'.tr('Aggiungi').'" data-class="btn btn-lg btn-primary" data-backto="record-edit">
         <i class="fa fa-plus"></i> '.tr('Nuovo promemoria').'
     </button>';*/
 
@@ -216,12 +215,12 @@ echo '
             function (result) {
                 var restore = buttonLoading("#add_promemoria");
 
-                $.post(globals.rootdir + "/actions.php?id_plugin='.$plugin['id'].'&id_parent='.$id_record.'", {
+                $.post(globals.rootdir + "/actions.php?id_plugin='.$module['id'].'&id_parent='.$id_record.'", {
                     op: "add-promemoria",
                     data_richiesta: "'.$contratto['data_accettazione'].'",
                     idtipointervento: $(".swal2-select").val()
                 }).done(function(data) {
-                    launch_modal("Nuovo promemoria", globals.rootdir + "/plugins/'.$plugin['directory'].'/pianficazione.php?id_plugin='.$plugin['id'].'&id_parent='.$id_record.'&id_record=" + data + "&add=1");
+                    launch_modal("Nuovo promemoria", globals.rootdir + "/plugins/'.$module['directory'].'/pianficazione.php?id_plugin='.$module['id'].'&id_parent='.$id_record.'&id_record=" + data + "&add=1");
 
                     buttonRestore("#add_promemoria", restore);
                 });

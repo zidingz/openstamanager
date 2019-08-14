@@ -1,7 +1,5 @@
 <?php
 
-$plugin = Plugins::get($id_plugin);
-
 $idriga = filter('idriga');
 
 if (empty($idriga)) {

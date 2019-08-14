@@ -5,6 +5,8 @@ namespace Controllers\Config;
 use App;
 use Controllers\Controller;
 use Database;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class ConfigurationController extends Controller
 {
@@ -22,7 +24,7 @@ class ConfigurationController extends Controller
         return false;
     }
 
-    public function configuration($request, $response, $args)
+    public function configuration(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $this->permission($request, $response);
 
@@ -43,7 +45,7 @@ class ConfigurationController extends Controller
         return $response;
     }
 
-    public function configurationSave($request, $response, $args)
+    public function configurationSave(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $this->permission($request, $response);
 
@@ -124,7 +126,7 @@ class ConfigurationController extends Controller
         return $response;
     }
 
-    public function configurationTest($request, $response, $args)
+    public function configurationTest(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $this->permission($request, $response);
 

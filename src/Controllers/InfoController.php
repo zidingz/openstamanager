@@ -4,6 +4,8 @@ namespace Controllers;
 
 use Auth;
 use Mail;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class InfoController extends Controller
 {
@@ -12,14 +14,14 @@ class InfoController extends Controller
 
     protected static $bugEmail = 'info@openstamanager.com';
 
-    public function info($request, $response, $args)
+    public function info(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $response = $this->twig->render($response, 'info\info.twig', $args);
 
         return $response;
     }
 
-    public function logs($request, $response, $args)
+    public function logs(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $query = 'SELECT * FROM `zz_logs`';
         if (!Auth::admin()) {
@@ -51,7 +53,7 @@ class InfoController extends Controller
         return $response;
     }
 
-    public function user($request, $response, $args)
+    public function user(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $user = Auth::user();
         $token = auth()->getToken();
@@ -67,7 +69,7 @@ class InfoController extends Controller
         return $response;
     }
 
-    public function password($request, $response, $args)
+    public function password(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $args['min_length_password'] = self::$min_length_password;
 
@@ -76,7 +78,7 @@ class InfoController extends Controller
         return $response;
     }
 
-    public function passwordPost($request, $response, $args)
+    public function passwordPost(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $user = $args['user'];
         $password = post('password');
@@ -91,7 +93,7 @@ class InfoController extends Controller
         return $response;
     }
 
-    public function bug($request, $response, $args)
+    public function bug(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $args['mail'] = Mail::get();
         $args['bug_email'] = self::$bugEmail;
@@ -101,7 +103,7 @@ class InfoController extends Controller
         return $response;
     }
 
-    public function bugSend($request, $response, $args)
+    public function bugSend(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $bug_email = self::$bugEmail;
 

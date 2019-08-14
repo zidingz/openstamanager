@@ -203,11 +203,6 @@ class Upload extends Model
         return $this->belongsTo(Module::class, 'id_module');
     }
 
-    public function plugin()
-    {
-        return $this->belongsTo(Plugin::class, 'id_plugin');
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class, 'created_by');

@@ -7,6 +7,8 @@ use Controllers\Config\ConfigurationController;
 use Controllers\Config\InitController;
 use Controllers\Config\RequirementsController;
 use Update;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Classe per l'impostazione automatica delle variabili rilevanti per il funzionamento del progetto.
@@ -15,7 +17,7 @@ use Update;
  */
 class ConfigMiddleware extends Middleware
 {
-    public function __invoke($request, $response, $next)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         $original = $response;
 

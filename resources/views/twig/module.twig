@@ -32,7 +32,9 @@
 
             {% if structure.hasAddFile() and structure.permission == 'rw' %}
                 <!-- Pulsante "Aggiungi" solo se la struttura lo supporta -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-title="{{ 'Aggiungi'|trans }}..." data-href="{{ path_for('module-add', {'module_id': module_id}) }}"><i class="fa fa-plus"></i></button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-title="{{ 'Aggiungi'|trans }}..." data-href="{{ path_for('module-add', {'module_id': module_id, 'reference_id': reference_id}) }}">
+                    <i class="fa fa-plus"></i>
+                </button>
             {% endif %}
         </a>
 

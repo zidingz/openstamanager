@@ -41,7 +41,7 @@
 
     <!--  Pulsanti di default -->
     <div id="pulsanti">
-        <a class="btn btn-warning" href="{{ path_for('module', {'module_id': module_id}) }}">
+        <a class="btn btn-warning" href="{{ path_for('module', {'module_id': module_id, 'reference_id': reference_id}) }}">
             <i class="fa fa-chevron-left"></i> {{ "Torna all'elenco"|trans }}
         </a>
 
@@ -148,7 +148,7 @@
     {( "name": "widgets", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}", "position": "right", "place": "editor" )}
 
     <hr>
-    <a class="btn btn-secondary" href="{{ path_for('module', {'module_id': module_id}) }}">
+    <a class="btn btn-secondary" href="{{ path_for('module', {'module_id': module_id, 'reference_id': reference_id}) }}">
         <i class="fa fa-chevron-left"></i> {{ 'Indietro'|trans }}
     </a>
 

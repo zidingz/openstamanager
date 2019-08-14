@@ -16,12 +16,12 @@ if ($record['can_delete'] and empty($scadenze)) {
 	<input type="hidden" name="op" value="update">
 
 	<!-- DATI -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo tr('Dati'); ?></h3>
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title"><?php echo tr('Dati'); ?></h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="card-body">
 			<div class="row">
 
 				<div class="col-md-3">
@@ -53,7 +53,7 @@ if ($record['can_delete']) {
 	<a class="btn btn-danger ask" data-backto="record-list">
 		<i class="fa fa-trash"></i> <?php echo tr('Elimina'); ?>
 	</a>
-	
+
 <?php
 }
 ?>

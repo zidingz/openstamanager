@@ -5,6 +5,8 @@ namespace Middlewares\Authorization;
 use Middlewares\Middleware;
 use Slim\Exception\NotFoundException;
 use Util\Query;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Classe per il controllo sui permessi di accesso relativi alle diverse sezioni del gestionale.
@@ -13,7 +15,7 @@ use Util\Query;
  */
 class PermissionMiddleware extends Middleware
 {
-    public function __invoke($request, $response, $next)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         $route = $request->getAttribute('route');
         if (!$route) {

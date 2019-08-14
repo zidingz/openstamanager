@@ -5,12 +5,12 @@ $sedi = $dbo->fetchArray('(SELECT "0" AS id, "Sede legale" AS nomesede) UNION (S
 
 <div class="row">
   <div class="col-md-6">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        <h3 class="panel-title"><?php echo tr('Giacenze'); ?></h3>
+    <div class="card card-primary">
+      <div class="card-header">
+        <h3 class="card-title"><?php echo tr('Giacenze'); ?></h3>
       </div>
-      
-      <div class="panel-body">
+
+      <div class="card-body">
           <table class="table table-striped table-condensed table-bordered">
             <thead>
               <tr>

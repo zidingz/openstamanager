@@ -25,10 +25,8 @@ class FileManager implements ManagerInterface
         $options['showpanel'] = isset($options['showpanel']) ? $options['showpanel'] : true;
         $options['label'] = isset($options['label']) ? $options['label'] : tr('Nuovo allegato').':';
 
-        $options['id_plugin'] = !empty($options['id_plugin']) ? $options['id_plugin'] : null;
-
         // ID del form
-        $attachment_id = 'attachments_'.$options['id_module'].'_'.$options['id_plugin'];
+        $attachment_id = 'attachments_'.$options['id_module'];
 
         $dbo = database();
 
@@ -48,7 +46,7 @@ class FileManager implements ManagerInterface
 
         $count = 0;
 
-        $where = '`id_module` '.(!empty($options['id_module']) && empty($options['id_plugin']) ? '= '.prepare($options['id_module']) : 'IS NULL').' AND `id_plugin` '.(!empty($options['id_plugin']) ? '= '.prepare($options['id_plugin']) : 'IS NULL').'';
+        $where = '`id_module` = '.prepare($options['id_module']);
 
         // Categorie
         $categories = $dbo->fetchArray('SELECT DISTINCT(BINARY `category`) AS `category` FROM `zz_files` WHERE '.$where.' ORDER BY `category`');
@@ -142,7 +140,7 @@ class FileManager implements ManagerInterface
 
                     if (!$options['readonly']) {
                         $result .= '
-                <a class="btn btn-sm btn-danger ask" data-backto="record-edit" data-msg="'.tr('Vuoi eliminare questo file?').'" data-op="unlink_file" data-filename="'.$r['filename'].'" data-id_record="'.$r['id_record'].'" data-id_plugin="'.$options['id_plugin'].'" data-before="show_'.$attachment_id.'" data-callback="reload_'.$attachment_id.'">
+                <a class="btn btn-sm btn-danger ask" data-backto="record-edit" data-msg="'.tr('Vuoi eliminare questo file?').'" data-op="unlink_file" data-filename="'.$r['filename'].'" data-id_record="'.$r['id_record'].'" data-before="show_'.$attachment_id.'" data-callback="reload_'.$attachment_id.'">
                     <i class="fa fa-trash"></i>
                 </a>';
                     }
@@ -237,7 +235,6 @@ $(document).ready(function() {
             type: "POST",
             data: {
                 id_module: "'.$options['id_module'].'",
-                id_plugin: "'.$options['id_plugin'].'",
                 id_record: "'.$options['id_record'].'",
                 op: "upload_category",
                 category: nome.text(),
@@ -277,7 +274,6 @@ $(document).ready(function() {
     var data = {
         op: "link_file",
         id_module: "'.$options['id_module'].'",
-        id_plugin: "'.$options['id_plugin'].'",
         id_record: "'.$options['id_record'].'",
     };
 
@@ -317,7 +313,7 @@ function show_'.$attachment_id.'() {
 }
 
 function reload_'.$attachment_id.'() {
-    $("#'.$attachment_id.'").load(globals.rootdir + "/ajax.php?op=list_attachments&id_module='.$options['id_module'].'&id_record='.$options['id_record'].'&id_plugin='.$options['id_plugin'].'", function() {
+    $("#'.$attachment_id.'").load(globals.rootdir + "/ajax.php?op=list_attachments&id_module='.$options['id_module'].'&id_record='.$options['id_record'].'", function() {
         $("#loading_'.$attachment_id.'").addClass("hide");
     });
 }

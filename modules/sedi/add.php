@@ -1,8 +1,11 @@
 <?php
 
 echo '
-<form action="" method="post" role="form">
-    <input type="hidden" name="id_parent" value="'.$id_parent.'">
+<form action="'.pathFor('module-add-save', [
+        'module_id' => $module_id,
+        'reference_id' => $reference_id,
+    ]).'" method="post" role="form">
+    <input type="hidden" name="id_parent" value="'.$reference_id.'">
 	<input type="hidden" name="backto" value="record-edit">
 	<input type="hidden" name="op" value="addsede">
 

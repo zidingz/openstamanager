@@ -24,12 +24,12 @@ echo '
     </div>
 </div>
 
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        <h3 class="panel-title">'.tr('Prezzo medio acquisto').'</h3>
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">'.tr('Prezzo medio acquisto').'</h3>
     </div>
     
-    <div class="panel-body">
+    <div class="card-body">
         <table class="table table-striped table-condensed table-bordered">
             <thead>
                 <tr>
@@ -50,12 +50,12 @@ echo '
     </div>
 </div>
 
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        <h3 class="panel-title">'.tr('Prezzo medio vendita').'</h3>
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">'.tr('Prezzo medio vendita').'</h3>
     </div>
     
-    <div class="panel-body">
+    <div class="card-body">
         <table class="table table-striped table-condensed table-bordered">
             <thead>
                 <tr>

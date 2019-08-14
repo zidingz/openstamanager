@@ -1,6 +1,5 @@
 <?php
 
-$plugin = Plugins::get($id_plugin);
 $is_add = filter('add') ? true : false;
 
 $pricing = Auth::admin() || Auth::user()['gruppo'] != 'Tecnici';
@@ -86,7 +85,7 @@ if (!empty($rs2)) {
             echo '
         <td>
 
-             <button type="button" class="btn btn-warning btn-sm" data-title="'.tr('Modifica spesa').'" onclick="launch_modal(\'Modifica spesa\', \''.$plugin->fileurl('add_righe.php').'?id_plugin='.$id_plugin.'&id_record='.$id_record.'&idriga='.$r['id'].'\', \'#bs-popup2\');">
+             <button type="button" class="btn btn-warning btn-sm" data-title="'.tr('Modifica spesa').'" onclick="launch_modal(\'Modifica spesa\', \''.$module->fileurl('add_righe.php').'?id_plugin='.$id_plugin.'&id_record='.$id_record.'&idriga='.$r['id'].'\', \'#bs-popup2\');">
                 <i class="fa fa-edit"></i>
              </button>
 

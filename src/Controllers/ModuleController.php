@@ -3,6 +3,8 @@
 namespace Controllers;
 
 use Controllers\Retro\ActionManager;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\NotFoundException;
 
 class ModuleController extends Controller
@@ -18,8 +20,8 @@ class ModuleController extends Controller
      *
      * @return mixed
      */
-    public function module($request, $response, $args)
-    {
+    public function module(ServerRequestInterface $request, ResponseInterface $response, array $args)
+{
         // Elenco dei plugin
         $args['plugins'] = $args['module']->children()->where('type', 'module_plugin')->get()->sortBy('order');
 
@@ -43,8 +45,8 @@ class ModuleController extends Controller
      *
      * @return mixed
      */
-    public function edit($request, $response, $args)
-    {
+    public function edit(ServerRequestInterface $request, ResponseInterface $response, array $args)
+{
         // Rimozione record precedenti sulla visita della pagina
         $this->database->delete('zz_semaphores', [
             'id_utente' => $args['user']['id'],
@@ -127,13 +129,13 @@ class ModuleController extends Controller
      *
      * @return mixed
      */
-    public function editContent($request, $response, $args)
+    public function editContent(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $controller = $this->getRecordManager($request, $response, $args);
 
         $args['reference_record'] = $controller->getReferenceRecord($args);
 
-        $response = $controller->content($request, $response, $args);
+        $response = $controller->modal($request, $response, $args);
 
         return $response;
     }
@@ -149,21 +151,17 @@ class ModuleController extends Controller
      *
      * @return mixed
      */
-    public function editRecord($request, $response, $args)
-    {
+    public function editRecord(ServerRequestInterface $request, ResponseInterface $response, array $args)
+{
         $controller = $this->getRecordManager($request, $response, $args);
 
         $record_id = $controller->update($request, $response, $args);
+        $args['record_id'] = $record_id;
 
         if (!empty($record_id)) {
-            $route = $this->router->pathFor('module-record', [
-                'module_id' => $args['module_id'],
-                'record_id' => $record_id,
-            ]);
+            $route = $this->router->pathFor('module-record', $args);
         } else {
-            $route = $this->router->pathFor('module', [
-                'module_id' => $args['module_id'],
-            ]);
+            $route = $this->router->pathFor('module', $args);
         }
 
         $response = $response->withRedirect($route);
@@ -182,8 +180,8 @@ class ModuleController extends Controller
      *
      * @return mixed
      */
-    public function add($request, $response, $args)
-    {
+    public function add(ServerRequestInterface $request, ResponseInterface $response, array $args)
+{
         $args['query_params'] = [];
         $query = $request->getQueryParams();
         foreach ($query as $key => $value) {
@@ -210,21 +208,17 @@ class ModuleController extends Controller
      *
      * @return mixed
      */
-    public function addRecord($request, $response, $args)
-    {
+    public function addRecord(ServerRequestInterface $request, ResponseInterface $response, array $args)
+{
         $controller = $this->getModuleManager($request, $response, $args);
 
         $record_id = $controller->create($request, $response, $args);
+        $args['record_id'] = $record_id;
 
         if (!empty($record_id)) {
-            $route = $this->router->pathFor('module-record', [
-                'module_id' => $args['module_id'],
-                'record_id' => $record_id,
-            ]);
+            $route = $this->router->pathFor('module-record', $args);
         } else {
-            $route = $this->router->pathFor('module', [
-                'module_id' => $args['module_id'],
-            ]);
+            $route = $this->router->pathFor('module', $args);
         }
 
         $response = $response->withRedirect($route);
@@ -243,8 +237,8 @@ class ModuleController extends Controller
      *
      * @return mixed
      */
-    public function recordAction($request, $response, $args)
-    {
+    public function recordAction(ServerRequestInterface $request, ResponseInterface $response, array $args)
+{
         $controller = $this->getRecordActionsManager($request, $response, $args);
 
         return $this->action($request, $response, $args, $controller);
@@ -261,31 +255,31 @@ class ModuleController extends Controller
      *
      * @return mixed
      */
-    public function moduleAction($request, $response, $args)
-    {
+    public function moduleAction(ServerRequestInterface $request, ResponseInterface $response, array $args)
+{
         $class = self::getModuleActionsManager($request, $response, $args);
         $controller = new $class($this->container);
 
         return $this->action($request, $response, $args, $controller);
     }
 
-    public function getRecordManager($request, $response, $args)
-    {
+    public function getRecordManager(ServerRequestInterface $request, ResponseInterface $response, array $args)
+{
         return $this->getController($request, $response, $args['structure'], 'Record');
     }
 
-    public function getModuleManager($request, $response, $args)
-    {
+    public function getModuleManager(ServerRequestInterface $request, ResponseInterface $response, array $args)
+{
         return $this->getController($request, $response, $args['structure'], 'Module');
     }
 
-    public function getModuleActionsManager($request, $response, $args)
-    {
+    public function getModuleActionsManager(ServerRequestInterface $request, ResponseInterface $response, array $args)
+{
         return $this->getController($request, $response, $args['structure'], 'ModuleActions');
     }
 
-    public function getRecordActionsManager($request, $response, $args)
-    {
+    public function getRecordActionsManager(ServerRequestInterface $request, ResponseInterface $response, array $args)
+{
         return $this->getController($request, $response, $args['structure'], 'RecordActions');
     }
 

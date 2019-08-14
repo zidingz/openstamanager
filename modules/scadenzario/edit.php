@@ -10,9 +10,9 @@ echo '
 	<input type="hidden" name="descrizione" value="'.$record['descrizione'].'">
 	<input type="hidden" name="iddocumento" value="'.$record['iddocumento'].'">
 
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title">
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title">
 			    '.tr('Dettagli scadenza').'
                 <button type="button" class="btn btn-sm btn-info float-right" id="add-scadenza">
                     <i class="fa fa-plus"></i> '.tr('Aggiungi scadenza').'

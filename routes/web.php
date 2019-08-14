@@ -111,10 +111,11 @@ $app->group('/module/{module_id:[0-9]+}', function () use ($app) {
     $app->group('/edit/{record_id:[0-9]+}', function () use ($app) {
         $app->get('/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:edit')
             ->setName('module-record');
-        $app->post('/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:editRecord');
+        $app->post('/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:editRecord')
+            ->setName('module-record-save');
 
-        $app->get('/content/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:editContent')
-            ->setName('module-record-content');
+        $app->get('/modal/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:editContent')
+            ->setName('module-record-modal');
 
         $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:recordAction')
             ->setName('module-record-action');
@@ -122,7 +123,8 @@ $app->group('/module/{module_id:[0-9]+}', function () use ($app) {
 
     $app->get('/add/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:add')
         ->setName('module-add');
-    $app->post('/add/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:addRecord');
+    $app->post('/add/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:addRecord')
+        ->setName('module-add-save');
 })->add(UserMiddleware::class)->add(PermissionMiddleware::class);
 
 // Stampe

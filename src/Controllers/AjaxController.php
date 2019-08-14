@@ -8,10 +8,12 @@ use Modules;
 use Prints;
 use Translator;
 use Util\Query;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class AjaxController extends Controller
 {
-    public function select($request, $response, $args)
+    public function select(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $op = empty($op) ? filter('op') : $op;
         $search = filter('search');
@@ -25,7 +27,7 @@ class AjaxController extends Controller
         return $response;
     }
 
-    public function complete($request, $response, $args)
+    public function complete(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $module = get('module');
         $op = get('op');
@@ -36,7 +38,7 @@ class AjaxController extends Controller
         return $response;
     }
 
-    public function search($request, $response, $args)
+    public function search(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $term = get('term');
         $term = str_replace('/', '\\/', $term);
@@ -47,7 +49,7 @@ class AjaxController extends Controller
         return $response;
     }
 
-    public function flash($request, $response, $args)
+    public function flash(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $response = flash()->getMessages();
         $response = $response->write(json_encode($results));
@@ -55,15 +57,15 @@ class AjaxController extends Controller
         return $response;
     }
 
-    public function listAttachments($request, $response, $args)
+    public function listAttachments(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $result = '{( "name": "filelist_and_upload", "id_module": "'.$id_module.'", "id_record": "'.$id_record.'", "id_plugin": "'.$id_plugin.'" )}';
+        $result = '{( "name": "filelist_and_upload", "id_module": "'.$args['module_id'].'", "id_record": "'.$args['record_id'].'" )}';
         $response = $response->write($result);
 
         return $response;
     }
 
-    public function activeUsers($request, $response, $args)
+    public function activeUsers(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $posizione = get('id_module');
         if (isset($id_record)) {
@@ -93,7 +95,7 @@ class AjaxController extends Controller
         return $response;
     }
 
-    public function sessionSet($request, $response, $args)
+    public function sessionSet(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $array = explode(',', get('session'));
         $value = get('value');
@@ -108,7 +110,7 @@ class AjaxController extends Controller
         return $response;
     }
 
-    public function sessionSetArray($request, $response, $args)
+    public function sessionSetArray(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $array = explode(',', get('session'));
         $value = "'".get('value')."'";
@@ -135,7 +137,7 @@ class AjaxController extends Controller
         return $response;
     }
 
-    public function dataLoad($request, $response, $args)
+    public function dataLoad(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         extract($args);
 
@@ -286,13 +288,13 @@ class AjaxController extends Controller
                         $info = [
                             'module_id' => $id_module,
                             'record_id' => $id_record,
+                            'reference_id' => $reference_id,
                         ];
 
                         if (!empty($reference_id)) {
                             $column['data-type'] = 'modal';
-                            $info['reference_id'] = $reference_id;
 
-                            $link = pathFor('module-record-content', $info);
+                            $link = pathFor('module-record-modal', $info);
                         } else {
                             $link = pathFor('module-record', $info);
                         }
@@ -320,7 +322,7 @@ class AjaxController extends Controller
         return $response;
     }
 
-    public function hooks($request, $response, $args)
+    public function hooks(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $hooks = Hook::all();
 
@@ -337,7 +339,7 @@ class AjaxController extends Controller
         return $response;
     }
 
-    public function hook($request, $response, $args)
+    public function hook(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $hook_id = $args['hook_id'];
         $hook = Hook::find($hook_id);

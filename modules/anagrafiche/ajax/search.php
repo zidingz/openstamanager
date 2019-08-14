@@ -90,7 +90,7 @@ foreach ($fields as $name => $value) {
 
 $rs = $dbo->fetchArray($query);
 
-$plugin = $dbo->fetchArray("SELECT id FROM zz_plugins WHERE name='Referenti'");
+$plugin = $dbo->fetchArray("SELECT id FROM zz_modules WHERE name='Referenti'");
 
 foreach ($rs as $r) {
     $result = [];

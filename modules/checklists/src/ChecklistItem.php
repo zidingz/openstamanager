@@ -17,16 +17,16 @@ class ChecklistItem extends Model
      *
      * @param Checklist $checklist
      * @param string    $contenuto
-     * @param int       $id_parent
+     * @param int       $reference_id
      *
      * @return self
      */
-    public static function build(Checklist $checklist, $contenuto, $id_parent = null)
+    public static function build(Checklist $checklist, $contenuto, $reference_id = null)
     {
         $model = parent::build();
 
         $model->checklist()->associate($checklist);
-        $model->id_parent = $id_parent;
+        $model->id_parent = $reference_id;
         $model->content = $contenuto;
 
         $model->findOrder();

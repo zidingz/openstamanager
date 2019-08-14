@@ -219,33 +219,6 @@ class Aggiornamento
     }
 
     /**
-     * Completa l'aggiornamento con le informazioni specifiche per i plugin.
-     *
-     * @param array $plugin
-     */
-    public function executePlugin($plugin)
-    {
-        // Informazioni dal file di configurazione
-        $info = $plugin['info'];
-
-        // Informazioni aggiuntive per il database
-        $insert = [
-            'idmodule_from' => Modules::get($info['module_from'])['id'],
-            'idmodule_to' => Modules::get($info['module_to'])['id'],
-            'position' => $info['position'],
-        ];
-
-        $id = $this->executeComponent($plugin['path'], 'plugins', 'zz_plugins', $insert, $info, $plugin['is_installed']);
-
-        if (!empty($id)) {
-            // Fix per i permessi di amministratore
-            $element = Plugin::find($id);
-
-            $element->groups()->syncWithoutDetaching($this->groups());
-        }
-    }
-
-    /**
      * Instanzia un aggiornamento sulla base di uno zip indicato.
      * Controlla inoltre che l'aggiornamento sia fattibile.
      *

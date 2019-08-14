@@ -4,6 +4,8 @@ namespace Middlewares;
 
 use Slim\Exception\NotFoundException;
 use Update;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Middleware per il blocco dei plugin senza riferimento al record genitore.
@@ -12,7 +14,7 @@ use Update;
  */
 class PluginMiddleware extends Middleware
 {
-    public function __invoke($request, $response, $next)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         $route = $request->getAttribute('route');
         if (!$route || !$this->database->isConnected() || Update::isUpdateAvailable()) {

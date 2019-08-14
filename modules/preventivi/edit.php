@@ -51,7 +51,7 @@ $block_edit = $record['is_completato'];
 				<div class="col-md-3">
                     <?php
                     if (!empty($record['idreferente'])) {
-                        echo Plugins::link('Referenti', $record['idanagrafica'], null, null, 'class="float-right"');
+                        echo Modules::link('Referenti', $record['idanagrafica'], null, null, 'class="float-right"');
                     }
                     ?>
 

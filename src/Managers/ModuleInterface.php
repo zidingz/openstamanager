@@ -2,9 +2,12 @@
 
 namespace Managers;
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
 interface ModuleInterface extends PageInterface
 {
-    public function add($request, $response, $args);
+    public function add(ServerRequestInterface $request, ResponseInterface $response, array $args);
 
-    public function create($request, $response, $args);
+    public function create(ServerRequestInterface $request, ResponseInterface $response, array $args);
 }

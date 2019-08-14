@@ -42,9 +42,9 @@ class Checklist extends Model
 
         while (!$checks->isEmpty()) {
             $child = $checks->shift();
-            $id_parent = $child->id_parent ? $relations[$child->id_parent] : null;
+            $reference_id = $child->id_parent ? $relations[$child->id_parent] : null;
 
-            $check = Check::build($user, $structure, $id_record, $child->content, $id_parent);
+            $check = Check::build($user, $structure, $id_record, $child->content, $reference_id);
             $check->setAccess($users, $group_id);
 
             $relations[$child->id] = $check->id;

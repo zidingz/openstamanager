@@ -24,7 +24,7 @@ if (!$is_cliente) {
 
 ?>
 
-<form action="" method="post" id="edit-form"  autocomplete="<?php echo setting('Autocompletamento form'); ?>" >
+<form action="" method="post" id="edit-form" autocomplete="<?php echo setting('Autocompletamento form'); ?>" >
 	<fieldset>
 		<input type="hidden" name="backto" value="record-edit">
 		<input type="hidden" name="op" value="update">
@@ -228,12 +228,12 @@ echo '
 
 echo '
 
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h3 class="panel-title">'.tr('Informazioni per tipo di anagrafica').'</h3>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">'.tr('Informazioni per tipo di anagrafica').'</h3>
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs nav-justified">
                     <li '.($is_cliente || $is_fornitore ? 'class="active"' : '').'><a href="#cliente_fornitore" data-toggle="tab" class="'.($is_cliente || $is_fornitore ? '' : 'disabled').'" '.($is_cliente || $is_fornitore ? '' : 'disabled').'>'.tr('Cliente e fornitore').'</a></li>

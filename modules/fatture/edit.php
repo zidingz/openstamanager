@@ -101,8 +101,8 @@ $query = 'SELECT * FROM co_statidocumento';
 if (empty($record['is_fiscale'])) {
     $query .= " WHERE descrizione = 'Bozza'";
 
-    $plugin = $dbo->fetchArray("SELECT id FROM zz_plugins WHERE title='Fatturazione Elettronica' AND idmodule_to = ".prepare($id_module));
-    echo '<script>$("#link-tab_'.$plugin[0]['id'].'").addClass("disabled");</script>';
+    $plugin = $dbo->fetchOne("SELECT id FROM zz_modules WHERE title='Fatturazione Elettronica' AND parent = ".prepare($id_module));
+    echo '<script>$("#link-tab_'.$plugin['id'].'").addClass("disabled");</script>';
 }
 
 ?>
@@ -168,7 +168,7 @@ if (empty($record['is_fiscale'])) {
                 if ($dir == 'uscita') {
                     ?>
                     <div class="col-md-3">
-                        {[ "type": "select", "label": "<?php echo tr('Partenza merce'); ?>", "name": "idsede_partenza", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$", "placeholder": "Sede legale", "value": "$idsede_partenza$", "icon-after": "add|<?php echo Modules::get('Anagrafiche')['id']; ?>|id_plugin=<?php echo Plugins::get('Sedi')['id']; ?>&id_parent=<?php echo $record['idanagrafica']; ?>||<?php echo (intval($block_edit)) ? 'disabled' : ''; ?>" ]}
+                        {[ "type": "select", "label": "<?php echo tr('Partenza merce'); ?>", "name": "idsede_partenza", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$", "placeholder": "Sede legale", "value": "$idsede_partenza$", "icon-after": "add|<?php echo Modules::get('Anagrafiche')['id']; ?>|id_plugin=<?php echo Modules::get('Sedi')['id']; ?>&id_parent=<?php echo $record['idanagrafica']; ?>||<?php echo (intval($block_edit)) ? 'disabled' : ''; ?>" ]}
                     </div>
 
                     <div class="col-md-3">
@@ -182,7 +182,7 @@ if (empty($record['is_fiscale'])) {
                     </div>
 
                     <div class="col-md-3">
-                        {[ "type": "select", "label": "<?php echo tr('Destinazione merce'); ?>", "name": "idsede_destinazione", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$",  "value": "$idsede_destinazione$", "readonly": "", "icon-after": "add|<?php echo Modules::get('Anagrafiche')['id']; ?>|id_plugin=<?php echo Plugins::get('Sedi')['id']; ?>&id_parent=<?php echo $record['idanagrafica']; ?>||<?php echo (intval($block_edit)) ? 'disabled' : ''; ?>" ]}
+                        {[ "type": "select", "label": "<?php echo tr('Destinazione merce'); ?>", "name": "idsede_destinazione", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$",  "value": "$idsede_destinazione$", "readonly": "", "icon-after": "add|<?php echo Modules::get('Anagrafiche')['id']; ?>|id_plugin=<?php echo Modules::get('Sedi')['id']; ?>&id_parent=<?php echo $record['idanagrafica']; ?>||<?php echo (intval($block_edit)) ? 'disabled' : ''; ?>" ]}
                     </div>
                 <?php
                 }

@@ -6,7 +6,7 @@ switch ($operazione) {
     case 'addreferente':
         if (!empty(post('nome'))) {
             $dbo->insert('an_referenti', [
-                'idanagrafica' => $id_parent,
+                'idanagrafica' => $reference_id,
                 'nome' => post('nome'),
                 'mansione' => post('mansione'),
                 'telefono' => post('telefono'),
@@ -28,7 +28,7 @@ switch ($operazione) {
 
     case 'updatereferente':
         $dbo->update('an_referenti', [
-            'idanagrafica' => $id_parent,
+            'idanagrafica' => $reference_id,
             'nome' => post('nome'),
             'mansione' => post('mansione'),
             'telefono' => post('telefono'),

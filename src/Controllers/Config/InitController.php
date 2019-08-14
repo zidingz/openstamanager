@@ -5,6 +5,8 @@ namespace Controllers\Config;
 use Auth;
 use Controllers\Controller;
 use Modules;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Settings;
 use Update;
 use Uploads;
@@ -64,7 +66,7 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
         return $values['has_user'] && $values['has_azienda'] && $values['has_settings'];
     }
 
-    public function init($request, $response, $args)
+    public function init(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $this->permission($request, $response);
 
@@ -99,7 +101,7 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
         return $response;
     }
 
-    public function initSave($request, $response, $args)
+    public function initSave(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $this->permission($request, $response);
 

@@ -3,10 +3,12 @@
 namespace Controllers;
 
 use Prints;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class PrintController extends Controller
 {
-    public function view($request, $response, $args)
+    public function view(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $link = pathFor('print-open', [
             'print_id' => $args['print_id'],
@@ -19,7 +21,7 @@ class PrintController extends Controller
         return $response;
     }
 
-    public function open($request, $response, $args)
+    public function open(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         /*
         $id_print = $args['print_id'];

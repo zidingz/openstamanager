@@ -4,6 +4,8 @@ namespace Middlewares;
 
 use Intl\Formatter;
 use Translator;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Middlware per la gestione della lingua del progetto.
@@ -12,7 +14,7 @@ use Translator;
  */
 class LangMiddleware extends Middleware
 {
-    public function __invoke($request, $response, $next)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         $config = $this->container['config'];
 

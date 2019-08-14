@@ -7,7 +7,7 @@ switch ($operazione) {
 
          if (!empty(post('nomesede'))) {
              $dbo->insert('an_sedi', [
-                'idanagrafica' => $id_parent,
+                'idanagrafica' => $reference_id,
                 'nomesede' => post('nomesede'),
                 'indirizzo' => post('indirizzo'),
                 'citta' => post('citta'),

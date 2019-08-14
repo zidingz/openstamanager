@@ -1,6 +1,9 @@
 <?php
 
-?><form action="" method="post" id="add-form">
+?><form action="<?php pathFor('module-add-save', [
+        'module_id' => $module_id,
+        'reference_id' => $reference_id,
+    ]) ?>" method="post" id="add-form">
 	<input type="hidden" name="op" value="add">
 	<input type="hidden" name="backto" value="record-edit">
 
@@ -9,7 +12,7 @@
 			{[ "type": "text", "label": "<?php echo tr('Nome'); ?>", "name": "nome", "required": "1" ]}
 		</div>
 	</div>
-	
+
 	<div class="row">
 		<div class="col-md-8">
 			{[ "type": "text", "label": "<?php echo tr('IBAN'); ?>", "name": "iban", "required": "1", "class": "alphanumeric-mask", "maxlength": 32, "value": "$iban$" ]}

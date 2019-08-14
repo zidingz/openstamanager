@@ -2,6 +2,9 @@
 
 namespace Middlewares;
 
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+
 /**
  * Classe per gestire la sanitarizzazione degli input, basata sul framework open-source HTMLPurifier.
  *
@@ -17,7 +20,7 @@ class FilterMiddleware extends Middleware
     /** @var array Elenco dei contenuti inviati via GET */
     protected $get = [];
 
-    public function __invoke($request, $response, $next)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         $post = $request->getParsedBody();
         if (!empty($post)) {

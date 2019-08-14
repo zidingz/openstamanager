@@ -7,10 +7,12 @@ use Controllers\Config\ConfigurationController;
 use Controllers\Config\InitController;
 use Controllers\Config\RequirementsController;
 use Update;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class BaseController extends Controller
 {
-    public function index($request, $response, $args)
+    public function index(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         // Requisiti di OpenSTAManager
         if (!RequirementsController::requirementsSatisfied()) {
@@ -64,7 +66,7 @@ class BaseController extends Controller
         return $response;
     }
 
-    public function loginAction($request, $response, $args)
+    public function loginAction(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $username = post('username');
         $password = post('password');
@@ -104,7 +106,7 @@ class BaseController extends Controller
         return $response;
     }
 
-    public function logout($request, $response, $args)
+    public function logout(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         Auth::logout();
 

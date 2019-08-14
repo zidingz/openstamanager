@@ -6,10 +6,10 @@ $operazione = filter('op');
 switch ($operazione) {
     case 'add-promemoria':
         // Lettura sede contratto
-        $idsede = $dbo->fetchOne('SELECT idsede FROM co_contratti WHERE id='.prepare($id_parent))['idsede'];
+        $idsede = $dbo->fetchOne('SELECT idsede FROM co_contratti WHERE id='.prepare($reference_id))['idsede'];
 
         $dbo->insert('co_promemoria', [
-            'idcontratto' => $id_parent,
+            'idcontratto' => $reference_id,
             'data_richiesta' => filter('data_richiesta'),
             'id_tipo_intervento' => filter('id_tipo_intervento'),
             'idsede' => $idsede,
@@ -69,7 +69,7 @@ switch ($operazione) {
 
         // if principale
         if (!empty($id_record) && !empty($intervallo) && post('pianifica_promemoria')) {
-            $qp = 'SELECT *, (SELECT idanagrafica FROM co_contratti WHERE id = '.$id_parent.' ) AS idanagrafica, (SELECT data_conclusione FROM co_contratti WHERE id = '.$id_parent.' ) AS data_conclusione, (SELECT descrizione FROM in_tipiintervento WHERE in_tipiintervento.id=co_promemoria.id_tipo_intervento) AS tipointervento FROM co_promemoria WHERE co_promemoria.id = '.$id_record;
+            $qp = 'SELECT *, (SELECT idanagrafica FROM co_contratti WHERE id = '.$reference_id.' ) AS idanagrafica, (SELECT data_conclusione FROM co_contratti WHERE id = '.$reference_id.' ) AS data_conclusione, (SELECT descrizione FROM in_tipiintervento WHERE in_tipiintervento.id=co_promemoria.id_tipo_intervento) AS tipointervento FROM co_promemoria WHERE co_promemoria.id = '.$id_record;
             $rsp = $dbo->fetchArray($qp);
 
             $id_tipo_intervento = $rsp[0]['id_tipo_intervento'];
@@ -107,9 +107,9 @@ switch ($operazione) {
                     // controllo nuova data richiesta --> solo  date maggiori o uguali di data richiesta iniziale ma che non superano la data di fine del contratto
                     if ((date('Y-m-d', strtotime($data_richiesta)) >= $min_date) && (date('Y-m-d', strtotime($data_richiesta)) <= date('Y-m-d', strtotime($data_conclusione)))) {
                         // Controllo che non esista già un promemoria idcontratto, id_tipo_intervento e data_richiesta.
-                        if (count($dbo->fetchArray("SELECT id FROM co_promemoria WHERE data_richiesta = '".$data_richiesta."' AND id_tipo_intervento = '".$id_tipo_intervento."' AND idcontratto = '".$id_parent."' ")) == 0) {
+                        if (count($dbo->fetchArray("SELECT id FROM co_promemoria WHERE data_richiesta = '".$data_richiesta."' AND id_tipo_intervento = '".$id_tipo_intervento."' AND idcontratto = '".$reference_id."' ")) == 0) {
                             // inserisco il nuovo promemoria
-                            $query = 'INSERT INTO `co_promemoria`(`idcontratto`, `id_tipo_intervento`, `data_richiesta`, `richiesta`, `idsede`, `idimpianti` ) VALUES('.prepare($id_parent).', '.prepare($id_tipo_intervento).', '.prepare($data_richiesta).', '.prepare($richiesta).', '.prepare($idsede).', '.prepare($idimpianti).')';
+                            $query = 'INSERT INTO `co_promemoria`(`idcontratto`, `id_tipo_intervento`, `data_richiesta`, `richiesta`, `idsede`, `idimpianti` ) VALUES('.prepare($reference_id).', '.prepare($id_tipo_intervento).', '.prepare($data_richiesta).', '.prepare($richiesta).', '.prepare($idsede).', '.prepare($idimpianti).')';
 
                             if ($dbo->query($query)) {
                                 $idriga = $dbo->lastInsertedID();
@@ -122,10 +122,10 @@ switch ($operazione) {
 
                                 // Copia degli allegati
                                 Uploads::copy([
-                                    'id_plugin' => Plugins::get('Pianificazione interventi')['id'],
+                                    'id_module' => Modules::get('Pianificazione interventi')['id'],
                                     'id_record' => $id_record,
                                 ], [
-                                    'id_plugin' => Plugins::get('Pianificazione interventi')['id'],
+                                    'id_module' => Modules::get('Pianificazione interventi')['id'],
                                     'id_record' => $idriga,
                                 ]);
 
@@ -170,7 +170,7 @@ switch ($operazione) {
 
                             // aggiungo i tecnici
                             foreach ($idtecnici as $idtecnico) {
-                                add_tecnico($idintervento, $idtecnico, $data_richiesta.' '.post('orario_inizio', true), $data_richiesta.' '.post('orario_fine', true), $id_parent);
+                                add_tecnico($idintervento, $idtecnico, $data_richiesta.' '.post('orario_inizio', true), $data_richiesta.' '.post('orario_fine', true), $reference_id);
                             }
 
                             // collego l'intervento ai promemoria
@@ -184,7 +184,7 @@ switch ($operazione) {
 
                             // Copia degli allegati
                             Uploads::copy([
-                                'id_plugin' => Plugins::get('Pianificazione interventi')['id'],
+                                'id_plugin' => Modules::get('Pianificazione interventi')['id'],
                                 'id_record' => $id_record,
                             ], [
                                 'id_module' => Modules::get('Interventi')['id'],

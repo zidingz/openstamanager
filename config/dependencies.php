@@ -1,18 +1,23 @@
 <?php
 
 // Auth manager
-$container['auth'] = function ($container) {
+$container['auth'] = function () {
     return new Auth();
 };
 
 // Flash messages
-$container['flash'] = function ($container) {
+$container['flash'] = function () {
     return new \Util\Messages();
 };
 
 // Sanitizing methods
 $container['filter'] = function ($container) {
     return new \Middlewares\FilterMiddleware($container);
+};
+
+// Custom router
+$container['router'] = function () {
+    return new Router();
 };
 
 use Slim\Views\PhpRenderer;
