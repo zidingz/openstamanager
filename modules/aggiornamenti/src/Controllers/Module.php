@@ -4,7 +4,7 @@ namespace Modules\Aggiornamenti\Controllers;
 
 use Controllers\Config\RequirementsController as Requirements;
 use InvalidArgumentException;
-use Managers\ModuleManager;
+use Modules\ModuleManager;
 use Modules\Aggiornamenti\Aggiornamento;
 use Modules\Aggiornamenti\DowngradeException;
 

@@ -2,7 +2,7 @@
 
 namespace Modules\Dashboard\Controllers;
 
-use Controllers\Retro\ActionManager;
+use Modules\Retro\ActionManager;
 
 class ModuleActions extends ActionManager
 {

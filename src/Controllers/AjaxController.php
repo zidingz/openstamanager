@@ -293,13 +293,9 @@ class AjaxController extends Controller
 
                         if (!empty($reference_id)) {
                             $column['data-type'] = 'modal';
-
-                            $link = pathFor('module-record-modal', $info);
-                        } else {
-                            $link = pathFor('module-record', $info);
                         }
 
-                        $column['data-link'] = $link.$hash;
+                        $column['data-link'] = pathFor('module-record', $info);
                     }
 
                     $attributes = [];

@@ -1,8 +1,8 @@
 <?php
 
-namespace Controllers\Retro;
+namespace Modules\Retro;
 
-use Managers\ActionInterface;
+use Modules\ActionInterface;
 
 class ActionManager extends RetroController implements ActionInterface
 {

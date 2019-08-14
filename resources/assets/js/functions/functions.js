@@ -50,7 +50,9 @@ function openModal(title, href, generate_id) {
         $(id).html(content.replace("|data|", data));
         $(id).modal('show');
     } else {
-        $.get(href, function (data, response) {
+        var url = href + (href.indexOf('?') !== -1 ? '&' : '?') + 'modal=1';
+
+        $.get(url, function (data, response) {
             if (response == 'success') {
                 $(id).html(content.replace("|data|", data));
                 $(id).modal('show');

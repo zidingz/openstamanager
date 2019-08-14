@@ -15,6 +15,23 @@ class PrintTemplate extends Model
     protected $table = 'zz_prints';
     protected $main_folder = 'templates';
 
+    /**
+     * Restituisce un array associativo dalla codifica JSON delle opzioni di stampa.
+     *
+     * @param string $string
+     *
+     * @return array
+     */
+    protected function getOptionsAttribute()
+    {
+        // Fix per contenuti con newline integrate
+        $string = str_replace(["\n", "\r"], ['\\n', '\\r'], $this->options);
+
+        $result = (array) json_decode($string, true);
+
+        return $result;
+    }
+
     /* Relazioni Eloquent */
 
     public function module()

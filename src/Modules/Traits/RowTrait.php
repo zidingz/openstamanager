@@ -1,8 +1,6 @@
 <?php
 
-namespace Managers;
-
-use Modules\Fatture\Fattura;
+namespace Modules\Traits;
 
 /**
  * Trait dedicato alla gestione delle operazioni di visualizzazione per i template di modifica e aggiunta righe.

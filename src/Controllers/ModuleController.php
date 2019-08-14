@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use Controllers\Retro\ActionManager;
+use Modules\Retro\ActionManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\NotFoundException;
@@ -27,9 +27,7 @@ class ModuleController extends Controller
 
         $controller = $this->getModuleManager($request, $response, $args);
 
-        $args['reference_record'] = $controller->getReferenceRecord($args);
-
-        $response = $controller->page($request, $response, $args);
+$response = $controller->page($request, $response, $args);
 
         return $response;
     }
@@ -46,16 +44,17 @@ class ModuleController extends Controller
      * @return mixed
      */
     public function edit(ServerRequestInterface $request, ResponseInterface $response, array $args)
-{
+    {
+        $user = auth()->getUser();
         // Rimozione record precedenti sulla visita della pagina
         $this->database->delete('zz_semaphores', [
-            'id_utente' => $args['user']['id'],
+            'id_utente' => $user['id'],
             'posizione' => $args['module_id'].', '.$args['record_id'],
         ]);
 
         // Creazione nuova visita
         $this->database->insert('zz_semaphores', [
-            'id_utente' => $args['user']['id'],
+            'id_utente' => $user['id'],
             'posizione' => $args['module_id'].', '.$args['record_id'],
         ]);
 
@@ -111,31 +110,8 @@ class ModuleController extends Controller
 
         $controller = $this->getRecordManager($request, $response, $args);
 
-        $args['reference_record'] = $controller->getReferenceRecord($args);
 
         $response = $controller->page($request, $response, $args);
-
-        return $response;
-    }
-
-    /**
-     * Gestione della pagine del record.
-     *
-     * @param $request
-     * @param $response
-     * @param $args
-     *
-     * @throws NotFoundException
-     *
-     * @return mixed
-     */
-    public function editContent(ServerRequestInterface $request, ResponseInterface $response, array $args)
-    {
-        $controller = $this->getRecordManager($request, $response, $args);
-
-        $args['reference_record'] = $controller->getReferenceRecord($args);
-
-        $response = $controller->modal($request, $response, $args);
 
         return $response;
     }
@@ -190,9 +166,7 @@ class ModuleController extends Controller
 
         $controller = $this->getModuleManager($request, $response, $args);
 
-        $args['reference_record'] = $controller->getReferenceRecord($args);
-
-        $response = $controller->add($request, $response, $args);
+$response = $controller->add($request, $response, $args);
 
         return $response;
     }
@@ -265,49 +239,37 @@ class ModuleController extends Controller
 
     public function getRecordManager(ServerRequestInterface $request, ResponseInterface $response, array $args)
 {
-        return $this->getController($request, $response, $args['structure'], 'Record');
+        return $this->getController($request, $response, $args, 'Record');
     }
 
     public function getModuleManager(ServerRequestInterface $request, ResponseInterface $response, array $args)
 {
-        return $this->getController($request, $response, $args['structure'], 'Module');
+        return $this->getController($request, $response, $args, 'Module');
     }
 
     public function getModuleActionsManager(ServerRequestInterface $request, ResponseInterface $response, array $args)
 {
-        return $this->getController($request, $response, $args['structure'], 'ModuleActions');
+        return $this->getController($request, $response, $args, 'ModuleActions');
     }
 
     public function getRecordActionsManager(ServerRequestInterface $request, ResponseInterface $response, array $args)
 {
-        return $this->getController($request, $response, $args['structure'], 'RecordActions');
+        return $this->getController($request, $response, $args, 'RecordActions');
     }
 
-    public function getController($request, $response, $module, $name)
+    public function getController(ServerRequestInterface $request, ResponseInterface $response, array $args, $name)
     {
-        $class = self::getControllerClass($module, $name);
+        $module = $args['module'];
+        $controller = $module->getController($this->container, $name, $args['record_id'], $args['reference_id']);
 
-        if (empty($class)) {
+        if (empty($controller)) {
             throw new NotFoundException($request, $response);
         }
-
-        $controller = new $class($this->container);
 
         return $controller;
     }
 
-    public static function getControllerClass($module, $name)
-    {
-        $class = $module->namespace.'\\'.$name;
-
-        if (!class_exists($class)) {
-            return null;
-        }
-
-        return $class;
-    }
-
-    protected function action($request, $response, $args, $controller)
+    protected function action(ServerRequestInterface $request, ResponseInterface $response, array $args, $controller)
     {
         $action = str_replace(['-', '_'], [' ', ' '], $args['action']);
         $action = lcfirst(ucwords($action));

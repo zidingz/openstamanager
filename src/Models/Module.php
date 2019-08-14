@@ -6,11 +6,13 @@ use Auth;
 use Common\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Checklists\Traits\ChecklistTrait;
+use Psr\Container\ContainerInterface;
 use Traits\Components\NoteTrait;
 use Traits\Components\UploadTrait;
 use Traits\ManagerTrait;
 use Traits\PermissionTrait;
 use Traits\StoreTrait;
+use Util\Query;
 
 class Module extends Model
 {
@@ -93,6 +95,43 @@ class Module extends Model
     public function getOptionAttribute()
     {
         return !empty($this->options2) ? $this->options2 : $this->options;
+    }
+
+    public function getController(ContainerInterface $container, string $name, ?int $record_id = null, ?int $reference_id = null)
+    {
+        $class = $this->getControllerClass($name);
+        if (empty($class)) return null;
+
+        $controller = new $class($container, $this, $record_id, $reference_id);
+
+        return $controller;
+    }
+
+    public function getControllerClass($name)
+    {
+        $class = $this->namespace.'\\'.$name;
+
+        if (!class_exists($class)) {
+            return null;
+        }
+
+        return $class;
+    }
+
+    public function hasRecordAccess($record_id)
+    {
+        Query::setSegments(false);
+        $query = Query::getQuery($this, [
+            'id' => $record_id,
+        ]);
+        Query::setSegments(true);
+
+        // Fix per la visione degli elementi eliminati (per permettere il rispristino)
+        $query = str_replace(['AND `deleted_at` IS NULL', '`deleted_at` IS NULL', 'AND deleted_at IS NULL', 'deleted_at IS NULL'], '', $query);
+
+        $result = !empty($query) ? database()->fetchNum($query) !== 0 : true;
+
+        return $result;
     }
 
     /* Relazioni Eloquent */

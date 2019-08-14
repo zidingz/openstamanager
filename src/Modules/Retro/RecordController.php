@@ -1,8 +1,8 @@
 <?php
 
-namespace Controllers\Retro;
+namespace Modules\Retro;
 
-use Managers\RecordInterface;
+use Modules\RecordInterface;
 use Models\Module;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -11,18 +11,21 @@ class RecordController extends RetroController implements RecordInterface
 {
     public function page(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
+        $args = $this->prepare($args);
         $args = $this->editor($args);
 
-        return $this->twig->render($response, 'old/editor.twig', $args);
+        $template = filter('modal') !== null ? 'add' : 'editor';
+        return $this->twig->render($response, 'old/'.$template.'.twig', $args);
     }
 
-    public function modal(ServerRequestInterface $request, ResponseInterface $response, array $args)
+    public function content(array $args)
     {
+        $args = $this->prepare($args);
         $args = $this->editor($args);
 
         $args['content'] = $args['editor_content'];
 
-        return $this->twig->render($response, 'old/add.twig', $args);
+        return $args;
     }
 
     public function data($id_record)

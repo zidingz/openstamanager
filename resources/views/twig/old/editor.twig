@@ -1,7 +1,7 @@
 {% extends "edit.twig" %}
 
 {% block editor_content %}
-    {{ editor_content|raw }}
+    {{ content|raw }}
 {% endblock %}
 
 {% block buttons %}
@@ -10,8 +10,9 @@
 
 {% block plugins_content %}
     {% for plugin in plugins %}
+        {% set plugin_content = plugins_content[plugin.id] %}
         <div id="tab_{{ plugin.id }}" class="tab-pane">
-            {% include 'content.twig' with {structure: plugin, bulk: plugins_content[plugin.id].bulk, plugin: plugin, plugin_id: plugin.id, include_header: true, custom_content: plugins_content[plugin.id].content} %}
+            {% include 'content.twig' with {structure: plugin, module: plugin, bulk: plugin_content.bulk, module_id: plugin.id, include_header: true, custom_content: plugin_content.content, reference_id: record_id} %}
         </div>
     {% endfor %}
 {% endblock %}

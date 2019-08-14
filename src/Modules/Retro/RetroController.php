@@ -1,14 +1,14 @@
 <?php
 
-namespace Controllers\Retro;
+namespace Modules\Retro;
 
 use App;
 use Controllers\Controller;
 use HTMLBuilder\HTMLBuilder;
-use Managers\ControllerManager;
+use Modules\Manager;
 use \ReflectionClass;
 
-class RetroController extends ControllerManager
+class RetroController extends Manager
 {
     public function getReferenceID($args)
     {
@@ -37,7 +37,6 @@ class RetroController extends ControllerManager
 
     protected function controller($args)
     {
-        $directory = $this->getDirectory();
         extract($args);
 
         $dbo = $database = $this->database;
@@ -63,6 +62,7 @@ class RetroController extends ControllerManager
             'content' => $content,
             'plugins_content' => $this->plugins($args),
         ]);
+
         $args['custom_content'] = $content;
 
         return $args;
@@ -105,7 +105,7 @@ class RetroController extends ControllerManager
 
         $args = array_merge($args, [
             'buttons' => $buttons,
-            'editor_content' => $content,
+            'content' => $content,
             'bulk' => $module_bulk,
             'plugins_content' => $this->plugins($args),
         ]);
@@ -161,7 +161,7 @@ class RetroController extends ControllerManager
 
         return $args;
     }
-
+/*
     protected function plugins($args)
     {
         extract($args);
@@ -197,5 +197,5 @@ class RetroController extends ControllerManager
         }
 
         return $plugins_content;
-    }
+    }*/
 }

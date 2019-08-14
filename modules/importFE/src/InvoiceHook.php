@@ -2,7 +2,7 @@
 
 namespace Plugins\ImportFE;
 
-use Managers\HookManager;
+use Modules\HookManager;
 use Modules;
 
 class InvoiceHook extends HookManager

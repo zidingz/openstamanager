@@ -23,9 +23,11 @@ class InfoController extends Controller
 
     public function logs(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
+        $user = auth()->getUser();
+
         $query = 'SELECT * FROM `zz_logs`';
         if (!Auth::admin()) {
-            $query .= ' WHERE `id_utente`='.prepare($args['user']['id']);
+            $query .= ' WHERE `id_utente`='.prepare($user['id']);
         }
         $query .= ' ORDER BY `created_at` DESC LIMIT 0, 100';
 
@@ -80,7 +82,7 @@ class InfoController extends Controller
 
     public function passwordPost(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $user = $args['user'];
+        $user = auth()->getUser();
         $password = post('password');
 
         $user->password = $password;
@@ -105,6 +107,7 @@ class InfoController extends Controller
 
     public function bugSend(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
+        $user = auth()->getUser();
         $bug_email = self::$bugEmail;
 
         // Preparazione email
@@ -133,7 +136,7 @@ class InfoController extends Controller
 
         // Aggiunta delle informazioni di base sull'installazione
         $infos = [
-            'Utente' => $args['user']['username'],
+            'Utente' => $user['username'],
             'IP' => get_client_ip(),
             'Versione OSM' => $args['version'].' ('.($args['revision'] ? $args['revision'] : 'In sviluppo').')',
             'PHP' => phpversion(),

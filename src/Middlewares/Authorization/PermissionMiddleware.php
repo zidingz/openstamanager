@@ -24,13 +24,15 @@ class PermissionMiddleware extends Middleware
 
         $args = $route->getArguments();
 
+        $structure = $args['structure'];
+
         // Controllo sui permessi di accesso alla struttura
         $enabled = ['r', 'rw'];
-        $permission = in_array($args['structure']->permission, $enabled);
+        $permission = in_array($structure->permission, $enabled);
 
         // Controllo sui permessi di accesso al record
-        if (!empty($args['id_record'])) {
-            $permission &= $this->recordAccess($args);
+        if (!empty($args['record_id'])) {
+            $permission &= $structure->hasRecordAccess($args['record_id']);
         }
 
         if (!$permission) {
@@ -42,21 +44,5 @@ class PermissionMiddleware extends Middleware
         }
 
         return $response;
-    }
-
-    protected function recordAccess($args)
-    {
-        Query::setSegments(false);
-        $query = Query::getQuery($args['structure'], [
-            'id' => $args['id_record'],
-        ]);
-        Query::setSegments(true);
-
-        // Fix per la visione degli elementi eliminati (per permettere il rispristino)
-        $query = str_replace(['AND `deleted_at` IS NULL', '`deleted_at` IS NULL', 'AND deleted_at IS NULL', 'deleted_at IS NULL'], '', $query);
-
-        $has_access = !empty($query) ? $this->database->fetchNum($query) !== 0 : true;
-
-        return $has_access;
     }
 }

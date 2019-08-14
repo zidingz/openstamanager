@@ -12,6 +12,7 @@
 use Middlewares\Authorization\GuestMiddleware;
 use Middlewares\Authorization\PermissionMiddleware;
 use Middlewares\Authorization\UserMiddleware;
+use Middlewares\ModuleMiddleware;
 
 // Pagina principale
 $app->get('/', 'Controllers\BaseController:index')
@@ -97,7 +98,8 @@ $app->group('/ajax', function () use ($app) {
     // Dataload
     $app->get('/dataload/{module_id:[0-9]+}/[reference/{reference_id:[0-9]+}/]', 'Controllers\AjaxController:dataLoad')
         ->setName('ajax-dataload')
-        ->add(PermissionMiddleware::class);
+        ->add(PermissionMiddleware::class)
+        ->add(ModuleMiddleware::class);
 })->add(UserMiddleware::class);
 
 // Moduli
@@ -114,9 +116,6 @@ $app->group('/module/{module_id:[0-9]+}', function () use ($app) {
         $app->post('/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:editRecord')
             ->setName('module-record-save');
 
-        $app->get('/modal/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:editContent')
-            ->setName('module-record-modal');
-
         $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:recordAction')
             ->setName('module-record-action');
     });
@@ -125,7 +124,10 @@ $app->group('/module/{module_id:[0-9]+}', function () use ($app) {
         ->setName('module-add');
     $app->post('/add/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:addRecord')
         ->setName('module-add-save');
-})->add(UserMiddleware::class)->add(PermissionMiddleware::class);
+})
+    ->add(UserMiddleware::class)
+    ->add(PermissionMiddleware::class)
+    ->add(ModuleMiddleware::class);
 
 // Stampe
 $app->group('/print', function () use ($app) {

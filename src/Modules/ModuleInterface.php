@@ -1,6 +1,6 @@
 <?php
 
-namespace Managers;
+namespace Modules;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

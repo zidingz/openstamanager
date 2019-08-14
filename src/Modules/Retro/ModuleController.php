@@ -1,8 +1,8 @@
 <?php
 
-namespace Controllers\Retro;
+namespace Modules\Retro;
 
-use Managers\ModuleInterface;
+use Modules\ModuleInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -10,20 +10,24 @@ class ModuleController extends RetroController implements ModuleInterface
 {
     public function page(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
+        $args = $this->prepare($args);
         $args = $this->controller($args);
 
-        return $this->twig->render($response, 'old/controller.twig', $args);
+        $template = filter('modal') !== null ? 'add' : 'controller';
+        return $this->twig->render($response, 'old/'.$template.'.twig', $args);
     }
 
-    public function modal(ServerRequestInterface $request, ResponseInterface $response, array $args)
+    public function content(array $args)
     {
-        $args = $this->editor($args);
+        $args = $this->prepare($args);
+        $args = $this->controller($args);
 
-        return $this->twig->render($response, 'old/add.twig', $args);
+        return $args;
     }
 
     public function add(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
+        $args = $this->prepare($args);
         $args = parent::add($args);
 
         return $this->twig->render($response, 'old/add.twig', $args);

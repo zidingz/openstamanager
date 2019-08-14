@@ -8,8 +8,6 @@ use Middlewares\PluginMiddleware;
 
 $app->add(new CalendarMiddleware($container));
 
-$app->add(new PluginMiddleware($container));
-
 // Middleware per i contenuti di base
 $app->add(new ContentMiddleware($container));
 

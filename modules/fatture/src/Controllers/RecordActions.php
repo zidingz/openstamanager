@@ -2,11 +2,11 @@
 
 namespace Modules\Fatture\Controllers;
 
-use Managers\RecordManager;
-use Managers\RowTrait;
+use Modules\Retro\RecordController;
+use Modules\Traits\RowTrait;
 use Modules\Fatture\Fattura;
 
-class Record extends RecordManager
+class Record extends RecordController
 {
     use RowTrait;
 

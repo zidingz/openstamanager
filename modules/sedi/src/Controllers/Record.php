@@ -2,7 +2,7 @@
 
 namespace Plugins\Sedi\Controllers;
 
-use Controllers\Retro\RecordController;
+use Modules\Retro\RecordController;
 
 class Record extends RecordController
 {

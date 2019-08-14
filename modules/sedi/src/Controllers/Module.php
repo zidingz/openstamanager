@@ -2,7 +2,7 @@
 
 namespace Plugins\Sedi\Controllers;
 
-use Controllers\Retro\ModuleController;
+use Modules\Retro\ModuleController;
 
 class Module extends ModuleController
 {

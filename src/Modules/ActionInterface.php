@@ -1,6 +1,6 @@
 <?php
 
-namespace Managers;
+namespace Modules;
 
 interface ActionInterface
 {
