@@ -1,7 +1,5 @@
 <?php
 
-include_once __DIR__.'/../../../core.php';
-
 $manager_id = filter('manager_id');
 
 $checklists = $structure->checklists()->orderBy('created_at')->get();

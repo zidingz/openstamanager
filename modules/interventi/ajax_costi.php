@@ -1,10 +1,5 @@
 <?php
 
-if (file_exists(__DIR__.'/../../../core.php')) {
-    include_once __DIR__.'/../../../core.php';
-} else {
-}
-
 use Modules\Interventi\Intervento;
 
 $intervento = Intervento::find($id_record);

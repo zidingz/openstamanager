@@ -1,7 +1,5 @@
 <?php
 
-include_once __DIR__.'/../../../core.php';
-
 switch ($resource) {
     case 'categorie_documenti':
         $query = 'SELECT id, descrizione FROM zz_documenti_categorie |where| ORDER BY descrizione ASC';

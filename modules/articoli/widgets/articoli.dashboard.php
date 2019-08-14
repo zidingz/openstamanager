@@ -1,7 +1,5 @@
 <?php
 
-include_once __DIR__.'/../../../core.php';
-
 $rs = $dbo->fetchArray('SELECT id, descrizione, qta, threshold_qta, um AS unitamisura FROM mg_articoli WHERE qta < threshold_qta AND attivo = 1 ORDER BY qta ASC');
 
 if (!empty($rs)) {

@@ -1,7 +1,5 @@
 <?php
 
-include_once __DIR__.'/../../../core.php';
-
 $link_id = Modules::get('Interventi')['id'];
 
 $fields = [

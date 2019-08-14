@@ -1,13 +1,31 @@
--- Strutture per la gestione Slim
+-- Strutture per la gestione Slim e conversione plugins
 ALTER TABLE `zz_modules` ADD `namespace` varchar(255);
+ALTER TABLE `zz_modules` ADD `type` ENUM('module', 'record_plugin', 'module_plugin') NOT NULL DEFAULT 'module';
+INSERT INTO `zz_modules` (`id`, `name`, `title`, `type`, `enabled`, `default`, `options`, `options2`, `directory`, `parent`) SELECT NULL, `name`, `title`, IF(`position` = 'tab', 'record_plugin', 'module_plugin'), `enabled`, `default`, `options`, `options2`, `directory`, `idmodule_to` FROM `zz_plugins`;
+UPDATE `zz_modules` SET `name` = 'Statistiche anagrafiche', `default` = 1, `namespace` = 'Plugins\\StatisticheAnagrafiche\\Controllers' WHERE `directory` = 'statistiche_anagrafiche';
+UPDATE `zz_modules` SET `name` = 'Statistiche articoli' `namespace` = 'Plugins\\StatisticheArticoli\\Controllers' WHERE `directory` = 'statistiche_articoli';
+UPDATE `zz_modules` SET `name` = 'Componenti impianto', `directory` = 'componenti_impianto', `default` = 1, `namespace` = 'Plugins\\ComponentiImpianto\\Controllers' WHERE `name` = 'Componenti';
+UPDATE `zz_modules` SET `directory` = 'giacenze', `options` = 'custom', `default` = 1, `namespace` = 'Plugins\\Giacenze\\Controllers' WHERE `name` = 'Giacenze';
+UPDATE `zz_modules` SET `name` = 'Revisioni preventivi', `default` = 1, `namespace` = 'Plugins\\RevisioniPreventivi\\Controllers' WHERE `name` = 'Revisioni';
+UPDATE `zz_modules` SET `name` = 'Importazione FE', `default` = 1, `namespace` = 'Plugins\\ImportFE\\Controllers' WHERE `directory` = 'importFE';
+UPDATE `zz_modules` SET `name` = 'Esportazione FE', `default` = 1, `namespace` = 'Plugins\\ExportFE\\Controllers' WHERE `directory` = 'exportFE';
+UPDATE `zz_modules` SET `name` = 'Rinnovi contratto', `default` = 1, `namespace` = 'Plugins\\RinnoviContratto\\Controllers', `directory` = 'rinnovi_contratto' WHERE `name` = 'Rinnovi';
+UPDATE `zz_modules` SET `name` = 'Consuntivo contratto', `directory` = 'consuntivo_contratto', `default` = 1, `namespace` = 'Plugins\\ConsuntivoContratto\\Controllers' WHERE `name` = 'Consuntivo' LIMIT 1;
+UPDATE `zz_modules` SET `name` = 'Consuntivo preventivo', `directory` = 'consuntivo_preventivo', `default` = 1, `namespace` = 'Plugins\\ConsuntivoPreventivo\\Controllers' WHERE `name` = 'Consuntivo' LIMIT 1;
+UPDATE `zz_modules` SET `name` = 'Impianti intervento', `directory` = 'impianti_intervento', `default` = 1, `namespace` = 'Plugins\\ImpiantiIntervento\\Controllers' WHERE `name` = 'Impianti';
+UPDATE `zz_modules` SET `name` = 'Interventi impianto', `directory` = 'interventi_impianto', `default` = 1, `namespace` = 'Plugins\\InterventiImpianto\\Controllers' WHERE `name` = 'Interventi svolti';
+UPDATE `zz_modules` SET `namespace` = 'Plugins\\Sedi\\Controllers' WHERE `name` = 'Sedi';
+UPDATE `zz_modules` SET `namespace` = 'Plugins\\Referenti\\Controllers' WHERE `name` = 'Referenti';
+UPDATE `zz_modules` SET `name` = 'Seriali', `directory` = 'seriali', `default` = 1, `namespace` = 'Plugins\\Seriali\\Controllers' WHERE `name` = 'Serial';
+UPDATE `zz_modules` SET `directory` = 'movimenti', `default` = 1, `namespace` = 'Plugins\\Movimenti\\Controllers' WHERE `name` = 'Movimenti';
+
+-- Dove'è Pianificazione fatturazione?
+
 UPDATE `zz_modules` SET `namespace` = 'Modules\\Fatture\\Controllers' WHERE `name` = 'Fatture di vendita';
 UPDATE `zz_modules` SET `namespace` = 'Modules\\Fatture\\Controllers' WHERE `name` = 'Fatture di acquisto';
 UPDATE `zz_modules` SET `namespace` = 'Modules\\Dashboard\\Controllers' WHERE `name` = 'Dashboard';
 UPDATE `zz_modules` SET `namespace` = 'Modules\\Aggiornamenti\\Controllers' WHERE `name` = 'Aggiornamenti';
 UPDATE `zz_modules` SET `namespace` = 'Modules\\Anagrafiche\\Controllers' WHERE `name` = 'Anagrafiche';
-
-ALTER TABLE `zz_modules` ADD `type` ENUM('module', 'plugin_module', 'plugin_record') NOT NULL DEFAULT 'module';
-INSERT INTO `zz_modules` (`id`, `name`, `title`, `type`, `enabled`, `default`, `options`, `directory`, `parent`) VALUES (NULL, 'Sedi', 'Sedi', 'plugin_module', '1', '1', '{ \"main_query\": [ { \"type\": \"table\", \"fields\": \"Nome, Indirizzo, Città, CAP, Provincia, Referente\", \"query\": \"SELECT an_sedi.id, an_sedi.nomesede AS Nome, an_sedi.indirizzo AS Indirizzo, an_sedi.citta AS Città, an_sedi.cap AS CAP, an_sedi.provincia AS Provincia, an_referenti.nome AS Referente FROM an_sedi LEFT OUTER JOIN an_referenti ON idsede = an_sedi.id WHERE 1=1 AND an_sedi.idanagrafica=|id_parent| HAVING 2=2 ORDER BY an_sedi.id DESC\"} ]}', 'sedi', '2');
 
 -- Standardizzazione tabelle
 

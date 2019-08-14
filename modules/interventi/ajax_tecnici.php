@@ -1,10 +1,5 @@
 <?php
 
-if (file_exists(__DIR__.'/../../../core.php')) {
-    include_once __DIR__.'/../../../core.php';
-} else {
-}
-
 $show_costi = true;
 // Limitazione delle azioni dei tecnici
 if ($user['gruppo'] == 'Tecnici') {

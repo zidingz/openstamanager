@@ -21,7 +21,7 @@ class ModuleController extends Controller
     public function module($request, $response, $args)
     {
         // Elenco dei plugin
-        $args['plugins'] = $args['module']->children()->where('type', 'plugin_module')->get()->sortBy('order');
+        $args['plugins'] = $args['module']->children()->where('type', 'module_plugin')->get()->sortBy('order');
 
         $controller = $this->getModuleManager($request, $response, $args);
 
@@ -105,7 +105,7 @@ class ModuleController extends Controller
         $args['include_operations'] = true;
 
         // Elenco dei plugin
-        $args['plugins'] = $args['module']->children()->where('type', 'plugin_record')->get()->sortBy('order');
+        $args['plugins'] = $args['module']->children()->where('type', 'record_plugin')->get()->sortBy('order');
 
         $controller = $this->getRecordManager($request, $response, $args);
 

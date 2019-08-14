@@ -1,10 +1,5 @@
 <?php
 
-if (file_exists(__DIR__.'/../../../core.php')) {
-    include_once __DIR__.'/../../../core.php';
-} else {
-}
-
 $idriga = filter('idriga');
 
 //Lettura idanagrafica cliente e percentuale di sconto/rincaro in base al listino

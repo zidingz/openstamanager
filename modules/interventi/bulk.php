@@ -1,10 +1,5 @@
 <?php
 
-if (file_exists(__DIR__.'/../../../core.php')) {
-    include_once __DIR__.'/../../../core.php';
-} else {
-}
-
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Fatture\Fattura;
 use Modules\Fatture\Tipo;

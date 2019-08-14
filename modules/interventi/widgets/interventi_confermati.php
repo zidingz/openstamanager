@@ -1,7 +1,5 @@
 <?php
 
-include_once __DIR__.'/../../../core.php';
-
 $rs = $dbo->fetchArray('SELECT * FROM in_interventi WHERE in_interventi.idstatointervento = (SELECT in_statiintervento.idstatointervento FROm in_statiintervento WHERE in_statiintervento.descrizione=\'In programmazione\') ORDER BY data_richiesta ASC');
 
 if (!empty($rs)) {

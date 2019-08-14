@@ -12,7 +12,7 @@ abstract class ControllerManager extends Controller
     public function getReferenceRecord($args)
     {
         $module = $args['structure'];
-        if ($module->type != 'plugin_module' && $module->type != 'plugin_record') {
+        if ($module->type != 'module_plugin' && $module->type != 'record_plugin') {
             return null;
         }
 

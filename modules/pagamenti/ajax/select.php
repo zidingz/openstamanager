@@ -1,7 +1,5 @@
 <?php
 
-include_once __DIR__.'/../../../core.php';
-
 switch ($resource) {
     case 'pagamenti':
         $query = "SELECT id,

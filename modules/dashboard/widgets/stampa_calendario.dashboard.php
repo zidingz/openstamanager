@@ -1,7 +1,5 @@
 <?php
 
-include_once __DIR__.'/../../../core.php';
-
 //trovo id_print della stampa
 $id_print = Prints::getModulePredefinedPrint(1)['id'];
 

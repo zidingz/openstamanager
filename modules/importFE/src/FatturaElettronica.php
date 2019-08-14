@@ -72,7 +72,7 @@ class FatturaElettronica
             $plugins = $module->plugins;
             if (!empty($plugins)) {
                 $plugin = $plugins->first(function ($value, $key) {
-                    return $value->name == 'Fatturazione Elettronica';
+                    return $value->name == 'Importazione FE';
                 });
 
                 self::$directory = DOCROOT.'/'.$plugin->upload_directory;

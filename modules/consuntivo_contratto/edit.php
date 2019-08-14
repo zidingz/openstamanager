@@ -1,7 +1,5 @@
 <?php
 
-include_once __DIR__.'/../../../core.php';
-
 /* CONSUNTIVO */
 
 // Salvo i colori e gli stati degli stati intervento su un array

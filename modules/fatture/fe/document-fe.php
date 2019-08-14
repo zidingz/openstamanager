@@ -1,7 +1,5 @@
 <?php
 
-include_once __DIR__.'/../../../core.php';
-
 use Modules\Fatture\Fattura;
 
 $space = str_repeat('&nbsp;', 6);

@@ -111,9 +111,10 @@ $app->group('/module/{module_id:[0-9]+}', function () use ($app) {
     $app->group('/edit/{record_id:[0-9]+}', function () use ($app) {
         $app->get('/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:edit')
             ->setName('module-record');
+        $app->post('/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:editRecord');
+
         $app->get('/content/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:editContent')
             ->setName('module-record-content');
-        $app->post('/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:editRecord');
 
         $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:recordAction')
             ->setName('module-record-action');

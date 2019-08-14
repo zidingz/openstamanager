@@ -26,7 +26,7 @@ class InvoiceHook extends HookManager
             $notify = !empty($count);
 
             $plugin = $plugins->first(function ($value, $key) {
-                return $value->name == 'Fatturazione Elettronica';
+                return $value->name == 'Importazione FE';
             });
 
             $link = pathFor('module', [

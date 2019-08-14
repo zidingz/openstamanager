@@ -44,7 +44,7 @@ class Anagrafiche extends Resource implements RetrieveInterface, CreateInterface
         if ($request['resource'] != 'anagrafiche') {
             $type = 'Cliente';
 
-            $filters[] = 'an_anagrafiche.idanagrafica IN (SELECT idanagrafica FROM an_tipianagrafiche_anagrafiche WHERE id_tipo_anagrafica = (SELECT id_tipo_anagrafica FROM an_tipianagrafiche WHERE descrizione = '.prepare($type).'))';
+            $filters[] = 'an_anagrafiche.idanagrafica IN (SELECT idanagrafica FROM an_tipianagrafiche_anagrafiche WHERE id_tipo_anagrafica = (SELECT id FROM an_tipianagrafiche WHERE descrizione = '.prepare($type).'))';
         }
         $query .= !empty($filters) ? ' AND ('.implode('OR ', $filters).')' : '';
 

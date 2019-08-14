@@ -1,7 +1,5 @@
 <?php
 
-include_once __DIR__.'/../../../core.php';
-
 switch ($resource) {
     case 'conti':
         $query = 'SELECT co_pianodeiconti2.* FROM co_pianodeiconti2 LEFT JOIN co_pianodeiconti3 ON co_pianodeiconti3.idpianodeiconti2=co_pianodeiconti2.id |where| GROUP BY co_pianodeiconti2.id';

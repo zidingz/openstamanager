@@ -1,7 +1,5 @@
 <?php
 
-include_once __DIR__.'/../../../core.php';
-
 // INTERVENTI ESEGUITI SU QUESTO IMPIANTO
 echo '
 <div class="card card-outline card-primary">
@@ -41,7 +39,7 @@ if (!empty($results)) {
 
     echo '  <tr>';
     echo '      <td colspan="2" class="text-right">';
-    echo '          <b>Totale:</b>';
+    echo '          <b>'.tr('Totale').':</b>';
     echo '      </td>';
     echo '      <td class="text-right">';
     echo            '<b>'.moneyFormat($totale_interventi).'</b>';
