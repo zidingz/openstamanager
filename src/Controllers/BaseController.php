@@ -6,9 +6,9 @@ use Auth;
 use Controllers\Config\ConfigurationController;
 use Controllers\Config\InitController;
 use Controllers\Config\RequirementsController;
-use Update;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Update;
 
 class BaseController extends Controller
 {

@@ -6,10 +6,10 @@ use AJAX;
 use Models\Hook;
 use Modules;
 use Prints;
-use Translator;
-use Util\Query;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Translator;
+use Util\Query;
 
 class AjaxController extends Controller
 {

@@ -2,8 +2,8 @@
 
 namespace Middlewares;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Classe per gestire la sanitarizzazione degli input, basata sul framework open-source HTMLPurifier.

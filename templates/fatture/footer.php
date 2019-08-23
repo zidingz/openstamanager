@@ -390,7 +390,7 @@ echo '
 <table style="font-size:7pt; color:#999;">
     <tr>
         <td style="text-align:center;">
-            $dicitura_fissa_fattura$
+            '.setting('Dicitura fissa fattura').((!empty(setting('OSMCloud Services API Token'))) ? tr(' Documento privo di valenza fiscale (art 21 dpr 633/72).') : '').'
         </td>
     </tr>
 </table>';

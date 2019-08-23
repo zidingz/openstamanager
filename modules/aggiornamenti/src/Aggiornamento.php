@@ -7,7 +7,6 @@ use GuzzleHttp\Client;
 use InvalidArgumentException;
 use Models\Group;
 use Models\Module;
-use Models\Plugin;
 use Modules;
 use Parsedown;
 use Plugins;

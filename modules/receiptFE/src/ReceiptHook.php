@@ -2,8 +2,8 @@
 
 namespace Plugins\ReceiptFE;
 
-use Modules\HookManager;
 use Modules;
+use Modules\HookManager;
 
 class ReceiptHook extends HookManager
 {

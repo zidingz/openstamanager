@@ -100,7 +100,9 @@ class Module extends Model
     public function getController(ContainerInterface $container, string $name, ?int $record_id = null, ?int $reference_id = null)
     {
         $class = $this->getControllerClass($name);
-        if (empty($class)) return null;
+        if (empty($class)) {
+            return null;
+        }
 
         $controller = new $class($container, $this, $record_id, $reference_id);
 

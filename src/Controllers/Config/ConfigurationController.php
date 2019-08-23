@@ -5,8 +5,8 @@ namespace Controllers\Config;
 use App;
 use Controllers\Controller;
 use Database;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class ConfigurationController extends Controller
 {

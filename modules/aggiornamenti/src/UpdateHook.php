@@ -2,8 +2,8 @@
 
 namespace Modules\Aggiornamenti;
 
-use Modules\HookManager;
 use Modules;
+use Modules\HookManager;
 
 class UpdateHook extends HookManager
 {

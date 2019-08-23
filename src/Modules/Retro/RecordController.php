@@ -3,7 +3,6 @@
 namespace Modules\Retro;
 
 use Modules\RecordInterface;
-use Models\Module;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -15,6 +14,7 @@ class RecordController extends RetroController implements RecordInterface
         $args = $this->editor($args);
 
         $template = filter('modal') !== null ? 'add' : 'editor';
+
         return $this->twig->render($response, 'old/'.$template.'.twig', $args);
     }
 

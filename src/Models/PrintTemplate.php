@@ -15,6 +15,18 @@ class PrintTemplate extends Model
     protected $table = 'zz_prints';
     protected $main_folder = 'templates';
 
+    /* Relazioni Eloquent */
+
+    public function module()
+    {
+        return $this->belongsTo(Module::class, 'id_module');
+    }
+
+    public function groups()
+    {
+        return $this->morphToMany(Group::class, 'permission', 'zz_permissions', 'external_id', 'group_id')->where('permission_level', '!=', '-')->withPivot('permission_level');
+    }
+
     /**
      * Restituisce un array associativo dalla codifica JSON delle opzioni di stampa.
      *
@@ -30,18 +42,6 @@ class PrintTemplate extends Model
         $result = (array) json_decode($string, true);
 
         return $result;
-    }
-
-    /* Relazioni Eloquent */
-
-    public function module()
-    {
-        return $this->belongsTo(Module::class, 'id_module');
-    }
-
-    public function groups()
-    {
-        return $this->morphToMany(Group::class, 'permission', 'zz_permissions', 'external_id', 'group_id')->where('permission_level', '!=', '-')->withPivot('permission_level');
     }
 
     protected static function boot()

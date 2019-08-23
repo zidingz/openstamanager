@@ -2,11 +2,11 @@
 
 namespace Middlewares;
 
+use Models\Module;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\NotFoundException;
 use Update;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Models\Module;
 use Util\Query;
 
 /**
@@ -51,4 +51,3 @@ class ModuleMiddleware extends Middleware
         return $next($request, $response);
     }
 }
-

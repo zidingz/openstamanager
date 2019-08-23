@@ -21,13 +21,13 @@ class ModuleController extends Controller
      * @return mixed
      */
     public function module(ServerRequestInterface $request, ResponseInterface $response, array $args)
-{
+    {
         // Elenco dei plugin
         $args['plugins'] = $args['module']->children()->where('type', 'module_plugin')->get()->sortBy('order');
 
         $controller = $this->getModuleManager($request, $response, $args);
 
-$response = $controller->page($request, $response, $args);
+        $response = $controller->page($request, $response, $args);
 
         return $response;
     }
@@ -110,7 +110,6 @@ $response = $controller->page($request, $response, $args);
 
         $controller = $this->getRecordManager($request, $response, $args);
 
-
         $response = $controller->page($request, $response, $args);
 
         return $response;
@@ -128,7 +127,7 @@ $response = $controller->page($request, $response, $args);
      * @return mixed
      */
     public function editRecord(ServerRequestInterface $request, ResponseInterface $response, array $args)
-{
+    {
         $controller = $this->getRecordManager($request, $response, $args);
 
         $record_id = $controller->update($request, $response, $args);
@@ -157,7 +156,7 @@ $response = $controller->page($request, $response, $args);
      * @return mixed
      */
     public function add(ServerRequestInterface $request, ResponseInterface $response, array $args)
-{
+    {
         $args['query_params'] = [];
         $query = $request->getQueryParams();
         foreach ($query as $key => $value) {
@@ -166,7 +165,7 @@ $response = $controller->page($request, $response, $args);
 
         $controller = $this->getModuleManager($request, $response, $args);
 
-$response = $controller->add($request, $response, $args);
+        $response = $controller->add($request, $response, $args);
 
         return $response;
     }
@@ -183,7 +182,7 @@ $response = $controller->add($request, $response, $args);
      * @return mixed
      */
     public function addRecord(ServerRequestInterface $request, ResponseInterface $response, array $args)
-{
+    {
         $controller = $this->getModuleManager($request, $response, $args);
 
         $record_id = $controller->create($request, $response, $args);
@@ -212,7 +211,7 @@ $response = $controller->add($request, $response, $args);
      * @return mixed
      */
     public function recordAction(ServerRequestInterface $request, ResponseInterface $response, array $args)
-{
+    {
         $controller = $this->getRecordActionsManager($request, $response, $args);
 
         return $this->action($request, $response, $args, $controller);
@@ -230,7 +229,7 @@ $response = $controller->add($request, $response, $args);
      * @return mixed
      */
     public function moduleAction(ServerRequestInterface $request, ResponseInterface $response, array $args)
-{
+    {
         $class = self::getModuleActionsManager($request, $response, $args);
         $controller = new $class($this->container);
 
@@ -238,22 +237,22 @@ $response = $controller->add($request, $response, $args);
     }
 
     public function getRecordManager(ServerRequestInterface $request, ResponseInterface $response, array $args)
-{
+    {
         return $this->getController($request, $response, $args, 'Record');
     }
 
     public function getModuleManager(ServerRequestInterface $request, ResponseInterface $response, array $args)
-{
+    {
         return $this->getController($request, $response, $args, 'Module');
     }
 
     public function getModuleActionsManager(ServerRequestInterface $request, ResponseInterface $response, array $args)
-{
+    {
         return $this->getController($request, $response, $args, 'ModuleActions');
     }
 
     public function getRecordActionsManager(ServerRequestInterface $request, ResponseInterface $response, array $args)
-{
+    {
         return $this->getController($request, $response, $args, 'RecordActions');
     }
 

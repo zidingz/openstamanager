@@ -6,9 +6,9 @@ use Auth;
 use Controllers\Config\ConfigurationController;
 use Controllers\Config\InitController;
 use Controllers\Config\RequirementsController;
-use Update;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Update;
 
 /**
  * Classe per l'impostazione automatica delle variabili rilevanti per il funzionamento del progetto.

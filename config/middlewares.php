@@ -4,7 +4,6 @@ use Middlewares\CalendarMiddleware;
 use Middlewares\ConfigMiddleware;
 use Middlewares\ContentMiddleware;
 use Middlewares\LangMiddleware;
-use Middlewares\PluginMiddleware;
 
 $app->add(new CalendarMiddleware($container));
 

@@ -2,8 +2,8 @@
 
 namespace Middlewares;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Middleware per l'implementazione del periodo temporale.

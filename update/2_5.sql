@@ -1,5 +1,5 @@
 -- Strutture per la gestione Slim e conversione plugins
-ALTER TABLE `zz_modules` ADD `namespace` varchar(255);
+ALTER TABLE `zz_modules` ADD `namespace` varchar(255) NOT NULL;
 ALTER TABLE `zz_modules` ADD `type` ENUM('module', 'record_plugin', 'module_plugin') NOT NULL DEFAULT 'module';
 INSERT INTO `zz_modules` (`id`, `name`, `title`, `type`, `enabled`, `default`, `options`, `options2`, `directory`, `parent`) SELECT NULL, `name`, `title`, IF(`position` = 'tab', 'record_plugin', 'module_plugin'), `enabled`, `default`, `options`, `options2`, `directory`, `idmodule_to` FROM `zz_plugins`;
 UPDATE `zz_modules` SET `name` = 'Statistiche anagrafiche', `default` = 1, `namespace` = 'Plugins\\StatisticheAnagrafiche\\Controllers' WHERE `directory` = 'statistiche_anagrafiche';
@@ -29,6 +29,9 @@ UPDATE `zz_modules` SET `namespace` = 'Modules\\Anagrafiche\\Controllers' WHERE 
 
 -- Aggiornamento allegati
 UPDATE `zz_files` SET `id_module` = (SELECT `id` FROM `zz_modules` WHERE `title` = (SELECT `title` FROM `zz_plugins` WHERE `id` = `zz_files`.`id_plugin`) AND `parent` = (SELECT `idmodule_to` FROM `zz_plugins` WHERE `id` = `zz_files`.`id_plugin`))  WHERE `id_plugin` IS NOT NULL;
+
+ALTER TABLE `zz_prints` ADD `class` varchar(255) NOT NULL;
+ALTER TABLE `zz_widgets` ADD `class` varchar(255) NOT NULL;
 
 -- Standardizzazione tabelle
 

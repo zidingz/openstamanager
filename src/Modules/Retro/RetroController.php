@@ -6,7 +6,7 @@ use App;
 use Controllers\Controller;
 use HTMLBuilder\HTMLBuilder;
 use Modules\Manager;
-use \ReflectionClass;
+use ReflectionClass;
 
 class RetroController extends Manager
 {
@@ -15,13 +15,14 @@ class RetroController extends Manager
         return $args['reference_id'];
     }
 
-    protected function getDirectory(){
+    protected function getDirectory()
+    {
         $class_info = new ReflectionClass($this);
         $file = $class_info->getFileName();
 
         $directory = dirname($file);
         $current_directory = dirname($directory);
-        while (!ends_with($current_directory, 'modules')){
+        while (!ends_with($current_directory, 'modules')) {
             $directory = $current_directory;
             $current_directory = dirname($directory);
         }
@@ -29,7 +30,8 @@ class RetroController extends Manager
         return $directory;
     }
 
-    protected function filepath($file){
+    protected function filepath($file)
+    {
         $directory = $this->getDirectory();
 
         return App::filepath($directory.'|custom|', $file);
@@ -161,41 +163,42 @@ class RetroController extends Manager
 
         return $args;
     }
-/*
-    protected function plugins($args)
-    {
-        extract($args);
 
-        $dbo = $database = $this->database;
-
-        // Plugins
-        $plugins_content = [];
-
-        $module_record = $record;
-        foreach ($args['plugins'] as $plugin) {
-            $record = $module_record;
-            $id_plugin = $plugin['id'];
-
-            $bulk = null;
-            $content = null;
-
-            // Inclusione di eventuale plugin personalizzato
-            if (!empty($plugin['script']) || $plugin->option == 'custom') {
-                ob_start();
-                include $plugin->getEditFile();
-                $content = ob_get_clean();
-            } else {
-                $bulk = $this->filepath('bulk.php');
-                $bulk = empty($bulk) ? [] : include $bulk;
-                $bulk = empty($bulk) ? [] : $bulk;
+    /*
+        protected function plugins($args)
+        {
+            extract($args);
+    
+            $dbo = $database = $this->database;
+    
+            // Plugins
+            $plugins_content = [];
+    
+            $module_record = $record;
+            foreach ($args['plugins'] as $plugin) {
+                $record = $module_record;
+                $id_plugin = $plugin['id'];
+    
+                $bulk = null;
+                $content = null;
+    
+                // Inclusione di eventuale plugin personalizzato
+                if (!empty($plugin['script']) || $plugin->option == 'custom') {
+                    ob_start();
+                    include $plugin->getEditFile();
+                    $content = ob_get_clean();
+                } else {
+                    $bulk = $this->filepath('bulk.php');
+                    $bulk = empty($bulk) ? [] : include $bulk;
+                    $bulk = empty($bulk) ? [] : $bulk;
+                }
+    
+                $plugins_content[$id_plugin] = [
+                    'content' => $content,
+                    'bulk' => $bulk,
+                ];
             }
-
-            $plugins_content[$id_plugin] = [
-                'content' => $content,
-                'bulk' => $bulk,
-            ];
-        }
-
-        return $plugins_content;
-    }*/
+    
+            return $plugins_content;
+        }*/
 }

@@ -2,9 +2,9 @@
 
 namespace Modules\Fatture\Controllers;
 
+use Modules\Fatture\Fattura;
 use Modules\Retro\RecordController;
 use Modules\Traits\RowTrait;
-use Modules\Fatture\Fattura;
 
 class Record extends RecordController
 {

@@ -3,10 +3,9 @@
 namespace Middlewares\Authorization;
 
 use Middlewares\Middleware;
-use Slim\Exception\NotFoundException;
-use Util\Query;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Exception\NotFoundException;
 
 /**
  * Classe per il controllo sui permessi di accesso relativi alle diverse sezioni del gestionale.

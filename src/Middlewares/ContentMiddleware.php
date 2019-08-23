@@ -2,12 +2,10 @@
 
 namespace Middlewares;
 
-use Models\Module;
 use Modules;
-use Update;
-use Util\Query;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Update;
 
 /**
  * Classe per l'impostazione automatica delle variabili rilevanti per il funzionamento del progetto.

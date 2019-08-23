@@ -5,7 +5,7 @@ include_once __DIR__.'/../../core.php';
 ?><form action="<?php pathFor('module-add-save', [
         'module_id' => $module_id,
         'reference_id' => $reference_id,
-    ]) ?>" method="post" id="add-form">
+    ]); ?>" method="post" id="add-form">
 	<input type="hidden" name="op" value="add">
 	<input type="hidden" name="backto" value="record-edit">
 

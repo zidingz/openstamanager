@@ -14,6 +14,7 @@ class ModuleController extends RetroController implements ModuleInterface
         $args = $this->controller($args);
 
         $template = filter('modal') !== null ? 'add' : 'controller';
+
         return $this->twig->render($response, 'old/'.$template.'.twig', $args);
     }
 

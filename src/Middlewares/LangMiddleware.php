@@ -3,9 +3,9 @@
 namespace Middlewares;
 
 use Intl\Formatter;
-use Translator;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Translator;
 
 /**
  * Middlware per la gestione della lingua del progetto.

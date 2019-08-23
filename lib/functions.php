@@ -351,9 +351,11 @@ function clean($string, $permitted = '')
  * Argomenti di ricerca dalla sessione.
  *
  * @param $module_id
+ *
  * @return array
  */
-function getSessionSearch($module_id){
+function getSessionSearch($module_id)
+{
     $search = [];
 
     $array = $_SESSION['module_'.$module_id];

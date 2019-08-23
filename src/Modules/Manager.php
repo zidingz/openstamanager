@@ -6,8 +6,6 @@ use Controllers\Controller;
 use Controllers\ModuleController;
 use Models\Module;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 abstract class Manager extends Controller
 {
@@ -24,10 +22,50 @@ abstract class Manager extends Controller
         $this->reference_id = $reference_id;
     }
 
+    abstract public function getReferenceID(array $args);
+
+    public function getReferenceRecord($args)
+    {
+        $module = $args['structure'];
+        if ($module->type == 'module') {
+            return null;
+        }
+
+        //$class = ModuleController::getControllerClass($module->parent()->first(), 'Record');
+        $id_record = $this->getReferenceID($args);
+        /*
+                if (!empty($id_record) && !empty($class)) {
+                    $manager = new $class($this->container);
+                    $data = $manager->data($id_record);
+        
+                    $result = $data['record'];
+                }
+        */
+        return $result;
+    }
+
+    public function plugins(array $args)
+    {
+        $plugins = $args['plugins'];
+        $args['plugins'] = [];
+
+        $results = [];
+        foreach ($plugins as $plugin) {
+            $controller = $plugin->getController($this->container, 'Module', null, $this->record_id);
+
+            if (!empty($controller)) {
+                $results[$plugin->id] = $controller->content($args);
+            }
+        }
+
+        return $results;
+    }
+
     /**
      * Completamento delle informazioni per il rendering del modulo.
      *
      * @param array $args
+     *
      * @return array
      */
     protected function prepare(array $args)
@@ -45,43 +83,5 @@ abstract class Manager extends Controller
         $args['reference_record'] = $this->getReferenceRecord($args);
 
         return $args;
-    }
-
-    abstract public function getReferenceID(array $args);
-
-    public function getReferenceRecord($args)
-    {
-        $module = $args['structure'];
-        if ($module->type == 'module') {
-            return null;
-        }
-
-        //$class = ModuleController::getControllerClass($module->parent()->first(), 'Record');
-        $id_record = $this->getReferenceID($args);
-/*
-        if (!empty($id_record) && !empty($class)) {
-            $manager = new $class($this->container);
-            $data = $manager->data($id_record);
-
-            $result = $data['record'];
-        }
-*/
-        return $result;
-    }
-
-    public function plugins(array $args){
-        $plugins = $args['plugins'];
-        $args['plugins'] = [];
-
-        $results = [];
-        foreach ($plugins as $plugin) {
-            $controller = $plugin->getController($this->container, 'Module', null, $this->record_id);
-
-            if (!empty($controller)){
-                $results[$plugin->id] = $controller->content($args);
-            }
-        }
-
-        return $results;
     }
 }

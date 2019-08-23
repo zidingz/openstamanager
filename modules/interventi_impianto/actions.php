@@ -1,6 +1,5 @@
 <?php
 
-
 $matricole = (array) post('matricole');
 
 // Salvo gli impianti selezionati
