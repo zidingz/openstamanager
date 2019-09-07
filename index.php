@@ -160,8 +160,15 @@ $response = $response->withBody($body);
 $app->respond($response);
 
 // Informazioni estese sulle azioni dell'utente
-if (!empty(post('op')) && post('op') != 'send-email') {
-    operationLog(post('op'));
+use Models\OperationLog;
+
+$op = post('op');
+if (!empty($op)) {
+    OperationLog::setInfo('id_module', $id_module);
+    OperationLog::setInfo('id_plugin', $id_plugin);
+    OperationLog::setInfo('id_record', $id_record);
+
+    OperationLog::build($op);
 }
 
 // Annullo le notifiche (AJAX)

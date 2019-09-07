@@ -2,6 +2,7 @@
 
 use Modules\Fatture\Fattura;
 use Plugins\ExportFE\FatturaElettronica;
+use Plugins\ExportFE\Interaction;
 use Util\Zip;
 
 switch (post('op')) {
@@ -87,6 +88,23 @@ switch (post('op')) {
 
         break;
 
+    case 'hook-send':
+        foreach ($id_records as $id) {
+            $fattura = Fattura::find($id);
+
+            $fe = new \Plugins\ExportFE\FatturaElettronica($fattura->id);
+            if ($fe->isGenerated() && $fattura->codice_stato_fe == 'GEN') {
+                $fattura->codice_stato_fe = 'QUEUE';
+                $fattura->data_stato_fe = date('Y-m-d H:i:s');
+                $fattura->hook_send = true;
+                $fattura->save();
+            }
+        }
+
+        flash()->info(tr('Le fatture elettroniche sono state aggiunte alla coda di invio'));
+
+        break;
+
     case 'export-xml-bulk':
         $dir = DOCROOT.'/files/export_fatture/';
         directory($dir.'tmp/');
@@ -139,7 +157,7 @@ switch (post('op')) {
 
                     if ($result) {
                         ++$added;
-                        operationLog('export-xml-bulk', ['id_record' => $r['id']]);
+                    //operationLog('export-xml-bulk', ['id_record' => $r['id']]);
                     } else {
                         $failed[] = $fattura->numero_esterno;
                     }
@@ -216,5 +234,17 @@ $operations['export-xml-bulk'] = [
         'blank' => true,
     ],
 ];
+
+if (Interaction::isEnabled()) {
+    $operations['hook-send'] = [
+        'text' => '<span><i class="fa fa-paper-plane"></i> '.tr('Coda di invio FE').'</span>',
+        'data' => [
+            'title' => '',
+            'msg' => tr('Vuoi davvero aggiungere queste fatture alla coda di invio per le fatture elettroniche?'),
+            'button' => tr('Procedi'),
+            'class' => 'btn btn-lg btn-warning',
+        ],
+    ];
+}
 
 return $operations;

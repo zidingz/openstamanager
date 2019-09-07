@@ -292,6 +292,9 @@ class Update
                     }
                 }
 
+                // Normalizzazione di charset e collation
+                self::normalizeDatabase($database->getDatabaseName());
+
                 // Normalizzazione dei campi per l'API
                 self::executeScript(DOCROOT.'/update/api.php');
 

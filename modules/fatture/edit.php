@@ -488,17 +488,17 @@ if (!$block_edit) {
             }
 
             echo '
-                    <div class="tip" data-toggle="tooltip" title="'.tr('Interventi completati non collegati a preventivi o contratti e che non siano già stati fatturati.').'" style="display:inline;">
-                        <a class="btn btn-sm btn-primary '.(!empty($interventi) ? '' : ' disabled').'" data-href="'.$rootdir.'/modules/fatture/add_intervento.php?id_module='.$id_module.'&id_record='.$id_record.'" data-title="Aggiungi intervento">
-                            <i class="fa fa-plus"></i> Intervento
+                    <div class="tip" data-toggle="tooltip" title="'.tr('Attività completate non collegate a preventivi o contratti e che non siano già state fatturate.').'" style="display:inline;">
+                        <a class="btn btn-sm btn-primary '.(!empty($interventi) ? '' : ' disabled').'" data-href="'.$rootdir.'/modules/fatture/add_intervento.php?id_module='.$id_module.'&id_record='.$id_record.'" data-title="Aggiungi attività">
+                            <i class="fa fa-plus"></i> Attività
                         </a>
                     </div>';
 
             // Lettura preventivi accettati, in attesa di conferma o in lavorazione
-            $prev_query = 'SELECT COUNT(*) AS tot FROM co_preventivi WHERE idanagrafica='.prepare($record['idanagrafica'])." AND id_stato IN(SELECT id FROM co_statipreventivi WHERE descrizione='Accettato' OR descrizione='In lavorazione' OR descrizione='In attesa di conferma') AND default_revision=1 AND co_preventivi.id IN (SELECT idpreventivo FROM co_righe_preventivi WHERE co_righe_preventivi.idpreventivo = co_preventivi.id AND (qta - qta_evasa) > 0)";
+            $prev_query = 'SELECT COUNT(*) AS tot FROM co_preventivi WHERE idanagrafica='.prepare($record['idanagrafica']).' AND id_stato IN(SELECT id FROM co_statipreventivi WHERE is_fatturabile = 1) AND default_revision=1 AND co_preventivi.id IN (SELECT idpreventivo FROM co_righe_preventivi WHERE co_righe_preventivi.idpreventivo = co_preventivi.id AND (qta - qta_evasa) > 0)';
             $preventivi = $dbo->fetchArray($prev_query)[0]['tot'];
             echo '
-                    <div class="tip"  title="'.tr('Preventivi accettati, in attesa di conferma o in lavorazione.').'" style="display:inline;">
+                    <div class="tip" style="display:inline;">
                         <a class="btn btn-sm btn-primary '.(!empty($preventivi) ? '' : ' disabled').'" data-href="'.$rootdir.'/modules/fatture/add_preventivo.php?id_module='.$id_module.'&id_record='.$id_record.'" data-title="Aggiungi preventivo" data-toggle="tooltip">
                             <i class="fa fa-plus"></i> Preventivo
                         </a>
@@ -508,7 +508,7 @@ if (!$block_edit) {
             $contr_query = 'SELECT COUNT(*) AS tot FROM co_contratti WHERE idanagrafica='.prepare($record['idanagrafica']).' AND id_stato IN( SELECT id FROM co_staticontratti WHERE is_fatturabile = 1) AND co_contratti.id IN (SELECT idcontratto FROM co_righe_contratti WHERE co_righe_contratti.idcontratto = co_contratti.id AND (qta - qta_evasa) > 0)';
             $contratti = $dbo->fetchArray($contr_query)[0]['tot'];
             echo '
-                    <div class="tip"  title="'.tr('Contratti accettati, in attesa di conferma o in lavorazione.').'" style="display:inline;">
+                    <div class="tip" style="display:inline;">
                         <a class="btn btn-sm btn-primary '.(!empty($contratti) ? '' : ' disabled').'"  data-href="'.$rootdir.'/modules/fatture/add_contratto.php?id_module='.$id_module.'&id_record='.$id_record.'" data-title="Aggiungi contratto" data-toggle="tooltip">
                             <i class="fa fa-plus"></i> Contratto
                         </a>
@@ -533,7 +533,7 @@ if (!$block_edit) {
     }
 
     // Lettura articoli
-    $art_query = 'SELECT COUNT(*) AS tot FROM mg_articoli WHERE attivo = 1';
+    $art_query = 'SELECT id FROM mg_articoli WHERE attivo = 1 AND deleted_at IS NULL';
     if ($dir == 'entrata') {
         $art_query .= ' AND (qta > 0 OR servizio = 1)';
     }
@@ -544,7 +544,7 @@ if (!$block_edit) {
         'action' => 'rowAdd',
     ]);
 
-    $articoli = $dbo->fetchArray($art_query)[0]['tot'];
+    $articoli = $dbo->fetchNum($art_query);
     echo '
                         <a class="btn btn-sm btn-primary'.(!empty($articoli) ? '' : ' disabled').'" data-href="'.$row_add.'?is_articolo" data-toggle="tooltip" data-title="'.tr('Aggiungi articolo').'">
                             <i class="fa fa-plus"></i> '.tr('Articolo').'

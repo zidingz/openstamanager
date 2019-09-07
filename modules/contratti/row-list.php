@@ -80,7 +80,7 @@ foreach ($righe as $riga) {
         // Imponibile
         echo '
             <td class="text-right">
-            '.moneyFormat($riga->imponibile_scontato).'
+            '.moneyFormat($riga->totale_imponibile).'
             </td>';
     }
 

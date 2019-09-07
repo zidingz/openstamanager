@@ -301,38 +301,6 @@ function searchFieldName($field)
 }
 
 /**
- * Registra un'azione specifica nei log.
- *
- * @since 2.4.3
- *
- * @param string $operation
- * @param int    $id_record
- * @param int    $id_module
- * @param int    $id_plugin
- * @param int    $reference_id
- * @param int    $id_email
- * @param array  $options
- */
-function operationLog($operation, array $ids = [], array $options = [])
-{
-    if (!Auth::check()) {
-        return false;
-    }
-
-    $ids['id_module'] = $ids['id_module'] ?: Modules::getCurrent()['id'];
-    $ids['id_record'] = $ids['id_record'] ?: filter('id_record');
-
-    database()->insert('zz_operations', array_merge($ids, [
-        'op' => $operation,
-        'id_utente' => Auth::user()['id'],
-
-        'options' => !empty($options) ? json_encode($options) : null,
-    ]));
-
-    return true;
-}
-
-/**
  * Rimuove spazi e caratteri speciali da una stringa.
  *
  * @param string $string

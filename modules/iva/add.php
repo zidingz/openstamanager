@@ -23,12 +23,12 @@
         </div>
 
 		<div class="col-md-6">
-			{[ "type": "number", "label": "<?php echo tr('Percentuale'); ?>", "name": "percentuale", "id": "percentuale-add", "icon-after": "<i class=\"fa fa-percent\"></i>" ]}
+			{[ "type": "number", "label": "<?php echo tr('Percentuale'); ?>", "name": "percentuale", "id": "percentuale-add", "icon-after": "<i class=\"fa fa-percent\"></i>", "max-value": "100" ]}
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-6">
-			{[ "type": "number", "label": "<?php echo tr('Indetraibile'); ?>", "name": "indetraibile", "icon-after": "<i class=\"fa fa-percent\"></i>" ]}
+			{[ "type": "number", "label": "<?php echo tr('Indetraibile'); ?>", "name": "indetraibile", "icon-after": "<i class=\"fa fa-percent\"></i>", "max-value": "100" ]}
 		</div>
 
 		<div class="col-md-6">

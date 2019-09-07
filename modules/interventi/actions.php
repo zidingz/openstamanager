@@ -2,6 +2,8 @@
 
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Articoli\Articolo as ArticoloOriginale;
+use Modules\Emails\Mail;
+use Modules\Emails\Template;
 use Modules\Interventi\Components\Articolo;
 use Modules\Interventi\Components\Riga;
 use Modules\Interventi\Components\Sconto;
@@ -48,16 +50,11 @@ switch (post('op')) {
         // Notifica chiusura intervento
         $stato = $dbo->selectOne('in_statiintervento', '*', ['id' => post('idstatointervento')]);
         if (!empty($stato['notifica']) && !empty($stato['destinatari']) && $stato['id'] != $record['id_stato']) {
-            $n = new Notifications\EmailNotification();
+            $template = Template::find($stato['id_email']);
 
-            $n->setTemplate($stato['id_email'], $id_record);
-            $n->setReceivers($stato['destinatari']);
-
-            if ($n->send()) {
-                flash()->info(tr('Notifica inviata'));
-            } else {
-                flash()->warning(tr("Errore nell'invio della notifica"));
-            }
+            $mail = Mail::build(auth()->getUser(), $template, $id_record);
+            $mail->addReceiver($stato['destinatari']);
+            $mail->save();
         }
         aggiorna_sedi_movimenti('interventi', $id_record);
         flash()->info(tr('Informazioni salvate correttamente!'));
@@ -479,16 +476,11 @@ switch (post('op')) {
                     $stato = $dbo->selectOne('in_statiintervento', '*', ['descrizione' => 'Completato']);
                     // Notifica chiusura intervento
                     if (!empty($stato['notifica']) && !empty($stato['destinatari'])) {
-                        $n = new Notifications\EmailNotification();
+                        $template = Template::find($stato['id_email']);
 
-                        $n->setTemplate($stato['id_email'], $id_record);
-                        $n->setReceivers($stato['destinatari']);
-
-                        if ($n->send()) {
-                            flash()->info(tr('Notifica inviata'));
-                        } else {
-                            flash()->warning(tr("Errore nell'invio della notifica"));
-                        }
+                        $mail = Mail::build(auth()->getUser(), $template, $id_record);
+                        $mail->addReceiver($stato['destinatari']);
+                        $mail->save();
                     }
                 } else {
                     flash()->error(tr('Errore durante il salvataggio della firma nel database!'));
@@ -528,16 +520,11 @@ switch (post('op')) {
 
         // Notifica rimozione dell' intervento al tecnico
         if (!empty($tecnico['email'])) {
-            $n = new Notifications\EmailNotification();
+            $template = Template::get('Notifica rimozione intervento');
 
-            $n->setTemplate('Notifica rimozione intervento', $id_record);
-            $n->setReceivers($tecnico['email']);
-
-            if ($n->send()) {
-                flash()->info(tr('Notifica inviata'));
-            } else {
-                flash()->warning(tr("Errore nell'invio della notifica"));
-            }
+            $mail = Mail::build(auth()->getUser(), $template, $id_record);
+            $mail->addReceiver($tecnico['email']);
+            $mail->save();
         }
 
         break;

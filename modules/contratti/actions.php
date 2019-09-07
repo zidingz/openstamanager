@@ -134,7 +134,7 @@ switch (post('op')) {
 
         $articolo->id_iva = post('idiva');
 
-        //$articolo->prezzo_unitario_acquisto = post('prezzo_acquisto', true) ?: 0;
+        $articolo->prezzo_unitario_acquisto = post('prezzo_acquisto', true) ?: 0;
         $articolo->prezzo_unitario_vendita = post('prezzo', true);
         $articolo->sconto_unitario = post('sconto', true);
         $articolo->tipo_sconto = post('tipo_sconto');
@@ -192,7 +192,7 @@ switch (post('op')) {
 
         $riga->id_iva = post('idiva');
 
-        //$riga->prezzo_unitario_acquisto = post('prezzo_acquisto', true) ?: 0;
+        $riga->prezzo_unitario_acquisto = post('prezzo_acquisto', true) ?: 0;
         $riga->prezzo_unitario_vendita = post('prezzo', true);
         $riga->sconto_unitario = post('sconto', true);
         $riga->tipo_sconto = post('tipo_sconto');
@@ -307,6 +307,7 @@ switch (post('op')) {
                     unset($rs[$i]['id']);
                     unset($rs[$i]['created_at']);
                     unset($rs[$i]['updated_at']);
+                    unset($rs[$i]['qta_evasa']);
                     $rs[$i]['idcontratto'] = $new_idcontratto;
 
                     $dbo->insert('co_righe_contratti', $rs);

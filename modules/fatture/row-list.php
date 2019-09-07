@@ -249,18 +249,22 @@ foreach ($righe as $row) {
         }
 
         echo "
-                    <a class='btn btn-sm btn-info' data-toggle='modal' data-title='".tr('Dati Fattura Elettronica')."' data-href='".$structure->fileurl('fe/row-fe.php').'?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$riga['id']."'>
-                        <i class='fa fa-file-code-o'></i>
+                    <a class='btn btn-xs btn-info'  title='".tr('Aggiungi informazioni FE per questa riga...')."' data-toggle='modal' data-title='".tr('Dati Fattura Elettronica')."' data-href='".$structure->fileurl('fe/row-fe.php').'?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$riga['id']."'>
+                        <i class='fa fa-file-code-o '></i>
                     </a>
 
-                    <a class='btn btn-sm btn-warning' title='Modifica questa riga...' onclick=\"launch_modal( 'Modifica riga', '".pathFor('module-record-action', [
+                    <a class='btn btn-xs btn-warning' title='".tr('Modifica questa riga...')."' onclick=\"launch_modal( 'Modifica riga', '".pathFor('module-record-action', [
                         'module_id' => $id_module,
                         'record_id' => $id_record,
                         'action' => 'rowEdit',
                         'params' => $riga['id'],
-                    ])."');\"><i class='fa fa-edit'></i></a>
+                    ])."');\">
+                        <i class='fa fa-edit'></i>
+                    </a>
 
-                    <a class='btn btn-sm btn-danger' title='Rimuovi questa riga...' onclick=\"if( confirm('Rimuovere questa riga dalla fattura?') ){ $('#delete-form-".$riga['id']."').submit(); }\"><i class='fa fa-trash'></i></a>
+                    <a class='btn btn-xs btn-danger' title='".tr('Rimuovi questa riga...')."' onclick=\"if( confirm('".tr('Rimuovere questa riga dalla fattura?')."') ){ $('#delete-form-".$riga['id']."').submit(); }\">
+                        <i class='fa fa-trash'></i>
+                    </a>
                 </div>
             </form>";
     }

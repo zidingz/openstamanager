@@ -49,9 +49,9 @@ echo '
         <tr class="first-level">
             <th colspan="2">
                 2 FatturaElettronicaBody
-                <button type="submit" class="btn btn-primary float-right">
+                <!--button type="submit" class="btn btn-primary float-right">
                     <i class="fa fa-edit"></i> '.tr('Salva').'
-                </button>
+                </button-->
 			</th>
         </tr>
         <tr class="second-level">
@@ -118,12 +118,12 @@ echo '
 var n = '.($key - 1).';
 function add_altri_dati(btn){
     cleanup_inputs();
-    
+
     var last = $(btn).closest("table").find("tr[id^=last-altri_dati]").parent().last();
 
     n++;
     var text = replaceAll($("#altri_dati-templace").html(), "-id-", "" + n);
-    
+
     last.after(text);
     restart_inputs();
 };

@@ -3,12 +3,15 @@
 namespace Modules\Articoli;
 
 use Common\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules;
 use Modules\Interventi\Components\Articolo as ArticoloIntervento;
 use Uploads;
 
 class Articolo extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'mg_articoli';
 
     /**

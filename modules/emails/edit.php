@@ -24,7 +24,7 @@
 
             <div class="row">
                 <div class="col-md-8">
-                    {[ "type": "select", "label": "<?php echo tr('Indirizzo email'); ?>", "name": "smtp", "value": "$id_smtp$", "ajax-source": "smtp" ]}
+                    {[ "type": "select", "label": "<?php echo tr('Indirizzo email'); ?>", "name": "smtp", "value": "$id_account$", "ajax-source": "smtp" ]}
                 </div>
 
                 <div class="col-md-4">
@@ -60,7 +60,7 @@
 <?php
 
 // Stampe
-$selected_prints = $dbo->fetchArray('SELECT id_print FROM zz_email_print WHERE id_email = '.prepare($id_record));
+$selected_prints = $dbo->fetchArray('SELECT id_print FROM em_print_template WHERE id_template = '.prepare($id_record));
 $selected = array_column($selected_prints, 'id_print');
 
 echo '

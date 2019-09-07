@@ -7,7 +7,9 @@ use Modules\Fatture\Components\Descrizione;
 use Modules\Fatture\Components\Riga;
 use Modules\Fatture\Components\Sconto;
 use Modules\Fatture\Fattura;
+use Modules\Fatture\Stato;
 use Modules\Fatture\Tipo;
+use Plugins\ExportFE\FatturaElettronica;
 
 $module = Modules::get($id_module);
 
@@ -38,6 +40,14 @@ switch (post('op')) {
 
     case 'update':
         if (post('id_record') !== null) {
+            $stato_precedente = $fattura->stato;
+
+            $stato = Stato::find(post('id_stato'));
+            $fattura->stato()->associate($stato);
+
+            $tipo = Tipo::find(post('id_tipo_documento'));
+            $fattura->tipo()->associate($tipo);
+
             $fattura->data = post('data');
             $fattura->data_registrazione = post('data_registrazione');
             $fattura->data_competenza = post('data_competenza');
@@ -92,8 +102,6 @@ switch (post('op')) {
             // Ricalcolo inps, ritenuta e bollo (se la fattura non è stata pagata)
             ricalcola_costiagg_fattura($id_record);
 
-            $stato = $dbo->select('co_statidocumento', 'descrizione', ['id' => post('idstatodocumento')])[0];
-
             // Elimino la scadenza e tutti i movimenti, poi se la fattura è emessa le ricalcolo
             if ($stato['descrizione'] == 'Bozza' or $stato['descrizione'] == 'Annullata') {
                 elimina_scadenze($id_record);
@@ -113,6 +121,55 @@ switch (post('op')) {
             if ($stato['descrizione'] == 'Emessa') {
                 aggiungi_scadenza($id_record);
                 aggiungi_movimento($id_record, $dir);
+            }
+
+            if ($stato_precedente->descrizione == 'Bozza' && $stato['descrizione'] == 'Emessa') {
+                // Generazione numero fattura se non presente
+                if (empty($fattura->numero_esterno)) {
+                    $fattura->numero_esterno = Fattura::getNextNumeroSecondario($fattura->data, $fattura->direzione, $fattura->id_segment);
+                    $fattura->save();
+                }
+
+                // Generazione automatica della Fattura Elettronica
+                $stato_fe = empty($fattura->codice_stato_fe) || in_array($fattura->codice_stato_fe, ['GEN', 'NS', 'EC02']);
+                $checks = FatturaElettronica::controllaFattura($fattura);
+                if ($stato_fe && empty($checks)) {
+                    try {
+                        $fattura_pa = new FatturaElettronica($id_record);
+                        $file = $fattura_pa->save(DOCROOT.'/'.FatturaElettronica::getDirectory());
+
+                        flash()->info(tr('Fattura elettronica generata correttamente!'));
+
+                        if (!$fattura_pa->isValid()) {
+                            $errors = $fattura_pa->getErrors();
+
+                            flash()->warning(tr('La fattura elettronica potrebbe avere delle irregolarità!').' '.tr('Controllare i seguenti campi: _LIST_', [
+                                    '_LIST_' => implode(', ', $errors),
+                                ]).'.');
+                        }
+                    } catch (UnexpectedValueException $e) {
+                    }
+                } elseif (!empty($checks)) {
+                    $message = tr('La fattura elettronica non è stata generata a causa di alcune informazioni mancanti').':';
+
+                    foreach ($checks as $check) {
+                        $message .= '
+    <p><b>'.$check['name'].' '.$check['link'].'</b></p>
+    <ul>';
+
+                        foreach ($check['errors'] as $error) {
+                            if (!empty($error)) {
+                                $message .= '
+        <li>'.$error.'</li>';
+                            }
+                        }
+
+                        $message .= '
+    </ul>';
+                    }
+
+                    flash()->warning($message);
+                }
             }
 
             aggiorna_sedi_movimenti('documenti', $id_record);

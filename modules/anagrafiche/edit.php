@@ -85,8 +85,6 @@ if (!$is_cliente) {
 				<?php
 } ?>
 
-
-
 				<div class="row">
 					<div class="col-md-2">
 						{[ "type": "text", "label": "<?php echo tr('Codice anagrafica'); ?>", "name": "codice", "required": 1, "class": "text-center alphanumeric-mask", "value": "$codice$", "maxlength": 20, "validation": "codice" ]}
@@ -496,6 +494,12 @@ echo '
 						{[ "type": "textarea", "label": "<?php echo tr('Note'); ?>", "name": "note", "value": "$note$" ]}
 					</div>
 				</div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        {[ "type": "checkbox", "label": "<?php echo tr('Opt-out newsletter'); ?>", "name": "disable_newsletter", "value": "<?php echo empty($record['enable_newsletter']); ?>" ]}
+                    </div>
+                </div>
 			</div>
 		</div>
 	</fieldset>

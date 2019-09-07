@@ -82,7 +82,6 @@ switch (post('op')) {
         }
 
         flash()->info(tr('Preventivo duplicato correttamente!'));
-
     break;
 
     case 'addintervento':
@@ -144,7 +143,7 @@ switch (post('op')) {
 
         $articolo->id_iva = post('idiva');
 
-        //$articolo->prezzo_unitario_acquisto = post('prezzo_acquisto', true) ?: 0;
+        $articolo->prezzo_unitario_acquisto = post('prezzo_acquisto', true) ?: 0;
         $articolo->prezzo_unitario_vendita = post('prezzo', true);
         $articolo->sconto_unitario = post('sconto', true);
         $articolo->tipo_sconto = post('tipo_sconto');
@@ -202,7 +201,7 @@ switch (post('op')) {
 
         $riga->id_iva = post('idiva');
 
-        //$riga->prezzo_unitario_acquisto = post('prezzo_acquisto', true) ?: 0;
+        $riga->prezzo_unitario_acquisto = post('prezzo_acquisto', true) ?: 0;
         $riga->prezzo_unitario_vendita = post('prezzo', true);
         $riga->sconto_unitario = post('sconto', true);
         $riga->tipo_sconto = post('tipo_sconto');
@@ -318,5 +317,16 @@ switch (post('op')) {
         $id_record = $id_record_new;
 
         flash()->info(tr('Aggiunta nuova revisione!'));
+        break;
+
+    case 'update_position':
+        $orders = explode(',', $_POST['order']);
+        $order = 0;
+
+        foreach ($orders as $idriga) {
+            $dbo->query('UPDATE `co_righe_preventivi` SET `order`='.prepare($order).' WHERE id='.prepare($idriga));
+            ++$order;
+        }
+
         break;
 }

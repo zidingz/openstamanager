@@ -1,8 +1,10 @@
 <?php
 
+use Notifications\EmailNotification;
+
 switch (post('op')) {
     case 'add':
-        $dbo->insert('zz_smtps', [
+        $dbo->insert('em_accounts', [
             'name' => post('name'),
             'from_name' => post('from_name'),
             'from_address' => post('from_address'),
@@ -17,10 +19,10 @@ switch (post('op')) {
     case 'update':
         $predefined = post('predefined');
         if (!empty($predefined)) {
-            $dbo->query('UPDATE zz_smtps SET predefined = 0');
+            $dbo->query('UPDATE em_accounts SET predefined = 0');
         }
 
-        $dbo->update('zz_smtps', [
+        $dbo->update('em_accounts', [
             'name' => post('name'),
             'note' => post('note'),
             'server' => post('server'),
@@ -31,6 +33,7 @@ switch (post('op')) {
             'from_address' => post('from_address'),
             'encryption' => post('encryption'),
             'pec' => post('pec'),
+            'timeout' => post('timeout'),
             'ssl_no_verify' => post('ssl_no_verify'),
             'predefined' => $predefined,
         ], ['id' => $id_record]);
@@ -72,7 +75,7 @@ switch (post('op')) {
         break;
 
     case 'test':
-        $mail = new Mail($id_record);
+        $mail = new EmailNotification($id_record);
 
         echo json_encode([
             'test' => $mail->testSMTP(),
@@ -81,7 +84,7 @@ switch (post('op')) {
         break;
 
     case 'delete':
-        $dbo->query('UPDATE zz_smtps SET deleted_at = NOW() WHERE id='.prepare($id_record));
+        $dbo->query('UPDATE em_accounts SET deleted_at = NOW() WHERE id='.prepare($id_record));
 
         flash()->info(tr('Account email eliminato!'));
 

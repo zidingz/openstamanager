@@ -61,8 +61,12 @@
                     {[ "type": "text", "label": "<?php echo tr('Username SMTP'); ?>", "name": "username", "value": "$username$" ]}
                 </div>
 
-                <div class="col-md-6">
-                    {[ "type": "password", "label": "<?php echo tr('Password SMTP'); ?>", "class": "", "name": "password", "value": "$password$" ]}
+                <div class="col-md-3">
+                    {[ "type": "password", "label": "<?php echo tr('Password SMTP'); ?>", "name": "password", "value": "$password$" ]}
+                </div>
+
+                <div class="col-md-3">
+                    {[ "type": "number", "label": "<?php echo tr('Timeout coda di invio (millisecondi)'); ?>", "name": "timeout", "value": "$timeout$", "decimals": 0 ]}
                 </div>
             </div>
 
@@ -80,7 +84,7 @@
 <?php
 // Collegamenti diretti
 // Template email collegati a questo account
-$elementi = $dbo->fetchArray('SELECT `id`, `name` FROM `zz_emails` WHERE `id_smtp` = '.prepare($id_record));
+$elementi = $dbo->fetchArray('SELECT `id`, `name` FROM `em_templates` WHERE `id_account` = '.prepare($id_record));
 
 if (!empty($elementi)) {
     echo '
