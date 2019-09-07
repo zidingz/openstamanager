@@ -49,7 +49,7 @@ $default_header$
             <tr>
                 <td class="border-full" style="height:20mm;">
                     <p class="small-bold">'.tr('Spett.le', [], ['upper' => true]).'</p>
-                    <p>$c_ragionesociale$</p>
+                    <p>$c_ragione_sociale$</p>
                     <p>$c_indirizzo$<br> $c_citta_full$</p>
                 </td>
             </tr>

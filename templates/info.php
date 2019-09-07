@@ -28,8 +28,8 @@ $replace = [
 // Rinominazione di particolari campi all'interno delle informazioni su anagrafica e azienda
 $rename = [
     'capitale_sociale' => 'capsoc',
-    'ragione_sociale' => 'ragionesociale',
-    'codice_fiscale' => 'codicefiscale',
+    'ragione_sociale' => 'ragione_sociale',
+    'codice_fiscale' => 'codice_fiscale',
 ];
 
 $keys = [];

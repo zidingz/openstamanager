@@ -76,13 +76,13 @@ abstract class MPDFManager extends Manager
         // Impostazione footer per l'ultima pagina
         if (!empty($options['last-page-footer'])) {
             $args['is_last_page'] = true;
-            $footer = $this->getTemplateFooter($args);
+            $footer = $this->getFooter($args);
 
             $manager->WriteHTML('<div class="fake-footer">'.$footer.'</div>');
             $manager->WriteHTML('<div style="position:absolute; bottom: 13mm; margin-right: '.($settings['margins']['right']).'mm">'.$footer.'</div>');
         }
 
-        $file = $this->getFile($this->record_id, $directory, $replaces);
+        $file = $this->getFileData($this->record_id, $directory, $replaces);
         $title = $file['name'];
 
         // Impostazione del titolo del PDF
@@ -112,5 +112,21 @@ abstract class MPDFManager extends Manager
 
         // Creazione effettiva del PDF
         $this->getManager()->Output($file['path'], \Mpdf\Output\Destination::FILE);
+    }
+
+    protected function renderHeader(array $args): void
+    {
+        $content = $this->getHeader($args);
+
+        // Impostazione di header
+        $this->getManager()->SetHTMLHeader($content);
+    }
+
+    protected function renderFooter(array $args): void
+    {
+        $content = $this->getFooter($args);
+
+        // Impostazione di footer
+        $this->getManager()->SetHTMLFooter($content);
     }
 }

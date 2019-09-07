@@ -59,16 +59,16 @@ abstract class Manager extends Controller
         return $settings;
     }
 
-    protected function getHeader(): string
+    protected function getHeader(array $args): string
     {
-        $content = $this->getTemplateHeader();
+        $content = $this->getTemplateHeader($args);
 
         return !empty($content) ? $content : '$default_header$';
     }
 
-    protected function getFooter(): string
+    protected function getFooter(array $args): string
     {
-        $content = $this->getTemplateFooter();
+        $content = $this->getTemplateFooter($args);
 
         return !empty($content) ? $content : '$default_footer$';
     }
@@ -93,7 +93,8 @@ abstract class Manager extends Controller
             IF(an_sedi.codice_fiscale != "", an_sedi.codice_fiscale, sede_legale.codice_fiscale) AS codice_fiscale,
             IF(an_sedi.piva != "", an_sedi.piva, sede_legale.piva) AS piva
         FROM an_anagrafiche
-            INNER JOIN an_sedi ON an_anagrafiche.idanagrafica=an_sedi.idanagrafica
+            INNER JOIN an_sedi ON an_anagrafiche.idanagrafica = an_sedi.idanagrafica
+            INNER JOIN an_sedi AS sede_legale ON an_anagrafiche.id_sede_legale = an_sedi.id
         WHERE an_sedi.idanagrafica='.prepare($id_cliente);
         if (empty($id_sede)) {
             $query .= ' AND `an_sedi`.`id`=`an_anagrafiche`.`id_sede_legale`';
@@ -156,7 +157,7 @@ abstract class Manager extends Controller
         return $this->replaces;
     }
 
-    protected function getFile($directory, $original_replaces)
+    protected function getFileData($directory, $original_replaces)
     {
         $id_record = $this->record_id;
         $module = $this->print->module;
@@ -192,7 +193,7 @@ abstract class Manager extends Controller
 
     abstract protected function renderBody(array $args): void;
 
-    abstract protected function getTemplateSettings(array $args): array;
+    abstract protected function getTemplateSettings(): array;
 
     abstract protected function getTemplateHeader(array $args): string;
 

@@ -20,7 +20,7 @@ echo '
     echo '
         <tr>
             <td colspan=2>
-                '.tr('Cliente').': <b>'.$c_ragionesociale.'</b>
+                '.tr('Cliente').': <b>'.$c_ragione_sociale.'</b>
             </td>';
 
     // Codice fiscale o P.Iva
@@ -33,7 +33,7 @@ echo '
     } else {
         echo '
     			<td colspan=2>
-    				'.tr('C.F.').': <b>'.strtoupper($c_codicefiscale).'</b>
+    				'.tr('C.F.').': <b>'.strtoupper($c_codice_fiscale).'</b>
     			</td>';
     }
 

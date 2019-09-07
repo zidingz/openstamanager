@@ -33,6 +33,10 @@ UPDATE `zz_files` SET `id_module` = (SELECT `id` FROM `zz_modules` WHERE `title`
 ALTER TABLE `zz_prints` ADD `class` varchar(255) NOT NULL;
 ALTER TABLE `zz_widgets` ADD `class` varchar(255) NOT NULL;
 
+-- Aggiornamento stampe
+UPDATE `zz_prints` SET `class` = 'Prints\\Fatture\\Manager' WHERE `name` = 'Fattura di vendita';
+
+
 -- Standardizzazione tabelle
 
 -- Separazione sedi dalle anagrafiche

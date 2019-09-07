@@ -20,7 +20,7 @@ echo '
             <tr>
                 <td colspan=2 class="border-full" style="height:16mm;">
                     <p class="small-bold">'.tr('Spett.le', [], ['upper' => true]).'</p>
-                    <p>$c_ragionesociale$</p>
+                    <p>$c_ragione_sociale$</p>
                     <p>$c_indirizzo$</p>
                     <p>$c_citta_full$</p>
                 </td>
@@ -40,7 +40,7 @@ echo '
                     <p class="small-bold">'.tr('Codice fiscale', [], ['upper' => true]).'</p>
                 </td>
                 <td class="border-right border-bottom text-right">
-                    <small>$c_codicefiscale$</small>
+                    <small>$c_codice_fiscale$</small>
                 </td>
             </tr>
         </table>

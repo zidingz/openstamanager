@@ -24,15 +24,14 @@ class PrintController extends Controller
 
     public function open(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        /*
         $print = PrintTemplate::find($args['print_id']);
         $manager = $print->getManager($this->container, $args['record_id']);
 
         $pdf = $manager->render();
-        */
 
-        $pdf = Prints::render($args['print_id'], $args['record_id']);
-
+        /*
+               $pdf = Prints::render($args['print_id'], $args['record_id']);
+       */
         $response = $response
             ->withHeader('Content-Type', 'application/pdf')
             ->write($pdf);

@@ -1,7 +1,7 @@
 <?php
 
 $r = $dbo->fetchOne('SELECT co_documenti.*,
-	an_anagrafiche.email,
+	sede_legale.email,
     an_anagrafiche.idconto_cliente,
     an_anagrafiche.idconto_fornitore,
 	an_anagrafiche.pec,
@@ -9,8 +9,9 @@ $r = $dbo->fetchOne('SELECT co_documenti.*,
 	co_tipidocumento.descrizione AS tipo_documento,
 	(SELECT pec FROM em_accounts WHERE em_accounts.id='.prepare($template['id_account']).') AS is_pec
 FROM co_documenti
-    INNER JOIN an_anagrafiche ON co_documenti.idanagrafica=an_anagrafiche.idanagrafica
-    INNER JOIN co_tipidocumento ON co_tipidocumento.id=co_documenti.idtipodocumento
+    INNER JOIN an_anagrafiche ON co_documenti.idanagrafica = an_anagrafiche.idanagrafica
+    INNER JOIN an_sedi AS sede_legale ON an_anagrafiche.id_sede_legale = sede_legale.id
+    INNER JOIN co_tipidocumento ON co_tipidocumento.id = co_documenti.id_tipo_documento
 WHERE co_documenti.id='.prepare($id_record));
 
 if (!empty(setting('Logo stampe'))) {

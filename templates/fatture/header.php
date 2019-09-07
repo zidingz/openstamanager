@@ -75,7 +75,7 @@ echo '
             <tr>
                 <td colspan=2 class="border-full"'.(!$fattura_accompagnatoria ? ' style="height:20mm;"' : '').'>
                     <p class="small-bold">'.tr('Spett.le', [], ['upper' => true]).'</p>
-                    <p>$c_ragionesociale$</p>
+                    <p>$c_ragione_sociale$</p>
 					<p>'.(!empty($c_indirizzo) ? $c_indirizzo : '').(!empty($c_citta_full) ? '<br>'.$c_citta_full : '').'</p>
 					<small>'.(!empty($c_codice_destinatario) ? tr('Cod.Fatturazione').': '.$c_codice_destinatario : '').'</small>
                 </td>
@@ -95,7 +95,7 @@ echo '
                     <p class="small-bold">'.tr('Codice fiscale', [], ['upper' => true]).'</p>
                 </td>
                 <td class="border-right border-bottom text-right">
-                    <small>$c_codicefiscale$</small>
+                    <small>$c_codice_fiscale$</small>
                 </td>
             </tr>';
 

@@ -124,8 +124,6 @@ class Prints
 
         $infos = self::get($print);
 
-        Permissions::addModule($infos['id_module']);
-
         $has_access = true;
         if (!empty($infos['is_record'])) {
             $module = Modules::get($infos['id_module']);
@@ -139,7 +137,7 @@ class Prints
             $has_access = database()->fetchNum($query) !== 0;
         }
 
-        if (empty($infos) || empty($infos['enabled']) || !Permissions::check([], false) || !$has_access) {
+        if (empty($infos) || empty($infos['enabled']) || !$has_access) {
             return false;
         }
 

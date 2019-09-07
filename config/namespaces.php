@@ -45,4 +45,5 @@ return [
     'modules/referenti' => 'Plugins\Referenti',
     'modules/seriali' => 'Plugins\Seriali',
     'modules/movimenti' => 'Plugins\Movimenti',
+    'templates/fatture' => 'Prints\Fatture',
 ];

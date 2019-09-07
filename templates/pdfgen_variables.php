@@ -14,12 +14,12 @@ $prefixes = [
 ];
 
 foreach ($prefixes as $prefix) {
-    if ($replaces[$prefix.'piva'] != $replaces[$prefix.'codicefiscale']) {
+    if ($replaces[$prefix.'piva'] != $replaces[$prefix.'codice_fiscale']) {
         $replaces[$prefix.'piva'] = !empty($replaces[$prefix.'piva']) ? 'P.Iva: '.$replaces[$prefix.'piva'] : '';
-        $replaces[$prefix.'codicefiscale'] = !empty($replaces[$prefix.'codicefiscale']) ? 'C.F.: '.$replaces[$prefix.'codicefiscale'] : '';
+        $replaces[$prefix.'codice_fiscale'] = !empty($replaces[$prefix.'codice_fiscale']) ? 'C.F.: '.$replaces[$prefix.'codice_fiscale'] : '';
     } else {
         $replaces[$prefix.'piva'] = !empty($replaces[$prefix.'piva']) ? 'P.Iva/C.F.: '.$replaces[$prefix.'piva'] : '';
-        $replaces[$prefix.'codicefiscale'] = '';
+        $replaces[$prefix.'codice_fiscale'] = '';
     }
 
     $replaces[$prefix.'codice_destinatario'] = !empty($replaces[$prefix.'codice_destinatario']) ? 'Cod.Fatturazione: '.$replaces[$prefix.'codice_destinatario'] : '';

@@ -42,7 +42,7 @@ if ($_GET['lev'] == '3') {
 }
 
 $body = str_replace('|percorso|', $percorso, $body);
-$body = str_replace('|info_fornitore|', $f_ragionesociale.'<br>'.$f_indirizzo.'<br>'.$f_citta, $body);
+$body = str_replace('|info_fornitore|', $f_ragione_sociale.'<br>'.$f_indirizzo.'<br>'.$f_citta, $body);
 $body = str_replace('|period_start|', Translator::dateToLocale($date_start), $body);
 $body = str_replace('|period_end|', Translator::dateToLocale($date_end), $body);
 
