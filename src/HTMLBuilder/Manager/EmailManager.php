@@ -40,7 +40,7 @@ class EmailManager implements ManagerInterface
             '_NUM_' => $emails->count(),
         ]).'</h3>
         <div class="card-tools float-right">
-            <button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+            <button type="button" class="btn btn-card-tool" data-card-widget="collapse"><i class="fa fa-plus"></i></button>
         </div>
     </div>
     <div class="card-body">

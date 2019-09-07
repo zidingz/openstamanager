@@ -111,7 +111,6 @@ $app->group('/hook', function () use ($app) {
         ->setName('hook-response');
 })->add(UserMiddleware::class);
 
-
 // Moduli
 $app->group('/module/{module_id:[0-9]+}', function () use ($app) {
     $app->get('/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:module')

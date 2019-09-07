@@ -18,7 +18,7 @@ echo '
             <button class="btn btn-warning btn-sm" onclick="add_calendar()">
                 <i class="fa fa-plus"></i> '.tr('Aggiungi periodo').'
             </button>
-            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+            <button type="button" class="btn btn-box-tool" data-card-widget="collapse">
                 <i class="fa fa-minus"></i>
             </button>
         </div>
@@ -36,7 +36,7 @@ echo '
         <h3 class="card-title">'.tr('Vendite e acquisti').'</h3>
 
         <div class="card-tools float-right">
-            <button type="button" class="btn btn-card-tool" data-widget="collapse">
+            <button type="button" class="btn btn-card-tool" data-card-widget="collapse">
                 <i class="fa fa-minus"></i>
             </button>
         </div>
@@ -139,7 +139,7 @@ echo '
                 <h3 class="card-title">'.tr('I 20 clienti TOP').'</h3><span class="tip" title="'.tr('Valori iva esclusa').'"> <i class="fa fa-question-circle-o" aria-d-none="true"></i></span>
 
                 <div class="card-tools float-right">
-                    <button type="button" class="btn btn-card-tool" data-widget="collapse">
+                    <button type="button" class="btn btn-card-tool" data-card-widget="collapse">
                         <i class="fa fa-minus"></i>
                     </button>
                 </div>
@@ -187,7 +187,7 @@ echo '
                 <h3 class="card-title">'.tr('I 20 articoli più venduti').'</h3><span class="tip" title="'.tr('Valori iva esclusa').'"> <i class="fa fa-question-circle-o" aria-d-none="true"></i></span>
 
                 <div class="card-tools float-right">
-                    <button type="button" class="btn btn-card-tool" data-widget="collapse">
+                    <button type="button" class="btn btn-card-tool" data-card-widget="collapse">
                         <i class="fa fa-minus"></i>
                     </button>
                 </div>
@@ -253,7 +253,7 @@ echo '
         <h3 class="card-title">'.tr('Interventi per tipologia').'</h3>
 
         <div class="card-tools float-right">
-            <button type="button" class="btn btn-card-tool" data-widget="collapse">
+            <button type="button" class="btn btn-card-tool" data-card-widget="collapse">
                 <i class="fa fa-minus"></i>
             </button>
         </div>

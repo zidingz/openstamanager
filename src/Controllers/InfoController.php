@@ -59,10 +59,8 @@ class InfoController extends Controller
 
     public function user(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $user = Auth::user();
         $token = auth()->getToken();
 
-        $anagrafica = $this->database->fetchOne('SELECT * FROM an_anagrafiche WHERE idanagrafica = '.prepare($user['idanagrafica']));
         $api = BASEURL.'/api/?token='.$token;
 
         $args['api'] = $api;

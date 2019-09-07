@@ -350,7 +350,7 @@ class Modules
 
             $result .= '" id="'.$element['id'].'">
                 <a href="'.$link.'" target="'.$target.'" class="nav-link">
-                    <i class="'.$element['icon'].'"></i>
+                    <i class="'.$element['icon'].' nav-icon"></i>
                     <p>
                         '.$title;
             if (!empty($submenus) && !empty($temp)) {

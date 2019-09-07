@@ -77,7 +77,7 @@ class FileManager implements ManagerInterface
                 }
 
                 $result .= '
-            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+            <button type="button" class="btn btn-box-tool" data-card-widget="collapse">
                 <i class="fa fa-minus"></i>
             </button>
         </div>

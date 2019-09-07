@@ -897,3 +897,16 @@ input.small-width {
 .has-feedback .form-control{
     padding-right: 6px;
 }
+
+/* AdminLTE 3 */
+
+.nav-sidebar .nav-link > p > i{
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+.nav-sidebar > .nav-item .nav-icon,
+.nav-sidebar .nav-link > p
+{
+    font-size: 0.9rem !important;
+}
