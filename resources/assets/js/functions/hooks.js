@@ -38,9 +38,6 @@ function startHook(hook, init) {
     $.ajax({
         url: globals.hooks.lock.replace('|id|', hook.id),
         type: "get",
-        data: {
-            id: hook.id,
-        },
         success: function (data) {
             var token = JSON.parse(data);
 
@@ -73,10 +70,6 @@ function executeHook(hook, token) {
     $.ajax({
         url: globals.hooks.lock.replace('|id|', hook.id).replace('|token|', token),
         type: "get",
-        data: {
-            id: hook.id,
-            token: token,
-        },
         success: function (data) {
             var result = JSON.parse(data);
             updateHook(hook);
@@ -105,9 +98,6 @@ function updateHook(hook) {
     $.ajax({
         url: globals.hooks.response.replace('|id|', hook.id),
         type: "get",
-        data: {
-            id: hook.id,
-        },
         success: function (data) {
             var result = JSON.parse(data);
             renderHook(hook, result);
@@ -165,7 +155,7 @@ function renderHook(hook, result) {
     // Inizializzazione
     var element = $("#" + element_id);
     if (element.length == 0) {
-        $("#hooks").append('<li class="hook-element" id="' + element_id + '"></li>');
+        $("#hooks").append('<a class="dropdown-item hook-element" href="#" id="' + element_id + '"></a>');
 
         element = $("#" + element_id);
     }
@@ -178,7 +168,7 @@ function renderHook(hook, result) {
     }
 
     // Contenuto
-    var content = '<a href="' + (result.link ? result.link : "#") + '"><i class="' + result.icon + '"></i><span class="small"> ' + result.message + '</span>';
+    var content = '</i><span> ' + result.message + '</span>';
 
     if (result.progress) {
         var current = result.progress.current;
@@ -191,7 +181,6 @@ function renderHook(hook, result) {
         content += '<div class="progress" style="margin-bottom: 0px;"><div class="progress-bar" role="progressbar" aria-valuenow="' + percentage + '" aria-valuemin="0" aria-valuemax="100" style="width:' + percentage + '%">' + percentage + '% (' + current + '/' + total + ')</div></div>';
     }
 
-    content += '</a>';
-
+    element.attr("href", result.link ? result.link : "#");
     element.html(content);
 }

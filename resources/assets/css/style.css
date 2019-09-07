@@ -602,6 +602,10 @@ input.small-width {
     min-width: 130px;
 }
 
+.dropdown-menu-lg {
+    min-width: 280px;
+}
+
 /*fix per tabs editor */
 
 .nav-tabs-custom > .nav-tabs > li {

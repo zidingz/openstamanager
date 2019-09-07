@@ -31,7 +31,6 @@ class HookController extends Controller
         $hook = Hook::find($hook_id);
 
         $token = $hook->lock();
-
         $response = $response->write(json_encode($token));
 
         return $response;
@@ -43,9 +42,8 @@ class HookController extends Controller
         $token = $args['token'];
         $hook = Hook::find($hook_id);
 
-        $response = $hook->execute($token);
-
-        $response = $response->write(json_encode($response));
+        $results = $hook->execute($token);
+        $response = $response->write(json_encode($results));
 
         return $response;
     }
@@ -55,8 +53,8 @@ class HookController extends Controller
         $hook_id = $args['hook_id'];
         $hook = Hook::find($hook_id);
 
-        $response = $hook->response();
-        $response = $response->write(json_encode($response));
+        $results = $hook->response();
+        $response = $response->write(json_encode($results));
 
         return $response;
     }

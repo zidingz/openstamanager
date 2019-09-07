@@ -79,12 +79,6 @@ $app->group('/ajax', function () use ($app) {
     $app->get('/search/', 'Controllers\AjaxController:search')
         ->setName('ajax-search');
 
-    // Hooks
-    $app->get('/hooks/', 'Controllers\AjaxController:hooks')
-        ->setName('hooks');
-    $app->get('/hook/{hook_id:[0-9]+}/', 'Controllers\AjaxController:hook')
-        ->setName('hook');
-
     // Messaggi flash
     $app->get('/flash/', 'Controllers\AjaxController:flash')
         ->setName('ajax-flash');
@@ -101,6 +95,22 @@ $app->group('/ajax', function () use ($app) {
         ->add(PermissionMiddleware::class)
         ->add(ModuleMiddleware::class);
 })->add(UserMiddleware::class);
+
+// Hooks
+$app->group('/hook', function () use ($app) {
+    $app->get('/list/', 'Controllers\HookController:hooks')
+        ->setName('hooks');
+
+    $app->get('/lock/{hook_id:[0-9]+}/', 'Controllers\HookController:lock')
+        ->setName('hook-lock');
+
+    $app->get('/execute/{hook_id:[0-9]+}/{token/', 'Controllers\HookController:execute')
+        ->setName('hook-execute');
+
+    $app->get('/response/{hook_id:[0-9]+}/', 'Controllers\HookController:response')
+        ->setName('hook-response');
+})->add(UserMiddleware::class);
+
 
 // Moduli
 $app->group('/module/{module_id:[0-9]+}', function () use ($app) {
