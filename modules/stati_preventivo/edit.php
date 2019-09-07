@@ -16,7 +16,7 @@ if ($preventivi == 0) {
 	<input type="hidden" name="id_record" value="<?php echo $id_record; ?>">
 
 	<div class="row">
-		
+
 
 		<div class="col-md-6">
 			{[ "type": "text", "label": "<?php echo tr('Descrizione'); ?>", "name": "descrizione", "required": 1, "value": "$descrizione$" ]}
@@ -25,25 +25,25 @@ if ($preventivi == 0) {
         <div class="col-md-2">
             {[ "type": "checkbox", "label": "<?php echo tr('Questo è uno stato completato'); ?>", "name": "is_completato", "value": "$is_completato$", "help": "<?php echo tr('I preventivi che si trovano in questo stato verranno considerati come completati'); ?>", "placeholder": "<?php echo tr('Completato'); ?>", "extra": "<?php echo $attr; ?>" ]}
 		</div>
-		
+
 		 <div class="col-md-2">
             {[ "type": "checkbox", "label": "<?php echo tr('Questo è uno stato pianificabile'); ?>", "name": "is_pianificabile", "value": "$is_pianificabile$", "help": "<?php echo tr('I preventivi che si trovano in questo stato verranno considerati come pianificabili'); ?>", "placeholder": "<?php echo tr('Pianificabile'); ?>", "extra": "<?php echo $attr; ?>" ]}
 		</div>
-		
+
 		 <div class="col-md-2">
             {[ "type": "checkbox", "label": "<?php echo tr('Questo è uno stato fatturabile'); ?>", "name": "is_fatturabile", "value": "$is_fatturabile$", "help": "<?php echo tr('I preventivi che si trovano in questo stato verranno considerati come fatturabili'); ?>", "placeholder": "<?php echo tr('Fatturabile'); ?>", "extra": "<?php echo $attr; ?>" ]}
 		</div>
-		
+
 	</div>
-	
+
 	<div class="row">
-	
+
 		<div class="col-md-6">
 			{[ "type": "text", "label": "<?php echo tr('Icona'); ?>", "name": "icona", "required": 1, "class": "text-center", "value": "$icona$", "extra": "", "icon-after": "<?php echo (!empty($record['icona'])) ? '<i class=\"'.$record['icona'].'\"></i>' : ''; ?>"  ]}
 		</div>
-		
+
 	</div>
-   
+
 </form>
 
 

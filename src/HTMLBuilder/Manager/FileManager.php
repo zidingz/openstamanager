@@ -41,7 +41,7 @@ class FileManager implements ManagerInterface
             <h3 class="card-title">'.tr('Allegati').'</h3>
         </div>
         <div class="card-body">
-            <div id="loading_'.$attachment_id.'" class="text-center hide" style="position:relative;top:100px;z-index:2;opacity:0.5;"  ><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i><span class="sr-only">'.tr('Caricamento...').'</span></div>';
+            <div id="loading_'.$attachment_id.'" class="text-center d-none" style="position:relative;top:100px;z-index:2;opacity:0.5;"  ><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i><span class="sr-only">'.tr('Caricamento...').'</span></div>';
         }
 
         $count = 0;
@@ -67,7 +67,7 @@ class FileManager implements ManagerInterface
 
                 if (!empty($category)) {
                     $result .= '
-            <button type="button" class="btn btn-box-tool category-save hide">
+            <button type="button" class="btn btn-box-tool category-save d-none">
                 <i class="fa fa-check"></i>
             </button>
 
@@ -219,8 +219,8 @@ $(document).ready(function() {
         nome.hide();
         $(this).hide();
 
-        input.removeClass("hide");
-        save_button.removeClass("hide");
+        input.removeClass("d-none");
+        save_button.removeClass("d-none");
     });
 
     $("#'.$attachment_id.' .category-save").click(function() {
@@ -309,12 +309,12 @@ $(document).ready(function() {
 });
 
 function show_'.$attachment_id.'() {
-    $("#loading_'.$attachment_id.'").removeClass("hide");
+    $("#loading_'.$attachment_id.'").removeClass("d-none");
 }
 
 function reload_'.$attachment_id.'() {
     $("#'.$attachment_id.'").load(globals.rootdir + "/ajax.php?op=list_attachments&id_module='.$options['id_module'].'&id_record='.$options['id_record'].'", function() {
-        $("#loading_'.$attachment_id.'").addClass("hide");
+        $("#loading_'.$attachment_id.'").addClass("d-none");
     });
 }
 </script>';

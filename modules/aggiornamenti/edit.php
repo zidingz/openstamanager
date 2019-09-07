@@ -132,13 +132,13 @@ function search(button) {
             op: "check",
         },
         success: function(data){
-            $("#update-search").addClass("hide");
+            $("#update-search").addClass("d-none");
 
             if (data == "none") {
-                $("#update-none").removeClass("hide");
+                $("#update-none").removeClass("d-none");
             } else {
                 $("#update-version").text(data);
-                $("#update-download").removeClass("hide");
+                $("#update-download").removeClass("d-none");
             }
         }
     });

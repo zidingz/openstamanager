@@ -90,7 +90,7 @@
     </script>
 
     <span class="float-right col-md-4">
-        <select class="form-control hide" id="language" required="1">
+        <select class="form-control d-none" id="language" required="1">
 {% for code, language in languages %}
             <option data-country="{{ language['flag'] }}" value="{{ code }}" {{ code == lang ? 'selected' : '' }}>{{ language['title'] }}</option>';
 {% endfor %}
@@ -113,7 +113,7 @@
         });
 
         function initLanguage(flag) {
-            $("#language").removeClass("hide");
+            $("#language").removeClass("d-none");
 
             $("#language").select2({
                 theme: "bootstrap",

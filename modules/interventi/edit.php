@@ -59,7 +59,7 @@
                     ?>
 
 					{[ "type": "select", "label": "<?php echo tr('Contratto'); ?>", "name": "idcontratto", "value": "<?php echo $record['id_contratto']; ?>", "ajax-source": "contratti", "readonly": "<?php echo $record['flag_completato']; ?>", "ajax-info": "idanagrafica=$idanagrafica$" ]}
-					<input type='hidden' name='idcontratto_riga' value='<?php echo $idcontratto_riga; ?>'>
+					<input type='d-none' name='idcontratto_riga' value='<?php echo $idcontratto_riga; ?>'>
 				</div>
 			</div>
 		</div>
@@ -133,7 +133,7 @@
 
     ?>
     <!-- Fatturazione Elettronica PA-->
-    <div class="card card-primary <?php echo ($record['tipo_anagrafica'] == 'Ente pubblico' || $record['tipo_anagrafica'] == 'Azienda') ? 'show' : 'hide'; ?>" >
+    <div class="card card-primary <?php echo ($record['tipo_anagrafica'] == 'Ente pubblico' || $record['tipo_anagrafica'] == 'Azienda') ? 'show' : 'd-none'; ?>" >
         <div class="card-header">
             <h3 class="card-title"><?php echo tr('Dati appalto'); ?>
 			<?php if (!empty($record['idcontratto'])) {
@@ -175,8 +175,8 @@
 
 		<div class="card-body">
 			<div class="float-right">
-				<a class='btn btn-secondary btn-details' onclick="$('.extra').removeClass('hide'); $(this).addClass('hide'); $('#dontshowall_dettagli').removeClass('hide');" id='showall_dettagli'><i class='fa fa-square-o'></i> <?php echo tr('Visualizza dettaglio costi'); ?></a>
-				<a class='btn btn-info btn-details hide' onclick="$('.extra').addClass('hide'); $(this).addClass('hide'); $('#showall_dettagli').removeClass('hide');" id='dontshowall_dettagli'><i class='fa fa-check-square-o'></i> <?php echo tr('Visualizza dettaglio costi'); ?></a>
+				<a class='btn btn-secondary btn-details' onclick="$('.extra').removeClass('d-none'); $(this).addClass('d-none'); $('#dontshowall_dettagli').removeClass('d-none');" id='showall_dettagli'><i class='fa fa-square-o'></i> <?php echo tr('Visualizza dettaglio costi'); ?></a>
+				<a class='btn btn-info btn-details d-none' onclick="$('.extra').addClass('d-none'); $(this).addClass('d-none'); $('#showall_dettagli').removeClass('d-none');" id='dontshowall_dettagli'><i class='fa fa-check-square-o'></i> <?php echo tr('Visualizza dettaglio costi'); ?></a>
 			</div>
 			<div class="clearfix"></div>
 			<br>

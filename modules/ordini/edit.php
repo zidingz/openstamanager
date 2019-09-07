@@ -101,7 +101,7 @@ $_SESSION['superselect']['idanagrafica'] = $record['idanagrafica'];
 	</div>
 
     <!-- Fatturazione Elettronica PA-->
-    <div class="card card-primary <?php echo ($record['tipo_anagrafica'] == 'Ente pubblico' || $record['tipo_anagrafica'] == 'Azienda') ? 'show' : 'hide'; ?>" >
+    <div class="card card-primary <?php echo ($record['tipo_anagrafica'] == 'Ente pubblico' || $record['tipo_anagrafica'] == 'Azienda') ? 'show' : 'd-none'; ?>" >
         <div class="card-header">
             <h3 class="card-title"><?php echo tr('Dati appalto'); ?></h3>
         </div>

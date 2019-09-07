@@ -168,20 +168,20 @@ class RetroController extends Manager
         protected function plugins($args)
         {
             extract($args);
-    
+
             $dbo = $database = $this->database;
-    
+
             // Plugins
             $plugins_content = [];
-    
+
             $module_record = $record;
             foreach ($args['plugins'] as $plugin) {
                 $record = $module_record;
                 $id_plugin = $plugin['id'];
-    
+
                 $bulk = null;
                 $content = null;
-    
+
                 // Inclusione di eventuale plugin personalizzato
                 if (!empty($plugin['script']) || $plugin->option == 'custom') {
                     ob_start();
@@ -192,13 +192,13 @@ class RetroController extends Manager
                     $bulk = empty($bulk) ? [] : include $bulk;
                     $bulk = empty($bulk) ? [] : $bulk;
                 }
-    
+
                 $plugins_content[$id_plugin] = [
                     'content' => $content,
                     'bulk' => $bulk,
                 ];
             }
-    
+
             return $plugins_content;
         }*/
 }

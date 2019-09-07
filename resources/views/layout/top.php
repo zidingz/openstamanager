@@ -254,8 +254,8 @@ if (Auth::check()) {
 					</a>
 
                     <!-- Navbar Left Menu -->
-                     <div class="navbar-left" class="hidden-xs">
-                        <ul class="nav navbar-nav" class="hidden-xs">
+                     <div class="navbar-left" class="d-none-xs">
+                        <ul class="nav navbar-nav" class="d-none-xs">
                             <li><a  href="#" id="daterange" style="color:'.$calendar.';" role="button" >
                                 <i class="fa fa-calendar" style="color:inherit"></i> <i class="fa fa-caret-down" style="color:inherit"></i>
                             </a></li>

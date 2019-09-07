@@ -258,11 +258,11 @@ echo '
 $(document).ready(function(){
     $("span[id^=movimenti-]").each(function() {
         $(this).on("mouseover", function() {
-            $(this).find(".tools").removeClass("hide");
+            $(this).find(".tools").removeClass("d-none");
         });
 
         $(this).on("mouseleave", function() {
-            $(this).find(".tools").addClass("hide");
+            $(this).find(".tools").addClass("d-none");
         });
 
         $(this).on("click", function() {

@@ -110,7 +110,7 @@ echo '
     $(document).ready(function() {
         $("#add-righe").ajaxForm({
             success: function(){
-                $("#bs-popup2").modal("hide");
+                $("#bs-popup2").modal("d-none");
 
                 refreshRighe('.$id_record.');
             }

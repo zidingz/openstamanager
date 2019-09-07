@@ -6,7 +6,7 @@ function copia_pianificazione_os(idcontratto, matricola_src) {
     $.get(globals.rootdir + '/modules/contratti/ajax.php?op=get_pianificazione_os&idcontratto=' + idcontratto + '&matricola_src=' + matricola_src, function (data, response) {
         if (response == 'success') {
             //Nascondo tutte le voci pianificate
-            $('div[id*=voce_]').addClass('hide');
+            $('div[id*=voce_]').addClass('d-none');
 
             //Tolgo tutte le spunte
             $('div[id*=voce_] input[id*=m_]').removeAttr('checked');
@@ -34,7 +34,7 @@ function copia_pianificazione_os(idcontratto, matricola_src) {
                 $('select[name*=voce] option[value=' + idvoce + ']').attr('selected', 'true');
 
                 //Mostro il riquadro della voce con i mesi
-                $('#voce_' + idvoce).removeClass('hide');
+                $('#voce_' + idvoce).removeClass('d-none');
 
                 //Spunto la coppia mese-anno
                 $('#m_' + mese + '_' + idvoce).removeAttr('checked').click();

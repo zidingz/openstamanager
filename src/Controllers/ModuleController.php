@@ -231,7 +231,7 @@ class ModuleController extends Controller
     public function moduleAction(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $class = self::getModuleActionsManager($request, $response, $args);
-        $controller = new $class($this->container);
+        $controller = new $class($this->container, $args['module'], $args['record_id'], $args['reference_id']);
 
         return $this->action($request, $response, $args, $controller);
     }

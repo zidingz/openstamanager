@@ -3,7 +3,7 @@
 namespace HTMLBuilder\Handler;
 
 /**
- * Gestione dell'input di tipo "text", "file", "password", "email", "number", "textarea" e "hidden".
+ * Gestione dell'input di tipo "text", "file", "password", "email", "number", "textarea" e "d-none".
  *
  * @since 2.3
  */
@@ -165,8 +165,8 @@ class DefaultHandler implements HandlerInterface
     }
 
     /**
-     * Gestione dell'input di tipo "hidden".
-     * Esempio: {[ "type": "hidden", "label": "Hidden di test", "placeholder": "Test", "name": "hidden" ]}.
+     * Gestione dell'input di tipo "d-none".
+     * Esempio: {[ "type": "d-none", "label": "Hidden di test", "placeholder": "Test", "name": "d-none" ]}.
      *
      * @param array $values
      * @param array $extras

@@ -29,7 +29,7 @@ class User extends Model
     protected $gruppo;
 
     /**
-     * The attributes that should be hidden for arrays.
+     * The attributes that should be d-none for arrays.
      *
      * @var array
      */

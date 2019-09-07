@@ -231,13 +231,13 @@ foreach ($righe as $row) {
     if ($record['stato'] != 'Pagato' && $record['stato'] != 'Emessa' && $riga['id'] != $fattura->rigaBollo->id) {
         echo "
             <form action='".$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record."' method='post' id='delete-form-".$riga['id']."' role='form'>
-                <input type='hidden' name='backto' value='record-edit'>
-                <input type='hidden' name='idriga' value='".$riga['id']."'>
-                <input type='hidden' name='op' value='".$delete."'>";
+                <input type='d-none' name='backto' value='record-edit'>
+                <input type='d-none' name='idriga' value='".$riga['id']."'>
+                <input type='d-none' name='op' value='".$delete."'>";
 
         if ($row->isArticolo()) {
             echo "
-                <input type='hidden' name='idarticolo' value='".$riga['idarticolo']."'>";
+                <input type='d-none' name='idarticolo' value='".$riga['idarticolo']."'>";
         }
 
         echo "
@@ -245,7 +245,7 @@ foreach ($righe as $row) {
 
         if (!$fattura->isNota() && $row->isArticolo() && $riga['abilita_serial'] && (empty($riga['idddt']) || empty($riga['idintervento']))) {
             echo "
-                    <a class='btn btn-primary btn-sm' data-toggle='tooltip' title='Aggiorna SN...' onclick=\"launch_modal( 'Aggiorna SN', '".$structure->fileurl('add_serial.php').'?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$riga['id'].'&idarticolo='.$riga['idarticolo']."');\"><i class='fa fa-barcode' aria-hidden='true'></i></a>";
+                    <a class='btn btn-primary btn-sm' data-toggle='tooltip' title='Aggiorna SN...' onclick=\"launch_modal( 'Aggiorna SN', '".$structure->fileurl('add_serial.php').'?id_module='.$id_module.'&id_record='.$id_record.'&idriga='.$riga['id'].'&idarticolo='.$riga['idarticolo']."');\"><i class='fa fa-barcode' aria-d-none='true'></i></a>";
         }
 
         echo "

@@ -173,7 +173,7 @@ echo '
     $(document).ready(function() {
         $("#add-articoli").ajaxForm({
             success: function(){
-                $("#bs-popup2").modal("hide");
+                $("#bs-popup2").modal("d-none");
                 refreshArticoli('.$id_record.');
             }
         });

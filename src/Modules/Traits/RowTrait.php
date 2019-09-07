@@ -9,7 +9,7 @@ namespace Modules\Traits;
  */
 trait RowTrait
 {
-    protected function rowAdd($request, $response, $args)
+    public function rowAdd($request, $response, $args)
     {
         $type = 'riga';
         if (get('is_descrizione') !== null) {
@@ -40,7 +40,7 @@ trait RowTrait
         return $this->render($type, $options, $result, $response, $args);
     }
 
-    protected function rowEdit($request, $response, $args)
+    public function rowEdit($request, $response, $args)
     {
         $documento = $this->getDocument($args);
 

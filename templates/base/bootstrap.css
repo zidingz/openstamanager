@@ -46,7 +46,7 @@ audio:not([controls]) {
     height: 0;
 }
 
-[hidden],
+[d-none],
 template {
     display: none;
 }
@@ -108,7 +108,7 @@ img {
 }
 
 svg:not(:root) {
-    overflow: hidden;
+    overflow: d-none;
 }
 
 figure {
@@ -1079,7 +1079,7 @@ table th[class*="col-"] {
 }
 
 .invisible {
-    visibility: hidden;
+    visibility: d-none;
 }
 
 .text-hide {
@@ -1090,7 +1090,7 @@ table th[class*="col-"] {
     border: 0;
 }
 
-.hidden {
+.d-none {
     display: none !important;
 }
 

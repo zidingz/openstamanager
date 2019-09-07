@@ -51,7 +51,7 @@ class ChoicesHandler implements HandlerInterface
         $result = '
     <div class="input-group">
         <span class="input-group-prepend input-group-text">
-            <input |attr| onchange="$(this).parent().find(\'[type=hidden]\').val( + this.checked)">
+            <input |attr| onchange="$(this).parent().find(\'[type=d-none]\').val( + this.checked)">
             <input type="hidden" name="|name|" value="|value|">
         </span>
         <input type="text" class="form-control" placeholder="|placeholder|" disabled>

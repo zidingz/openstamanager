@@ -46,11 +46,11 @@ $(document).ready(function () {
         sub.selectReset();
 
         if($(this).val()){
-            sub.parent().find(".input-group-prepend button").removeClass("hide");
+            sub.parent().find(".input-group-prepend button").removeClass("d-none");
             sub.parent().find(".input-group-prepend button").data("href", original + "&id_original="+$(this).val());
         }
         else {
-            sub.parent().find(".input-group-prepend button").addClass("hide");
+            sub.parent().find(".input-group-prepend button").addClass("d-none");
         }
     });
 });

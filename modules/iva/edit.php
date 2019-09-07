@@ -86,7 +86,7 @@ if ($res) {
 <script>
 $(document).ready(function(){
     $('#esente-edit').change(function(){
-        var checkbox = $(this).parent().find('[type=hidden]');
+        var checkbox = $(this).parent().find('[type=d-none]');
 
         if (checkbox.val() == 1) {
             $("#percentuale-edit").prop("disabled", true);

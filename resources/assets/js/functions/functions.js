@@ -19,7 +19,7 @@ function openModal(title, href, generate_id) {
     }
 
     if ($(id).length == 0){
-        $('#modals').append('<div class="modal fade" id="' + id.replace("#", "") + '" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="true"></div>');
+        $('#modals').append('<div class="modal fade" id="' + id.replace("#", "") + '" role="dialog" aria-labelledby="myModalLabel" aria-d-none="true" data-backdrop="static" data-keyboard="true"></div>');
     }
 
     $(id).on('hidden.bs.modal', function () {
@@ -36,7 +36,7 @@ function openModal(title, href, generate_id) {
                 <i class="fa fa-pencil"></i> ' + title + '\
             </h4>\
             <button type="button" class="close" data-dismiss="modal">\
-                <span aria-hidden="true">&times;</span><span class="sr-only">' + globals.translations.close + '</span>\
+                <span aria-d-none="true">&times;</span><span class="sr-only">' + globals.translations.close + '</span>\
             </button>\
         </div>\
         <div class="modal-body">|data|</div>\
@@ -386,6 +386,7 @@ function submitAjax(form, data, callback, errorCallback) {
 
     if(valid) {
         $("#main_loading").show();
+        var url = $(form).attr('action') ? $(form).attr('action') : location.href;
 
         content_was_modified = false;
 
@@ -397,7 +398,7 @@ function submitAjax(form, data, callback, errorCallback) {
 
         // Invio dei dati
         $(form).ajaxSubmit({
-            url: globals.rootdir + "/actions.php",
+            url: url,
             data: data,
             type: "post",
             success: function (data) {

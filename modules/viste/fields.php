@@ -218,7 +218,7 @@ echo '
     });
 
     $(document).ready(function(){
-        $("#save").addClass("hide");
+        $("#save").addClass("d-none");
 
         $(".sortable").disableSelection();
         $(".sortable").each(function() {

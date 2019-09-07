@@ -48,7 +48,7 @@
 <script>
 $(document).ready(function(){
     $('#bs-popup #esente-add').change(function(){
-        var checkbox = $(this).parent().find('[type=hidden]');
+        var checkbox = $(this).parent().find('[type=d-none]');
 
         if (checkbox.val() == 1) {
             $("#bs-popup #percentuale-add").prop("disabled", true);

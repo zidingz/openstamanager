@@ -462,7 +462,7 @@ if (!empty($id_intervento)) {
                 if(response=="success"){
                     // Se l'aggiunta intervento proviene dalla scheda di pianificazione ordini di servizio della dashboard, la ricarico
                     if(ref == "dashboard"){
-                        $("#bs-popup").modal('hide');
+                        $("#bs-popup").modal('d-none');
 
                         // Aggiornamento elenco interventi da pianificare
                         $('#calendar').fullCalendar('refetchEvents');
@@ -472,7 +472,7 @@ if (!empty($id_intervento)) {
                     // Se l'aggiunta intervento proviene dai contratti, faccio il submit via ajax e ricarico la tabella dei contratti
                     else if(ref == "interventi_contratti"){
 
-						$("#bs-popup").modal('hide');
+						$("#bs-popup").modal('d-none');
 						parent.window.location.reload();
 						//TODO: da gestire via ajax
 						//$('#elenco_interventi > tbody').load(globals.rootdir + '/modules/contratti/plugins/contratti.pianificazioneinterventi.php?op=get_interventi_pianificati&idcontratto=<?php echo $idcontratto; ?>');

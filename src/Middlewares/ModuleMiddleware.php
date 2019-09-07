@@ -41,7 +41,7 @@ class ModuleMiddleware extends Middleware
         $this->addVariable('search', getSessionSearch($module['id']));
 
         // Gestione della visualizzazione plugin (reference_id obbligatorio)
-        if (!empty($args['module']) && $args['module']->type != 'module' && !isset($args['reference_id'])) {
+        if (!empty($args['module']) && $args['module']->type == 'record_plugin' && !isset($args['reference_id'])) {
             throw new NotFoundException($request, $response);
         }
 

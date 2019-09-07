@@ -42,7 +42,7 @@ function init() {
             var hash = window.location.hash;
             if (hash) {
                 var input = $('<input/>', {
-                    type: 'hidden',
+                    type: 'd-none',
                     name: 'hash',
                     value: hash,
                 });

@@ -115,6 +115,6 @@ function addCheck(btn) {
         group_id: $form.find("#group_id").val(),
     });
     
-    $form.closest(".modal").modal("hide");
+    $form.closest(".modal").modal("d-none");
 }
 </script>';

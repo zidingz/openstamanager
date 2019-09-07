@@ -1,13 +1,13 @@
 <?php
 echo "<form action='".$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record."' method='post'>";
-echo "  <input type='hidden' name='backto' value='record-edit'>";
-echo "  <input type='hidden' name='op' value='edit_revision'>";
-echo "  <input type='hidden' name='id_plugin' value='".$id_plugin."'>";
-echo "  <input type='hidden' name='id_record' value='".$id_record."'>";
+echo "  <input type='d-none' name='backto' value='record-edit'>";
+echo "  <input type='d-none' name='op' value='edit_revision'>";
+echo "  <input type='d-none' name='id_plugin' value='".$id_plugin."'>";
+echo "  <input type='d-none' name='id_record' value='".$id_record."'>";
 
 $rs_master_revision = $dbo->fetchArray('SELECT master_revision FROM co_preventivi WHERE id='.prepare($id_record));
 
-echo "  <input type='hidden' name='master_revision' value='".$rs_master_revision[0]['master_revision']."'>";
+echo "  <input type='d-none' name='master_revision' value='".$rs_master_revision[0]['master_revision']."'>";
 
 $rs_revisioni = $dbo->fetchArray('SELECT * FROM co_preventivi WHERE master_revision='.prepare($rs_master_revision[0]['master_revision']).' OR id='.prepare($rs_master_revision[0]['master_revision']).' ORDER BY created_at');
 
@@ -58,10 +58,10 @@ echo '  </div>';
 echo '</form>';
 
 echo "<form action='".$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record."' method='post' id='form_deleterevision'>";
-echo "  <input type='hidden' name='backto' value='record-edit'>";
-echo "  <input type='hidden' name='op' value='delete_revision'>";
-echo "  <input type='hidden' name='id_plugin' value='".$id_plugin."'>";
-echo "  <input type='hidden' name='id_record' value='".$id_record."'>";
-echo "  <input type='hidden' name='idrevisione' id='idrevisione' value=''>";
+echo "  <input type='d-none' name='backto' value='record-edit'>";
+echo "  <input type='d-none' name='op' value='delete_revision'>";
+echo "  <input type='d-none' name='id_plugin' value='".$id_plugin."'>";
+echo "  <input type='d-none' name='id_record' value='".$id_record."'>";
+echo "  <input type='d-none' name='idrevisione' id='idrevisione' value=''>";
 echo '</form>';
 ?>

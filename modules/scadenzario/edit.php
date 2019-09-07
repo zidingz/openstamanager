@@ -157,7 +157,7 @@ echo '
 
 					<div class="clearfix"></div>
 
-					<div class="alert alert-error hide" id="totale"><?php echo tr('Il totale da pagare deve essere pari a _MONEY_', [
+					<div class="alert alert-error d-none" id="totale"><?php echo tr('Il totale da pagare deve essere pari a _MONEY_', [
                         '_MONEY_' => '<b>'.moneyFormat($totale_da_pagare).'</b>',
                     ]); ?>.<br><?php echo tr('Differenza di _TOT_ _CURRENCY_', [
                             '_TOT_' => '<span id="diff"></span>',
@@ -258,11 +258,11 @@ echo '
         diff = Math.abs(totale_da_pagare) - Math.abs(totale_utente);
 
         if (diff == 0) {
-            $('#btn-saves').removeClass('hide');
-            $('#totale').addClass('hide');
+            $('#btn-saves').removeClass('d-none');
+            $('#totale').addClass('d-none');
         } else {
-            $('#btn-saves').addClass('hide');
-            $('#totale').removeClass('hide');
+            $('#btn-saves').addClass('d-none');
+            $('#totale').removeClass('d-none');
         }
 
         $('#diff').html(diff.toLocale());

@@ -118,9 +118,9 @@ function start_datatables() {
                                 .addClass('compact')
                                 .css('font-size', 'inherit');
                             $(win.document.body).find('td:first-child')
-                                .addClass('hide');
+                                .addClass('d-none');
                             $(win.document.body).find('th:first-child')
-                                .addClass('hide');
+                                .addClass('d-none');
                         },
                         exportOptions: {
                             modifier: {
@@ -176,7 +176,7 @@ function start_datatables() {
 
                     api.columns('.search').every(function () {
                         var column = this;
-                        $('<br><input type="text" style="width:100%" class="form-control" placeholder="' + globals.translations.filter + '..."><i class="deleteicon fa fa-times fa-2x hide"></i>')
+                        $('<br><input type="text" style="width:100%" class="form-control" placeholder="' + globals.translations.filter + '..."><i class="deleteicon fa fa-times fa-2x d-none"></i>')
                             .appendTo(column.header())
                             .on('keyup', function (e) {
 
@@ -187,13 +187,13 @@ function start_datatables() {
                                     if (!$(this).val()) {
                                         if ($(this).parent().data("slow") != undefined) $("#slow").remove();
                                         $(this).removeClass('input-searching');
-                                        $(this).next('.deleteicon').addClass('hide');
+                                        $(this).next('.deleteicon').addClass('d-none');
                                     } else {
                                         if ($(this).parent().data("slow") != undefined && $("#slow").length == 0) {
                                             $("#" + $this.attr('id') + "_info").parent().append('<span class="text-danger" id="slow"><i class="fa fa-refresh fa-spin"></i> ' + globals.translations.long + '</span>');
                                         }
                                         $(this).addClass('input-searching');
-                                        $(this).next('.deleteicon').removeClass('hide');
+                                        $(this).next('.deleteicon').removeClass('d-none');
                                     }
                                 }
 
@@ -253,7 +253,7 @@ function start_datatables() {
                 drawCallback: function (settings) {
                     var api = new $.fn.dataTable.Api(settings);
 
-                    $(".dataTables_sizing .deleteicon").addClass('hide');
+                    $(".dataTables_sizing .deleteicon").addClass('d-none');
 
                     $("[data-background]").each(function () {
                         $(this).parent().css("background", $(this).data("background"));

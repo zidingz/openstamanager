@@ -257,8 +257,8 @@
     </div>
 
     <footer class="main-footer">
-        <a class="hidden-xs" href="https://www.openstamanager.com" title="{{ "Il gestionale open source per l'assistenza tecnica e la fatturazione"|trans }}" target="_blank"><strong>{{ 'OpenSTAManager'|trans }}</strong></a>
-        <span class="float-right hidden-xs">
+        <a class="d-none-xs" href="https://www.openstamanager.com" title="{{ "Il gestionale open source per l'assistenza tecnica e la fatturazione"|trans }}" target="_blank"><strong>{{ 'OpenSTAManager'|trans }}</strong></a>
+        <span class="float-right d-none-xs">
             <strong>{{ 'Versione'|trans }}:</strong> {{ version }}
             <small class="text-muted">({{ revision ? revision : 'In sviluppo'|trans }})</small>
         </span>
@@ -321,7 +321,7 @@
     </script>
 
     <!-- Modal di default -->
-    <div class="modal fade" id="bs-popup" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="true"></div>
-    <div class="modal fade" id="bs-popup2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="true"></div>
+    <div class="modal fade" id="bs-popup" role="dialog" aria-labelledby="myModalLabel" aria-d-none="true" data-backdrop="static" data-keyboard="true"></div>
+    <div class="modal fade" id="bs-popup2" role="dialog" aria-labelledby="myModalLabel" aria-d-none="true" data-backdrop="static" data-keyboard="true"></div>
 </div>
 {% endblock %}

@@ -84,7 +84,7 @@ input[type=file] {
     max-height: 80vh;
     width: 600px;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: d-none;
 }
 
 .ui-autocomplete a {
@@ -304,8 +304,8 @@ span.form-control {
 }
 
 .li-widget button.close {
-    padding-right: 5px;
-    opacity: 0.1;
+    position: absolute;
+    right: 5px;
 }
 
 /* Tooltip dark */
@@ -358,11 +358,11 @@ span.form-control {
     height: 30px;
     position: absolute;
     margin-left: -30px;
-    bottom: 7px;
+    bottom: 17px;
     right: 17px;
     float: right;
     display: block;
-    overflow: hidden;
+    overflow: d-none;
     text-overflow: ellipsis;
     white-space: nowrap;
 }

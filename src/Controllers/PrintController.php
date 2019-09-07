@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Models\PrintTemplate;
 use Prints;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -24,17 +25,11 @@ class PrintController extends Controller
     public function open(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         /*
-        $id_print = $args['print_id'];
+        $print = PrintTemplate::find($args['print_id']);
+        $manager = $print->getManager($this->container, $args['record_id']);
 
-        // Retrocompatibilità
-        $ptype = get('ptype');
-        if (!empty($ptype)) {
-            $print = $this->database->fetchOne('SELECT id, previous FROM zz_prints WHERE directory = '.prepare($ptype).' ORDER BY predefined DESC LIMIT 1');
-            $id_print = $print['id'];
-
-            $id_record = !empty($id_record) ? $id_record : get($print['previous']);
-            $args['record_id'] = $id_record;
-        }*/
+        $pdf = $manager->render();
+        */
 
         $pdf = Prints::render($args['print_id'], $args['record_id']);
 

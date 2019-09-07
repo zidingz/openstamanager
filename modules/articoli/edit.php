@@ -141,7 +141,7 @@
 
                     <div class="row">
                         <div class="col-md-6">
-						<button type="button" class="btn btn-info btn-sm float-right tip float-right" title="<?php echo tr('Scorpora iva dal prezzo di vendita.'); ?>" id="scorpora_iva"><i class="fa fa-calculator" aria-hidden="true"></i></button>
+						<button type="button" class="btn btn-info btn-sm float-right tip float-right" title="<?php echo tr('Scorpora iva dal prezzo di vendita.'); ?>" id="scorpora_iva"><i class="fa fa-calculator" aria-d-none="true"></i></button>
                           {[ "type": "number", "label": "<?php echo tr('Prezzo di vendita'); ?>", "name": "prezzo_vendita", "value": "$prezzo_vendita$", "icon-after": "<?php echo currency(); ?>" ]}
                         </div>
 

@@ -85,7 +85,7 @@ if ($dir == 'entrata') {
                 ?>
 
 				<!-- id_segment -->
-				{[ "type": "hidden", "label": "Segmento", "name": "id_segment", "class": "text-center", "value": "$id_segment$" ]}
+				{[ "type": "d-none", "label": "Segmento", "name": "id_segment", "class": "text-center", "value": "$id_segment$" ]}
 
 				<div class="col-md-3">
 					{[ "type": "text", "label": "<?php echo $label; ?>", "name": "numero_esterno", "class": "text-center", "value": "$numero_esterno$" ]}
@@ -253,7 +253,7 @@ if (empty($record['is_fiscale'])) {
                     if ($fattura->isFE() && $ricalcola && $module['name'] == 'Fatture di acquisto') {
                         echo '
                     <button type="button" class="btn btn-info btn-sm float-right tip" title="'.tr('Ricalcola le scadenze').'. '.tr('Per ricalcolare correttamente le scadenze, imposta la fattura in stato \'\'Bozza\'\' e correggi il metodo di  come desiderato, poi re-imposta lo stato \'\'Emessa\'\' e utilizza questa funzione').'." id="ricalcola_scadenze">
-                        <i class="fa fa-calculator" aria-hidden="true"></i>
+                        <i class="fa fa-calculator" aria-d-none="true"></i>
                     </button>';
                     }
 

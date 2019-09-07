@@ -93,7 +93,7 @@ if (!empty($sessioni)) {
             <td style="border-right:1px solid #aaa;">
                 '.Translator::numberToLocale($ore).'
 
-                <div class="extra hide">
+                <div class="extra d-none">
                     <table class="table table-condensed table-bordered">
                         <tr>
                             <th class="text-danger">'.tr('Costo').':</th>
@@ -122,7 +122,7 @@ if (!empty($sessioni)) {
             <td style="border-right:1px solid #aaa;">
                 '.Translator::numberToLocale($km).'
 
-                <div class="extra hide">
+                <div class="extra d-none">
                     <table class="table table-condensed table-bordered">
                     <tr>
                         <th class="text-danger">'.tr('Costo').':</th>
@@ -224,8 +224,8 @@ if (empty($sessioni)) {
     echo '
         $(".btn-details").attr("disabled", true);
         $(".btn-details").addClass("disabled");
-        $("#showall_dettagli").removeClass("hide");
-        $("#dontshowall_dettagli").addClass("hide");';
+        $("#showall_dettagli").removeClass("d-none");
+        $("#dontshowall_dettagli").addClass("d-none");';
 } else {
     echo '
         $(".btn-details").attr("disabled", false);

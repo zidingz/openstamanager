@@ -69,13 +69,13 @@ class Checklist {
     }
 
     showLoader() {
-        $("#loading_" + this.id).removeClass("hide");
+        $("#loading_" + this.id).removeClass("d-none");
     }
 
     reload() {
         var $this = this;
         $("#" + $this.id).load(globals.rootdir + "/ajax.php?op=checklists&id_module=" + $this.info.id_module + "&id_record=" + $this.info.id_record + "&id_plugin=" + $this.info.id_plugin, function() {
-            $("#loading_" + $this.id).addClass("hide");
+            $("#loading_" + $this.id).addClass("d-none");
         });
     }
 }

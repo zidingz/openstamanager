@@ -5,7 +5,7 @@
     {( "name": "widgets", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}", "position": "top", "editor": "controller" )}
 
     {% if setting('Attiva notifica di presenza utenti sul record') %}
-        <div class="card card-outline card-warning card-solid text-center info-active hide">
+        <div class="card card-outline card-warning card-solid text-center info-active d-none">
             <div class="card-header">
                 <h3 class="card-title"><i class="fa fa-warning"></i> {{ 'Attenzione!'|trans }}</h3>
             </div>
@@ -209,13 +209,13 @@
                 },
                 function(data) {
                     if (data.length != 0) {
-                        $(".info-active").removeClass("hide");
+                        $(".info-active").removeClass("d-none");
                         $(".info-active .list").html("");
                         $.each( data, function( key, val ) {
                             $(".info-active .list").append("<li>"+val.username+"</li>");
                         });
                     }
-                    else $(".info-active").addClass("hide");
+                    else $(".info-active").addClass("d-none");
                 });
         }
 

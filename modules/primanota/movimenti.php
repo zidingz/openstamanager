@@ -99,12 +99,12 @@ function calcolaBilancio() {
 
     if (bilancio == 0) {
         $("#testo_aggiuntivo").removeClass("text-danger").html(\'\');
-        $("#add-submit").removeClass("hide");
-        $("#btn_crea_modello").removeClass("hide");
+        $("#add-submit").removeClass("d-none");
+        $("#btn_crea_modello").removeClass("d-none");
     } else {
         $("#testo_aggiuntivo").addClass("text-danger").html(sbilancio.replace("|value|", bilancio.toLocale()));
-        $("#add-submit").addClass("hide");
-        $("#btn_crea_modello").addClass("hide");
+        $("#add-submit").addClass("d-none");
+        $("#btn_crea_modello").addClass("d-none");
     }
 
     return bilancio == 0;

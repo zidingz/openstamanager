@@ -123,7 +123,7 @@ foreach ($results as $result) {
 
 </form>
 
-<div class="card card-outline card-warning card-solid text-center hide" id="wait">
+<div class="card card-outline card-warning card-solid text-center d-none" id="wait">
 	<div class="card-header">
 		<h3 class="card-title"><i class="fa fa-warning"></i> <?php echo tr('Attenzione!'); ?></h3>
 	</div>
@@ -203,10 +203,10 @@ $(document).ready(function(){
 		});
 
 		if( tot != 100) {
-			$('#wait').removeClass("hide");
+			$('#wait').removeClass("d-none");
 			event.preventDefault();
 		} else {
-			$('#wait').addClass("hide");
+			$('#wait').addClass("d-none");
 			$(this).unbind('submit').submit();
 		}
 	});

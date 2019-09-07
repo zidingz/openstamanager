@@ -37,7 +37,7 @@ abstract class Manager extends Controller
                 if (!empty($id_record) && !empty($class)) {
                     $manager = new $class($this->container);
                     $data = $manager->data($id_record);
-        
+
                     $result = $data['record'];
                 }
         */

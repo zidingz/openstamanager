@@ -154,7 +154,7 @@ echo '{( "name": "filelist_and_upload", "id_record": "'.$id_record.'", "id_modul
 
 echo '
 	<!-- PIANIFICAZIONE CICLICA -->
-	<div class="card card-primary '.(!empty($is_add) ? 'hide' : '').'">
+	<div class="card card-primary '.(!empty($is_add) ? 'd-none' : '').'">
 		<div class="card-header">
 			<h3 class="card-title">'.tr('Promemoria ciclico?').'</h3>
 		</div>
@@ -189,7 +189,7 @@ echo '
 
 echo '
 	<!-- PIANIFICARE INTERVENTI -->
-	<div class="card card-primary '.(!empty($is_add) ? 'hide' : '').'">
+	<div class="card card-primary '.(!empty($is_add) ? 'd-none' : '').'">
 		<div class="card-header">
 			<h3 class="card-title">'.tr('Pianificare interventi?').'</h3>
 		</div>

@@ -27,7 +27,7 @@ foreach ($imports as $key => $value) {
 	<!-- PULSANTI -->
 	<div class="row">
 		<div class="col-md-12 text-right">
-			<button id="example" type="button" class="btn btn-info hide" ><i class="fa fa-file"></i> <?php echo tr('Scarica esempio CSV'); ?></button>
+			<button id="example" type="button" class="btn btn-info d-none" ><i class="fa fa-file"></i> <?php echo tr('Scarica esempio CSV'); ?></button>
 			<button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> <?php echo tr('Aggiungi'); ?></button>
 		</div>
 	</div>
@@ -36,9 +36,9 @@ foreach ($imports as $key => $value) {
 <script>
 $('#id_record').change( function(){
     if ($(this).val()>0){
-        $("#example").removeClass('hide');
+        $("#example").removeClass('d-none');
     } else {
-		$("#example").addClass('hide');
+		$("#example").addClass('d-none');
     }
 });
 

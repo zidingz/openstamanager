@@ -68,9 +68,9 @@ if (get('anteprima') !== null) {
 <script type="text/javascript">
     $(document).ready( function(){
         $('#firma').on('click', function(){
-            $('#preview').addClass('hide');
+            $('#preview').addClass('d-none');
 
-            $('#form-firma').removeClass('hide');
+            $('#form-firma').removeClass('d-none');
         })
 
         var wrapper = document.getElementById("signature-pad"),

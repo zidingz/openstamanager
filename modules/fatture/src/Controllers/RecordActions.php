@@ -6,7 +6,7 @@ use Modules\Fatture\Fattura;
 use Modules\Retro\RecordController;
 use Modules\Traits\RowTrait;
 
-class Record extends RecordController
+class RecordActions extends RecordController
 {
     use RowTrait;
 
