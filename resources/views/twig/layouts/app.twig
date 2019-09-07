@@ -127,6 +127,12 @@
         ajax_array_set_url: "{{ path_for('ajax-session-array') }}",
         ajax_flash: "{{ path_for('ajax-flash') }}",
         ajax_hook: "{{ path_for('hook', {'hook_id': '|id|'}) }}",
+        hooks: {
+            list: "{{ path_for('hooks') }}",
+            lock: "{{ path_for('hook-lock', {'hook_id': '|id|'}) }}",
+            excute: "{{ path_for('hook-excute', {'hook_id': '|id|', 'token': '|token|'}) }}",
+            response: "{{ path_for('hook-response', {'hook_id': '|id|'}) }}",
+        }
     };
 </script>
 
@@ -167,7 +173,9 @@
                     <i class="fa fa-bell-o"></i>
                     <span class="badge badge-warning navbar-badge">
                         <span id="hooks-loading"><i class="fa fa-spinner fa-spin fa-xs"></i></span>
-                        <span id="hooks-count"></span>
+                        <span id="hooks-notified"></span>
+                        <span id="hooks-counter" class="hide">0</span>
+                        <span id="hooks-number" class="hide">0</span>
                     </span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" id="hooks">
@@ -273,51 +281,8 @@
             clock();
 
             // Hooks
-            $.ajax({
-                url: "{{ path_for('hooks') }}",
-                type: "get",
-                success: function(data) {
-                    hooks = JSON.parse(data);
-
-                    hooks.forEach(function(item, index){
-                        executeHook(item, hooks.length);
-                    });
-                },
-            });
+            startHooks();
         });
-
-        function executeHook(hook, length){
-            $("#hooks").append('<li class="dropdown-item" id="hook-loader-' + hook.id + '"><a href="#">{{ 'Hook "_NAME_" in esecuzione'|trans({'_NAME_': "' + hook.name + '"})|raw }}</a></li>');
-
-            $.ajax({
-                url: "{{ path_for('hook', {'hook_id': '" + hook.id + "'})|raw }}",
-                type: "get",
-                success: function(data) {
-                    result = JSON.parse(data);
-
-                    $("#hook-loader-" + hook.id).remove();
-                    message = '<li class="hook-element dropdown-item"><a href="' + (result.link ? result.link : "#") + '"><i class="' + result.icon + '"></i> ' + result.message + '</a></li>';
-
-                    // Inserimento della notifica
-                    if(result.notify) {
-                        hooks_count = $("#hooks-count");
-                        number = parseInt(hooks_count.text());
-                        number = isNaN(number) ? 0 : number;
-
-                        hooks_count.text(parseInt(number) + 1);
-
-                        $("#hooks").prepend(message);
-                    } else {
-                        $("#hooks").append(message);
-                    }
-
-                    // Rimozione eventuale della rotella di caricamento
-                    if($(".hook-element").length == hooks.length) {
-                        $("#hooks-loading").hide();
-                    }
-                },
-            });
-        }
     </script>
 
     <!-- Modal di default -->

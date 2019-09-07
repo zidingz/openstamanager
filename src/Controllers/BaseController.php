@@ -73,23 +73,7 @@ class BaseController extends Controller
         $keep_alive = (filter('keep_alive') != null);
 
         if ($this->database->isConnected() && $this->database->isInstalled() && $this->auth->attempt($username, $password)) {
-            $_SESSION['keep_alive'] = $keep_alive;
-
-            // Rimozione log vecchi
-            $this->database->query('DELETE FROM `zz_operations` WHERE DATE_ADD(`created_at`, INTERVAL 30*24*60*60 SECOND) <= NOW()');
-
-            // Auto backup del database giornaliero
-            if (setting('Backup automatico')) {
-                $result = Backup::daily();
-
-                if (!isset($result)) {
-                    flash()->info(tr('Backup saltato perché già esistente!'));
-                } elseif (!empty($result)) {
-                    flash()->info(tr('Backup automatico eseguito correttamente!'));
-                } else {
-                    flash()->error(tr('Errore durante la generazione del backup automatico!'));
-                }
-            }
+            $_SESSION['keep_alive'] = true;
 
             $response = $this->redirectFirstModule($request, $response);
         } else {
