@@ -51,7 +51,7 @@ class AjaxController extends Controller
 
     public function flash(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $response = flash()->getMessages();
+        $results = flash()->getMessages();
         $response = $response->write(json_encode($results));
 
         return $response;
@@ -312,35 +312,6 @@ class AjaxController extends Controller
                 $results['data'][] = $result;
             }
         }
-
-        $response = $response->write(json_encode($results));
-
-        return $response;
-    }
-
-    public function hooks(ServerRequestInterface $request, ResponseInterface $response, array $args)
-    {
-        $hooks = Hook::all();
-
-        $results = [];
-        foreach ($hooks as $hook) {
-            $results[] = [
-                'id' => $hook->id,
-                'name' => $hook->name,
-            ];
-        }
-
-        $response = $response->write(json_encode($results));
-
-        return $response;
-    }
-
-    public function hook(ServerRequestInterface $request, ResponseInterface $response, array $args)
-    {
-        $hook_id = $args['hook_id'];
-        $hook = Hook::find($hook_id);
-
-        $results = $hook->execute();
 
         $response = $response->write(json_encode($results));
 
