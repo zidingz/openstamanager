@@ -1,22 +1,21 @@
-{% extends "layouts/guest.twig" %}
+{% extends "layouts/base.twig" %}
 
 {% block title %}{{ "Accesso negato!"|trans }}{% endblock %}
+{% block body_class %}hold-transition login-page{% endblock %}
 
-{% block box_class %}card-warning text-center{% endblock %}
-{% block box_header %}
-    <h3 class="card-title">{{ 'Accesso negato!'|trans }}</h3>
+{% block body %}
+    <section style="position: absolute;left: 35%;top: 40%;">
+        <div class="error-page">
+            <h2 class="headline text-info"> 403</h2>
+
+            <div class="error-content">
+                <h3><i class="fas fa-exclamation-triangle text-info"></i> {{ 'Oops! Accesso negato'|trans }}.</h3>
+
+                <p>
+                    {{ 'Non possiedi permessi sufficienti per accedere alla pagina da te richiesta'|trans }}.
+                    {{ 'Nel frattempo, puoi tornare alla _PAGE_'|trans({'_PAGE_': '<a href="' ~ path_for('login') ~ '">' ~ 'pagina principale'|trans ~ '</a>' })|raw }}.
+                </p>
+            </div>
+        </div>
+    </section>
 {% endblock %}
-
-{% block content %}
-    <div class="text-center">
-        <h3 class="text-muted">
-            <small class="form-text">{{ 'Stai cercando di accedere ad una sezione verso cui non possiedi permessi sufficienti'|trans }}.</small>
-        </h3>
-        <br>
-
-        <a class="btn btn-secondary" href="{{ path_for('login') }}">
-            <i class="fa fa-chevron-left"></i> {{ 'Indietro'|trans }}
-        </a>
-    </div>
-{% endblock %}
-

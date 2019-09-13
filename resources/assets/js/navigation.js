@@ -1,4 +1,11 @@
 $(document).ready(function () {
+    // AdminLTE 3 Sidebar
+    $(".nav-sidebar .nav-link[href]").on("click", function(e) {
+        if (!$(e.target).hasClass("fa")) {
+            location.href = $(this).attr("href");
+        }
+    });
+
     // Tabs
     $('.nav-tabs').tabs();
 

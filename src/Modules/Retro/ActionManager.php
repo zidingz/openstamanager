@@ -9,6 +9,10 @@ class ActionManager extends RetroController implements ActionInterface
     public function __call($name, $arguments)
     {
         $action = $arguments[2]['action'];
+        $action = str_replace(['-', '_'], [' ', ' '], $action);
+        $action = lcfirst(ucwords($action));
+        $action = str_replace(' ', '', $action);
+
         $op = filter('op');
 
         if (empty($op)) {

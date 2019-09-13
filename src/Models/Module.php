@@ -6,7 +6,6 @@ use Auth;
 use Common\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Checklists\Traits\ChecklistTrait;
-use Psr\Container\ContainerInterface;
 use Traits\Components\NoteTrait;
 use Traits\Components\UploadTrait;
 use Traits\ManagerTrait;
@@ -65,6 +64,16 @@ class Module extends Model
         return $this->variables[$id_record];
     }
 
+    public function getClass()
+    {
+        $class = $this->class;
+        $result = new $class();
+
+        return $result;
+    }
+
+    // Attributi Eloquent
+
     /**
      * Restituisce i permessi relativi all'account in utilizzo.
      *
@@ -97,29 +106,6 @@ class Module extends Model
         return !empty($this->options2) ? $this->options2 : $this->options;
     }
 
-    public function getController(ContainerInterface $container, string $name, ?int $record_id = null, ?int $reference_id = null)
-    {
-        $class = $this->getControllerClass($name);
-        if (empty($class)) {
-            return null;
-        }
-
-        $controller = new $class($container, $this, $record_id, $reference_id);
-
-        return $controller;
-    }
-
-    public function getControllerClass($name)
-    {
-        $class = $this->namespace.'\\'.$name;
-
-        if (!class_exists($class)) {
-            return null;
-        }
-
-        return $class;
-    }
-
     public function hasRecordAccess($record_id)
     {
         Query::setSegments(false);
@@ -148,7 +134,7 @@ class Module extends Model
         return $this->hasMany(PrintTemplate::class, 'id_module');
     }
 
-    public function Templates()
+    public function templates()
     {
         return $this->hasMany(Template::class, 'id_module');
     }

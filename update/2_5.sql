@@ -1,5 +1,5 @@
 -- Strutture per la gestione Slim e conversione plugins
-ALTER TABLE `zz_modules` ADD `namespace` varchar(255) NOT NULL;
+ALTER TABLE `zz_modules` ADD `namespace` varchar(255) NOT NULL, ADD `class` varchar(255) NOT NULL;
 ALTER TABLE `zz_modules` ADD `type` ENUM('module', 'record_plugin', 'module_plugin') NOT NULL DEFAULT 'module';
 INSERT INTO `zz_modules` (`id`, `name`, `title`, `type`, `enabled`, `default`, `options`, `options2`, `directory`, `parent`) SELECT NULL, `name`, `title`, IF(`position` = 'tab', 'record_plugin', 'module_plugin'), `enabled`, `default`, `options`, `options2`, `directory`, `idmodule_to` FROM `zz_plugins`;
 UPDATE `zz_modules` SET `name` = 'Statistiche anagrafiche', `default` = 1, `namespace` = 'Plugins\\StatisticheAnagrafiche\\Controllers' WHERE `directory` = 'statistiche_anagrafiche';
@@ -19,7 +19,7 @@ UPDATE `zz_modules` SET `namespace` = 'Plugins\\Referenti\\Controllers' WHERE `n
 UPDATE `zz_modules` SET `name` = 'Seriali', `directory` = 'seriali', `default` = 1, `namespace` = 'Plugins\\Seriali\\Controllers' WHERE `name` = 'Serial';
 UPDATE `zz_modules` SET `directory` = 'movimenti', `default` = 1, `namespace` = 'Plugins\\Movimenti\\Controllers' WHERE `name` = 'Movimenti';
 
--- Dove'è Pianificazione fatturazione?
+UPDATE `zz_modules` SET `class` = 'Modules\\Retro\\Register';
 
 UPDATE `zz_modules` SET `namespace` = 'Modules\\Fatture\\Controllers' WHERE `name` = 'Fatture di vendita';
 UPDATE `zz_modules` SET `namespace` = 'Modules\\Fatture\\Controllers' WHERE `name` = 'Fatture di acquisto';

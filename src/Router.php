@@ -19,6 +19,10 @@ class Router extends \Slim\Router
             }
         }
 
+        if (strpos($name, 'module') == 0) {
+            $name = str_replace('module', 'module-'.$data['module_id'], $name);
+        }
+
         return parent::pathFor($name, $data, $queryParams);
     }
 

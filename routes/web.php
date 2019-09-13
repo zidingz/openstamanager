@@ -111,33 +111,6 @@ $app->group('/hook', function () use ($app) {
         ->setName('hook-response');
 })->add(UserMiddleware::class);
 
-// Moduli
-$app->group('/module/{module_id:[0-9]+}', function () use ($app) {
-    $app->get('/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:module')
-        ->setName('module');
-
-    $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:moduleAction')
-        ->setName('module-action');
-
-    $app->group('/edit/{record_id:[0-9]+}', function () use ($app) {
-        $app->get('/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:edit')
-            ->setName('module-record');
-        $app->post('/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:editRecord')
-            ->setName('module-record-save');
-
-        $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:recordAction')
-            ->setName('module-record-action');
-    });
-
-    $app->get('/add/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:add')
-        ->setName('module-add');
-    $app->post('/add/[reference/{reference_id:[0-9]+}/]', 'Controllers\ModuleController:addRecord')
-        ->setName('module-add-save');
-})
-    ->add(UserMiddleware::class)
-    ->add(PermissionMiddleware::class)
-    ->add(ModuleMiddleware::class);
-
 // Stampe
 $app->group('/print', function () use ($app) {
     $app->get('/{print_id:[0-9]+}/[{record_id:[0-9]+}/]', 'Controllers\PrintController:view')

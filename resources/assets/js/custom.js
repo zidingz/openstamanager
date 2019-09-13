@@ -1,10 +1,3 @@
-// AdminLTE 3 Sidebar
-$(".nav-sidebar .nav-link[href]").on("click", function(e) {
-    if (!$(e.target).hasClass("fa")) {
-        location.href = $(this).attr("href");
-    }
-});
-
 // Aggiunta dell'ingranaggio all'unload della pagina
 $(window).on("beforeunload", function () {
     $("#main_loading").show();

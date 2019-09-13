@@ -37,10 +37,10 @@ class PermissionMiddleware extends Middleware
         if (!$permission) {
             //$response = $this->twig->render($response, 'errors\403.twig', $args);
             //return $response->withStatus(403);
-            throw new NotFoundException($request, $response);
+            //throw new NotFoundException($request, $response);
         } else {
-            $response = $next($request, $response);
         }
+        $response = $next($request, $response);
 
         return $response;
     }

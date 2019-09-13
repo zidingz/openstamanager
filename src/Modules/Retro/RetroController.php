@@ -5,36 +5,15 @@ namespace Modules\Retro;
 use App;
 use Controllers\Controller;
 use HTMLBuilder\HTMLBuilder;
-use Modules\Manager;
-use ReflectionClass;
+use Modules\Traits\DefaultTrait;
 
-class RetroController extends Manager
+abstract class RetroController extends Controller
 {
-    public function getReferenceID($args)
+    use DefaultTrait;
+
+    public static function filepath($module, $file)
     {
-        return $args['reference_id'];
-    }
-
-    protected function getDirectory()
-    {
-        $class_info = new ReflectionClass($this);
-        $file = $class_info->getFileName();
-
-        $directory = dirname($file);
-        $current_directory = dirname($directory);
-        while (!ends_with($current_directory, 'modules')) {
-            $directory = $current_directory;
-            $current_directory = dirname($directory);
-        }
-
-        return $directory;
-    }
-
-    protected function filepath($file)
-    {
-        $directory = $this->getDirectory();
-
-        return App::filepath($directory.'|custom|', $file);
+        return App::filepath('modules/'.$module->directory.'|custom|', $file);
     }
 
     protected function controller($args)
@@ -45,14 +24,14 @@ class RetroController extends Manager
 
         if ($args['structure']->option == 'custom') {
             // Lettura risultato query del modulo
-            $init = $this->filepath('init.php');
+            $init = $args['module']->filepath('init.php');
             if (!empty($init)) {
                 include $init;
             }
 
             $args['record'] = $record;
 
-            $content = $this->filepath('edit.php');
+            $content = $args['module']->filepath('edit.php');
             if (!empty($content)) {
                 ob_start();
                 include $content;
@@ -77,7 +56,7 @@ class RetroController extends Manager
         $dbo = $database = $this->database;
 
         // Lettura risultato query del modulo
-        $init = $structure->filepath('init.php');
+        $init = $args['module']->filepath('init.php');
         if (!empty($init)) {
             include $init;
         }
@@ -87,21 +66,21 @@ class RetroController extends Manager
         // Registrazione del record
         HTMLBuilder::setRecord($record);
 
-        $content = $structure->filepath('edit.php');
+        $content = $args['module']->filepath('edit.php');
         if (!empty($content)) {
             ob_start();
             include $content;
             $content = ob_get_clean();
         }
 
-        $buttons = $structure->filepath('buttons.php');
+        $buttons = $args['module']->filepath('buttons.php');
         if (!empty($buttons)) {
             ob_start();
             include $buttons;
             $buttons = ob_get_clean();
         }
 
-        $module_bulk = $structure->filepath('bulk.php');
+        $module_bulk = $args['module']->filepath('bulk.php');
         $module_bulk = empty($module_bulk) ? [] : include $module_bulk;
         $module_bulk = empty($module_bulk) ? [] : $module_bulk;
 
@@ -122,7 +101,7 @@ class RetroController extends Manager
         $dbo = $database = $this->database;
 
         // Lettura risultato query del modulo
-        $init = $structure->filepath('init.php');
+        $init = $args['module']->filepath('init.php');
         if (!empty($init)) {
             include $init;
         }
@@ -130,7 +109,7 @@ class RetroController extends Manager
         $args['record'] = $record;
 
         // Registrazione del record
-        $actions = $structure->filepath('actions.php');
+        $actions = $args['module']->filepath('actions.php');
         if (!empty($actions)) {
             include $actions;
         }
@@ -145,7 +124,7 @@ class RetroController extends Manager
         $dbo = $database = $this->database;
 
         // Lettura risultato query del modulo
-        $init = $this->filepath('init.php');
+        $init = $args['module']->filepath('init.php');
         if (!empty($init)) {
             include $init;
         }
@@ -188,7 +167,7 @@ class RetroController extends Manager
                     include $plugin->getEditFile();
                     $content = ob_get_clean();
                 } else {
-                    $bulk = $this->filepath('bulk.php');
+                    $bulk = $args['module']->filepath('bulk.php');
                     $bulk = empty($bulk) ? [] : include $bulk;
                     $bulk = empty($bulk) ? [] : $bulk;
                 }

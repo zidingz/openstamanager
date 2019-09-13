@@ -11,11 +11,16 @@ trait PermissionTrait
      */
     public function getPermissionAttribute()
     {
-        if (auth()->user()->is_admin) {
+        $user = auth()->user();
+        if (empty($user)) {
+            return '-';
+        }
+
+        if ($user->is_admin) {
             return 'rw';
         }
 
-        $group = auth()->user()->group->id;
+        $group = $user->group->id;
 
         $pivot = $this->pivot ?: $this->groups->first(function ($item) use ($group) {
             return $item->id == $group;

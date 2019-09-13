@@ -1,5 +1,9 @@
 <?php
 
+use Monolog\Handler\FilterHandler;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Handler\StreamHandler;
+
 // Auth manager
 $container['auth'] = function () {
     return new Auth();
@@ -18,6 +22,34 @@ $container['filter'] = function ($container) {
 // Custom router
 $container['router'] = function () {
     return new Router();
+};
+
+// Logger
+$container['logger'] = function ($container) {
+    $logger = new Monolog\Logger('Logs');
+    $logger->pushProcessor(new Monolog\Processor\UidProcessor());
+    $logger->pushProcessor(new Monolog\Processor\WebProcessor());
+
+    $handlers = [];
+    // File di log di base (logs/error.log, logs/setup.log)
+    $handlers[] = new StreamHandler(__DIR__.'/../logs/error.log', Monolog\Logger::ERROR);
+
+    // File di log ordinati in base alla data
+    if ($container['debug']) {
+        $handlers[] = new RotatingFileHandler(__DIR__.'/../logs/error.log', 0, Monolog\Logger::ERROR);
+    }
+
+    $pattern = '[%datetime%] %channel%.%level_name%: %message% %context%'.PHP_EOL.'%extra% '.PHP_EOL;
+    $monologFormatter = new Monolog\Formatter\LineFormatter($pattern);
+    $monologFormatter->includeStacktraces($container['debug']);
+
+    // Filtra gli errori per livello preciso del gestore dedicato
+    foreach ($handlers as $handler) {
+        $handler->setFormatter($monologFormatter);
+        $logger->pushHandler(new FilterHandler($handler, [$handler->getLevel()]));
+    }
+
+    return $logger;
 };
 
 use Slim\Views\PhpRenderer;
@@ -49,18 +81,6 @@ $container['twig'] = function ($container) {
     $twig = new \Slim\Views\Twig('resources/views/twig', [
         'cache' => false, //DOCROOT.'/cache/twig',
     ]);
-
-    // Aggiunta supporto moduli
-    $loader = $twig->getLoader();
-    $namespaces = require DOCROOT.'/config/namespaces.php';
-    foreach ($namespaces as $path => $namespace) {
-        $name = basename($path);
-        $path = $path.'/views';
-
-        if (file_exists($path)) {
-            $loader->addPath($path, $name);
-        }
-    }
 
     // Instantiate and add Slim specific extension
     $router = $container->get('router');
@@ -97,6 +117,39 @@ $container['twig'] = function ($container) {
 // Exception handlers
 $container['notFoundHandler'] = function ($container) {
     return function ($request, $response) use ($container) {
+        $response = $response->withStatus(404);
+
         return $container['twig']->render($response, 'errors/404.twig');
     };
 };
+
+$container['notAllowedHandler'] = function ($container) {
+    return function ($request, $response) use ($container) {
+        $response = $response->withStatus(403);
+
+        return $container['twig']->render($response, 'errors/403.twig');
+    };
+};
+
+if (!$container['debug']) {
+    $container['errorHandler'] = function ($container) {
+        return function ($request, $response, $exception) use ($container) {
+            $response = $response->withStatus(500);
+
+            // Log the message
+            $container['logger']->addError($exception->getMessage(), [
+                'code' => $exception->getCode(),
+                'message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'trace' => $exception->getTraceAsString(),
+            ]);
+
+            return $container['twig']->render($response, 'errors/500.twig');
+        };
+    };
+
+    $container['phpErrorHandler'] = function ($container) {
+        return $container['errorHandler'];
+    };
+}

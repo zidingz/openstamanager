@@ -3,6 +3,7 @@
 use Middlewares\CalendarMiddleware;
 use Middlewares\ConfigMiddleware;
 use Middlewares\ContentMiddleware;
+use Middlewares\CSRFMiddleware;
 use Middlewares\LangMiddleware;
 
 $app->add(new CalendarMiddleware($container));
@@ -17,3 +18,6 @@ $app->add(new ConfigMiddleware($container));
 
 // Middleware per la lingua
 $app->add(new LangMiddleware($container));
+
+// Middleware CSRF
+//$app->add(new CSRFMiddleware($container));
