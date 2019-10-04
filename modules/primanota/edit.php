@@ -68,6 +68,6 @@ include $structure->filepath('movimenti.php');
     });
 </script>
 
-<a class="btn btn-danger ask" data-backto="record-list" data-idmastrino="<?php echo $record['idmastrino']; ?>">
+<a href="#" class="btn btn-danger ask" data-backto="record-list" data-idmastrino="<?php echo $record['idmastrino']; ?>">
     <i class="fa fa-trash"></i> <?php echo tr('Elimina'); ?>
 </a>

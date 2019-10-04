@@ -148,6 +148,6 @@ $(document).ready(function() {
 </script>';
 
 echo '
-<a class="btn btn-danger ask" data-backto="record-list">
+<a href="#" class="btn btn-danger ask" data-backto="record-list">
     <i class="fa fa-trash"></i> '.tr('Elimina').'
 </a>';

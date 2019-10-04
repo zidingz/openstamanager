@@ -80,6 +80,7 @@ $container['view'] = function ($container) {
 $container['twig'] = function ($container) {
     $twig = new \Slim\Views\Twig('resources/views/twig', [
         'cache' => false, //DOCROOT.'/cache/twig',
+        'debug' => true,
     ]);
 
     // Instantiate and add Slim specific extension
@@ -106,6 +107,8 @@ $container['twig'] = function ($container) {
 
     $function = new \Twig\TwigFunction('module', '\Modules::get');
     $twig->getEnvironment()->addFunction($function);
+
+    $twig->getEnvironment()->addExtension(new \Twig\Extension\DebugExtension());
 
     if (!empty($container['debugbar'])) {
         $twig->offsetSet('debugbar', $container['debugbar']);

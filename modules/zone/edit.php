@@ -17,6 +17,6 @@
 	</div>
 </form>
 
-<a class="btn btn-danger ask" data-backto="record-list">
+<a href="#" class="btn btn-danger ask" data-backto="record-list">
     <i class="fa fa-trash"></i> <?php echo tr('Elimina'); ?>
 </a>

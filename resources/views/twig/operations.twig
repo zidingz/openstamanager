@@ -1,32 +1,57 @@
 <!-- Informazioni sulle operazioni -->
-{% for operation in operations %}
-    <ul class="timeline">
-        <li {{ operation.tags }}>
-            <div class="timeline-badge {{ operation.color }}"><i class="fa fa-{{ operation.icon }}"></i></div>
-            <div class="timeline-panel">
-                <div class="timeline-heading">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <h4 class="timeline-title">{{ operation.description }}</h4>
-                        </div>
-                        <div class="col-md-4 text-right">
-                            <p><small class="label label-default tip" title="{{ operation.created_at|timestamp }}"><i class="fa fa-clock-o"></i> {{ operation.created_at|diffForHumans }}</small></p>
-                            <p><small class="label label-default"><i class="fa fa-user"></i> {{ operation.username }}</small></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="timeline-body">
+<div class="timeline">
+{% for operation in operations.groupBy('') %}
+    {% set icon = 'pencil-square-o' %}
+    {% set description = operation.op %}
+    {% set color = null %}
+    {% set tags = null %}
 
-                </div>
-                <div class="timeline-footer">
+    {% if description == 'add' %}
+        {% set description = 'Creazione'|trans %}
+        {% set icon = 'plus' %}
+        {% set color = 'success' %}
+    {% elseif description == 'update' %}
+        {% set description = 'Modifica'|trans %}
+        {% set icon = 'pencil' %}
+        {% set color = 'info' %}
+    {% elseif description == 'delete' %}
+        {% set description = 'Eliminazione'|trans %}
+        {% set icon = 'times' %}
+        {% set color = 'danger' %}
+    {% endif %}
 
-                </div>
-            </div>
-        </li>
-    </ul>
-{% else %}
-    <div class="alert alert-info">
-        <i class="fa fa-info-circle"></i>
-        {{ 'Nessun log disponibile per questa scheda'|trans }}.
+    <div class="time-label">
+        <span class="bg-green">23 Aug. 2019</span>
     </div>
+
+    <div>
+        <i class="fas fa-{{ operation.icon }} bg-{{ operation.color }}"></i>
+
+        <div class="timeline-item">
+            <span class="time tip" title="{{ operation.created_at|diffForHumans }}"><i class="fas fa-clock"></i> {{ operation.created_at|time }}</span>
+
+            <p><small class="label label-default"></small></p></span>
+
+            <h3 class="timeline-header">{{ 'da parte di _USER_'|trans({'_ACTION_': '<a href="#">' ~ operation.description ~ '</a>', '_USER_': '<i class="fa fa-user"></i>' ~ operation.username})|raw }}</h3>
+            <div class="timeline-body">
+
+            </div>
+
+            <div class="timeline-footer">
+
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+    <div>
+        <i class="fas fa-clock bg-gray"></i>
+    </div>
+</div>
+
+{% else %}
+<div class="alert alert-info">
+    <i class="fa fa-info-circle"></i>
+    {{ 'Nessun log disponibile per questa scheda'|trans }}.
+</div>
 {% endfor %}

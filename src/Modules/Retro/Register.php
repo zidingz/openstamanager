@@ -11,36 +11,48 @@ use Slim\App as SlimApp;
 
 class Register extends Original
 {
-    protected static $container;
-
-    public static function boot(SlimApp $app, Module $module)
+    public function boot(SlimApp $app):void
     {
-        $container = $app->getContainer();
-        self::$container = $container;
+        parent::boot($app);
 
+        // Inclusione autonoma delle strutture PHP necessarie
+        $this->autoload();
+
+        // Caricamento template
+        $this->views();
+
+        // Registrazione percorsi di navigazione
+        $this->routes($app);
+    }
+
+    protected function autoload():void{
         // Inclusione modutil.php
-        $file = $module->filepath('modutil.php');
+        $file = $this->module->filepath('modutil.php');
         if (!empty($file)) {
             include_once $file;
         }
 
         // Inclusione Composer
-        $file = $module->filepath('vendor/autoload.php');
+        $file = $this->module->filepath('vendor/autoload.php');
         if (!empty($file)) {
             include_once $file;
         }
+    }
 
+    protected function views():void{
         // Supporto viste personalizzate
-        $loader = $container['twig']->getLoader();
-        $path = $module->filepath('views');
-        $name = $module->directory;
+        $loader = self::$container['twig']->getLoader();
+        $path = $this->module->filepath('views');
+        $name = $this->module->directory;
 
         if (file_exists($path)) {
             $loader->addPath($path, $name);
         }
+    }
 
+    protected function routes(SlimApp $app):void{
         // Percorsi raggiungibili
-        $prefix = 'module-'.$module->id;
+        $prefix = 'module-'.$this->module->id;
         $app->group('/'.$prefix, function () use ($app, $prefix) {
             $app->get('/[reference/{reference_id:[0-9]+}/]', ModuleController::class.':page')
                 ->setName($prefix);
@@ -50,16 +62,16 @@ class Register extends Original
             $app->post('/add/[reference/{reference_id:[0-9]+}/]', ModuleController::class.':create')
                 ->setName($prefix.'-add-save');
 
-            $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', ActionManager::class.':moduleAction')
+            $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', ActionController::class.':moduleAction')
                 ->setName($prefix.'-action');
 
             $app->group('/edit/{record_id:[0-9]+}', function () use ($app, $prefix) {
-                $app->get('/[reference/{reference_id:[0-9]+}/]', RecordManager::class.':edit')
+                $app->get('/[reference/{reference_id:[0-9]+}/]', RecordController::class.':page')
                     ->setName($prefix.'-record');
-                $app->post('/[reference/{reference_id:[0-9]+}/]', RecordManager::class.':update')
+                $app->post('/[reference/{reference_id:[0-9]+}/]', RecordController::class.':update')
                     ->setName($prefix.'-record-save');
 
-                $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', ActionManager::class.':recordAction')
+                $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', ActionController::class.':recordAction')
                     ->setName($prefix.'-record-action');
             });
         })
@@ -68,24 +80,24 @@ class Register extends Original
             ->add(ModuleMiddleware::class);
     }
 
-    public static function getUrlName(Module $module, ?int $record_id)
+    public function getUrlName(array $parameters = [])
     {
-        $prefix = 'module-'.$module->id;
+        $prefix = 'module-'.$this->module->id;
 
-        if (empty($record_id)) {
+        if (empty($parameters['record_id'])) {
             return $prefix;
         }
 
         return $prefix.'-record';
     }
 
-    public static function getData(Module $module, ?int $id_record)
+    public function getData(?int $id_record)
     {
         $dbo = $database = self::$container->database;
         $defined_vars = get_defined_vars();
 
         // Lettura risultato query del modulo
-        $init = RetroController::filepath($module, 'init.php');
+        $init = RetroController::filepath($this->module, 'init.php');
         if (!empty($init)) {
             include $init;
         }
@@ -95,6 +107,20 @@ class Register extends Original
         $result = array_diff_key($vars, $defined_vars);
         unset($result['defined_vars']);
         unset($result['init']);
+
+        return $result;
+    }
+
+    public function render(array $args = [])
+    {
+        $controller = new ModuleController(self::$container);
+
+        $args['module_id'] = $this->module->id;
+        $args['id_module'] = $this->module->id;
+        $args['module'] = $this->module;
+        $args['structure'] = $this->module;
+
+        $result = $controller->content($args);
 
         return $result;
     }

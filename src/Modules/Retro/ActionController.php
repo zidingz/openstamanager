@@ -4,7 +4,7 @@ namespace Modules\Retro;
 
 use Modules\ActionInterface;
 
-class ActionManager extends RetroController implements ActionInterface
+class ActionController extends RetroController implements ActionInterface
 {
     public function __call($name, $arguments)
     {

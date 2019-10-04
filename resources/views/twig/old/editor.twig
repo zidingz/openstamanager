@@ -8,11 +8,20 @@
     {{ buttons|raw }}
 {% endblock %}
 
+{% set plugins = module.getPlugins('record_plugin') %}
+
+{% block plugins_list %}
+    {% for plugin in plugins %}
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#tab_{{ plugin.id }}" id="link-tab_{{ plugin.id }}">{{ plugin.title }}</a>
+        </li>
+    {% endfor %}
+{% endblock %}
+
 {% block plugins_content %}
     {% for plugin in plugins %}
-        {% set plugin_content = plugins_content[plugin.id] %}
         <div id="tab_{{ plugin.id }}" class="tab-pane">
-            {% include 'content.twig' with {structure: plugin, module: plugin, bulk: plugin_content.bulk, module_id: plugin.id, include_header: true, custom_content: plugin_content.content, reference_id: record_id} %}
+            {{ plugin.render({reference_id: record_id})|raw }}
         </div>
     {% endfor %}
 {% endblock %}

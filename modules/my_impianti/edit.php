@@ -113,7 +113,7 @@ if (!empty($record['immagine'])) {
 
 {( "name": "filelist_and_upload", "id_module": "$id_module$", "id_record": "$id_record$" )}
 
-<a class="btn btn-danger ask" data-backto="record-list">
+<a href="#" class="btn btn-danger ask" data-backto="record-list">
     <i class="fa fa-trash"></i> <?php echo tr('Elimina'); ?>
 </a>
 

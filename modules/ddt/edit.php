@@ -357,7 +357,7 @@ if (!empty($elementi)) {
 $field_name = ($dir == 'entrata') ? 'idsede_partenza' : 'idsede_destinazione';
 if (in_array($record[$field_name], $user->sedi)) {
     ?>
-    <a class="btn btn-danger ask" data-backto="record-list">
+    <a href="#" class="btn btn-danger ask" data-backto="record-list">
         <i class="fa fa-trash"></i> <?php echo tr('Elimina'); ?>
     </a>
 <?php

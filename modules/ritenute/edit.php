@@ -46,7 +46,7 @@ if ($record['doc_associati'] > 0) {
 // Presenza di documenti associati
 if ($record['doc_associati'] == 0) {
     echo '
-<a class="btn btn-danger ask" data-backto="record-list">
+<a href="#" class="btn btn-danger ask" data-backto="record-list">
     <i class="fa fa-trash"></i> '.tr('Elimina').'
 </a>';
 }

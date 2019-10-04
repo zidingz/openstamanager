@@ -16,24 +16,17 @@ trait DefaultTrait
         return $args['reference_id'];
     }
 
-    public function getReferenceRecord(array $args)
+    public function getReferenceData(array $args)
     {
         $module = $args['structure'];
         if ($module->type == 'module') {
-            return null;
+            return [];
         }
 
-        //$class = ModuleController::getControllerClass($module->parent()->first(), 'Record');
         $id_record = $this->getReferenceID($args);
-        /*
-                if (!empty($id_record) && !empty($class)) {
-                    $manager = new $class($this->container);
-                    $data = $manager->data($id_record);
+        $data = Module::find($args['module']->parent)->class->getData($id_record);
 
-                    $result = $data['record'];
-                }
-        */
-        return $result;
+        return $data;
     }
 
     public function getPlugins(string $type = 'module_plugin')
@@ -110,23 +103,6 @@ trait DefaultTrait
         return $operations;
     }
 
-    public function plugins(array $args)
-    {
-        $plugins = $args['plugins'];
-        $args['plugins'] = [];
-
-        $results = [];
-        foreach ($plugins as $plugin) {
-            $controller = $plugin->getController($this->container, 'Module', null, $this->record_id);
-
-            if (!empty($controller)) {
-                $results[$plugin->id] = $controller->content($args);
-            }
-        }
-
-        return $results;
-    }
-
     /**
      * Completamento delle informazioni per il rendering del modulo.
      *
@@ -136,7 +112,23 @@ trait DefaultTrait
      */
     protected function prepare(array $args)
     {
-        $args['reference_record'] = $this->getReferenceRecord($args);
+        $data = $this->getReferenceData($args);
+        $args['reference_record'] = $data['record'];
+
+        $ignore = [
+            'module',
+            'structure',
+            'id_module',
+            'module_id',
+            'record',
+            'id_record',
+        ];
+
+        foreach ($ignore as $key){
+            unset($data[$key]);
+        }
+
+        $args = array_merge($data, $args);
 
         return $args;
     }

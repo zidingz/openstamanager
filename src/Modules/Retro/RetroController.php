@@ -41,7 +41,6 @@ abstract class RetroController extends Controller
 
         $args = array_merge($args, [
             'content' => $content,
-            'plugins_content' => $this->plugins($args),
         ]);
 
         $args['custom_content'] = $content;
@@ -88,7 +87,6 @@ abstract class RetroController extends Controller
             'buttons' => $buttons,
             'content' => $content,
             'bulk' => $module_bulk,
-            'plugins_content' => $this->plugins($args),
         ]);
 
         return $args;
@@ -142,42 +140,4 @@ abstract class RetroController extends Controller
 
         return $args;
     }
-
-    /*
-        protected function plugins($args)
-        {
-            extract($args);
-
-            $dbo = $database = $this->database;
-
-            // Plugins
-            $plugins_content = [];
-
-            $module_record = $record;
-            foreach ($args['plugins'] as $plugin) {
-                $record = $module_record;
-                $id_plugin = $plugin['id'];
-
-                $bulk = null;
-                $content = null;
-
-                // Inclusione di eventuale plugin personalizzato
-                if (!empty($plugin['script']) || $plugin->option == 'custom') {
-                    ob_start();
-                    include $plugin->getEditFile();
-                    $content = ob_get_clean();
-                } else {
-                    $bulk = $args['module']->filepath('bulk.php');
-                    $bulk = empty($bulk) ? [] : include $bulk;
-                    $bulk = empty($bulk) ? [] : $bulk;
-                }
-
-                $plugins_content[$id_plugin] = [
-                    'content' => $content,
-                    'bulk' => $bulk,
-                ];
-            }
-
-            return $plugins_content;
-        }*/
 }

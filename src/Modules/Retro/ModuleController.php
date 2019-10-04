@@ -23,7 +23,7 @@ class ModuleController extends RetroController implements ModuleInterface
         $args = $this->prepare($args);
         $args = $this->controller($args);
 
-        return $args;
+        return $args['content'];
     }
 
     public function add(ServerRequestInterface $request, ResponseInterface $response, array $args)

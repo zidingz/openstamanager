@@ -50,9 +50,9 @@
 
             {( "name": "button", "type": "email", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}" )}
 
-            <a class="btn btn-success" id="save">
+            <button type="button" class="btn btn-success" id="save">
                 <i class="fa fa-check"></i> {{ 'Salva'|trans }}
-            </a>
+            </button>
         </div>
     </div>
 
@@ -141,7 +141,6 @@
         });
     </script>
 {% endblock %}
-
 
 {% block bottom_content %}
     <!-- Widget in alto -->

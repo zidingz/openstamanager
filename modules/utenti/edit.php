@@ -179,7 +179,7 @@ if ($record['editable'] == 1) {
     <!-- PULSANTI -->
 	<div class="row">
 		<div class="col-md-12 text-right">
-            <a class="btn btn-danger ask" data-backto="record-list" data-msg="'.tr('Eliminando questo gruppo verranno eliminati anche i permessi e gli utenti collegati').'" data-op="deletegroup">
+            <a href="#" class="btn btn-danger ask" data-backto="record-list" data-msg="'.tr('Eliminando questo gruppo verranno eliminati anche i permessi e gli utenti collegati').'" data-op="deletegroup">
                 <i class="fa fa-trash"></i> '.tr('Elimina').'
             </a>
 		</div>

@@ -27,7 +27,7 @@ class ModuleMiddleware extends Middleware
         $module_id = explode('-', $name)[1];
 
         $args = $route->getArguments();
-        $args['module_id'] = $module_id;
+        $args['module_id'] = $args['module_id'] ?: $module_id;
 
         Module::setCurrent($args['module_id']);
         Query::setModuleRecord($args['reference_id']);

@@ -191,7 +191,7 @@ if (file_exists($backup_dir)) {
                     <i class="fa fa-upload"></i>
                 </a>
 
-                <a class="btn btn-danger ask" title="'.tr('Elimina backup').'" data-backto="record-list" data-op="del" data-number="'.$id.'">
+                <a href="#" class="btn btn-danger ask" title="'.tr('Elimina backup').'" data-backto="record-list" data-op="del" data-number="'.$id.'">
                     <i class="fa fa-trash"></i>
                 </a>
             </div>
@@ -241,7 +241,7 @@ if (file_exists($backup_dir)) {
                     <i class="fa fa-upload"></i>
                 </a>
 
-                <a class="btn btn-danger ask" title="'.tr('Elimina backup').'" data-backto="record-list" data-op="del" data-number="'.$id.'">
+                <a href="#" class="btn btn-danger ask" title="'.tr('Elimina backup').'" data-backto="record-list" data-op="del" data-number="'.$id.'">
                     <i class="fa fa-trash"></i>
                 </a>
             </div>

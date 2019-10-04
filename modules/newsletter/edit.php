@@ -120,9 +120,9 @@ if (!$anagrafiche->isEmpty()) {
                         <td>'.Modules::link('Anagrafiche', $anagrafica->id, $anagrafica->ragione_sociale).'</td>
                         <td class="text-center">'.$data.'</td>
                         <td class="text-center">
-                            <a class="btn btn-danger ask btn-sm" data-backto="record-edit" data-op="remove_receiver" data-id="'.$anagrafica->id.'">
+                            <button type="button" class="btn btn-danger ask btn-sm" data-backto="record-edit" data-op="remove_receiver" data-id="'.$anagrafica->id.'">
                                 <i class="fa fa-trash"></i>
-                            </a>
+                            </button>
                         </td>
                     </tr>';
     }
@@ -142,7 +142,7 @@ if (!$anagrafiche->isEmpty()) {
 
 {( "name": "filelist_and_upload", "id_module": "$id_module$", "id_record": "$id_record$" )}
 
-<a class="btn btn-danger ask" data-backto="record-list">
+<a href="#" class="btn btn-danger ask" data-backto="record-list">
     <i class="fa fa-trash"></i> '.tr('Elimina').'
 </a>';
 

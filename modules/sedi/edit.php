@@ -127,7 +127,7 @@ echo '
 	<!-- PULSANTI -->
 	<div class="row">
 		<div class="col-md-12">
-            <a class="btn btn-danger ask" data-backto="record-edit" data-op="deletesede" data-id="'.$record['id'].'" data-id_plugin="'.$id_plugin.'" data-id_module="'.$id_module.'" data-id_parent="'.$reference_id.'">
+            <a href="#" class="btn btn-danger ask" data-backto="record-edit" data-op="deletesede" data-id="'.$record['id'].'" data-id_plugin="'.$id_plugin.'" data-id_module="'.$id_module.'" data-id_parent="'.$reference_id.'">
                 <i class="fa fa-trash"></i> '.tr('Elimina').'
             </a>
 

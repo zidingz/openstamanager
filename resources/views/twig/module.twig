@@ -39,11 +39,7 @@
         </a>
 
         <ul class="nav nav-tabs float-right" id="tabs" role="tablist">
-            {% for plugin in plugins %}
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tab_{{ plugin.id }}" id="link-tab_{{ plugin.id }}">{{ plugin.title }}</a>
-                </li>
-            {% endfor %}
+            {% block plugins_list %}{% endblock %}
 
             {% if include_operations and user.isAdmin() %}
                 <li class="nav-item float-right bg-warning">

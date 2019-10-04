@@ -64,15 +64,27 @@ class Module extends Model
         return $this->variables[$id_record];
     }
 
-    public function getClass()
-    {
-        $class = $this->class;
-        $result = new $class();
+    public function render(array $args){
+        return $this->class->render($args);
+    }
 
-        return $result;
+    public function getPlugins(string $type = 'module_plugin')
+    {
+        return $this->plugins()
+            ->where('type', $type)
+            ->orderBy('order')
+            ->get();
     }
 
     // Attributi Eloquent
+
+    public function getClassAttribute()
+    {
+        $class = $this->attributes['class'];
+        $result = new $class($this);
+
+        return $result;
+    }
 
     /**
      * Restituisce i permessi relativi all'account in utilizzo.
@@ -94,11 +106,6 @@ class Module extends Model
         ]);
 
         return $views;
-    }
-
-    public function getNamespaceAttribute()
-    {
-        return $this->attributes['namespace'] ? '\\'.$this->attributes['namespace'] : null;
     }
 
     public function getOptionAttribute()
@@ -126,7 +133,7 @@ class Module extends Model
 
     public function plugins()
     {
-        return $this->hasMany(Plugin::class, 'idmodule_to');
+        return $this->hasMany(Module::class, 'parent')->where('type', '<>', 'module');
     }
 
     public function prints()

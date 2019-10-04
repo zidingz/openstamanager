@@ -48,7 +48,7 @@ if ($record['can_delete']) {
 // Record eliminabile solo se permesso
 if ($record['can_delete']) {
     ?>
-        <a class="btn btn-danger ask" data-backto="record-list">
+        <a href="#" class="btn btn-danger ask" data-backto="record-list">
             <i class="fa fa-trash"></i> <?php echo tr('Elimina'); ?>
         </a>
 <?php
