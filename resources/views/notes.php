@@ -9,7 +9,7 @@ if (!empty($notes)) {
                 <h3 class="card-title">'.tr('Note interne').'</h3>
             </div>
 
-            <div class="box-body">
+            <div class="card-body">
                 <div class="direct-chat-messages" style="height: 50vh">';
 
     foreach ($notes as $nota) {

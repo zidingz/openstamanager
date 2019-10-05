@@ -14,7 +14,7 @@ echo '
             </div>
         </div>
 
-        <div class="box-body">
+        <div class="card-body">
 
         <table class="table table-striped table-condensed">
 

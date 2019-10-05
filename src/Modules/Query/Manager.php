@@ -8,14 +8,14 @@ use Util\Query;
 
 abstract class Manager
 {
-    abstract protected function getQuery();
-
     /**
      * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param array $args
-     * @return ResponseInterface
+     * @param ResponseInterface      $response
+     * @param array                  $args
+     *
      * @throws \Exception
+     *
+     * @return ResponseInterface
      */
     public function dataLoad(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
@@ -197,4 +197,6 @@ abstract class Manager
 
         return $response;
     }
+
+    abstract protected function getQuery();
 }

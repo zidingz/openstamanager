@@ -76,11 +76,11 @@ echo '
 
 // Elenco
 echo '
-<div class="box">
-    <div class="box-header with-border">
-        <h3 class="box-title">'.tr('Elenco seriali').'</h3>
+<div class="card">
+    <div class="card-header with-border">
+        <h3 class="card-title">'.tr('Elenco seriali').'</h3>
     </div>
-    <div class="box-body">';
+    <div class="card-body">';
 
 // Conteggio totale prodotti
 $rs = $dbo->fetchArray('SELECT COUNT(id) AS tot FROM mg_prodotti WHERE id_articolo='.prepare($id_record));

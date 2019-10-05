@@ -323,6 +323,39 @@ class Update
     }
 
     /**
+     * Restituisce l'elenco degli aggiornamento nel percorso indicato.
+     *
+     * @param string $directory
+     *
+     * @return array
+     */
+    public static function getUpdates($directory)
+    {
+        $results = [];
+        $previous = [];
+
+        $files = glob($directory.'/*.{php,sql}', GLOB_BRACE);
+        natsort($files);
+        foreach ($files as $file) {
+            $infos = pathinfo($file);
+            $version = str_replace('_', '.', $infos['filename']);
+
+            if (array_search($version, $previous) === false && self::isVersion($version)) {
+                $path = str_replace(DOCROOT, '', $infos['dirname'].'/'.$infos['filename']);
+                $path = ltrim($path, '/');
+
+                $results[] = [
+                    'path' => $path,
+                    'version' => $version,
+                ];
+                $previous[] = $version;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * Controlla la presenza di aggiornamenti e prepara il database per la procedura.
      */
     protected static function prepareToUpdate()
@@ -392,41 +425,6 @@ class Update
     protected static function getCoreUpdates()
     {
         return self::getUpdates(DOCROOT.'/update');
-    }
-
-    /**
-     * Restituisce l'elenco degli aggiornamento nel percorso indicato.
-     *
-     * @param string $directory
-     *
-     * @return array
-     */
-    protected static function getUpdates($directory)
-    {
-        $results = [];
-        $previous = [];
-
-        $files = glob($directory.'/*.{php,sql}', GLOB_BRACE);
-        natsort($files);
-        foreach ($files as $file) {
-            $infos = pathinfo($file);
-            $version = str_replace('_', '.', $infos['filename']);
-
-            if (array_search($version, $previous) === false && self::isVersion($version)) {
-                $path = str_replace(DOCROOT, '', $infos['dirname'].'/'.$infos['filename']);
-                $path = ltrim($path, '/');
-
-                $results[] = [
-                    'path' => $path,
-                    'version' => $version,
-                ];
-                $previous[] = $version;
-            }
-        }
-
-        $results;
-
-        return $results;
     }
 
     /**

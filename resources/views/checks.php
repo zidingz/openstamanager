@@ -11,7 +11,7 @@ echo '
         <div class="card-header">
             <h3 class="card-title">'.tr('Checklist').'</h3>
         </div>
-        <div class="box-body" style="position:relative">
+        <div class="card-body" style="position:relative">
             <div id="loading_'.$checks_id.'" class="text-center hide component-loader">
                 <div>
                     <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>

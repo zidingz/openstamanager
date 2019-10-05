@@ -72,7 +72,7 @@ if (Auth::isBrute()) {
             <h3 class="card-title">'.tr('Attenzione').'</h3>
         </div>
 
-        <div class="box-body text-center">
+        <div class="card-body text-center">
         <p>'.tr('Sono stati effettuati troppi tentativi di accesso consecutivi!').'</p>
         <p>'.tr('Tempo rimanente (in secondi)').': <span id="brute-timeout">'.(Auth::getBruteTimeout() + 1).'</span></p>
         </div>
@@ -103,7 +103,7 @@ echo '
             <h3 class="card-title">'.$pageTitle.'</h3>
         </div>
 
-        <div class="box-body">';
+        <div class="card-body">';
 
 if (empty($token)) {
     echo '
@@ -127,7 +127,7 @@ if (empty($token)) {
 echo '
             </div>
             
-            <div class="box-footer">
+            <div class="card-footer">
                     <button type="submit" id="submit-button" class="btn btn-success btn-block">
                         <i class="fa fa-arrow-right"></i> '.tr('Procedi').'
             </button>

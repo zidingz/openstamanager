@@ -124,7 +124,7 @@ trait DefaultTrait
             'id_record',
         ];
 
-        foreach ($ignore as $key){
+        foreach ($ignore as $key) {
             unset($data[$key]);
         }
 

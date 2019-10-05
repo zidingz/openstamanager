@@ -218,18 +218,18 @@
 
         <section class="sidebar">
             <!-- Sidebar user panel -->
-            <a class="user-panel mt-3 pb-3 mb-3 d-flex" href="{{ path_for('user') }}" style="height: 60px">
-                <div class="image">
+            <a href="{{ path_for('user') }}" class="" style="height: 60px">
+                <div class="text-center mt-2">
                     {% if user.photo %}
-                        <img src="{{ user.photo }}" class="img-circle pull-left" alt="{{ user.username }}" />
+                        <img src="{{ base_url() }}{{ user.photo }}" class="profile-user-img img-fluid img-circle" alt="{{ user.username }}" />
                     {% else %}
-                        <i class="fa fa-user-circle-o fa-3x pull-left" alt="{{ 'OpenSTAManager'|trans }}"></i>
+                        <i class="fa fa-user-circle-o fa-5x" alt="{{ user.username }}" ></i>
                     {% endif %}
                 </div>
 
-                <div class="info text-center" style="width: 100%; padding-top: 10px;">
+                <h3 class="profile-username text-center" style="width: 100%; padding-top: 10px;">
                     {{ user.username }}
-                </div>
+                </h3>
             </a>
 
             <p class="text-center" id="datetime"></p>

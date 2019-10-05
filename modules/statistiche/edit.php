@@ -24,7 +24,7 @@ echo '
         </div>
     </div>
 
-    <div class="box-body collapse in" id="calendars">
+    <div class="card-body collapse in" id="calendars">
 
     </div>
 </div>';

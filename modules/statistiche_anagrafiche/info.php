@@ -79,7 +79,7 @@ echo '
     ]).'</h3>
     </div>
 
-    <div class="box-body">
+    <div class="card-body">
 
         <div class="row">
             <div class="col-md-4">

@@ -41,7 +41,7 @@ if ($user_photo) {
 
 echo '
     </div>
-    <div class="box-footer">
+    <div class="card-footer">
         <div class="row">
             <div class="col-sm-4 border-right">
                 <div class="description-block">

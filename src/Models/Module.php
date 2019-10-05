@@ -64,7 +64,8 @@ class Module extends Model
         return $this->variables[$id_record];
     }
 
-    public function render(array $args){
+    public function render(array $args = [])
+    {
         return $this->class->render($args);
     }
 

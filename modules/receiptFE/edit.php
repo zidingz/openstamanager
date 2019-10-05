@@ -21,7 +21,7 @@ echo '
 
         </h3>
     </div>
-    <div class="box-body" id="upload">
+    <div class="card-body" id="upload">
         <div class="row">
             <div class="col-md-9">
                 {[ "type": "file", "name": "blob", "required": 1 ]}
@@ -59,7 +59,7 @@ if (Interaction::isEnabled()) {
 
 echo '
     </div>
-    <div class="box-body" id="list">';
+    <div class="card-body" id="list">';
 
 if (Interaction::isEnabled()) {
     echo '

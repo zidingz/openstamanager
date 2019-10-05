@@ -43,7 +43,7 @@ if (!empty($options['create_document'])) {
         <div class="card-header with-border">
             <h3 class="card-title">'.tr('Nuovo documento').'</h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
 
             <div class="row">
                 <input type="hidden" name="create_document" value="on" />
@@ -101,7 +101,7 @@ if (in_array($final_module['name'], ['Fatture di vendita', 'Fatture di acquisto'
         <div class="card-header with-border">
             <h3 class="card-title">'.tr('Opzioni generali delle righe').'</h3>
         </div>
-        <div class="box-body">';
+        <div class="card-body">';
 
     if ($show_rivalsa || $show_ritenuta_acconto) {
         echo '
@@ -162,7 +162,7 @@ if (in_array($final_module['name'], ['Fatture di vendita', 'Fatture di acquisto'
             <h3 class="card-title">'.tr('Righe da importare').'</h3>
         </div>
 
-        <table class="box-body table table-striped table-hover table-condensed">
+        <table class="card-body table table-striped table-hover table-condensed">
             <tr>
                 <th>'.tr('Descrizione').'</th>
                 <th width="10%">'.tr('Q.tà').'</th>
