@@ -45,6 +45,12 @@ trait RetroTrait
         include $this->filepath('body.php');
         $content = ob_get_clean();
 
+        if (!empty($autofill)) {
+            $result = $autofill->generate();
+
+            $content = str_replace('|autofill|', $result, $content);
+        }
+
         $this->body = $this->replace($content);
 
         ob_start();
@@ -52,6 +58,28 @@ trait RetroTrait
         $content = ob_get_clean();
 
         $this->footer = $this->replace($content);
+    }
+
+    /**
+     * @param int|null $id_cliente
+     * @param int|null $id_sede
+     *
+     * @return array
+     */
+    protected function getReplaces(?int $id_cliente = null, ?int $id_sede = null): array
+    {
+        $replaces = parent::getReplaces($id_cliente, $id_sede);
+
+        // Logo specifico della stampa
+        $logo = \Prints::filepath($this->print->id, 'logo_azienda.jpg');
+        $logo = $logo ?: $replaces['default_logo'];
+
+        // Valori aggiuntivi per la sostituzione
+        $this->replaces = array_merge($replaces, [
+            'logo' => $logo,
+        ]);
+
+        return $this->replaces;
     }
 
     protected function replace($content): string

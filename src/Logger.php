@@ -49,7 +49,6 @@ class Logger extends Monolog\Logger
 
         // If there was an error then $error will be an array, otherwise null.
         if ($error['type'] === E_ERROR) {
-            dd(error_get_last());
             $response = $this->container->response;
             $response = $this->container['twig']->render($response, 'errors/500.twig');
 
@@ -59,7 +58,7 @@ class Logger extends Monolog\Logger
         }
     }
 
-    public function logException(\Exception $exception)
+    public function logException($exception)
     {
         $this->addError($exception->getMessage(), [
             'code' => $exception->getCode(),

@@ -13,7 +13,7 @@ echo '
             ]).'</h3>
 		</div>
 
-		<div class="card-body">';
+		<div class="card-body row">';
 
 foreach ($records as $record) {
     echo '
