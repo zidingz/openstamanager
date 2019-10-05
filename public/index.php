@@ -111,11 +111,15 @@ require __DIR__.'/../routes/web.php';
 require __DIR__.'/../config/middlewares.php';
 
 // Inizializzazione percorsi per i moduli
-$modules = Module::withoutGlobalScope('enabled')
-    ->get();
-foreach ($modules as $module) {
-    $class = $module->class;
-    $class->boot($app, $module);
+if (Update::isCoreUpdated()) {
+    $modules = Module::withoutGlobalScope('enabled')
+        ->get();
+    foreach ($modules as $module) {
+        $class = $module->class;
+        $class->boot($app, $module);
+
+        Update::addModuleUpdates($class->updates());
+    }
 }
 
 // Run application
