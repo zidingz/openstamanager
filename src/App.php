@@ -160,6 +160,8 @@ class App
         // Assets aggiuntivi
         $config = self::getConfig();
 
+        $version = Update::getVersion();
+
         // Impostazione dei percorsi
         $paths = self::getPaths();
         $lang = trans()->getCurrentLocale();
@@ -192,13 +194,13 @@ class App
                 foreach ($lang_replace as $replace) {
                     $name = str_replace('|lang|', $replace, $element);
 
-                    if (file_exists(str_replace(ROOTDIR, DOCROOT, $name))) {
+                    if (file_exists(DOCROOT.str_replace(ROOTDIR, '', $name))) {
                         $element = $name;
                         break;
                     }
                 }
 
-                $result[$key] = $element;
+                $result[$key] = $element.'?v='.$version;
             }
 
             $assets[$section] = $result;

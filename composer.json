@@ -71,7 +71,8 @@
     },
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "": "src/",
+            "Update\\": "update/"
         },
         "files": [
             "lib/functions.php",

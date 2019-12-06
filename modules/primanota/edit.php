@@ -64,7 +64,7 @@ include $structure->filepath('movimenti.php');
 
 <script>
     $("#edit-form").submit(function(e) {
-        return calcolaBilancio();
+        return controllaConti();
     });
 </script>
 

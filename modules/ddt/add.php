@@ -8,15 +8,17 @@ if ($module['name'] == 'Ddt di vendita') {
     $id_tipoddt = $dbo->fetchOne("SELECT id FROM dt_tipiddt WHERE descrizione='Ddt in uscita'")['id'];
 
     $tipo_anagrafica = tr('Cliente');
+    $label = tr('Destinatario');
 } else {
     $dir = 'uscita';
 
     $id_tipoddt = $dbo->fetchOne("SELECT id FROM dt_tipiddt WHERE descrizione='Ddt in entrata'")['id'];
 
     $tipo_anagrafica = tr('Fornitore');
+    $label = tr('Mittente');
 }
 
-$id_anagrafica = !empty(get('idanagrafica')) ? get('idanagrafica') : $user['idanagrafica'];
+$id_anagrafica = !empty(get('idanagrafica')) ? get('idanagrafica') : '';
 
 ?><form action="<?php pathFor('module-add-save', [
         'module_id' => $module_id,
@@ -26,17 +28,25 @@ $id_anagrafica = !empty(get('idanagrafica')) ? get('idanagrafica') : $user['idan
 	<input type="hidden" name="backto" value="record-edit">
 	<input type="hidden" name="dir" value="<?php echo $dir; ?>">
 
+    <!-- Fix creazione da Anagrafica -->
+    <input type="hidden" name="id_record" value="">
+
 	<div class="row">
 		<div class="col-md-4">
 			 {[ "type": "date", "label": "<?php echo tr('Data'); ?>", "name": "data", "required": 1, "value": "-now-" ]}
 		</div>
 
 		<div class="col-md-4">
-			{[ "type": "select", "label": "Destinatario", "name": "idanagrafica", "id": "idanagrafica_add", "required": 1, "ajax-source": "clienti_fornitori", "icon-after": "add|<?php echo Modules::get('Anagrafiche')['id']; ?>|tipoanagrafica=<?php echo $tipo_anagrafica; ?>" ]}
+			{[ "type": "select", "label": "<?php echo $label; ?>", "name": "idanagrafica", "id": "idanagrafica_add", "required": 1, "value": "<?php echo $id_anagrafica; ?>", "ajax-source": "clienti_fornitori", "icon-after": "add|<?php echo Modules::get('Anagrafiche')['id']; ?>|tipoanagrafica=<?php echo $tipo_anagrafica; ?>" ]}
+		</div>
+
+		<!-- il campo idtipoddt può essere anche rimosso -->
+		<div class="col-md-4 hide">
+			{[ "type": "select", "label": "<?php echo tr('Tipo ddt'); ?>", "name": "id_tipo_ddt", "required": 1, "values": "query=SELECT id, descrizione FROM dt_tipiddt WHERE dir='<?php echo $dir; ?>'", "value": "<?php echo $id_tipoddt; ?>" ]}
 		</div>
 
 		<div class="col-md-4">
-			{[ "type": "select", "label": "<?php echo tr('Tipo ddt'); ?>", "name": "id_tipo_ddt", "required": 1, "values": "query=SELECT id, descrizione FROM dt_tipiddt WHERE dir='<?php echo $dir; ?>'", "value": "<?php echo $id_tipoddt; ?>" ]}
+			{[ "type": "select", "label": "<?php echo tr('Causale trasporto'); ?>", "name": "idcausalet",  "value": "$idcausalet$", "ajax-source": "causali", "icon-after": "add|<?php echo Modules::get('Causali')['id']; ?>|||<?php echo $block_edit ? 'disabled' : ''; ?>" ]}
 		</div>
 	</div>
 
@@ -47,3 +57,12 @@ $id_anagrafica = !empty(get('idanagrafica')) ? get('idanagrafica') : $user['idan
 		</div>
 	</div>
 </form>
+
+<script>
+//autosubmit se tutti i campi obbligatori sono valorizzati
+$('#bs-popup').on('shown.bs.modal', function () {
+	if ($('#add-form').parsley().isValid()) {
+		$("#add-form").submit();
+	}
+});
+</script>

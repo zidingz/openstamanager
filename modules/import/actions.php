@@ -35,7 +35,7 @@ switch (post('op')) {
         }
 
         $csv = $csv->setOffset($offset)
-                    ->setLimit($limit);
+            ->setLimit($limit);
 
         // Chiavi per la lettura CSV
         $keys = [];

@@ -187,9 +187,11 @@ echo '
         </div>';
 
 // Data di registrazione
+$data_registrazione = get('data_registrazione');
+$data_registrazione = new \Carbon\Carbon($data_registrazione);
 echo '
         <div class="col-md-3">
-            {[ "type": "date", "label": "'.tr('Data di registrazione').'", "name": "data_registrazione", "required": 1, "value": "'.(get('data_registrazione') ?: $dati_generali['Data']).'", "max-date": "-now-", "min-date": "'.$dati_generali['Data'].'", "readonly": "'.(intval(get('data_registrazione') != null)).'" ]}
+            {[ "type": "date", "label": "'.tr('Data di registrazione').'", "name": "data_registrazione", "required": 1, "value": "'.($data_registrazione ?: $dati_generali['Data']).'", "max-date": "-now-", "min-date": "'.$dati_generali['Data'].'" ]}
         </div>';
 
 if (!empty($anagrafica)) {
@@ -232,7 +234,7 @@ echo '
     <div class="row" >
 		<div class="col-md-6">
 		    <button type="button" class="btn btn-info btn-sm float-right" onclick="session_set(\'superselect,codice_modalita_pagamento_fe\', \'\', 0)">
-		        <i class="fa fa-refresh"></i> '.tr('Reset modalità').'
+		        <i class="fa fa-refresh"></i> '.tr('Visualizza tutte le modalità').'
             </button>
 
             {[ "type": "select", "label": "'.tr('Pagamento').'", "name": "pagamento", "required": 1, "ajax-source": "pagamenti" ]}
@@ -240,8 +242,12 @@ echo '
 
 // Movimentazioni
 echo '
-        <div class="col-md-6">
+        <div class="col-md-3">
             {[ "type": "checkbox", "label": "'.tr('Movimenta gli articoli').'", "name": "movimentazione", "value": 1 ]}
+        </div>
+
+        <div class="col-md-3">
+            {[ "type": "checkbox", "label": "'.tr('Creazione automatica articoli').'", "name": "crea_articoli", "value": 0, "help": "'.tr("Nel caso di righe con tag CodiceArticolo, il gestionale procede alla creazione dell'articolo se la riga non risulta assegnata manualmente").'" ]}
         </div>
     </div>';
 
@@ -273,35 +279,25 @@ if (!empty($righe)) {
 
         $query .= ' ORDER BY descrizione ASC';
 
-        /*Visualizzo codici articoli*/
-        $codici_articoli = '';
+        // Visualizzazione codici articoli
+        $codici = $riga['CodiceArticolo'] ?: [];
+        $codici = !empty($codici) && !isset($codici[0]) ? [$codici] : $codici;
 
-        //caso di un solo codice articolo
-        if (isset($riga['CodiceArticolo']) and empty($riga['CodiceArticolo'][0]['CodiceValore'])) {
-            $riga['CodiceArticolo'][0]['CodiceValore'] = $riga['CodiceArticolo']['CodiceValore'];
-            $riga['CodiceArticolo'][0]['CodiceTipo'] = $riga['CodiceArticolo']['CodiceTipo'];
+        $codici_articoli = [];
+        foreach ($codici as $codice) {
+            $codici_articoli[] = $codice['CodiceValore'].' ('.$codice['CodiceTipo'].')';
         }
 
-        foreach ($riga['CodiceArticolo'] as $key2 => $item) {
-            foreach ($item as $key2 => $name) {
-                if ($key2 == 'CodiceValore') {
-                    if (!empty($item['CodiceValore'])) {
-                        $codici_articoli .= '<small>'.$item['CodiceValore'].' ('.$item['CodiceTipo'].')</small>';
-
-                        if (($item['CodiceValore'] != end($riga['CodiceArticolo'][(count($riga['CodiceArticolo']) - 1)])) and (is_array($riga['CodiceArticolo'][1]))) {
-                            $codici_articoli .= ', ';
-                        }
-                    }
-                }
-            }
-        }
+        // Individuazione articolo con codice relativo
+        $codice_principale = $codici[0]['CodiceValore'];
+        $id_articolo = $database->fetchOne('SELECT id FROM mg_articoli WHERE codice = '.prepare($codice_principale))['id'];
 
         echo '
         <tr>
             <td>
                 '.$riga['Descrizione'].'<br>
 
-				'.(($codici_articoli != '') ? $codici_articoli.'<br>' : '').'
+				'.(!empty($codici_articoli) ? '<small>'.implode(', ', $codici_articoli).'</small><br>' : '').'
 
                 <small>'.tr('Q.tà: _QTA_ _UM_', [
                     '_QTA_' => Translator::numberToLocale($riga['Quantita']),
@@ -319,7 +315,7 @@ if (!empty($righe)) {
                 {[ "type": "select", "name": "conto['.$key.']", "ajax-source": "conti-acquisti", "required": 1, "placeholder": "Conto acquisti" ]}
             </td>
             <td>
-                {[ "type": "select", "name": "articoli['.$key.']", "ajax-source": "articoli", "icon-after": "add|'.Modules::get('Articoli')['id'].'|codice='.htmlentities($riga['CodiceArticolo'][0]['CodiceValore']).'&descrizione='.htmlentities($riga['Descrizione']).'" ]}
+                {[ "type": "select", "name": "articoli['.$key.']", "ajax-source": "articoli", "icon-after": "add|'.Modules::get('Articoli')['id'].'|codice='.htmlentities($codice_principale).'&descrizione='.htmlentities($riga['Descrizione']).'", "value": "'.$id_articolo.'" ]}
             </td>
         </tr>';
     }

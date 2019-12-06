@@ -84,7 +84,7 @@ input[type=file] {
     max-height: 80vh;
     width: 600px;
     overflow-y: auto;
-    overflow-x: d-none;
+    overflow-x: hidden;
 }
 
 .ui-autocomplete a {
@@ -362,7 +362,7 @@ span.form-control {
     right: 17px;
     float: right;
     display: block;
-    overflow: d-none;
+    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -717,8 +717,8 @@ input.small-width {
     margin-left: 11px;
 }
 
-.progress .progress-bar span{
-    color:#000;
+.progress .progress-bar span {
+    color: #000;
 }
 
 .attachment-img {
@@ -731,7 +731,7 @@ input.small-width {
     max-height: 100px;
 }
 
-.has-feedback .form-control{
+.has-feedback .form-control {
     padding-right: 6px;
 }
 
@@ -746,4 +746,8 @@ input.small-width {
 .nav-sidebar .nav-link > p
 {
     font-size: 0.9rem !important;
+}
+
+.direct-chat-text img {
+    max-width: 100%;
 }

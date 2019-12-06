@@ -1,7 +1,5 @@
 <?php
 
-include_once __DIR__.'/../../../crore.php';
-
 $show_costi = true;
 // Limitazione delle azioni dei tecnici
 if ($user['gruppo'] == 'Tecnici') {

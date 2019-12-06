@@ -1,5 +1,7 @@
 <?php
 
+use Modules\Iva\Aliquota;
+
 $block_edit = !empty($note_accredito) || $record['stato'] == 'Emessa' || $record['stato'] == 'Pagato' || $record['stato'] == 'Parzialmente pagato';
 
 $rs = $dbo->fetchArray('SELECT co_tipidocumento.descrizione, dir FROM co_tipidocumento INNER JOIN co_documenti ON co_tipidocumento.id=co_documenti.id_tipo_documento WHERE co_documenti.id='.prepare($id_record));
@@ -20,6 +22,40 @@ if ($dir == 'entrata') {
     $conto = 'vendite';
 } else {
     $conto = 'acquisti';
+}
+
+// Informazioni sulla dichiarazione d'intento
+if ($dir == 'entrata' && !empty($fattura->dichiarazione) && $fattura->stato->descrizione == 'Bozza') {
+    $diff = $fattura->dichiarazione->massimale - $fattura->dichiarazione->totale;
+
+    $id_iva = setting("Iva per lettere d'intento");
+    $iva = Aliquota::find($id_iva);
+
+    if ($diff > 0) {
+        echo '
+    <div class="alert alert-info">
+        <i class="fa fa-warning"></i> '.tr("La fattura è collegata a una dichiarazione d'intento con diponibilità di _MONEY_: per collegare una riga alla dichiarazione è sufficiente inserire come IVA _IVA_", [
+                '_MONEY_' => moneyFormat(abs($diff)),
+                '_IVA_' => '"'.$iva->descrizione.'"',
+            ]).'</b>
+    </div>';
+    } elseif ($diff == 0) {
+        echo '
+    <div class="alert alert-warning">
+        <i class="fa fa-warning"></i> '.tr("La dichiarazione d'intento ha raggiunto il massimale previsto di _MONEY_: le nuove righe della fattura devono presentare IVA diversa da _IVA_", [
+                '_MONEY_' => moneyFormat(abs($fattura->dichiarazione->massimale)),
+                '_IVA_' => '"'.$iva->descrizione.'"',
+            ]).'</b>
+    </div>';
+    } else {
+        echo '
+    <div class="alert alert-danger">
+        <i class="fa fa-warning"></i> '.tr("La dichiarazione d'intento ha superato il massimale previsto di _MONEY_: per rimuovere righe della fattura dalla dichiarazione è sufficiente modificare l'IVA in qualcosa di diverso da _IVA_", [
+            '_MONEY_' => moneyFormat(abs($diff)),
+                '_IVA_' => '"'.$iva->descrizione.'"',
+        ]).'</b>
+    </div>';
+    }
 }
 
 ?>
@@ -75,9 +111,9 @@ if ($dir == 'entrata') {
                 <?php
                 if ($dir == 'uscita') {
                     echo '
-                				<div class="col-md-3">
-                					{[ "type": "text", "label": "'.tr('Numero fattura/protocollo').'", "required": 1, "name": "numero","class": "text-center alphanumeric-mask", "value": "$numero$" ]}
-                                </div>';
+                <div class="col-md-2">
+                    {[ "type": "text", "label": "'.tr('Numero fattura/protocollo').'", "required": 1, "name": "numero","class": "text-center alphanumeric-mask", "value": "$numero$" ]}
+                </div>';
                     $label = tr('Numero fattura del fornitore');
                 } else {
                     $label = tr('Numero fattura');
@@ -87,11 +123,11 @@ if ($dir == 'entrata') {
 				<!-- id_segment -->
 				{[ "type": "d-none", "label": "Segmento", "name": "id_segment", "class": "text-center", "value": "$id_segment$" ]}
 
-				<div class="col-md-3">
+				<div class="col-md-2">
 					{[ "type": "text", "label": "<?php echo $label; ?>", "name": "numero_esterno", "class": "text-center", "value": "$numero_esterno$" ]}
 				</div>
 
-				<div class="col-md-<?php echo ($dir == 'entrata') ? '3' : '2'; ?>">
+				<div class="col-md-2">
 					{[ "type": "date", "label": "<?php echo tr('Data emissione'); ?>", "name": "data", "required": 1, "value": "$data$" ]}
 				</div>
 
@@ -106,42 +142,37 @@ if (empty($record['is_fiscale'])) {
 }
 
 ?>
-				<?php if ($dir == 'uscita') {
+				<?php if ($dir == 'entrata') {
+    $readonly = '"readonly":1,';
+}
     ?>
 
 				<div class="col-md-2">
-					{[ "type": "date", "label": "<?php echo tr('Data registrazione'); ?>", "name": "data_registrazione", "required": 0, "value": "$data_registrazione$" ]}
+					{[ "type": "date", "label": "<?php echo tr('Data registrazione'); ?>", <?php echo $readonly; ?> "name": "data_registrazione", "required": 0, "value": "$data_registrazione$" ]}
 				</div>
 
                 <div class="col-md-2">
-                    {[ "type": "date", "label": "<?php echo tr('Data competenza'); ?>", "name": "data_competenza", "required": 0, "value": "$data_competenza$", "min-date": "$data_registrazione$" ]}
+                    {[ "type": "date", "label": "<?php echo tr('Data competenza'); ?>", "name": "data_competenza", "required": 1, "value": "$data_competenza$", "min-date": "$data_registrazione$" ]}
                 </div>
 
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        $("#data_registrazione").on("dp.change", function (e) {
-                            var data = $("#data_competenza");
-                            data.data("DateTimePicker").minDate(e.date);
 
-                            if(data.data("DateTimePicker").date() < e.date){
-                                data.data("DateTimePicker").date(e.date);
-                            }
-                        })
-                    });
-                </script>
 
-				<?php
-} ?>
-
-                <div class="col-md-3">
 					<?php
                     if ($dir == 'entrata') {
                         ?>
-					{[ "type": "select", "label": "<?php echo tr('Stato FE'); ?>", "name": "codice_stato_fe", "required": 0, "values": "query=SELECT codice as id, CONCAT_WS(' - ',codice,descrizione) as text FROM fe_stati_documento", "value": "$codice_stato_fe$", "disabled": <?php echo intval(API\Services::isEnabled()); ?>, "class": "unblockable", "help": "<?php echo (!empty($record['data_stato_fe'])) ? Translator::timestampToLocale($record['data_stato_fe']) : ''; ?>", "disabled": "<?php echo intval($record['stato'] == 'Bozza'); ?>" ]}
-					<?php
+
+                <div class="col-md-2">
+                    {[ "type": "select", "label": "<?php echo tr('Stato FE'); ?>", "name": "codice_stato_fe", "required": 0, "values": "query=SELECT codice as id, CONCAT_WS(' - ',codice,descrizione) as text FROM fe_stati_documento", "value": "$codice_stato_fe$", "disabled": <?php echo intval(API\Services::isEnabled() || $record['stato'] == 'Bozza'); ?>, "class": "unblockable", "help": "<?php echo (!empty($record['data_stato_fe'])) ? Translator::timestampToLocale($record['data_stato_fe']) : ''; ?>" ]}
+                </div>
+
+                        <?php
                     }
                     ?>
-				</div>
+
+                <div class="col-md-2">
+                    <!-- TODO: Rimuovere possibilità di selezionare lo stato pagato obbligando l'utente ad aggiungere il movimento in prima nota -->
+                    {[ "type": "select", "label": "<?php echo tr('Stato'); ?>", "name": "idstatodocumento", "required": 1, "values": "query=<?php echo $query; ?>", "value": "$idstatodocumento$", "class": "unblockable", "extra": " onchange = \"if ($('#idstatodocumento option:selected').text()=='Pagato' || $('#idstatodocumento option:selected').text()=='Parzialmente pagato' ){if( confirm('<?php echo tr('Sicuro di voler impostare manualmente la fattura come pagata senza aggiungere il movimento in prima nota?'); ?>') ){ return true; }else{ $('#idstatodocumento').selectSet(<?php echo $record['idstatodocumento']; ?>); }}\" " ]}
+                </div>
 			</div>
 
 			<div class="row">
@@ -187,11 +218,6 @@ if (empty($record['is_fiscale'])) {
                 <?php
                 }
                 ?>
-
-				<div class="col-md-3">
-					<!-- TODO: Rimuovere possibilità di selezionare lo stato pagato obbligando l'utente ad aggiungere il movimento in prima nota -->
-					{[ "type": "select", "label": "<?php echo tr('Stato'); ?>", "name": "id_stato", "required": 1, "values": "query=<?php echo $query; ?>", "value": "$id_stato$", "class": "unblockable", "extra": " onchange = \"if ($('#id_stato option:selected').text()=='Pagato' || $('#id_stato option:selected').text()=='Parzialmente pagato' ){if( confirm('<?php echo tr('Sicuro di voler impostare manualmente la fattura come pagata senza aggiungere il movimento in prima nota?'); ?>') ){ return true; }else{ $('#id_stato').selectSet(<?php echo $record['id_stato']; ?>); }}\" " ]}
-				</div>
 
 				<?php if ($dir == 'entrata') {
                     ?>
@@ -283,6 +309,17 @@ if (empty($record['is_fiscale'])) {
                 <div class="col-md-3">
                     {[ "type": "select", "label": "<?php echo tr('Ritenuta contributi'); ?>", "name": "id_ritenuta_contributi", "value": "$id_ritenuta_contributi$", "values": "query=SELECT * FROM co_ritenuta_contributi" ]}
                 </div>
+
+                <?php
+                if ($dir == 'entrata') {
+                    ?>
+                    <div class="col-md-3">
+                        {[ "type": "select", "label": "<?php echo tr("Dichiarazione d'intento"); ?>", "name": "id_dichiarazione_intento", "ajax-source": "dichiarazioni_intento", "value": "$id_dichiarazione_intento$" ]}
+                    </div>
+
+                    <?php
+                }
+                ?>
             </div>
 
 			<div class="row">
@@ -589,7 +626,9 @@ if ($dir == 'entrata') {
 		<div class="row">
 			<div class="col-md-12">
 <?php
+
 include $structure->filepath('row-list.php');
+
 ?>
 			</div>
 		</div>
@@ -650,6 +689,16 @@ echo '
 	$("#idanagrafica").change(function(){
         $("#" + id).selectInfo("idanagrafica", $(this).val()).selectReset();
         $("#idagente").selectInfo("idanagrafica", $(this).val()).selectReset();
+
+        $("#id_dichiarazione_intento").selectReset();';
+
+        if ($dir == 'entrata') {
+            echo '$("#idsede_destinazione").selectReset();';
+        } else {
+            echo '$("#idsede_partenza").selectReset();';
+        }
+
+echo '
 	});
 
     $("#ricalcola_scadenze").click(function(){
@@ -691,7 +740,7 @@ if (!empty($note_accredito)) {
 
 <?php
 // Eliminazione ddt solo se ho accesso alla sede aziendale
-$field_name = ($dir == 'entrata') ? 'idsede_partenza' : 'idsede_uscita';
+$field_name = ($dir == 'entrata') ? 'idsede_partenza' : 'idsede_destinazione';
 if (in_array($record[$field_name], $user->sedi)) {
     ?>
     <a href="#" class="btn btn-danger ask" data-backto="record-list">
@@ -726,14 +775,34 @@ $(".btn-sm[data-toggle=\"tooltip\"]").each(function() {
                 text:  "'.tr('Alcuni campi obbligatori non sono stati compilati correttamente').'.",
             });
 
-            $("#bs-popup").one("show.bs.modal", function (e) {
+            $(document).one("show.bs.modal","#bs-popup", function (e) {
                 return e.preventDefault();
             });
 		}
 
-	    $("#bs-popup").one("show.bs.modal", function (e) {
+	    $(document).one("show.bs.modal","#bs-popup", function () {
             buttonRestore(btn, restore);
         });
 	});
+});
+
+$(document).ready(function () {
+    $("#data_registrazione").on("dp.change", function (e) {
+        var data = $("#data_competenza");
+        data.data("DateTimePicker").minDate(e.date);
+
+        if(data.data("DateTimePicker").date() < e.date){
+            data.data("DateTimePicker").date(e.date);
+        }
+    });
+
+    $("#data").on("dp.change", function (e) {
+        var data_competenza = $("#data_competenza");
+        data_competenza.data("DateTimePicker").minDate(e.date);
+
+        if(data_competenza.data("DateTimePicker").date() < e.date){
+            data_competenza.data("DateTimePicker").date(e.date);
+        }
+    });
 });
 </script>';

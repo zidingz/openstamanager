@@ -22,8 +22,6 @@ $rs = $dbo->fetchArray($q);
 
 if (!empty($rs)) {
     foreach ($rs as $r) {
-        $delete = !empty($r['idarticolo']) ? 'unlink_articolo' : 'unlink_riga';
-
         $extra = '';
         $mancanti = 0;
 
@@ -142,11 +140,11 @@ if (!empty($rs)) {
         if ($record['flag_completato'] == 0) {
             echo "
             <form action='".$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record."' method='post' id='delete-form-".$r['id']."' role='form'>
-                <input type='d-none' name='backto' value='record-edit'>
-                <input type='d-none' name='id_record' value='".$id_record."'>
-                <input type='d-none' name='idriga' value='".$r['id']."'>
-                <input type='d-none' name='dir' value='".$dir."'>
-                <input type='d-none' name='op' value='".$delete."'>";
+                <input type='hidden' name='backto' value='record-edit'>
+                <input type='hidden' name='id_record' value='".$id_record."'>
+                <input type='hidden' name='idriga' value='".$r['id']."'>
+                <input type='hidden' name='dir' value='".$dir."'>
+                <input type='hidden' name='op' value='delete_riga'>";
 
             if (!empty($r['idarticolo'])) {
                 echo "

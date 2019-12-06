@@ -171,7 +171,7 @@ switch ($resource) {
             $search_fields[] = 'provincia LIKE '.prepare('%'.$search.'%');
         }
 
-            // $custom['id_tipo_intervento'] = 'id_tipo_intervento_default';
+        // $custom['id_tipo_intervento'] = 'id_tipo_intervento_default';
         break;
 
     // Nota Bene: nel campo id viene specificato id_tipo_anagrafica-idanagrafica -> modulo Utenti e permessi, creazione nuovo utente
@@ -286,20 +286,23 @@ switch ($resource) {
         break;
 
     case 'sedi_azienda':
-        $user = Auth::user();
+        if (isset($superselect['idanagrafica'])) {
+            $user = Auth::user();
+            $id_azienda = get_var('Azienda predefinita');
 
-        $query = "SELECT id, CONCAT_WS(' - ', nomesede, citta) AS descrizione FROM an_sedi |where| ORDER BY descrizione";
+            $query = "SELECT id, CONCAT_WS(' - ', nomesede, citta) AS descrizione FROM an_sedi |where| ORDER BY descrizione";
 
-        foreach ($elements as $element) {
-            $filter[] = 'id='.prepare($element);
-        }
+            foreach ($elements as $element) {
+                $filter[] = 'id=' . prepare($element);
+            }
 
-        $where[] = 'idanagrafica='.prepare($user->idanagrafica);
-        $where[] = 'id IN('.implode(',', $user->sedi).')';
+            $where[] = 'idanagrafica=' . prepare($id_azienda);
+            $where[] = 'id IN(' . implode(',', $user->sedi) . ')';
 
-        if (!empty($search)) {
-            $search_fields[] = 'nomesede LIKE '.prepare('%'.$search.'%');
-            $search_fields[] = 'citta LIKE '.prepare('%'.$search.'%');
+            if (!empty($search)) {
+                $search_fields[] = 'nomesede LIKE ' . prepare('%' . $search . '%');
+                $search_fields[] = 'citta LIKE ' . prepare('%' . $search . '%');
+            }
         }
 
         break;
@@ -329,6 +332,28 @@ switch ($resource) {
 
         if (!empty($search)) {
             $search_fields[] = 'nome LIKE '.prepare('%'.$search.'%');
+        }
+
+        break;
+
+    case 'dichiarazioni_intento':
+        $query = "SELECT id, CONCAT_WS(' - ', numero_protocollo, numero_progressivo) as descrizione FROM co_dichiarazioni_intento |where| ORDER BY data";
+
+        foreach ($elements as $element) {
+            $filter[] = 'id='.prepare($element);
+        }
+
+        $where[] = 'data_inizio < NOW()';
+        $where[] = 'data_fine > NOW()';
+        if (empty($filter)) {
+            $where[] = 'deleted_at IS NULL';
+        }
+
+        $where[] = 'id_anagrafica='.prepare($superselect['idanagrafica']);
+
+        if (!empty($search)) {
+            $search_fields[] = 'numero_protocollo LIKE '.prepare('%'.$search.'%');
+            $search_fields[] = 'numero_progressivo LIKE '.prepare('%'.$search.'%');
         }
 
         break;

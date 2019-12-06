@@ -17,7 +17,7 @@ $(document).ready(function () {
         removeHash();
     }
 
-    $(window).bind('beforeunload', function(){
+    $(window).bind('beforeunload', function () {
         if (location.hash == '#tab_0') {
             removeHash();
         }

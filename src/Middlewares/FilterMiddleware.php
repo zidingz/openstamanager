@@ -174,7 +174,14 @@ class FilterMiddleware extends Middleware
 
             //$config->set('Cache.SerializerPath', realpath(__DIR__.'/cache/HTMLPurifier'));
             $config->set('Cache.DefinitionImpl', null);
-            $config->set('URI.AllowedSchemes', ['data' => true]);
+            $config->set('URI.AllowedSchemes', [
+                'http' => true,
+                'https' => true,
+                'mailto' => true,
+                'ftp' => true,
+                'tel' => true,
+                'data' => true,
+            ]);
 
             self::$purifier = new \HTMLPurifier($config);
         }

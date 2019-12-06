@@ -134,7 +134,7 @@ function search(button) {
         success: function(data){
             $("#update-search").addClass("d-none");
 
-            if (data == "none") {
+            if (data == "none" || data == "" ) {
                 $("#update-none").removeClass("d-none");
             } else {
                 $("#update-version").text(data);

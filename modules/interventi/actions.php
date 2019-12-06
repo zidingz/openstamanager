@@ -99,6 +99,7 @@ switch (post('op')) {
             $intervento->id_preventivo = post('idpreventivo');
             $intervento->id_contratto = post('idcontratto');
             $intervento->richiesta = $richiesta;
+            $intervento->idsede_destinazione = $idsede_destinazione;
             $intervento->data_scadenza = $data_scadenza;
 
             $intervento->save();
@@ -110,7 +111,7 @@ switch (post('op')) {
                     'id_tipo_intervento' => $id_tipo_intervento,
                     'data_richiesta' => $data_richiesta,
                     'richiesta' => $richiesta,
-                    'idsede_destinazione' => $idsede_destinazione ?: 0,
+                    'idsede' => $idsede_destinazione ?: 0,
                 ], ['idcontratto' => $idcontratto, 'id' => $idcontratto_riga]);
 
                 //copio le righe dal promemoria all'intervento
@@ -181,70 +182,38 @@ switch (post('op')) {
             flash()->clearMessage('info');
             flash()->clearMessage('warning');
         }
+
         aggiorna_sedi_movimenti('interventi', $id_record);
 
         break;
 
     // Eliminazione intervento
     case 'delete':
-        // Elimino anche eventuali file caricati
-        Uploads::deleteLinked([
-            'id_module' => $id_module,
-            'id_record' => $id_record,
-        ]);
+        try {
+            $intervento->delete();
 
-        $codice = $dbo->fetchArray('SELECT codice FROM in_interventi WHERE id='.prepare($id_record))[0]['codice'];
+            // Eliminazione associazioni tra interventi e contratti
+            $dbo->query('UPDATE co_promemoria SET idintervento = NULL WHERE idintervento='.prepare($id_record));
 
-        /*
-            Riporto in magazzino gli articoli presenti nell'intervento in cancellazine
-        */
-        // Leggo la quantità attuale nell'intervento
-        $q = 'SELECT qta, idarticolo FROM mg_articoli_interventi WHERE idintervento='.prepare($id_record);
-        $rs = $dbo->fetchArray($q);
+            // Elimino il collegamento al componente
+            $dbo->query('DELETE FROM my_impianto_componenti WHERE idintervento='.prepare($id_record));
 
-        for ($i = 0; $i < count($rs); ++$i) {
-            $qta = $rs[$i]['qta'];
-            $idarticolo = $rs[$i]['idarticolo'];
+            // Eliminazione associazione tecnici collegati all'intervento
+            $dbo->query('DELETE FROM in_interventi_tecnici WHERE idintervento='.prepare($id_record));
 
-            add_movimento_magazzino($idarticolo, $qta, ['idintervento' => $id_record]);
+            // Eliminazione associazione interventi e my_impianti
+            $dbo->query('DELETE FROM my_impianti_interventi WHERE idintervento='.prepare($id_record));
+
+            // Elimino anche eventuali file caricati
+            Uploads::deleteLinked([
+                'id_module' => $id_module,
+                'id_record' => $id_record,
+            ]);
+
+            flash()->info(tr('Intervento eliminato!'));
+        } catch (InvalidArgumentException $e) {
+            flash()->error(tr('Sono stati utilizzati alcuni serial number nel documento: impossibile procedere!'));
         }
-
-        // Eliminazione associazioni tra interventi e contratti
-        $query = 'UPDATE co_promemoria SET idintervento = NULL WHERE idintervento='.prepare($id_record);
-        $dbo->query($query);
-
-        // Eliminazione dell'intervento
-        $query = 'DELETE FROM in_interventi WHERE id='.prepare($id_record);
-        $dbo->query($query);
-
-        // Elimino i collegamenti degli articoli a questo intervento
-        $dbo->query('DELETE FROM mg_articoli_interventi WHERE idintervento='.prepare($id_record));
-
-        // Elimino il collegamento al componente
-        $dbo->query('DELETE FROM my_impianto_componenti WHERE idintervento='.prepare($id_record));
-
-        // Eliminazione associazione tecnici collegati all'intervento
-        $query = 'DELETE FROM in_interventi_tecnici WHERE idintervento='.prepare($id_record);
-        $dbo->query($query);
-
-        // Eliminazione righe aggiuntive dell'intervento
-        $query = 'DELETE FROM in_righe_interventi WHERE idintervento='.prepare($id_record);
-        $dbo->query($query);
-
-        // Eliminazione associazione interventi e articoli
-        $query = 'DELETE FROM mg_articoli_interventi WHERE idintervento='.prepare($id_record);
-        $dbo->query($query);
-
-        // Eliminazione associazione interventi e my_impianti
-        $query = 'DELETE FROM my_impianti_interventi WHERE idintervento='.prepare($id_record);
-        $dbo->query($query);
-
-        // Eliminazione movimenti riguardanti l'intervento cancellato
-        $dbo->query('DELETE FROM mg_movimenti WHERE idintervento='.prepare($id_record));
-
-        flash()->info(tr('Intervento _NUM_ eliminato!', [
-            '_NUM_' => "'".$codice."'",
-        ]));
 
         break;
 
@@ -318,11 +287,25 @@ switch (post('op')) {
             ' WHERE id='.prepare($idriga));
 
         aggiorna_sedi_movimenti('interventi', $id_record);
+
         break;
 
-    case 'delriga':
-        $idriga = post('idriga');
-        $dbo->query('DELETE FROM in_righe_interventi WHERE id='.prepare($idriga));
+    case 'delete_riga':
+        $id_riga = post('idriga');
+
+        if (!empty($id_riga)) {
+            $riga = $intervento->getRighe()->find($id_riga);
+
+            try {
+                $riga->delete();
+
+                flash()->info(tr('Riga rimossa!'));
+            } catch (InvalidArgumentException $e) {
+                flash()->error(tr('Alcuni serial number sono già stati utilizzati!'));
+            }
+        }
+
+        aggiorna_sedi_movimenti('interventi', $id_record);
 
         break;
 
@@ -411,33 +394,6 @@ switch (post('op')) {
 
         break;
 
-    case 'unlink_articolo':
-        $idriga = post('idriga');
-        $idarticolo = post('idarticolo');
-
-        // Riporto la merce nel magazzino
-        if (!empty($idriga) && !empty($id_record)) {
-            // Leggo la quantità attuale nell'intervento
-            $q = 'SELECT qta, idarticolo, idimpianto FROM mg_articoli_interventi WHERE id='.prepare($idriga);
-            $rs = $dbo->fetchArray($q);
-            $qta = $rs[0]['qta'];
-            $idarticolo = $rs[0]['idarticolo'];
-            $idimpianto = $rs[0]['idimpianto'];
-
-            add_movimento_magazzino($idarticolo, $qta, ['idintervento' => $id_record]);
-
-            // Elimino questo articolo dall'intervento
-            $dbo->query('DELETE FROM mg_articoli_interventi WHERE id='.prepare($idriga).' AND idintervento='.prepare($id_record));
-
-            // Elimino il collegamento al componente
-            $dbo->query('DELETE FROM my_impianto_componenti WHERE idimpianto='.prepare($idimpianto).' AND idintervento='.prepare($id_record));
-
-            // Elimino i seriali utilizzati dalla riga
-            $dbo->query('DELETE FROM `mg_prodotti` WHERE id_articolo = '.prepare($idarticolo).' AND id_riga_intervento = '.prepare($id_record));
-        }
-        aggiorna_sedi_movimenti('interventi', $id_record);
-        break;
-
     case 'add_serial':
         $idriga = post('idriga');
         $idarticolo = post('idarticolo');
@@ -469,11 +425,11 @@ switch (post('op')) {
 
                 if (!$img->save($docroot.'/files/interventi/'.$firma_file)) {
                     flash()->error(tr('Impossibile creare il file!'));
-                } elseif ($dbo->query('UPDATE in_interventi SET firma_file='.prepare($firma_file).', firma_data=NOW(), firma_nome = '.prepare($firma_nome).', id_stato = (SELECT id FROM in_statiintervento WHERE descrizione = \'Completato\') WHERE id='.prepare($id_record))) {
+                } elseif ($dbo->query('UPDATE in_interventi SET firma_file='.prepare($firma_file).', firma_data=NOW(), firma_nome = '.prepare($firma_nome).', id_stato = (SELECT id FROM in_statiintervento WHERE descrizione = \'OK\') WHERE id='.prepare($id_record))) {
                     flash()->info(tr('Firma salvata correttamente!'));
                     flash()->info(tr('Attività completata!'));
 
-                    $stato = $dbo->selectOne('in_statiintervento', '*', ['descrizione' => 'Completato']);
+                    $stato = $dbo->selectOne('in_statiintervento', '*', ['codice' => 'OK']);
                     // Notifica chiusura intervento
                     if (!empty($stato['notifica']) && !empty($stato['destinatari'])) {
                         $template = Template::find($stato['id_email']);

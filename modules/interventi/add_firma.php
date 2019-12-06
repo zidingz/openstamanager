@@ -1,7 +1,5 @@
 <?php
 
-$module_name = 'Interventi';
-
 if (get('anteprima') !== null) {
     // Lettura dati intervento
     $query = 'SELECT codice FROM in_interventi WHERE id='.prepare($id_record);

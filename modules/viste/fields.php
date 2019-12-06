@@ -18,11 +18,17 @@ foreach ($fields as $key => $field) {
     echo '
                 <div class="card card-outline card-'.($field['visible'] ? 'success' : 'danger').'">
                     <div class="card-header">
-                        <h3 class="card-title">
-                            <a data-toggle="collapse" href="#field-'.$field['id'].'">'.tr('Campo in posizione _POSITION_', [
+                        <h3 class="card-title">'.
+                            tr('Campo in posizione _POSITION_', [
                                 '_POSITION_' => $field['order'],
-                                ]).' ('.$field['name'].')</a>
-                        </h3>';
+                                ]).' ('.$field['name'].')
+                        </h3>
+
+                        <div class="card-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>';
 
     if ($editable) {
         echo '

@@ -5,7 +5,7 @@ Tutti i maggiori cambiamenti di questo progetto saranno documentati in questo fi
 Il formato utilizzato è basato sulle linee guida di [Keep a Changelog](http://keepachangelog.com/), e il progetto segue il [Semantic Versioning](http://semver.org/) per definire le versioni delle release.
 
 - [2.5](#25)
-- [2.4.11 (2019-)](#2411-2019-)
+- [2.4.11 (2019-11-29)](#2411-2019-11-29)
 - [2.4.10 (2019-07-23)](#2410-2019-07-23)
 - [2.4.9 (2019-05-17)](#249-2019-05-17)
 - [2.4.8 (2019-03-01)](#248-2019-03-01)
@@ -35,7 +35,7 @@ Il formato utilizzato è basato sulle linee guida di [Keep a Changelog](http://k
  - Miglioramento della procedura semplificata di aggiornamento
  - Inversione del comportamento della classe **Filter** e degli helper *post*, *get* e *filter* (il secondo parametro restituisce il valore formattato)
 
-## 2.4.11 (2019-)
+## 2.4.11 (2019-11-29)
 
 ### Aggiunto (Added)
 
@@ -53,6 +53,12 @@ Il formato utilizzato è basato sulle linee guida di [Keep a Changelog](http://k
  - Supporto all'inserimento manuale di maggiori attributi per le *Fatture Elettroniche*, tramite gli appositi pulsanti "Attributi avanzati" all'interno delle **Fatture di vendita**
  - Aggiunto Identificativo documento, Num Item, codici CIG e CUP in **DDT di uscita**
  - Modulo **Newsletter** per la gestione delle campagne di newsletter sulla base delle informazioni delle **Anagrafiche**
+ - Supporto alle *Dichiarazione d'Intento* per le *Fatture di vendita**
+ - Calcolo del margine per i **Preventivi**
+ - Supporto alla selezione della lingua durante la configurazione
+ - Gestione dei permessi per gruppi all'interno del sistema di **Gestione documentale**
+ - Supporto agli sconti combinati nel modulo **Listini**
+ - Supporto al caricamento di archivi ZIP per le *Fatture Elettroniche* di acquisto da importare (solo estrazione)
 
 ### Modificato (Changed)
 
@@ -61,9 +67,16 @@ Il formato utilizzato è basato sulle linee guida di [Keep a Changelog](http://k
  - Miglioramento del sistema di evasione delle quantità nel passaggio tra documenti, ora integrato nelle classi Eloquent e completamente automatico
  - Correzione delle diciure generali *Imponibile scontato* in *Totale imponibile* e *Sconto* in *Sconto/maggiorazione*
  - Aggiornamento degli hook per permettere l'aggiunta di task in background
-    - Invio email massimo
+    - Invio delle email
     - Backup automatico
  - **Articoli** ora eliminabili solo virtualmente attraverso il flag *deleted_at*
+
+ - Miglioramento del plugin *Giacenze* nel modulo **Articoli** per interagire con gli **Ordini** registrati, e aggiunta della quantità progressiva per nel plugin *Movimenti*
+ - Generazione del numero delle **Fatture di vendita** a seguito dell'emissione della stessa
+ - Supporto alla precisione di importi e quantità fino a 5 decimali
+ - Opzione per la creazione automatica degli articoli presenti in **Fattura Elettronica**
+ - Revisione della visualizzazione grafica del modulo **Prima Nota**, per rendere più chiara la suddivisione logica delle righe in relazione all'evasione delle scadenze
+ - Aggiornamento delle stampe *Inventario magazzino* e *Calendario*
 
 ### Rimosso (Removed)
  - Funzione *get_costi_intervento* del modulo **Attività**, a causa dell'aggiornamento della maggior parte del sistema di gestione degli **Attività** con le classi Eloquent
@@ -72,7 +85,8 @@ Il formato utilizzato è basato sulle linee guida di [Keep a Changelog](http://k
 
 ### Fixed
 
- -
+ - Fix selezione di articoli senza movimenti
+ - Fix per l'autocompletamento delle email nella procedura di invio
 
 ## 2.4.10 (2019-07-23)
 

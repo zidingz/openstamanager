@@ -7,6 +7,8 @@ use Modules\Emails\Template;
 
 $database->query('ALTER TABLE `zz_operations` DROP FOREIGN KEY `zz_operations_ibfk_3`');
 $logs = $database->fetchArray("SELECT * FROM `zz_operations` WHERE `op` = 'send-email'");
+
+$database->query('UPDATE `zz_operations` SET `id_email` = NULL');
 foreach ($logs as $log) {
     $user = User::find($log['id_utente']);
     $template = Template::find($log['id_email']);
@@ -38,6 +40,23 @@ foreach ($logs as $log) {
 }
 
 $database->query('ALTER TABLE `zz_operations` ADD FOREIGN KEY (`id_email`) REFERENCES `em_emails`(`id`) ON DELETE SET NULL');
+
+// Aggiunta permessi alla gestione documentale
+$gruppi = $database->fetchArray('SELECT `id` FROM `zz_groups`');
+$viste = $database->fetchArray('SELECT `id` FROM `do_categorie`');
+
+$array = [];
+foreach ($viste as $vista) {
+    foreach ($gruppi as $gruppo) {
+        $array[] = [
+            'id_gruppo' => $gruppo['id'],
+            'id_categoria' => $vista['id'],
+        ];
+    }
+}
+if (!empty($array)) {
+    $database->insert('do_permessi', $array);
+}
 
 // File e cartelle deprecate
 $files = [

@@ -370,7 +370,7 @@ class FatturaElettronica
         $errors = [];
 
         // Controlli sulla fattura stessa
-        if ($fattura->stato->descrizione != 'Emessa') {
+        if ($fattura->stato->descrizione == 'Bozza') {
             $missing = [
                 'state' => tr('Stato ("Emessa")'),
             ];
@@ -451,7 +451,7 @@ class FatturaElettronica
         $missing = [];
         if (!empty($data)) {
             foreach ($fields as $key => $name) {
-                if (empty($data[$key])) {
+                if (empty($data[$key]) && !empty($name)) {
                     $missing[] = $name;
                 }
             }
@@ -493,7 +493,7 @@ class FatturaElettronica
         $missing = [];
         if (!empty($data)) {
             foreach ($fields as $key => $name) {
-                if (empty($data[$key])) {
+                if (empty($data[$key]) && !empty($name)) {
                     $missing[] = $name;
                 }
             }
@@ -592,6 +592,7 @@ class FatturaElettronica
         }
 
         // Codice fiscale
+        //TODO: Nella fattura elettronica, emessa nei confronti di soggetti titolari di partita IVA (nodo CessionarioCommittente), non va indicato il codice fiscale se è già presente la partita iva.
         if (!empty($anagrafica['codice_fiscale'])) {
             $result['CodiceFiscale'] = preg_replace('/\s+/', '', $anagrafica['codice_fiscale']);
 
@@ -1231,6 +1232,28 @@ class FatturaElettronica
                 ];
             }
 
+            $rs_ritenuta = $database->fetchOne('SELECT percentuale_imponibile FROM co_ritenutaacconto WHERE id='.prepare($riga['idritenutaacconto']));
+            if (!empty($rs_ritenuta['percentuale_imponibile'])) {
+                $dettaglio[]['AltriDatiGestionali'] = [
+                    'TipoDato' => 'IMPON-RACC',
+                    'RiferimentoTesto' => 'Imponibile % ritenuta d\'acconto',
+                    'RiferimentoNumero' => $rs_ritenuta['percentuale_imponibile'],
+                ];
+            }
+
+            // Dichiarazione d'intento
+            $dichiarazione = $documento->dichiarazione;
+            $id_iva_dichiarazione = setting("Iva per lettere d'intento");
+            if (!empty($dichiarazione) && $riga->aliquota->id == $id_iva_dichiarazione) {
+                $dettaglio[]['AltriDatiGestionali'] = [
+                    'TipoDato' => 'AswDichInt',
+                    'RiferimentoTesto' => $dichiarazione->numero_protocollo,
+                    'RiferimentoTesto' => $dichiarazione->numero_progressivo,
+                    'RiferimentoData' => $dichiarazione->data_emissione,
+                ];
+            }
+
+            // Dati aggiuntivi dinamici
             if (!empty($dati_aggiuntivi['altri_dati'])) {
                 foreach ($dati_aggiuntivi['altri_dati'] as $dato) {
                     $altri_dati = [];

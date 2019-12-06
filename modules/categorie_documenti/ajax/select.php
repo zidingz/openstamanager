@@ -2,10 +2,10 @@
 
 switch ($resource) {
     case 'categorie_documenti':
-        $query = 'SELECT id, descrizione FROM zz_documenti_categorie |where| ORDER BY descrizione ASC';
+        $query = 'SELECT id, descrizione FROM do_categorie |where| ORDER BY descrizione ASC';
 
         foreach ($elements as $element) {
-            $filter[] = 'zz_documenti_categorie.id='.prepare($element);
+            $filter[] = 'do_categorie.id='.prepare($element);
         }
 
         if (empty($filter)) {

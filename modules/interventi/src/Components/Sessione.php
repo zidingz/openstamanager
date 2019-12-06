@@ -358,13 +358,23 @@ class Sessione extends Model
     }
 
     /**
-     * Restituisce il gaudagno totale (totale_imponibile - spesa) relativo all'elemento.
+     * Restituisce il margine totale (imponibile - spesa) relativo all'elemento.
      *
      * @return float
      */
-    public function getGuadagnoAttribute()
+    public function getMargineAttribute()
     {
-        return $this->totale_imponibile - $this->spesa;
+        return $this->imponibile - $this->spesa;
+    }
+
+    /**
+     * Restituisce il margine percentuale relativo all'elemento.
+     *
+     * @return float
+     */
+    public function getMarginePercentualeAttribute()
+    {
+        return (1 - ($this->spesa / $this->imponibile)) * 100;
     }
 
     public function getIvaIndetraibileAttribute()
@@ -401,7 +411,7 @@ class Sessione extends Model
         $result = $database->fetchOne('SELECT * FROM in_tariffe WHERE idtecnico='.prepare($this->anagrafica->id).' AND idtipointervento = '.prepare($id_tipo));
 
         // Costi unitari del contratto
-        $id_contratto = $this->intervento->idcontratto;
+        $id_contratto = $this->intervento->id_contratto;
         if (!empty($id_contratto)) {
             $tariffa_contratto = $database->fetchOne('SELECT costo_ore, costo_km, costo_dirittochiamata FROM co_contratti_tipiintervento WHERE idcontratto = '.prepare($id_contratto).' AND idtipointervento = '.prepare($id_tipo));
 

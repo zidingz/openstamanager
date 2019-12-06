@@ -49,7 +49,13 @@ switch (post('op')) {
             $fattura->tipo()->associate($tipo);
 
             $fattura->data = post('data');
-            $fattura->data_registrazione = post('data_registrazione');
+
+            if ($dir == 'entrata') {
+                $fattura->data_registrazione = post('data');
+            } else {
+                $fattura->data_registrazione = post('data_registrazione');
+            }
+
             $fattura->data_competenza = post('data_competenza');
 
             $fattura->numero_esterno = post('numero_esterno');
@@ -78,10 +84,11 @@ switch (post('op')) {
             $fattura->rivalsainps = 0;
             $fattura->ritenutaacconto = 0;
             $fattura->iva_rivalsainps = 0;
-
-            $fattura->codice_stato_fe = post('codice_stato_fe') ?: null;
             $fattura->id_ritenuta_contributi = post('id_ritenuta_contributi') ?: null;
 
+            $fattura->codice_stato_fe = post('codice_stato_fe') ?: null;
+
+            // Informazioni per le fatture di acquisto
             if ($dir == 'uscita') {
                 $fattura->numero = post('numero');
                 $fattura->numero_esterno = post('numero_esterno');
@@ -89,6 +96,7 @@ switch (post('op')) {
                 $fattura->idritenutaacconto = post('id_ritenuta_acconto');
             }
 
+            // Operazioni sul bollo
             $fattura->addebita_bollo = post('addebita_bollo');
             $bollo_automatico = post('bollo_automatico');
             if (empty($bollo_automatico)) {
@@ -97,39 +105,13 @@ switch (post('op')) {
                 $fattura->bollo = null;
             }
 
+            // Operazioni sulla dichiarazione d'intento
+            $dichiarazione_precedente = $fattura->dichiarazione;
+            $fattura->id_dichiarazione_intento = post('id_dichiarazione_intento') ?: null;
+
             $fattura->save();
 
-            // Ricalcolo inps, ritenuta e bollo (se la fattura non è stata pagata)
-            ricalcola_costiagg_fattura($id_record);
-
-            // Elimino la scadenza e tutti i movimenti, poi se la fattura è emessa le ricalcolo
-            if ($stato['descrizione'] == 'Bozza' or $stato['descrizione'] == 'Annullata') {
-                elimina_scadenze($id_record);
-                //elimina_movimenti($id_record, 0);
-                //elimino movimento anche prima nota (se pagata o parzialmente pagata)
-                elimina_movimenti($id_record, 1);
-            } elseif ($stato['descrizione'] == 'Emessa') {
-                elimina_scadenze($id_record);
-                elimina_movimenti($id_record, 0);
-            } elseif (($stato['descrizione'] == 'Pagato' or $stato['descrizione'] == 'Parzialmente pagato') and ($dbo->fetchNum('SELECT id  FROM co_scadenziario WHERE iddocumento = '.prepare($id_record)) == 0)) {
-                // aggiungo la scadenza come già pagata
-                aggiungi_scadenza($id_record, null, 1);
-                aggiungi_movimento($id_record, $dir);
-            }
-
-            // Se la fattura è in stato "Emessa" posso inserirla in scadenzario e aprire il mastrino cliente
-            if ($stato['descrizione'] == 'Emessa') {
-                aggiungi_scadenza($id_record);
-                aggiungi_movimento($id_record, $dir);
-            }
-
             if ($stato_precedente->descrizione == 'Bozza' && $stato['descrizione'] == 'Emessa') {
-                // Generazione numero fattura se non presente
-                if (empty($fattura->numero_esterno)) {
-                    $fattura->numero_esterno = Fattura::getNextNumeroSecondario($fattura->data, $fattura->direzione, $fattura->id_segment);
-                    $fattura->save();
-                }
-
                 // Generazione automatica della Fattura Elettronica
                 $stato_fe = empty($fattura->codice_stato_fe) || in_array($fattura->codice_stato_fe, ['GEN', 'NS', 'EC02']);
                 $checks = FatturaElettronica::controllaFattura($fattura);
@@ -517,7 +499,7 @@ switch (post('op')) {
         break;
 
     // Scollegamento riga generica da documento
-    case 'unlink_riga':
+    case 'delete_riga':
         $id_riga = post('idriga');
 
         if (!empty($id_riga)) {
@@ -563,15 +545,21 @@ switch (post('op')) {
         $type = post('type');
 
         $movimenta = true;
+        $idsede = 0;
+
         if ($type == 'ordine') {
             $documento = \Modules\Ordini\Ordine::find($id_documento);
+            $idsede = $documento->idsede;
         } elseif ($type == 'ddt') {
             $documento = \Modules\DDT\DDT::find($id_documento);
+            $idsede = ($documento->direzione == 'entrata') ? $documento->idsede_destinazione : $documento->idsede_partenza;
             $movimenta = false;
         } elseif ($type == 'preventivo') {
             $documento = \Modules\Preventivi\Preventivo::find($id_documento);
+            $idsede = $documento->idsede;
         } elseif ($type == 'contratto') {
             $documento = \Modules\Contratti\Contratto::find($id_documento);
+            $idsede = $documento->idsede;
         }
 
         // Creazione della fattura al volo
@@ -581,6 +569,7 @@ switch (post('op')) {
 
             $fattura = Fattura::build($documento->anagrafica, $tipo, post('data'), post('id_segment'));
             $fattura->idpagamento = $documento->idpagamento;
+            $fattura->idsede_destinazione = $idsede;
             $fattura->id_ritenuta_contributi = post('id_ritenuta_contributi') ?: null;
             $fattura->save();
 
@@ -722,22 +711,4 @@ if (get('op') == 'nota_addebito') {
 
     $id_record = $nota->id;
     aggiorna_sedi_movimenti('documenti', $id_record);
-}
-
-// Aggiornamento stato dei ddt presenti in questa fattura in base alle quantità totali evase
-if (!empty($id_record) && setting('Cambia automaticamente stato ddt fatturati')) {
-    $rs = $dbo->fetchArray('SELECT DISTINCT idddt FROM co_righe_documenti WHERE iddocumento='.prepare($id_record));
-
-    for ($i = 0; $i < sizeof($rs); ++$i) {
-        $dbo->query('UPDATE dt_ddt SET id_stato=(SELECT id FROM dt_statiddt WHERE descrizione="'.get_stato_ddt($rs[$i]['idddt']).'") WHERE id = '.prepare($rs[$i]['idddt']));
-    }
-}
-
-// Aggiornamento stato degli ordini presenti in questa fattura in base alle quantità totali evase
-if (!empty($id_record) && setting('Cambia automaticamente stato ordini fatturati')) {
-    $rs = $dbo->fetchArray('SELECT DISTINCT idordine FROM co_righe_documenti WHERE iddocumento='.prepare($id_record));
-
-    for ($i = 0; $i < sizeof($rs); ++$i) {
-        $dbo->query('UPDATE or_ordini SET id_stato=(SELECT id FROM or_statiordine WHERE descrizione="'.get_stato_ordine($rs[$i]['idordine']).'") WHERE id = '.prepare($rs[$i]['idordine']));
-    }
 }

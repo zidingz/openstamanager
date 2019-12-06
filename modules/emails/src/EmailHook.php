@@ -17,12 +17,15 @@ class EmailHook extends Manager
     {
         $diff = date('Y-m-d H:i:s', strtotime('-4 hours'));
         $failed = function ($query) use ($diff) {
-            $query->whereDate('failed_at', '<', $diff)
+            $query->where('failed_at', '<', $diff)
                 ->orWhereNull('failed_at');
         };
 
+        $accounts = Account::all();
         $remaining = Mail::whereNull('sent_at')
             ->where($failed)
+            ->where('attempt', '<', 10)
+            ->whereIn('id_account', $accounts->pluck('id'))
             ->count();
 
         return !empty($remaining);
@@ -32,24 +35,28 @@ class EmailHook extends Manager
     {
         $diff = date('Y-m-d H:i:s', strtotime('-4 hours'));
         $failed = function ($query) use ($diff) {
-            $query->whereDate('failed_at', '<', $diff)
+            $query->where('failed_at', '<', $diff)
                 ->orWhereNull('failed_at');
         };
 
         $accounts = Account::all();
         $list = [];
         foreach ($accounts as $account) {
-            $last_mail = $account->emails()->whereNotNull('sent_at')->orderBy('sent_at')->first();
+            $last_mail = $account->emails()
+                ->whereNotNull('sent_at')
+                ->orderBy('sent_at')
+                ->first();
 
             // Controllo sul timeout dell'account
             $date = new Carbon($last_mail->sent_at);
             $now = new Carbon();
-            $diff = $date->diffInMilliseconds($now);
+            $diff_milliseconds = $date->diffInMilliseconds($now);
 
-            if (empty($last_mail) || $diff > $account->timeout) {
+            if (empty($last_mail) || $diff_milliseconds > $account->timeout) {
                 $mail = Mail::whereNull('sent_at')
                     ->where('id_account', $account->id)
                     ->where($failed)
+                    ->where('attempt', '<', 10)
                     ->orderBy('created_at')
                     ->first();
 
@@ -78,12 +85,14 @@ class EmailHook extends Manager
         $user = auth()->getUser();
 
         $current = Mail::whereDate('sent_at', '>', $yesterday)
+            ->where('attempt', '<', 10)
             ->where('created_by', $user->id)
             ->count();
         $total = Mail::where(function ($query) use ($yesterday) {
             $query->whereDate('sent_at', '>', $yesterday)
                 ->orWhereNull('sent_at');
         })
+            ->where('attempt', '<', 10)
             ->where('created_by', $user->id)
             ->count();
 

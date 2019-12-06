@@ -10,7 +10,7 @@ use Uploads;
 class EmailNotification extends PHPMailer implements NotificationInterface
 {
     protected $mail;
-    protected $attachments = [];
+    protected $directory;
 
     protected $infos = [];
 
@@ -99,13 +99,13 @@ class EmailNotification extends PHPMailer implements NotificationInterface
         // Allegati
         $uploads = $mail->uploads;
         foreach ($uploads as $upload) {
-            $this->addUpload($upload);
+            $this->addUpload($upload->id);
         }
 
         // Stampe
         $prints = $mail->prints;
         foreach ($prints as $print) {
-            $this->addPrint($print['id'], $mail->id_record, $print['name']);
+            $this->addPrint($print['id'], $mail->id_record);
         }
 
         // Conferma di lettura
@@ -159,13 +159,16 @@ class EmailNotification extends PHPMailer implements NotificationInterface
                 $this->mail->failed_at = date('Y-m-d H:i:s');
             }
 
+            // Salvataggio del numero di tentativi
+            $this->mail->attempt = $this->mail->attempt + 1;
+
             $this->mail->save();
         }
 
         $this->SmtpClose();
 
         // Pulizia file generati
-        delete(DOCROOT.'/files/notifications/');
+        //delete($this->getTempDirectory());
 
         // Segnalazione degli errori
         if (!$result) {
@@ -221,17 +224,10 @@ class EmailNotification extends PHPMailer implements NotificationInterface
     {
         $print = Prints::get($print);
 
-        if (empty($name)) {
-            $name = $print['title'].'.pdf';
-        }
+        $info = Prints::render($print['id'], $id_record, null, true);
+        $name = $name ?: $info['path'];
 
-        // Utilizzo di una cartella particolare per il salvataggio temporaneo degli allegati
-        $path = DOCROOT.'/files/notifications/'.rand(0, 999);
-
-        $info = Prints::render($print['id'], $id_record, $path);
-        $name = $name ?: $info['name'];
-
-        $this->addAttachment($info['path'], $name);
+        $this->AddStringAttachment($info['pdf'], $name);
     }
 
     /**
@@ -262,5 +258,16 @@ class EmailNotification extends PHPMailer implements NotificationInterface
                 $this->AddAddress($email, $name);
             }
         }
+    }
+
+    protected function getTempDirectory()
+    {
+        if (!isset($this->directory)) {
+            $this->directory = DOCROOT.'/files/notifications/'.rand(0, 999);
+
+            directory($this->directory);
+        }
+
+        return $this->directory;
     }
 }

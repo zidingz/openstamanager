@@ -2,11 +2,11 @@
 
 include_once __DIR__.'/../core.php';
 
-if (!empty($notes)) {
+if (count($notes) > 0) {
     echo '
-        <div class="card card-outline card-warning direct-chat direct-chat-warning">
+        <div class="card card-info direct-chat direct-chat-info">
             <div class="card-header with-border">
-                <h3 class="card-title">'.tr('Note interne').'</h3>
+                <h3 class="box-title">'.tr('Note interne').'</h3>
             </div>
 
             <div class="card-body">
@@ -30,7 +30,7 @@ if (!empty($notes)) {
                         <img class="direct-chat-img" src="'.$photo.'">';
         } else {
             echo '
-                
+
                         <i class="fa fa-user-circle-o direct-chat-img fa-3x" alt="'.tr('OpenSTAManager').'"></i>';
         }
 
@@ -43,7 +43,7 @@ if (!empty($notes)) {
                                 <span class="label label-default tip" title="'.tr('Data di notifica').'" style="margin-right: 5px">
                                     <i class="fa fa-bell"></i> '.dateFormat($nota->notification_date).'
                                 </span>
-                                
+
                                 <button type="button" class="btn btn-info btn-sm ask" data-op="notification_nota" data-id_nota="'.$nota->id.'" data-msg="'.tr('Rimuovere la data di notifica da questa nota?').'" data-backto="record-edit" data-button="'.tr('Rimuovi').'" data-class="btn btn-lg btn-warning">
                                     <i class="fa fa-eye"></i>
                                 </button>';
@@ -68,7 +68,7 @@ if (!empty($notes)) {
         </div>';
 } else {
     echo '
-        <p>'.tr('Non sono presenti note interne').'</p>';
+        <div class="alert alert-info" ><i class="fa fa-info-circle" ></i> '.tr('Non sono presenti note interne.').'</div>';
 }
 
 if ($structure->permission == 'rw') {
@@ -76,11 +76,14 @@ if ($structure->permission == 'rw') {
         <form action="" method="post">
             <input type="hidden" name="op" value="add_nota">
             <input type="hidden" name="backto" value="record-edit">
-            
-            {[ "type": "date", "label": "'.tr('Data di notifica').'", "name": "data_notifica", "class": "unblockable" ]}
-
-            {[ "type": "ckeditor", "label": "'.tr('Nuova nota').'", "name": "contenuto", "required": 1, "class": "unblockable" ]}
-            
+            <div class="row" >
+                <div class="col-md-12" >
+                    {[ "type": "ckeditor", "label": "'.tr('Nuova nota').'", "name": "contenuto", "required": 1, "class": "unblockable" ]}
+                </div>
+                <div class="col-md-4" >
+                    {[ "type": "date", "label": "'.tr('Data di notifica').'", "name": "data_notifica", "class": "unblockable", "help": "'.tr('Eventuale data di notifica di un promemoria di questa nota.').'" ]}
+                </div>
+            </div>
             <!-- PULSANTI -->
             <div class="row">
                 <div class="col-md-12 text-right">

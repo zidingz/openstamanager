@@ -14,11 +14,13 @@ switch (post('op')) {
         $idanagrafica = post('idanagrafica');
         $nome = post('nome');
         $idtipointervento = post('id_tipo_intervento');
+        $data_bozza = post('data_bozza');
+        $id_sede = post('idsede');
 
         $anagrafica = Anagrafica::find($idanagrafica);
         $tipo = TipoSessione::find($idtipointervento);
 
-        $preventivo = Preventivo::build($anagrafica, $tipo, $nome);
+        $preventivo = Preventivo::build($anagrafica, $tipo, $nome, $data_bozza, $id_sede);
         $id_record = $preventivo->id;
 
         flash()->info(tr('Aggiunto preventivo numero _NUM_!', [
@@ -122,9 +124,13 @@ switch (post('op')) {
 
     // Eliminazione preventivo
     case 'delete':
-        $preventivo->delete();
+        try {
+            $preventivo->delete();
 
-        flash()->info(tr('Preventivo eliminato!'));
+            flash()->info(tr('Preventivo eliminato!'));
+        } catch (InvalidArgumentException $e) {
+            flash()->error(tr('Sono stati utilizzati alcuni serial number nel documento: impossibile procedere!'));
+        }
 
         break;
 

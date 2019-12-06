@@ -3,16 +3,17 @@
 use Plugins\ReceiptFE\Interaction;
 
 echo '
-<p>'.tr('Le ricevute delle Fatture Elettroniche permettono di individuare se una determinata fattura tramessa è stata accettata dal Sistema Di Interscambio').'.</p>
-
+<p>'.tr('Le ricevute delle Fatture Elettroniche permettono di individuare se una determinata fattura tramessa è stata accettata dal Sistema Di Interscambio').'.</p>';
+if (Interaction::isEnabled()) {
+    echo '
 <p>'.tr('Tramite il pulsante _BTN_ è possibile procedere al recupero delle ricevute, aggiornando automaticamente lo stato delle relative fatture e allegandole ad esse', [
     '_BTN_' => '<b>'.tr('Ricerca ricevute').'</b>',
-]).'.</p>
-<br>
-
-<div class="card card-outline card-success">
-    <div class="card-header with-border">
-        <h3 class="card-title">
+]).'.</p>';
+}
+echo '
+<div class="box box-success">
+    <div class="box-header with-border">
+        <h3 class="box-title">
             '.tr('Carica un XML').'
 
             <span class="tip" title="'.tr('Formati supportati: XML e P7M').'.">
@@ -183,7 +184,10 @@ function importAll(btn) {
                     type: "info",
                 })
 
-                buttonRestore(btn, restore);
+                $("#list").load("'.$structure->fileurl('list.php').'?id_module='.$id_module.'&id_plugin='.$id_plugin.'", function() {
+                    buttonRestore(button, restore);
+                });
+
             },
             error: function(xhr, error, thrown) {
                 ajaxError(xhr, error, thrown);

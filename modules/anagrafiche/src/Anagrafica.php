@@ -4,8 +4,13 @@ namespace Modules\Anagrafiche;
 
 use Common\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Contratti\Contratto;
+use Modules\DDT\DDT;
 use Modules\Fatture\Fattura;
+use Modules\Ordini\Ordine;
+use Modules\Preventivi\Preventivo;
 use Modules\TipiIntervento\Tipo as TipoSessione;
+use Plugins\DichiarazioniIntento\Dichiarazione;
 use Settings;
 use Traits\RecordTrait;
 use Util\Generator;
@@ -23,10 +28,12 @@ class Anagrafica extends Model
 
     protected $appends = [
         'id',
+        'partita_iva',
     ];
 
     protected $hidden = [
         'idanagrafica',
+        'piva',
     ];
 
     /**
@@ -169,18 +176,6 @@ class Anagrafica extends Model
     }
 
     /**
-     * Controlla se l'anagrafica è del tipo indicato.
-     *
-     * @return bool
-     */
-    public function isTipo($name)
-    {
-        return $this->tipi()->get()->search(function ($item, $key) use ($name) {
-            return $item->descrizione == $name;
-        }) !== false;
-    }
-
-    /**
      * Controlla se l'anagrafica è di tipo 'Azienda'.
      *
      * @return bool
@@ -189,6 +184,34 @@ class Anagrafica extends Model
     {
         return $this->isTipo('Azienda');
     }
+
+    /**
+     * Controlla se l'anagrafica è di tipo 'Azienda'.
+     *
+     * @return bool
+     */
+    public function isTipo($type)
+    {
+        return $this->tipi()->get()->search(function ($item, $key) use ($type) {
+            return $item->descrizione == $type;
+        }) !== false;
+    }
+
+    public function delete()
+    {
+        if (!$this->isAzienda()) {
+            return parent::delete();
+        }
+    }
+
+    public function save(array $options = [])
+    {
+        $this->fixRagioneSociale();
+
+        return parent::save($options);
+    }
+
+    // Attributi Eloquent
 
     /**
      * Restituisce l'identificativo.
@@ -213,15 +236,11 @@ class Anagrafica extends Model
     public function setNomeAttribute($value)
     {
         $this->attributes['nome'] = trim($value);
-
-        $this->fixRagioneSociale();
     }
 
     public function setCognomeAttribute($value)
     {
         $this->attributes['cognome'] = trim($value);
-
-        $this->fixRagioneSociale();
     }
 
     public function setCodiceFiscaleAttribute($value)
@@ -240,14 +259,21 @@ class Anagrafica extends Model
         $this->attributes['codice_destinatario'] = trim(strtoupper($codice_destinatario));
     }
 
+    /**
+     * Restituisce la sede legale collegata.
+     *
+     * @return self
+     */
+    public function getSedeLegaleAttribute()
+    {
+        return $this->sedi()->where('id', $this->id_sede_legale)->first();
+    }
+
+    // Relazioni Eloquent
+
     public function tipi()
     {
         return $this->belongsToMany(Tipo::class, 'an_tipianagrafiche_anagrafiche', 'idanagrafica', 'id_tipo_anagrafica');
-    }
-
-    public function fatture()
-    {
-        return $this->hasMany(Fattura::class, 'idanagrafica');
     }
 
     public function sedi()
@@ -260,21 +286,34 @@ class Anagrafica extends Model
         return $this->sedeLegale->nazione();
     }
 
-    /**
-     * Restituisce la sede legale collegata.
-     *
-     * @return self
-     */
-    public function getSedeLegaleAttribute()
+    public function fatture()
     {
-        return $this->sedi()->where('id', $this->id_sede_legale)->first();
+        return $this->hasMany(Fattura::class, 'idanagrafica');
     }
 
-    public function delete()
+    public function ordini()
     {
-        if (!$this->isAzienda()) {
-            return parent::delete();
-        }
+        return $this->hasMany(Ordine::class, 'idanagrafica');
+    }
+
+    public function ddt()
+    {
+        return $this->hasMany(DDT::class, 'idanagrafica');
+    }
+
+    public function contratti()
+    {
+        return $this->hasMany(Contratto::class, 'idanagrafica');
+    }
+
+    public function preventivi()
+    {
+        return $this->hasMany(Preventivo::class, 'idanagrafica');
+    }
+
+    public function dichiarazioni()
+    {
+        return $this->hasMany(Dichiarazione::class, 'id_anagrafica');
     }
 
     // Metodi statici

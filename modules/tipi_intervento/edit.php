@@ -67,15 +67,27 @@
 </form>
 
 <?php
+ // Permetto eliminazione tipo intervento solo se questo non è utilizzado da nessun'altra parte nel gestionale
+$elementi = $dbo->fetchArray('SELECT `in_interventi`.`id_tipo_intervento`  FROM `in_interventi` WHERE `in_interventi`.`id_tipo_intervento` = '.prepare($id_record).'
+UNION
+SELECT `an_anagrafiche`.`id_tipo_intervento_default` AS `id_tipo_intervento` FROM `an_anagrafiche` WHERE `an_anagrafiche`.`id_tipo_intervento_default` = '.prepare($id_record).'
+UNION
+SELECT `co_preventivi`.`id_tipo_intervento` FROM `co_preventivi` WHERE `co_preventivi`.`id_tipo_intervento` = '.prepare($id_record).'
+UNION
+SELECT `co_promemoria`.`id_tipo_intervento` FROM `co_promemoria` WHERE `co_promemoria`.`id_tipo_intervento` = '.prepare($id_record).'
+UNION
+SELECT `in_tariffe`.`id_tipo_intervento` FROM `in_tariffe` WHERE `in_tariffe`.`id_tipo_intervento` = '.prepare($id_record).'
+UNION
+SELECT `in_interventi_tecnici`.`id_tipo_intervento` FROM `in_interventi_tecnici` WHERE `in_interventi_tecnici`.`id_tipo_intervento` = '.prepare($id_record).'
+UNION
+SELECT `co_contratti_tipiintervento`.`id_tipo_intervento` FROM `co_contratti_tipiintervento` WHERE `co_contratti_tipiintervento`.`id_tipo_intervento` = '.prepare($id_record).'
+ORDER BY `id_tipo_intervento`');
 
-$interventi = $dbo->fetchArray('SELECT COUNT(*) AS tot_interventi FROM in_interventi WHERE id_tipo_intervento='.prepare($id_record));
-
-$tot_interventi = $interventi[0]['tot_interventi'];
-if ($tot_interventi > 0) {
+if (!empty($elementi)) {
     echo '
     <div class="alert alert-danger">
-        '.tr('Ci sono _NUM_ interventi collegati', [
-            '_NUM_' => $tot_interventi,
+        '.tr('Ci sono _NUM_ records collegati', [
+            '_NUM_' => count($elementi),
         ]).'.
     </div>';
 } else {

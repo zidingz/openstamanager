@@ -45,9 +45,13 @@ if (!empty($user)) {
     </div>
 
     <script>
-        $(function() {
+        function no_check_pwd(){
             $("#password").attr("disabled", true);
             $("#submit-button").attr("disabled", false).removeClass("disabled");
+        }
+        
+        $("#bs-popup").on("shown.bs.modal", function () {
+            no_check_pwd();
         });
 
         $("#change_password").change(function() {
@@ -55,10 +59,9 @@ if (!empty($user)) {
                 $("#password").attr("disabled", false);
                 $("#password").change();
             } else {
-                $("#password").attr("disabled", true);
-                $("#submit-button").attr("disabled", false).removeClass("disabled");
+                no_check_pwd();
             }
-        })
+        });
     </script>';
 }
 

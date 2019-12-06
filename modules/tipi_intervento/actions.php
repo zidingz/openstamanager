@@ -47,16 +47,35 @@ switch (post('op')) {
         break;
 
     case 'delete':
-        $query = 'DELETE FROM in_tipiintervento WHERE id_tipo_intervento='.prepare($id_record);
-        $dbo->query($query);
+        // Permetto eliminazione tipo intervento solo se questo non è utilizzado da nessun'altra parte a gestionale
+        $elementi = $dbo->fetchArray('SELECT `in_interventi`.`id_tipo_intervento`  FROM `in_interventi` WHERE `in_interventi`.`id_tipo_intervento` = '.prepare($id_record).'
+        UNION
+        SELECT `an_anagrafiche`.`id_tipo_intervento_default` AS `id_tipo_intervento` FROM `an_anagrafiche` WHERE `an_anagrafiche`.`id_tipo_intervento_default` = '.prepare($id_record).'
+        UNION
+        SELECT `co_preventivi`.`id_tipo_intervento` FROM `co_preventivi` WHERE `co_preventivi`.`id_tipo_intervento` = '.prepare($id_record).'
+        UNION
+        SELECT `co_promemoria`.`id_tipo_intervento` FROM `co_promemoria` WHERE `co_promemoria`.`id_tipo_intervento` = '.prepare($id_record).'
+        UNION
+        SELECT `in_tariffe`.`id_tipo_intervento` FROM `in_tariffe` WHERE `in_tariffe`.`id_tipo_intervento` = '.prepare($id_record).'
+        UNION
+        SELECT `in_interventi_tecnici`.`id_tipo_intervento` FROM `in_interventi_tecnici` WHERE `in_interventi_tecnici`.`id_tipo_intervento` = '.prepare($id_record).'
+        UNION
+        SELECT `co_contratti_tipiintervento`.`id_tipo_intervento` FROM `co_contratti_tipiintervento` WHERE `co_contratti_tipiintervento`.`id_tipo_intervento` = '.prepare($id_record).'
+        ORDER BY `idtipointervento`');
 
-        // Elimino anche le tariffe collegate ai vari tecnici
-        $query = 'DELETE FROM in_tariffe WHERE id_tipo_intervento='.prepare($id_record);
-        $dbo->query($query);
+        if (empty($elementi)) {
+            $query = 'DELETE FROM in_tipiintervento WHERE id_tipo_intervento='.prepare($id_record);
+            $dbo->query($query);
 
-        flash()->info(tr('Tipo di intervento eliminato!'));
-        break;
+            // Elimino anche le tariffe collegate ai vari tecnici
+            $query = 'DELETE FROM in_tariffe WHERE id_tipo_intervento='.prepare($id_record);
+            $dbo->query($query);
 
+            flash()->info(tr('Tipo di intervento eliminato!'));
+            break;
+        }
+
+        // no break
     case 'import':
         $values = [
             'costo_ore' => $record['costo_orario'],

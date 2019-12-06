@@ -29,7 +29,7 @@ function openModal(title, href, generate_id) {
         }
     });
 
-    var content =  '<div class="modal-dialog modal-lg">\
+    var content = '<div class="modal-dialog modal-lg">\
     <div class="modal-content">\
         <div class="modal-header bg-light-blue">\
             <h4 class="modal-title">\
@@ -86,7 +86,7 @@ function getUrlVars() {
     var search = window.location.search.substring(1);
     if (!search) return {};
 
-    var results = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g,'":"') + '"}', function(key, value) {
+    var results = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}', function (key, value) {
         return key === "" ? value : decodeURIComponent(value)
     });
 
@@ -384,7 +384,7 @@ function submitAjax(form, data, callback, errorCallback) {
 
     if (!data) data = {};
 
-    if(valid) {
+    if (valid) {
         $("#main_loading").show();
         var url = $(form).attr('action') ? $(form).attr('action') : location.href;
 
@@ -453,17 +453,17 @@ function renderMessages() {
 
             info = messages.info ? messages.info : [];
             info.forEach(function (element) {
-                toastr["success"](element);
+                if (element) toastr["success"](element);
             });
 
             warning = messages.warning ? messages.warning : [];
             warning.forEach(function (element) {
-                toastr["warning"](element);
+                if (element) toastr["warning"](element);
             });
 
             error = messages.error ? messages.error : [];
             error.forEach(function (element) {
-                toastr["error"](element);
+                if (element) toastr["error"](element);
             });
 
         }
