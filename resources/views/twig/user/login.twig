@@ -1,13 +1,38 @@
-{% extends "layouts/guest.twig" %}
+{% extends "layouts/base.twig" %}
 
+{% block body_class %}hold-transition login-page{% endblock %}
 {% block title %}{{ "Login"|trans }}{% endblock %}
 
-{% block box_class %}card-warning text-center login-box{% endblock %}
-{% block box_header %}
-    <h3 class="card-title">
-        <img src="{{ base_url() }}/assets/img/logo.png" class="logo-image" alt="{{ 'OSM Logo'|trans }}">
-        {{ "OpenSTAManager"|trans }}
-    </h3>
+{% block body %}
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="//openstamanager.com" target="_blank">
+                <img src="{{ base_url() }}/assets/img/full_logo.png" style="max-width: 360px">
+            </a>
+        </div>
+
+        <form novalidate action="" method="post">
+            <div class="card">
+                <div class="card-body login-card-body">
+                    <h4 class="login-box-msg">{{ 'OpenSTAManager'|trans }}</h4>
+
+                    {[ "type": "text", "name": "username", "autocomplete": "username", "placeholder": "{{ 'Username'|trans }}", "value": "{{ username }}", "icon-before": "<i class=\"fa fa-user\"></i>", "required": 1 ]}
+                    <div class="mb-3"></div>
+
+                    {[ "type": "password", "name": "password", "autocomplete": "current-password", "placeholder": "{{ 'Password'|trans }}", "icon-before": "<i class=\"fa fa-lock\"></i>" ]}
+                    <div class="mb-3"></div>
+
+                    <div class="text-right">
+                        <a href="{{ base_url() }}/reset.php">{{ 'Dimenticata la password?'|trans }}</a>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-warning btn-block">{{ 'Accedi'|trans }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
 {% endblock %}
 
 {% block before_content %}
@@ -59,38 +84,3 @@
     </script>
     {% endif %}
 {% endblock %}
-
-{% block content %}
-<form action="" method="post">
-    <div class="form-group input-group">
-        <span class="input-group-prepend input-group-text"><i class="fa fa-user"></i></span>
-        <input type="text" name="username" autocomplete="username" class="form-control" placeholder="{{ 'Nome utente'|trans }}" value="{{ username }}">
-    </div>
-
-    {[ "type": "password", "name": "password", "autocomplete": "current-password", "placeholder": "{{ 'Password'|trans }}", "icon-before": "<i class=\"fa fa-lock\"></i>" ]}
-
-    <div class="text-right">
-        <a href="'.ROOTDIR.'/reset.php">{{ 'Dimenticata la password?'|trans }}</a>
-    </div>
-
-    <div class="card-footer">
-        <button type="submit" id="login" class="btn btn-danger btn-block">{{ 'Accedi'|trans }}</button>
-    </div>
-</form>
-
-<script>
-    $(document).ready( function(){
-        $("#login").click(function(){
-            $("#login").text("{{ has_backup ? 'Backup automatico in corso'|trans : 'Autenticazione'|trans }}...");
-        });
-
-        if( $("input[name=username]").val() == ""){
-            $("input[name=username]").focus();
-        }
-        else{
-            $("input[name=password]").focus();
-        }
-    });
-</script>
-{% endblock %}
-

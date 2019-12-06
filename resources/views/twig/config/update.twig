@@ -32,16 +32,16 @@
                 confirmButtonClass: "btn btn-lg btn-success",
                 confirmButtonText: "{{ 'Procedi'|trans }}",
             }).then(function(){
-                $("#progress").show();
+                $("#update-info").removeClass("d-none");
                 $("#result").load("{{ path_for('update-progress') }}");
                 $("#contine_button").remove();
             }, function(){});
         }
     </script>
 
-    <div id="progress">
+    <div id="update-info" class="d-none">
         <div class="progress">
-            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+            <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
                 <span>0%</span>
             </div>
         </div>
@@ -95,10 +95,9 @@
         }
 
         function setPercent(percent){
-            $("#progress .progress-bar").width(percent + "%");
-            $("#progress .progress-bar span").text(percent + "%");
+            $("#update-info .progress-bar").width(percent + "%");
+            $("#update-info .progress-bar span").text(percent + "%");
 
-            console.log(percent);
             if (percent >= 100){
                 $("#completed").show();
             }
@@ -109,7 +108,7 @@
                 versions.push(version);
                 current += 1;
 
-                $("#progress .info").html($("#progress .info").html() + "<p><strong>{{ 'Aggiornamento _DONE_ di _TODO_ (_VERSION_)'|trans({
+                $("#update-info .info").html($("#update-info .info").html() + "<p><strong>{{ 'Aggiornamento _DONE_ di _TODO_ (_VERSION_)'|trans({
                     '_DONE_': '" + current + "',
                     '_TODO_': '" + count + "',
                     '_VERSION_': '" + version.trim() + "',

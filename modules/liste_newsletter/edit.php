@@ -12,20 +12,20 @@ echo '
 		<div class="panel-heading">
 			<h3 class="panel-title">'.tr('Dati campagna').'</h3>
 		</div>
-		
+
 		<div class="panel-body">
             <div class="row">
                 <div class="col-md-12">
                     {[ "type": "text", "label": "'.tr('Nome').'", "name": "name", "required": 1, "value": "$name$" ]}
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-12">
                     {[ "type": "textarea", "label": "'.tr('Descrizione').'", "name": "description", "required": 0, "value": "$description$" ]}
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-12">
                     {[ "type": "textarea", "label": "'.tr('Query dinamica').'", "name": "query", "required": 0, "value": "$query$", "help": "'.tr("La query SQL deve restituire gli identificativi delle anagrafiche da inserire nella lista, sotto un campo di nome ''id''").'. '.tr('Per esempio: _SQL_', [
@@ -40,21 +40,21 @@ echo '
 <form action="" method="post" id="receivers-form">
 	<input type="hidden" name="backto" value="record-edit">
 	<input type="hidden" name="op" value="add_receivers">
-	
+
 	<!-- Destinatari -->
-    <div class="box box-primary">
-        <div class="box-header">
-            <h3 class="box-title">'.tr('Aggiunta destinatari').'</h3>
+    <div class="card card-outline card-primary">
+        <div class="card-header">
+            <h3 class="card-title">'.tr('Aggiunta destinatari').'</h3>
         </div>
-        
-        <div class="box-body">
+
+        <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
                     {[ "type": "select", "label": "'.tr('Destinatari').'", "name": "receivers[]", "ajax-source": "anagrafiche_newsletter", "multiple": 1, "disabled": '.intval(!empty($lista->query)).' ]}
                 </div>
             </div>
-        
-            <div class="row pull-right">
+
+            <div class="row float-right">
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-primary">
                         <i class="fa fa-plus"></i> '.tr('Aggiungi').'
@@ -76,7 +76,7 @@ echo '
             <span class="badge">'.$anagrafiche->count().'</span>
         </h3>
     </div>
-    
+
     <div class="panel-body">';
 
 if (!$anagrafiche->isEmpty()) {
@@ -89,7 +89,7 @@ if (!$anagrafiche->isEmpty()) {
                     <th class="text-center" width="60">#</th>
                 </tr>
             </thead>
-        
+
             <tbody>';
 
     foreach ($anagrafiche as $anagrafica) {

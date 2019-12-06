@@ -143,6 +143,10 @@ trait RowTrait
         $iva = $this->database->fetchOne('SELECT idiva_'.($dir == 'uscita' ? 'acquisti' : 'vendite').' AS idiva FROM an_anagrafiche WHERE idanagrafica='.prepare($documento['idanagrafica']));
         $result['idiva'] = $iva['idiva'] ?: setting('Iva predefinita');
 
+        if (!empty($documento->dichiarazione)) {
+            $result['idiva'] = setting("Iva per lettere d'intento");
+        }
+
         // Aggiunta sconto di default da listino per le vendite
         $listino = $this->database->fetchOne('SELECT prc_guadagno FROM an_anagrafiche INNER JOIN mg_listini ON an_anagrafiche.idlistino_'.($dir == 'uscita' ? 'acquisti' : 'vendite').'=mg_listini.id WHERE idanagrafica='.prepare($documento['idanagrafica']));
 

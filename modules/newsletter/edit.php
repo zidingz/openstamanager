@@ -74,12 +74,12 @@ echo '
 	<input type="hidden" name="op" value="add_receivers">
 
 	<!-- Destinatari -->
-    <div class="box box-primary">
-        <div class="box-header">
-            <h3 class="box-title">'.tr('Aggiunta destinatari').'</h3>
+    <div class="card card-outline card-primary">
+        <div class="card-header">
+            <h3 class="card-title">'.tr('Aggiunta destinatari').'</h3>
         </div>
 
-        <div class="box-body">
+        <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
                     {[ "type": "select", "label": "'.tr('Destinatari').'", "name": "receivers[]", "ajax-source": "anagrafiche_newsletter", "multiple": 1 ]}
@@ -90,7 +90,7 @@ echo '
                 </div>
             </div>
 
-            <div class="row pull-right">
+            <div class="row float-right">
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-primary">
                         <i class="fa fa-plus"></i> '.tr('Aggiungi').'

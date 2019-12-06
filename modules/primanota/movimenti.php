@@ -35,7 +35,7 @@ function renderTabella($nome, $righe, $id_scadenza_default = null)
 
     echo '
 <div class="raggruppamento_primanota" data-id_scadenza="'.$id_scadenza_default.'">
-    <button class="btn btn-info btn-xs pull-right" type="button" onclick="addRiga(this)">
+    <button class="btn btn-info btn-xs float-right" type="button" onclick="addRiga(this)">
         <i class="fa fa-plus"></i> '.tr('Aggiungi riga').'
     </button>
 

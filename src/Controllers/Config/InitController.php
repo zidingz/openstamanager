@@ -27,14 +27,14 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
             $has_user = $database->fetchNum('SELECT `id` FROM `zz_users`') != 0;
 
             $settings = [
-            'Regime Fiscale' => true,
-            'Tipo Cassa Previdenziale' => false,
-            'Conto predefinito fatture di vendita' => true,
-            'Conto predefinito fatture di acquisto' => true,
-            "Percentuale ritenuta d'acconto" => false,
-            "Causale ritenuta d'acconto" => false,
-            'Valuta' => true,
-        ];
+                'Regime Fiscale' => true,
+                'Tipo Cassa Previdenziale' => false,
+                'Conto predefinito fatture di vendita' => true,
+                'Conto predefinito fatture di acquisto' => true,
+                "Percentuale ritenuta d'acconto" => false,
+                "Causale ritenuta d'acconto" => false,
+                'Valuta' => true,
+            ];
 
             if (!empty(setting("Percentuale ritenuta d'acconto"))) {
                 $settings["Causale ritenuta d'acconto"] = true;
@@ -81,6 +81,7 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
 
         // Form dell'anagrafica Azienda
         ob_start();
+        $module_id = Modules::get('Anagrafiche')->id;
         $id_tipo_anagrafica = $this->database->fetchOne("SELECT id FROM an_tipianagrafiche WHERE descrizione='Azienda'")['id'];
         $readonly_tipo = true;
         include DOCROOT.'/modules/anagrafiche/add.php';

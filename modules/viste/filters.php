@@ -22,8 +22,8 @@ if (!empty($additionals)) {
                     '_NAME_' => $additional['name'],
                 ]).'
                 </h3>
-                <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <div class="card-tools float-right">
+                    <button type="button" class="btn btn-card-tool" data-widget="collapse">
                     <i class="fa fa-plus"></i>
                     </button>
                 </div>';

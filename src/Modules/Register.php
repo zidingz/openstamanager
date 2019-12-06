@@ -90,7 +90,7 @@ abstract class Register
     /**
      * Restutuisce un elenco di aggiornamenti presentati dal modulo.
      */
-    abstract protected function updates(): array;
+    abstract public function updates(): array;
 
     /**
      * Registra un nuovo namespace Twig per l'applicazione.

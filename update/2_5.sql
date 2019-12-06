@@ -3,7 +3,7 @@ ALTER TABLE `zz_modules` ADD `namespace` varchar(255) NOT NULL, ADD `class` varc
 ALTER TABLE `zz_modules` ADD `type` ENUM('module', 'record_plugin', 'module_plugin') NOT NULL DEFAULT 'module';
 INSERT INTO `zz_modules` (`id`, `name`, `title`, `type`, `enabled`, `default`, `options`, `options2`, `directory`, `parent`) SELECT NULL, `name`, `title`, IF(`position` = 'tab', 'record_plugin', 'module_plugin'), `enabled`, `default`, `options`, `options2`, `directory`, `idmodule_to` FROM `zz_plugins`;
 UPDATE `zz_modules` SET `name` = 'Statistiche anagrafiche', `default` = 1, `namespace` = 'Plugins\\StatisticheAnagrafiche\\Controllers' WHERE `directory` = 'statistiche_anagrafiche';
-UPDATE `zz_modules` SET `name` = 'Statistiche articoli' `namespace` = 'Plugins\\StatisticheArticoli\\Controllers' WHERE `directory` = 'statistiche_articoli';
+UPDATE `zz_modules` SET `name` = 'Statistiche articoli', `namespace` = 'Plugins\\StatisticheArticoli\\Controllers' WHERE `directory` = 'statistiche_articoli';
 UPDATE `zz_modules` SET `name` = 'Componenti impianto', `directory` = 'componenti_impianto', `default` = 1, `namespace` = 'Plugins\\ComponentiImpianto\\Controllers' WHERE `name` = 'Componenti';
 UPDATE `zz_modules` SET `directory` = 'giacenze', `options` = 'custom', `default` = 1, `namespace` = 'Plugins\\Giacenze\\Controllers' WHERE `name` = 'Giacenze';
 UPDATE `zz_modules` SET `name` = 'Revisioni preventivi', `default` = 1, `namespace` = 'Plugins\\RevisioniPreventivi\\Controllers' WHERE `name` = 'Revisioni';
@@ -251,7 +251,7 @@ UPDATE `updates` SET `sql` = NULL WHERE `sql` = '0000-00-00' OR `sql` = '0000-00
 UPDATE `updates` SET `version` = NULL WHERE `version` = '0000-00-00' OR `version` = '0000-00-00 00:00:00';
 UPDATE `or_ordini` SET `data` = NULL WHERE `data` = '0000-00-00' OR `data` = '0000-00-00 00:00:00';
 UPDATE `co_documenti` SET `data` = NULL WHERE `data` = '0000-00-00' OR `data` = '0000-00-00 00:00:00';
-UPDATE `zz_documenti` SET `data` = NULL WHERE `data` = '0000-00-00' OR `data` = '0000-00-00 00:00:00';
+UPDATE `do_documenti` SET `data` = NULL WHERE `data` = '0000-00-00' OR `data` = '0000-00-00 00:00:00';
 UPDATE `co_movimenti` SET `data` = NULL WHERE `data` = '0000-00-00' OR `data` = '0000-00-00 00:00:00';
 UPDATE `my_impianto_componenti` SET `data` = NULL WHERE `data` = '0000-00-00' OR `data` = '0000-00-00 00:00:00';
 UPDATE `dt_ddt` SET `data` = NULL WHERE `data` = '0000-00-00' OR `data` = '0000-00-00 00:00:00';

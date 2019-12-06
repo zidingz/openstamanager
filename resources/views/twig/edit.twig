@@ -21,7 +21,7 @@
 
 {% block module_content %}
     {% if record.deleted_at is not empty %}
-    <div class="alert alert-danger text-center">
+    <div class="alert alert-warning text-center">
         <h3>{{ 'Ripristinare il record?'|trans }}</h3>
 
         <a class="btn btn-warning" id="restore">
@@ -163,7 +163,7 @@
 
             {% if read_only %}
             $("a.btn, button, input[type=button], input[type=submit]", "section.content").hide();
-            $("a.btn-info, a.btn-warning, button.btn-info, button.btn-warning, input[type=button].btn-info", "section.content").show();
+            $("a.btn-info, button.btn-info, input[type=button].btn-info", "section.content").show();
             {% endif %}
 
         });
@@ -176,6 +176,10 @@
             if( event.keyCode >= 32 ){
                 content_was_modified = true;
             }
+        });
+        
+        $(".superselect, .superselectajax").on("change", function (e) {
+            content_was_modified = true;
         });
 
         // tolgo il controllo se sto salvando

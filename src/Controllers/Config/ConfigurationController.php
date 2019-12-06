@@ -84,7 +84,7 @@ class ConfigurationController extends Controller
         $new_config = str_replace(array_keys($values), $values, $new_config);
 
         // Controlla che la scrittura del file di configurazione sia andata a buon fine
-        $creation = file_put_contents('config.inc.php', $new_config);
+        $creation = file_put_contents(DOCROOT.'/config.inc.php', $new_config);
 
         if (!$creation) {
             $args['database_name'] = $database_name;

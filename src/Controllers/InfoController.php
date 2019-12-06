@@ -4,7 +4,7 @@ namespace Controllers;
 
 use Auth;
 use Mail;
-use Modules\Emails\MailAccount;
+use Modules\Emails\Account;
 use Notifications\EmailNotification;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -97,7 +97,7 @@ class InfoController extends Controller
 
     public function bug(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $args['mail'] = MailAccount::get();
+        $args['mail'] = Account::where('predefined', true)->first();
         $args['bug_email'] = self::$bugEmail;
 
         $response = $this->twig->render($response, 'info\bug.twig', $args);

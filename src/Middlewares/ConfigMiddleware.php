@@ -19,8 +19,6 @@ class ConfigMiddleware extends Middleware
 {
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
-        $original = $response;
-
         $route = $request->getAttribute('route');
         if (!$route) {
             return $next($request, $response);

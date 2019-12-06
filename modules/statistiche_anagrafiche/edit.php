@@ -13,19 +13,19 @@ echo '
             <button class="btn btn-warning btn-sm" onclick="add_calendar()">
                 <i class="fa fa-plus"></i> '.tr('Aggiungi periodo').'
             </button>
-            <button type="button" class="btn btn-box-tool" data-card-widget="collapse">
+            <button type="button" class="btn btn-card-tool" data-card-widget="collapse">
                 <i class="fa fa-minus"></i>
             </button>
         </div>
     </div>
-    
+
     <div class="card-body collapse in" id="calendars">
-        
+
     </div>
 </div>
 
 <div id="widgets">
-        
+
 </div>';
 
 $statistiche = Modules::get('Statistiche');
@@ -42,7 +42,7 @@ var local_url = "'.str_replace('edit.php', '', $structure->fileurl('edit.php')).
 
 function init_calendar(calendar) {
     var widgets = new Widget(calendar, "info.php", {}, "#widgets");
-    
+
     calendar.addElement(widgets);
 }
 </script>

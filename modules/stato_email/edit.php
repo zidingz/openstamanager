@@ -8,15 +8,15 @@ echo '
     <div class="panel-heading">
         <h3 class="panel-title">'.tr('Informazioni').'</h3>
     </div>
-    
+
     <div class="panel-body">
-        
+
         <div class="row">
             <div class="col-md-3">
                 <h4>'.tr('Template').'</h4>
                 '.Modules::link('Template email', $mail->template->id, $mail->template->name).'
             </div>
-            
+
             <div class="col-md-3">
                 <h4>'.tr('Utente').'</h4>
                 '.Modules::link('Anagrafiche', $mail->user->anagrafica->id, $mail->user->nome_completo).'
@@ -26,7 +26,7 @@ echo '
                 <h4>'.tr('Data di invio').'</h4>
                 '.($mail->sent_at ? timestampFormat($mail->sent_at) : '-').'
             </div>
-            
+
             <div class="col-md-3">
                 <h4>'.tr('Ultimo tentativo').'</h4>
                 '.($mail->processing_at ? timestampFormat($mail->processing_at) : '-').' ('.tr('totale: _TOT_', [
@@ -57,7 +57,7 @@ echo '
                     <th>'.tr('Indirizzo').'</th>
                 </tr>
             </thead>
-            
+
             <tbody>';
 
 foreach ($receivers as $receiver) {
@@ -85,7 +85,7 @@ echo '
                     <th>'.tr('Nome').'</th>
                 </tr>
             </thead>
-            
+
             <tbody>';
 
 foreach ($prints as $print) {
@@ -115,7 +115,7 @@ echo '
                     <th>'.tr('Nome').'</th>
                 </tr>
             </thead>
-            
+
             <tbody>';
 
 foreach ($uploads as $upload) {
@@ -150,7 +150,7 @@ if (empty($mail->sent_at)) {
 
     if ($mail->attempt >= 10) {
         echo '
-<a class="btn btn-warning ask pull-right" data-backto="record-edit" data-msg="'.tr("Rimettere in coda l'email?").'" data-op="retry" data-button="'.tr('Rimetti in coda').'" data-class="btn btn-lg btn-warning" >
+<a class="btn btn-warning ask float-right" data-backto="record-edit" data-msg="'.tr("Rimettere in coda l'email?").'" data-op="retry" data-button="'.tr('Rimetti in coda').'" data-class="btn btn-lg btn-warning" >
     <i class="fa fa-refresh"></i> '.tr('Rimetti in coda').'
 </a>';
     }

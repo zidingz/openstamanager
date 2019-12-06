@@ -153,7 +153,7 @@ echo '
                 <i class="fa fa-trash"></i> '.tr('Elimina').'
             </a>
 
-			<button type="submit" class="btn btn-primary pull-right"><i class="fa fa-edit"></i> '.tr('Modifica').'</button>
+			<button type="submit" class="btn btn-primary float-right"><i class="fa fa-edit"></i> '.tr('Modifica').'</button>
 		</div>
 	</div>
 </form>';

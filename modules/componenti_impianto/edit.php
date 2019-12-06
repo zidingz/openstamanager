@@ -91,21 +91,21 @@ if (!empty($rs2)) {
         }
 
         echo '
-            <div class="box '.$collapsed.' box-'.($same ? 'default' : 'primary').'">
-                <div class="box-header with-border'.($same ? ' mini' : '').'">
-                    <h3 class="box-title'.($same ? ' mini' : '').'">'.
+            <div class="card card-outline '.$collapsed.' card-'.($same ? 'default' : 'primary').'">
+                <div class="card-header'.($same ? ' mini' : '').'">
+                    <h3 class="card-title'.($same ? ' mini' : '').'">'.
                         ($same ? '<small>' : '').$nome_componente.' ('.$statocomponente.')'.($same ? '</small>' : '').'
                     </h3>
 
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <div class="card-tools float-right">
+                        <button type="button" class="btn btn-card-tool" data-widget="collapse">
                             <i class="fa fa-'.$icon.'"></i>
                         </button>
                     </div>
                 </div>';
 
         echo '
-                <div id="collapse_'.$j.'" class="box-body">
+                <div id="collapse_'.$j.'" class="card-body">
                     <div class="row">';
         // FORM COMPONENTE
         echo '

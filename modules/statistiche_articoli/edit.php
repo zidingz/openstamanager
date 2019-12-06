@@ -13,14 +13,14 @@ echo '
             <button class="btn btn-warning btn-sm" onclick="add_calendar()">
                 <i class="fa fa-plus"></i> '.tr('Aggiungi periodo').'
             </button>
-            <button type="button" class="btn btn-box-tool" data-card-widget="collapse">
+            <button type="button" class="btn btn-card-tool" data-card-widget="collapse">
                 <i class="fa fa-minus"></i>
             </button>
         </div>
     </div>
-    
+
     <div class="card-body collapse in" id="calendars">
-        
+
     </div>
 </div>
 
@@ -28,7 +28,7 @@ echo '
     <div class="card-header">
         <h3 class="card-title">'.tr('Prezzo medio acquisto').'</h3>
     </div>
-    
+
     <div class="card-body">
         <table class="table table-striped table-condensed table-bordered">
             <thead>
@@ -44,7 +44,7 @@ echo '
                 </tr>
             </thead>
             <tbody id="prezzi_acquisto">
-                
+
             </tbody>
         </table>
     </div>
@@ -54,7 +54,7 @@ echo '
     <div class="card-header">
         <h3 class="card-title">'.tr('Prezzo medio vendita').'</h3>
     </div>
-    
+
     <div class="card-body">
         <table class="table table-striped table-condensed table-bordered">
             <thead>
@@ -70,7 +70,7 @@ echo '
                 </tr>
             </thead>
             <tbody id="prezzi_vendita">
-                
+
             </tbody>
         </table>
     </div>
@@ -93,7 +93,7 @@ var local_url = "'.str_replace('edit.php', '', $structure->fileurl('edit.php')).
 function init_calendar(calendar) {
     var prezzo_acquisto = new Prezzo(calendar, "#prezzi_acquisto", "uscita");
     var prezzo_vendita = new Prezzo(calendar, "#prezzi_vendita", "entrata");
-    
+
     calendar.addElement(prezzo_acquisto);
     calendar.addElement(prezzo_vendita);
 }

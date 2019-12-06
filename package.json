@@ -4,7 +4,7 @@
     "dependencies": {
         "@ckeditor/ckeditor5-build-classic": "^12.0.0",
         "@fortawesome/fontawesome-free": "^5.8.2",
-        "admin-lte": "^3.0.0-rc.1",
+        "admin-lte": "^3.0.0",
         "autosize": "^3.0.21",
         "bootstrap": "^4.3.1",
         "bootstrap-colorpicker": "2.5.1",
@@ -32,7 +32,6 @@
         "select2": "4.0.3",
         "select2-bootstrap-theme": "^0.1.0-beta.10",
         "signature_pad": "^2.1.1",
-        "smartwizard": "^4.2.2",
         "sweetalert2": "^6.11.4",
         "toastr": "^2.1.4",
         "tooltipster": "^4.2.5"
@@ -165,13 +164,6 @@
         },
         "select2-bootstrap-theme": {
             "main": "dist/select2-bootstrap.css"
-        },
-        "smartwizard": {
-            "main": [
-                "dist/css/smart_wizard.min.css",
-                "dist/css/smart_wizard_theme_arrows.min.css",
-                "dist/js/jquery.smartWizard.min.js"
-            ]
         },
         "sweetalert2": {
             "main": [

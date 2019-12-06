@@ -191,10 +191,8 @@ class AjaxController extends Controller
             $results['recordsFiltered'] = $data['count'];
 
             // SOMME
-            if ($draw_numer == 1) {
-                $results['summable'] = Query::getSums($structure, $search);
-            }
-
+            $results['summable'] = Query::getSums($structure, $search);
+            
             // Allineamento delle righe
             $align = [];
             $row = $rows[0] ?: [];

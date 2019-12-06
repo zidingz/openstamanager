@@ -11,9 +11,9 @@ if (Interaction::isEnabled()) {
 ]).'.</p>';
 }
 echo '
-<div class="box box-success">
-    <div class="box-header with-border">
-        <h3 class="box-title">
+<div class="card card-outline card-success">
+    <div class="card-header">
+        <h3 class="card-title">
             '.tr('Carica un XML').'
 
             <span class="tip" title="'.tr('Formati supportati: XML e P7M').'.">
@@ -39,7 +39,7 @@ echo '
 
 echo '
 <div class="card card-outline card-info">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title">
             '.tr('Ricevute da importare').'</span>
         </h3>';

@@ -77,7 +77,7 @@ echo '
 // Elenco
 echo '
 <div class="card">
-    <div class="card-header with-border">
+    <div class="card-header">
         <h3 class="card-title">'.tr('Elenco seriali').'</h3>
     </div>
     <div class="card-body">';

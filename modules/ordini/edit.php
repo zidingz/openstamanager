@@ -132,7 +132,7 @@ $_SESSION['superselect']['idanagrafica'] = $record['idanagrafica'];
                 <h4 class="panel-title">
                     <?php echo tr('Dati appalto'); ?>
 
-                    <div class="box-tools pull-right">
+                    <div class="card-tools float-right">
                         <a data-toggle="collapse" href="#dati_appalto"><i class="fa fa-plus" style='color:white;margin-top:2px;'></i></a>
                     </div>
                 </h4>

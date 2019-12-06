@@ -19,10 +19,12 @@ class Logger extends Monolog\Logger
 
         $handlers = [];
         // File di log di base (logs/error.log, logs/setup.log)
+        $handlers[] = new StreamHandler(__DIR__.'/../logs/setup.log', Monolog\Logger::EMERGENCY);
         $handlers[] = new StreamHandler(__DIR__.'/../logs/error.log', Monolog\Logger::ERROR);
 
         // File di log ordinati in base alla data
         if ($container['debug']) {
+            $handlers[] = new RotatingFileHandler(__DIR__.'/../logs/setup.log', 0, Monolog\Logger::EMERGENCY);
             $handlers[] = new RotatingFileHandler(__DIR__.'/../logs/error.log', 0, Monolog\Logger::ERROR);
         }
 

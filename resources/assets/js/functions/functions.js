@@ -83,14 +83,15 @@ function scrollToOffset(offset) {
  * Ritorna un array associativo con i parametri passati via GET
  */
 function getUrlVars() {
-    var search = window.location.search.substring(1);
-    if (!search) return {};
+    var pairs = window.location.search.slice(1).split('&');
 
-    var results = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}', function (key, value) {
-        return key === "" ? value : decodeURIComponent(value)
+    var result = {};
+    pairs.forEach(function(pair) {
+        pair = pair.split('=');
+        result[pair[0]] = decodeURIComponent(pair[1] || '');
     });
 
-    return results;
+    return JSON.parse(JSON.stringify(result));
 }
 
 // Data e ora (orologio)

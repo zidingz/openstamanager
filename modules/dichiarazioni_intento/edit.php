@@ -18,7 +18,7 @@ echo '
 		<div class="col-md-4">
 			{[ "type": "text", "label": "'.tr('Numero protocollo').'", "name": "numero_protocollo", "required": 1, "value": "'.$record['numero_protocollo'].'" ]}
 		</div>
-		
+
 		<div class="col-md-4">
 			{[ "type": "text", "label": "'.tr('Numero progressivo').'", "name": "numero_progressivo", "required": 1, "value": "'.$record['numero_progressivo'].'" ]}
 		</div>
@@ -28,28 +28,28 @@ echo '
 		<div class="col-md-4">
 			{[ "type": "date", "label": "'.tr('Data di inizio').'", "name": "data_inizio", "required": 1, "value": "'.$record['data_inizio'].'" ]}
 		</div>
-		
+
         <div class="col-md-4">
 			{[ "type": "date", "label": "'.tr('Data di fine').'", "name": "data_fine", "required": 1, "value": "'.$record['data_fine'].'" ]}
 		</div>
-		
+
 		<div class="col-md-4">
 			{[ "type": "number", "label": "'.tr('Massimale').'", "name": "massimale", "required": 1, "icon-after": "'.currency().'", "value": "'.$record['massimale'].'" ]}
 		</div>
 	</div>
-	
+
     <div class="row">
 		<div class="col-md-6">
 			{[ "type": "date", "label": "'.tr('Data protocollo').'", "name": "data_protocollo", "value": "'.$record['data_protocollo'].'" ]}
 		</div>
-		
+
         <div class="col-md-6">
 			{[ "type": "date", "label": "'.tr('Data di emissione').'", "name": "data_emissione", "value": "'.$record['data_emissione'].'" ]}
 		</div>
 	</div>
-	
+
 	<p><b>'.tr('Totale utilizzato').':</b> '.moneyFormat($record['totale']).'</p>
-	
+
 	<!-- PULSANTI -->
 	<div class="row">
 		<div class="col-md-12">
@@ -57,7 +57,7 @@ echo '
                 <i class="fa fa-trash"></i> '.tr('Elimina').'
             </a>
 
-			<button type="submit" class="btn btn-primary pull-right">
+			<button type="submit" class="btn btn-primary float-right">
 			    <i class="fa fa-plus"></i> '.tr('Modifica').'
 			</button>
 		</div>

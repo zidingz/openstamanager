@@ -24,8 +24,8 @@ foreach ($fields as $key => $field) {
                                 ]).' ('.$field['name'].')
                         </h3>
 
-                        <div class="card-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <div class="card-tools float-right">
+                            <button type="button" class="btn btn-card-tool" data-widget="collapse">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>';

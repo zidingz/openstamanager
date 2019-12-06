@@ -132,8 +132,13 @@ class Update
     public function isCoreUpdated()
     {
         $database = database();
+        $database_ready = $database->isConnected() && $database->tableExists('updates');
 
-        $results = $database->fetchArray("SELECT version FROM `updates` WHERE (directory IS NULL OR directory = '') AND (done != 1 OR done IS NULL)");
+        $results = true;
+
+        if ($database_ready) {
+            $results = $database->fetchArray("SELECT version FROM `updates` WHERE (directory IS NULL OR directory = '') AND (done != 1 OR done IS NULL)");
+        }
 
         return empty($results);
     }
@@ -332,7 +337,7 @@ class Update
                 return true;
             } catch (\Exception $e) {
                 $logger = logger();
-                $logger->addRecord(\Monolog\Logger::EMERGENCY, $e->getMessage());
+                $logger->logException(\Monolog\Logger::EMERGENCY, $e->getMessage());
             }
 
             return false;

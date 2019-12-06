@@ -78,7 +78,7 @@ class Register extends Original
         $this->addView($path, $name);
     }
 
-    protected function updates(): array
+    public function updates(): array
     {
         return \Update::getUpdates(__DIR__.'/../update');
     }
