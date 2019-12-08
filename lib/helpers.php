@@ -45,7 +45,7 @@ function prepare($parameter)
  */
 function filter($param, $method = null, $parse = false)
 {
-    return container()->filter->getValue($param, $method, $parse);
+    return container()->get('filter')->getValue($param, $method, $parse);
 }
 
 /**
@@ -60,7 +60,7 @@ function filter($param, $method = null, $parse = false)
  */
 function post($param, $parse = false)
 {
-    return container()->filter->getValue($param, 'post', $parse);
+    return container()->get('filter')->getValue($param, 'post', $parse);
 }
 
 /**
@@ -75,7 +75,7 @@ function post($param, $parse = false)
  */
 function get($param, $parse = false)
 {
-    return container()->filter->getValue($param, 'get', $parse);
+    return container()->get('filter')->getValue($param, 'get', $parse);
 }
 
 /**

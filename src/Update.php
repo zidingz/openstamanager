@@ -337,7 +337,7 @@ class Update
                 return true;
             } catch (\Exception $e) {
                 $logger = logger();
-                $logger->logException(\Monolog\Logger::EMERGENCY, $e->getMessage());
+                $logger->addRecord(\Monolog\Logger::EMERGENCY, $e->getMessage());
             }
 
             return false;

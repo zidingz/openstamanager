@@ -2,8 +2,6 @@
 
 use Psr\Container\ContainerInterface;
 use Slim\Views\Twig;
-use Slim\Views\PhpRenderer;
-use Slim\Psr7\Response;
 
 // Auth manager
 $container->set('auth', function(ContainerInterface $container){
@@ -20,11 +18,6 @@ $container->set('filter', function(ContainerInterface $container){
     return new \Middlewares\FilterMiddleware($container);
 });
 
-// Logger
-$container->set('logger', function(ContainerInterface $container){
-    return new Logger($container);
-});
-
 // Database
 $container->set('database', function(ContainerInterface $container){
     $config = $container->get('config');
@@ -33,6 +26,7 @@ $container->set('database', function(ContainerInterface $container){
 
     return $database;
 });
+
 /*
 // Debugbar
 if (App::debug()) {
@@ -107,46 +101,3 @@ $container->set('twig', function(ContainerInterface $container){
 
     return $twig;
 });
-/*
-// Exception handlers
-$errorMiddleware = $app->addErrorMiddleware(true, true, true);
-$errorMiddleware->setErrorHandler(
-    HttpNotFoundException::class,
-    function (ServerRequestInterface $request, Throwable $exception, bool $displayErrorDetails) {
-        $response = new Response();
-        $response = $response->withStatus(404);
-
-        return $this->get('twig')->render($response, 'errors/404.twig');
-    }
-);
-
-// Set the Not Allowed Handler
-$errorMiddleware->setErrorHandler(
-    HttpMethodNotAllowedException::class,
-    function (ServerRequestInterface $request, Throwable $exception, bool $displayErrorDetails) {
-        $response = new Response();
-        $response = $response->withStatus(403);
-
-        return $this->get('twig')->render($response, 'errors/403.twig');
-    }
-);
-
-
-
-if (!$container->set('debug']) {
-    $container->set('errorHandler'], function(ContainerInterface $container){
-        return function ($request, $response, $exception) use ($container) {
-            $response = $response->withStatus(500);
-
-            // Log the exception
-            $container->set('logger']->logException($exception);
-
-            return $container->set('twig']->render($response, 'errors/500.twig');
-        });
-    });
-
-    $container->set('phpErrorHandler'], function(ContainerInterface $container){
-        return $container->set('errorHandler'];
-    });
-}
-*/

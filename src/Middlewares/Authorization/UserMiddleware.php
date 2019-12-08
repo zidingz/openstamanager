@@ -2,7 +2,6 @@
 
 namespace Middlewares\Authorization;
 
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
 

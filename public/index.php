@@ -4,6 +4,7 @@ use Models\Module;
 use Models\OperationLog;
 use DI\Container;
 use Slim\Factory\AppFactory;
+use Psr\Container\ContainerInterface;
 
 // Impostazioni di configurazione PHP
 date_default_timezone_set('Europe/Rome');
@@ -57,6 +58,16 @@ App::setContainer($container);
 AppFactory::setContainer($container);
 $app = AppFactory::create();
 
+// Impostazione di debug
+$container->set('debug', App::debug());
+
+// Configurazione
+$container->set('config', $config);
+
+// Logger
+$logger = new Logger($container);
+$container->set('logger', $logger);
+
 // Impostazione percorso di base
 $app->setBasePath((function () {
     $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
@@ -81,12 +92,6 @@ session_start();
 // Routing
 $container->set('router', $app->getRouteCollector()->getRouteParser());
 
-// Impostazione di debug
-$container->set('debug', $debug);
-
-// Configurazione
-$container->set('config', $config);
-
 // Istanziamento delle dipendenze
 require __DIR__.'/../config/dependencies.php';
 
@@ -95,8 +100,6 @@ require __DIR__.'/../routes/web.php';
 
 // Aggiunta dei middleware
 require __DIR__.'/../config/middlewares.php';
-
-$app->addRoutingMiddleware();
 
 // Inizializzazione percorsi per i moduli
 if (Update::isCoreUpdated()) {
@@ -109,6 +112,7 @@ if (Update::isCoreUpdated()) {
         Update::addModuleUpdates($class->updates());
     }
 }
+
 // Run application
 ob_start();
 $app->run();
