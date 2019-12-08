@@ -10,7 +10,7 @@
     {% endfor %}
 
     globals = {
-        rootdir: '{{ base_url() }}',
+        rootdir: '{{ base_path() }}',
         js: '{{ paths['js'] }}',
         css: '{{ paths['css'] }}',
         img: '{{ paths['img'] }}',
@@ -118,17 +118,17 @@
         order_manager_id: '{{ order_manager_id }}',
         tempo_attesa_ricerche: {{ setting('Tempo di attesa ricerche in secondi') }},
         dataload_page_buffer: '{{ setting('Lunghezza in pagine del buffer Datatables') }}',
-        select_url: "{{ path_for('ajax-select') }}",
-        dataload_url: "{{ path_for('ajax-dataload', {'module_id': '|module_id|'}) }}",
-        dataload_url_plugin: "{{ path_for('ajax-dataload', {'module_id': '|module_id|', 'reference_id': '|reference_id|'}) }}",
-        ajax_set_url: "{{ path_for('ajax-session') }}",
-        ajax_array_set_url: "{{ path_for('ajax-session-array') }}",
-        ajax_flash: "{{ path_for('ajax-flash') }}",
+        select_url: "{{ url_for('ajax-select') }}",
+        dataload_url: "{{ url_for('ajax-dataload', {'module_id': '|module_id|'}) }}",
+        dataload_url_plugin: "{{ url_for('ajax-dataload', {'module_id': '|module_id|', 'reference_id': '|reference_id|'}) }}",
+        ajax_set_url: "{{ url_for('ajax-session') }}",
+        ajax_array_set_url: "{{ url_for('ajax-session-array') }}",
+        ajax_flash: "{{ url_for('ajax-flash') }}",
         hooks: {
-            list: "{{ path_for('hooks') }}",
-            lock: "{{ path_for('hook-lock', {'hook_id': '|id|'}) }}",
-            execute: "{{ path_for('hook-execute', {'hook_id': '|id|', 'token': '|token|'}) }}",
-            response: "{{ path_for('hook-response', {'hook_id': '|id|'}) }}",
+            list: "{{ url_for('hooks') }}",
+            lock: "{{ url_for('hook-lock', {'hook_id': '|id|'}) }}",
+            execute: "{{ url_for('hook-execute', {'hook_id': '|id|', 'token': '|token|'}) }}",
+            response: "{{ url_for('hook-response', {'hook_id': '|id|'}) }}",
         }
     };
 </script>
@@ -189,19 +189,19 @@
                 <i class="fa fa-print"></i>
             </a></li>
 
-            <li class="nav-item"><a href="{{ path_for('bug') }}" class="nav-link tip" title="{{ 'Segnalazione bug'|trans }}">
+            <li class="nav-item"><a href="{{ url_for('bug') }}" class="nav-link tip" title="{{ 'Segnalazione bug'|trans }}">
                 <i class="fa fa-bug"></i>
             </a></li>
 
-            <li class="nav-item"><a href="{{ path_for('logs') }}" class="nav-link tip" title="{{ 'Log accessi'|trans }}">
+            <li class="nav-item"><a href="{{ url_for('logs') }}" class="nav-link tip" title="{{ 'Log accessi'|trans }}">
                 <i class="fa fa-book"></i>
             </a></li>
 
-            <li class="nav-item"><a href="{{ path_for('info') }}" class="nav-link tip" title="{{ 'Informazioni'|trans }}">
+            <li class="nav-item"><a href="{{ url_for('info') }}" class="nav-link tip" title="{{ 'Informazioni'|trans }}">
                 <i class="fa fa-info"></i>
             </a></li>
 
-            <li><a href="{{ path_for('logout') }}" class="nav-link btn-danger text-white tip" onclick="sessionStorage.clear()" title="{{ 'Esci'|trans }}">
+            <li><a href="{{ url_for('logout') }}" class="nav-link btn-danger text-white tip" onclick="sessionStorage.clear()" title="{{ 'Esci'|trans }}">
                 <i class="fa fa-power-off"></i>
             </a></li>
         </div>
@@ -209,17 +209,17 @@
 
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a href="https://www.openstamanager.com" class="brand-link" title="{{ "Il gestionale open source per l'assistenza tecnica e la fatturazione"|trans }}" target="_blank">
-            <img src="{{ base_url() }}/assets/img/logo.png" alt="OSM Logo" class="brand-image img-circle elevation-3">
+            <img src="{{ base_path() }}/assets/img/logo.png" alt="OSM Logo" class="brand-image img-circle elevation-3">
 
             <span class="brand-text">{{ 'OpenSTAManager'|trans }}</span>
         </a>
 
         <section class="sidebar">
             <!-- Sidebar user panel -->
-            <a href="{{ path_for('user') }}" class="" style="height: 60px">
+            <a href="{{ url_for('user') }}" class="" style="height: 60px">
                 <div class="text-center mt-2">
                     {% if user.photo %}
-                        <img src="{{ base_url() }}{{ user.photo }}" class="profile-user-img img-fluid img-circle" alt="{{ user.username }}" />
+                        <img src="{{ base_path() }}{{ user.photo }}" class="profile-user-img img-fluid img-circle" alt="{{ user.username }}" />
                     {% else %}
                         <i class="fa fa-user-circle-o fa-5x" alt="{{ user.username }}" ></i>
                     {% endif %}

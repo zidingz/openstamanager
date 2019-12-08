@@ -14,7 +14,7 @@ use HTMLBuilder\HTMLBuilder;
  */
 function database()
 {
-    return \App::getContainer()['database'];
+    return \App::getContainer()->get('database');
 }
 
 /**
@@ -102,7 +102,7 @@ function setting($name, $again = false)
  */
 function flash()
 {
-    return \App::getContainer()['flash'];
+    return \App::getContainer()->get('flash');
 }
 
 /**
@@ -114,7 +114,7 @@ function flash()
  */
 function auth()
 {
-    return \App::getContainer()['auth'];
+    return \App::getContainer()->get('auth');
 }
 
 /**
@@ -126,7 +126,7 @@ function auth()
  */
 function trans()
 {
-    return \App::getContainer()['translator'];
+    return \App::getContainer()->get('translator');
 }
 
 /**
@@ -138,7 +138,7 @@ function trans()
  */
 function formatter()
 {
-    return \App::getContainer()['formatter'];
+    return \App::getContainer()->get('formatter');
 }
 
 /**
@@ -174,7 +174,7 @@ if (!function_exists('_')) {
  */
 function logger()
 {
-    return \App::getContainer()['logger'];
+    return \App::getContainer()->get('logger');
 }
 
 /**
@@ -258,11 +258,11 @@ function diffForHumans($timestamp)
  *
  * @since 2.5
  */
-function pathFor($name, $parameters = [])
+function urlFor($name, $parameters = [])
 {
-    $router = container()->router;
+    $router = container()->get('router');
 
-    return $router->pathFor($name, $parameters);
+    return $router->urlFor($name, $parameters);
 }
 
 /**

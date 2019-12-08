@@ -4,7 +4,7 @@ namespace Middlewares;
 
 use Models\Module;
 use Modules;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Update;
 
@@ -15,11 +15,11 @@ use Update;
  */
 class ContentMiddleware extends Middleware
 {
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
     {
-        $route = $request->getAttribute('route');
-        if (!$route || !$this->database->isConnected() || Update::isUpdateAvailable()) {
-            return $next($request, $response);
+        $route = $this->getRoute($request);
+        if (empty($route) || !$this->database->isConnected() || Update::isUpdateAvailable()) {
+            return $handler->handle($request);
         }
 
         $this->addVariable('user', auth()->getUser());
@@ -37,7 +37,7 @@ class ContentMiddleware extends Middleware
         // Menu principale
         $this->addVariable('main_menu', $this->getMainMenu());
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 
     /**

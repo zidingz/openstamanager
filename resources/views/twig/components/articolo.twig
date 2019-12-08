@@ -55,15 +55,15 @@
             {% endif %}
 
         $('#prezzi button').click(function () {
-            $('#prezzi div').load("{{ path_for('ajax-complete') }}?module=Articoli&op=get_prezzi&id_articolo=" + $('#id_articolo').selectData().id + "&idanagrafica={{ options['idanagrafica'] }}");
+            $('#prezzi div').load("{{ url_for('ajax-complete') }}?module=Articoli&op=get_prezzi&id_articolo=" + $('#id_articolo').selectData().id + "&idanagrafica={{ options['idanagrafica'] }}");
         });
 
         $('#prezzi_acquisto button').click(function () {
-            $('#prezzi_acquisto div').load("{{ path_for('ajax-complete') }}?module=Articoli&op=get_prezzi_acquisto&id_articolo=" + $('#id_articolo').selectData().id + "&idanagrafica={{ options['idanagrafica'] }}");
+            $('#prezzi_acquisto div').load("{{ url_for('ajax-complete') }}?module=Articoli&op=get_prezzi_acquisto&id_articolo=" + $('#id_articolo').selectData().id + "&idanagrafica={{ options['idanagrafica'] }}");
         });
 
         $('#prezzi_vendita button').click(function () {
-            $('#prezzi_vendita div').load("{{ path_for('ajax-complete') }}?module=Articoli&op=get_prezzi_vendita&id_articolo=" + $('#id_articolo').selectData().id + "&idanagrafica={{ options['idanagrafica'] }}");
+            $('#prezzi_vendita div').load("{{ url_for('ajax-complete') }}?module=Articoli&op=get_prezzi_vendita&id_articolo=" + $('#id_articolo').selectData().id + "&idanagrafica={{ options['idanagrafica'] }}");
         });
         {% endif %}
 

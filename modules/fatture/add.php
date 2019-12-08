@@ -13,7 +13,7 @@ if ($module['name'] == 'Fatture di vendita') {
 $id_anagrafica = !empty(get('idanagrafica')) ? get('idanagrafica') : $user['idanagrafica'];
 
 ?>
-<form action="<?php echo pathFor('module-add-save', [
+<form action="<?php echo urlFor('module-add-save', [
         'module_id' => $module_id,
         'reference_id' => $reference_id,
     ]); ?>" method="post" id="add-form">

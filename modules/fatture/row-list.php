@@ -248,7 +248,7 @@ foreach ($righe as $row) {
                         <i class='fa fa-file-code-o '></i>
                     </a>
 
-                    <a class='btn btn-xs btn-warning' title='".tr('Modifica questa riga...')."' onclick=\"launch_modal( 'Modifica riga', '".pathFor('module-record-action', [
+                    <a class='btn btn-xs btn-warning' title='".tr('Modifica questa riga...')."' onclick=\"launch_modal( 'Modifica riga', '".urlFor('module-record-action', [
                         'module_id' => $id_module,
                         'record_id' => $id_record,
                         'action' => 'rowEdit',

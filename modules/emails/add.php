@@ -1,7 +1,7 @@
 <?php
 
 ?>
-<form action="'.pathFor('module-add-save', [
+<form action="'.urlFor('module-add-save', [
         'module_id' => $module_id,
         'reference_id' => $reference_id,
     ]).'" method="post" id="add-form">

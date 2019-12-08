@@ -1,64 +1,88 @@
 <?php
 
+use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
+use Slim\Views\PhpRenderer;
+use Slim\Psr7\Response;
+
 // Auth manager
-$container['auth'] = function () {
+$container->set('auth', function(ContainerInterface $container){
     return new Auth();
-};
+});
 
 // Flash messages
-$container['flash'] = function () {
+$container->set('flash', function(ContainerInterface $container){
     return new \Util\Messages();
-};
+});
 
 // Sanitizing methods
-$container['filter'] = function ($container) {
+$container->set('filter', function(ContainerInterface $container){
     return new \Middlewares\FilterMiddleware($container);
-};
+});
 
-// Custom router
-$container['router'] = function () {
-    return new Router();
-};
+// Logger
+$container->set('logger', function(ContainerInterface $container){
+    return new Logger($container);
+});
 
-use Slim\Views\PhpRenderer;
+// Database
+$container->set('database', function(ContainerInterface $container){
+    $config = $container->get('config');
 
+    $database = new Database($config['db_host'], $config['db_username'], $config['db_password'], $config['db_name']);
+
+    return $database;
+});
+/*
+// Debugbar
+if (App::debug()) {
+    $debugbar = new \DebugBar\StandardDebugBar();
+
+    $debugbar->addCollector(new \Extensions\EloquentCollector($container['database']->getCapsule()));
+    $debugbar->addCollector(new \DebugBar\Bridge\MonologCollector($container['logger']));
+
+    $paths = App::getPaths();
+    $debugbarRenderer = $debugbar->getJavascriptRenderer();
+    $debugbarRenderer->setIncludeVendors(false);
+    $debugbarRenderer->setBaseUrl($paths['assets'].'/php-debugbar');
+
+    $container['debugbar'] = $debugbarRenderer;
+}*/
+
+/*
 // Templating PHP
-$container['view'] = function ($container) {
+$container->set('view', function(ContainerInterface $container){
     $renderer = new PhpRenderer('./');
 
     $renderer->setAttributes([
-        'database' => $container['database'],
-        'dbo' => $container['database'],
-        'config' => $container['config'],
-        'router' => $container['router'],
+        'database' => $container->get('database'),
+        'dbo' => $container->get('database'),
+        'config' => $container->get('config'),
+        'router' => $container->get('router'),
 
         'rootdir' => ROOTDIR,
         'docroot' => DOCROOT,
         'baseurl' => BASEURL,
     ]);
 
-    if (!empty($container['debugbar'])) {
-        $renderer->addAttribute('debugbar', $container['debugbar']);
+    if (!empty($container->get('debugbar'))) {
+        $renderer->addAttribute('debugbar', $container->get('debugbar'));
     }
 
     return $renderer;
-};
+});
+*/
 
 // Templating Twig
-$container['twig'] = function ($container) {
-    $twig = new \Slim\Views\Twig(__DIR__.'/../resources/views/twig', [
+$container->set('twig', function(ContainerInterface $container){
+    $twig = new Twig(__DIR__.'/../resources/views/twig', [
         'cache' => false,
         'debug' => true,
     ]);
 
-    // Instantiate and add Slim specific extension
-    $router = $container->get('router');
-    $twig->addExtension(new \Slim\Views\TwigExtension($router, $container->get('uri')));
-
-    $twig->offsetSet('auth', $container['auth']);
-    $twig->offsetSet('user', $container['auth']->user());
-    $twig->offsetSet('flash', $container['flash']);
-    $twig->offsetSet('router', $container['router']);
+    $twig->offsetSet('auth', $container->get('auth'));
+    $twig->offsetSet('user', $container->get('auth')->user());
+    $twig->offsetSet('flash', $container->get('flash'));
 
     $filter = new \Twig\TwigFilter('diffForHumans', 'diffForHumans');
     $twig->getEnvironment()->addFilter($filter);
@@ -77,43 +101,52 @@ $container['twig'] = function ($container) {
 
     $twig->getEnvironment()->addExtension(new \Twig\Extension\DebugExtension());
 
-    if (!empty($container['debugbar'])) {
-        $twig->offsetSet('debugbar', $container['debugbar']);
+    if ($container->has('debugbar')) {
+        $twig->offsetSet('debugbar', $container->get('debugbar'));
     }
 
     return $twig;
-};
-
+});
+/*
 // Exception handlers
-$container['notFoundHandler'] = function ($container) {
-    return function ($request, $response) use ($container) {
+$errorMiddleware = $app->addErrorMiddleware(true, true, true);
+$errorMiddleware->setErrorHandler(
+    HttpNotFoundException::class,
+    function (ServerRequestInterface $request, Throwable $exception, bool $displayErrorDetails) {
+        $response = new Response();
         $response = $response->withStatus(404);
 
-        return $container['twig']->render($response, 'errors/404.twig');
-    };
-};
+        return $this->get('twig')->render($response, 'errors/404.twig');
+    }
+);
 
-$container['notAllowedHandler'] = function ($container) {
-    return function ($request, $response) use ($container) {
+// Set the Not Allowed Handler
+$errorMiddleware->setErrorHandler(
+    HttpMethodNotAllowedException::class,
+    function (ServerRequestInterface $request, Throwable $exception, bool $displayErrorDetails) {
+        $response = new Response();
         $response = $response->withStatus(403);
 
-        return $container['twig']->render($response, 'errors/403.twig');
-    };
-};
+        return $this->get('twig')->render($response, 'errors/403.twig');
+    }
+);
 
-if (!$container['debug']) {
-    $container['errorHandler'] = function ($container) {
+
+
+if (!$container->set('debug']) {
+    $container->set('errorHandler'], function(ContainerInterface $container){
         return function ($request, $response, $exception) use ($container) {
             $response = $response->withStatus(500);
 
             // Log the exception
-            $container['logger']->logException($exception);
+            $container->set('logger']->logException($exception);
 
-            return $container['twig']->render($response, 'errors/500.twig');
-        };
-    };
+            return $container->set('twig']->render($response, 'errors/500.twig');
+        });
+    });
 
-    $container['phpErrorHandler'] = function ($container) {
-        return $container['errorHandler'];
-    };
+    $container->set('phpErrorHandler'], function(ContainerInterface $container){
+        return $container->set('errorHandler'];
+    });
 }
+*/

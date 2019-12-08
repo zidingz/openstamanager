@@ -90,7 +90,7 @@ class InfoController extends Controller
 
         flash()->info(tr('Password aggiornata!'));
 
-        $response = $response->withRedirect($this->router->pathFor('user'));
+        $response = $response->withRedirect($this->router->urlFor('user'));
 
         return $response;
     }
@@ -169,7 +169,7 @@ class InfoController extends Controller
             delete($backup_file);
         }
 
-        $response = $response->withRedirect($this->router->pathFor('bug'));
+        $response = $response->withRedirect($this->router->urlFor('bug'));
 
         return $response;
     }

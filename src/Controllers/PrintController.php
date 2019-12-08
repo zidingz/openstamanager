@@ -11,7 +11,7 @@ class PrintController extends Controller
 {
     public function view(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $link = pathFor('print-open', [
+        $link = urlFor('print-open', [
             'print_id' => $args['print_id'],
             'record_id' => $args['record_id'],
         ]);

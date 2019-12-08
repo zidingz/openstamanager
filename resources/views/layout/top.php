@@ -174,8 +174,8 @@ if (Auth::check()) {
                 order_manager_id: "'.($dbo->isInstalled() ? Modules::get('Stato dei servizi')['id'] : '').'",
                 dataload_page_buffer: '.setting('Lunghezza in pagine del buffer Datatables').',
                 tempo_attesa_ricerche: '.setting('Tempo di attesa ricerche in secondi').',
-                dataload_module: "'.pathFor('ajax-dataload-module', ['module_id' => '|id_module|']).'",
-                dataload_plugin: "'.pathFor('ajax-dataload-plugin', ['plugin_id' => '|id_plugin|', 'reference_id' => '|id_parent|']).'",
+                dataload_module: "'.urlFor('ajax-dataload-module', ['module_id' => '|id_module|']).'",
+                dataload_plugin: "'.urlFor('ajax-dataload-plugin', ['plugin_id' => '|id_plugin|', 'reference_id' => '|id_parent|']).'",
             };
 		</script>';
 } else {

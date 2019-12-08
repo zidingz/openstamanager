@@ -27,21 +27,21 @@ class BaseController extends Controller
         elseif (!ConfigurationController::isConfigured()) {
             Auth::logout();
 
-            $response = $response->withRedirect($this->router->pathFor('configuration'));
+            $response = $response->withRedirect($this->router->urlFor('configuration'));
         }
 
         // Installazione e/o aggiornamento
         elseif (Update::isUpdateAvailable()) {
             Auth::logout();
 
-            $response = $response->withRedirect($this->router->pathFor('update'));
+            $response = $response->withRedirect($this->router->urlFor('update'));
         }
 
         // Configurazione informazioni di base
         elseif (!InitController::isInitialized()) {
             Auth::logout();
 
-            $response = $response->withRedirect($this->router->pathFor('init'));
+            $response = $response->withRedirect($this->router->urlFor('init'));
         }
 
         // Login
@@ -85,7 +85,7 @@ class BaseController extends Controller
             $this->flash->addMessage('username', $username);
             $this->flash->addMessage('keep_alive', $keep_alive);
 
-            $response = $response->withRedirect($this->router->pathFor('login'));
+            $response = $response->withRedirect($this->router->urlFor('login'));
         }
 
         return $response;
@@ -95,7 +95,7 @@ class BaseController extends Controller
     {
         Auth::logout();
 
-        $response = $response->withRedirect($this->router->pathFor('login'));
+        $response = $response->withRedirect($this->router->urlFor('login'));
 
         return $response;
     }
@@ -108,7 +108,7 @@ class BaseController extends Controller
         if (!empty($module)) {
             $response = $response->withRedirect($module->url('module'));
         } else {
-            $response = $response->withRedirect($this->router->pathFor('logout'));
+            $response = $response->withRedirect($this->router->urlFor('logout'));
         }
 
         return $response;

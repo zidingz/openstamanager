@@ -31,7 +31,7 @@ class ReceiptHook extends CachedManager
                 return $value->name == 'Ricevute FE';
             });
 
-            $link = pathFor('module', [
+            $link = urlFor('module', [
                 'module_id' => $module->id,
             ]).'#tab_'.$plugin->id;
         }

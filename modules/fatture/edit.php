@@ -575,7 +575,7 @@ if (!$block_edit) {
         $art_query .= ' AND (qta > 0 OR servizio = 1)';
     }
 
-    $row_add = pathFor('module-record-action', [
+    $row_add = urlFor('module-record-action', [
         'module_id' => $id_module,
         'record_id' => $id_record,
         'action' => 'rowAdd',

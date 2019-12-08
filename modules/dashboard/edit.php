@@ -363,7 +363,7 @@ if ($vista == 'mese') {
     $def = 'agendaWeek';
 }
 
-$link = pathFor('module-action', [
+$link = urlFor('module-action', [
     'module_id' => $id_module,
     'action' => 'action',
 ]);
@@ -625,7 +625,7 @@ if (Modules::getPermission('Interventi') == 'rw') {
                     name = 'id_intervento';
                 }
 
-                launch_modal('<?php echo tr('Pianifica intervento'); ?>', '<?php echo pathFor('module-add', [
+                launch_modal('<?php echo tr('Pianifica intervento'); ?>', '<?php echo urlFor('module-add', [
                     'module_id' => Modules::get('Interventi')['id'],
                 ]); ?>?&data='+data+'&orario_inizio='+ora_dal+'&orario_fine='+ora_al+'&ref=dashboard&idcontratto=' + $(this).data('idcontratto') + '&' + name + '=' + $(this).data('id'), 1);
 
@@ -642,7 +642,7 @@ if (Modules::getPermission('Interventi') == 'rw') {
 				ora_dal = moment(start).format("HH:mm");
 				ora_al = moment(end).format("HH:mm");
 
-                launch_modal('<?php echo tr('Aggiungi intervento'); ?>', '<?php echo pathFor('module-add', [
+                launch_modal('<?php echo tr('Aggiungi intervento'); ?>', '<?php echo urlFor('module-add', [
                     'module_id' => Modules::get('Interventi')['id'],
                 ]); ?>?ref=dashboard&data='+data+'&orario_inizio='+ora_dal+'&orario_fine='+ora_al, 1 );
 

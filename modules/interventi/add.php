@@ -460,7 +460,7 @@ if (!empty($id_intervento)) {
             $('#add-form').find('[type=submit]').prop("disabled", true).addClass("disabled");
             $('#add-form').find('input:disabled, select:disabled, textarea:disabled').removeAttr('disabled');
 
-            $.post('<?php echo pathFor('module-add', [
+            $.post('<?php echo urlFor('module-add', [
                 'module_id' => Modules::get('Interventi')['id'],
             ]); ?>', $('#add-form').serialize(), function(data,response){
                 if(response=="success"){

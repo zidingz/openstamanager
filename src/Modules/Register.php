@@ -100,7 +100,7 @@ abstract class Register
      */
     protected function addView(string $path, string $name)
     {
-        $loader = self::$container['twig']->getLoader();
+        $loader = self::$container->get('twig')->getLoader();
 
         if (file_exists($path)) {
             $loader->addPath($path, $name);

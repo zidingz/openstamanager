@@ -172,7 +172,7 @@ function download(button) {
                 </h3>
             </div>
             <div class="card-body">
-                <form action="'.pathFor('module', ['module_id' => $id_module]).'" method="post" enctype="multipart/form-data" id="update">
+                <form action="'.urlFor('module', ['module_id' => $id_module]).'" method="post" enctype="multipart/form-data" id="update">
                     <input type="hidden" name="op" value="upload">
                     <input type="hidden" name="backto" value="record-list">
 

@@ -126,13 +126,7 @@ class Formatter
             $this->setPrecision($decimals);
         }
 
-        if (is_object($this->numberFormatter)) {
-            $result = $this->numberFormatter->format($value);
-        } else {
-            $number = number_format($value, $this->getPrecision(), self::getStandardFormats()['number']['decimals'], self::getStandardFormats()['number']['thousands']);
-
-            $result = $this->customNumber($number, self::getStandardFormats()['number'], $this->getNumberSeparators());
-        }
+        $result = $this->numberFormatter->format($value);
 
         if (isset($decimals)) {
             $this->setPrecision($original);
@@ -168,11 +162,7 @@ class Formatter
 
         $value = $sign.$value;
 
-        if (is_object($this->numberFormatter)) {
-            $result = $this->numberFormatter->parse($value);
-        } else {
-            $result = $this->customNumber($value, $this->getNumberSeparators(), self::getStandardFormats()['number']);
-        }
+        $result = $this->numberFormatter->parse($value);
 
         $result = is_numeric($result) ? floatval($result) : false;
 

@@ -153,7 +153,7 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
             }
         }
 
-        return $response->withRedirect($this->router->pathFor('login'));
+        return $response->withRedirect($this->router->urlFor('login'));
     }
 
     protected function saveAnagrafica()

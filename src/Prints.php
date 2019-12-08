@@ -180,7 +180,7 @@ class Prints
             return false;
         }
 
-        $link = pathFor('print', [
+        $link = urlFor('print', [
             'print_id' => $infos['id'],
             'record_id' => $id_record,
         ]);

@@ -175,7 +175,7 @@ abstract class Manager
                             $column['data-type'] = 'modal';
                         }
 
-                        $column['data-link'] = pathFor('module-record', $info);
+                        $column['data-link'] = urlFor('module-record', $info);
                     }
 
                     $attributes = [];

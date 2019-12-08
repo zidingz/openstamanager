@@ -192,7 +192,7 @@ class AjaxController extends Controller
 
             // SOMME
             $results['summable'] = Query::getSums($structure, $search);
-            
+
             // Allineamento delle righe
             $align = [];
             $row = $rows[0] ?: [];
@@ -292,7 +292,7 @@ class AjaxController extends Controller
                             $column['data-type'] = 'modal';
                         }
 
-                        $column['data-link'] = pathFor('module-record', $info);
+                        $column['data-link'] = urlFor('module-record', $info);
                     }
 
                     $attributes = [];

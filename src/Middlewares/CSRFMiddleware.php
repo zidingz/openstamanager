@@ -3,7 +3,7 @@
 namespace Middlewares;
 
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -25,16 +25,9 @@ class CSRFMiddleware extends Middleware
         $this->csrf = $csrf;
     }
 
-    public function __get($property)
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
     {
-        if (isset($this->container[$property])) {
-            return $this->container[$property];
-        }
-    }
-
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
-    {
-        $result = $this->csrf->__invoke($request, $response, function ($a, $b) {
+        $result = $this->csrf->__invoke($request, $handler, function ($a, $b) {
             return $a;
         });
 
@@ -57,6 +50,6 @@ class CSRFMiddleware extends Middleware
         // Registrazione informazioni per i template
         $this->addVariable('csrf_input', $csrf_input);
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 }

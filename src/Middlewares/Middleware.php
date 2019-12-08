@@ -3,8 +3,9 @@
 namespace Middlewares;
 
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Routing\RouteContext;
 
 /**
  * @since 2.5
@@ -20,17 +21,17 @@ abstract class Middleware
 
     public function __get($property)
     {
-        if (isset($this->container[$property])) {
-            return $this->container[$property];
+        if ($this->container->has($property)) {
+            return $this->container->get($property);
         }
     }
 
-    abstract public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next);
+    abstract public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler);
 
     protected function addArgs(ServerRequestInterface $request, $new)
     {
-        $route = $request->getAttribute('route');
-        if (!$route) {
+        $route = $this->getRoute($request);
+        if (empty($route)) {
             return $request;
         }
 
@@ -58,7 +59,12 @@ abstract class Middleware
 
     protected function addVariable($name, $content)
     {
-        $twig = $this->container['twig'];
+        $twig = $this->container->get('twig');
         $twig->offsetSet($name, $content);
+    }
+
+    protected function getRoute(ServerRequestInterface $request){
+        $routeContext = RouteContext::fromRequest($request);
+        return $routeContext->getRoute();
     }
 }

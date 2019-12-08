@@ -31,7 +31,7 @@ class InvoiceHook extends CachedManager
                 return $value->name == 'Importazione FE';
             });
 
-            $link = pathFor('module', [
+            $link = urlFor('module', [
                 'module_id' => $module->id,
             ]).'#tab_'.$plugin->id;
         }

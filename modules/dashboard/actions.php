@@ -27,7 +27,7 @@ switch (filter('op')) {
                 'title' => '<b>Int. '.$r['codice'].'</b> '.$r['cliente'].'<br><b>'.tr('Tecnici').':</b> '.$r['nome_tecnico'].' '.(($r['have_attachments']) ? '<i class="fa fa-paperclip" aria-d-none="true"></i>' : ''),
                 'start' => $r['orario_inizio'],
                 'end' => $r['orario_fine'],
-                'url' => pathFor('module-record', [
+                'url' => urlFor('module-record', [
                     'module_id' => Modules::get('Interventi')['id'],
                     'record_id' => $r['idintervento'],
                 ]),

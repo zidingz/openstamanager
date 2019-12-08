@@ -33,7 +33,7 @@
                 confirmButtonText: "{{ 'Procedi'|trans }}",
             }).then(function(){
                 $("#update-info").removeClass("d-none");
-                $("#result").load("{{ path_for('update-progress') }}");
+                $("#result").load("{{ url_for('update-progress') }}");
                 $("#contine_button").remove();
             }, function(){});
         }
@@ -66,7 +66,7 @@
             <p class="text-danger">{{ "E' fortemente consigliato rimuovere i permessi di scrittura dal file _FILE_"|trans({'_FILE_': '<b>config.inc.php</b>'})|raw }}.</p>
         {% endif %}
 
-        <a class="btn btn-success btn-block" href="{{ path_for('login') }}">
+        <a class="btn btn-success btn-block" href="{{ url_for('login') }}">
             <i class="fa fa-check"></i> {{ 'Continua'|trans }}
         </a>
     </div>

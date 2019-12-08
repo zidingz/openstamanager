@@ -3,7 +3,7 @@
 namespace Middlewares\Authorization;
 
 use Middlewares\Middleware;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\NotFoundException;
 
@@ -14,11 +14,11 @@ use Slim\Exception\NotFoundException;
  */
 class PermissionMiddleware extends Middleware
 {
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
     {
-        $route = $request->getAttribute('route');
-        if (!$route) {
-            return $next($request, $response);
+        $route = $this->getRoute($request);
+        if (empty($route)) {
+            return $handler->handle($request);
         }
 
         $args = $route->getArguments();
@@ -40,8 +40,7 @@ class PermissionMiddleware extends Middleware
             //throw new NotFoundException($request, $response);
         } else {
         }
-        $response = $next($request, $response);
 
-        return $response;
+        return $handler->handle($request);
     }
 }

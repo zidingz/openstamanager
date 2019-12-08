@@ -10,7 +10,7 @@
             <input type="hidden" name="lang" value="{{ full_locale }}">
 
             <div class="py-5 text-center">
-                <img class="d-block mx-auto mb-4" src="{{ base_url() }}/assets/img/full_logo.png" alt="{{ 'Logo OpenSTAManager'|trans }}">
+                <img class="d-block mx-auto mb-4" src="{{ base_path() }}/assets/img/full_logo.png" alt="{{ 'Logo OpenSTAManager'|trans }}">
                 <h2>{{ 'Benvenuto in _NAME_!'|trans({'_NAME_': '<strong>' ~ 'OpenSTAManager'|trans ~ '</strong>'})|raw }}</h2>
                 <p class="lead">{{ 'Puoi procedere alla configurazione tecnica del software attraverso i parametri seguenti, che potranno essere corretti secondo necessità tramite il file _FILE_'|trans({'_FILE_': '<i>config.inc.php</i>'})|raw }}. </p>
 
@@ -134,7 +134,7 @@
                     $("#install").prop('disabled', true);
 
                     $(this).closest("form").ajaxSubmit({
-                        url: '{{ path_for('configuration-test') }}',
+                        url: '{{ url_for('configuration-test') }}',
                         data: {
                             test: 1,
                         },

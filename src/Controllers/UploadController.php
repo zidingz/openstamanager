@@ -18,7 +18,7 @@ class UploadController extends Controller
             return $response;
         }
 
-        $link = pathFor('upload-open', [
+        $link = urlFor('upload-open', [
             'upload_id' => $args['upload_id'],
         ]);
 

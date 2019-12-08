@@ -12,7 +12,7 @@ class ConfigurationController extends Controller
 {
     public static function isConfigured()
     {
-        $config = App::getContainer()['config'];
+        $config = App::getContainer()->get('config');
 
         $valid_config = isset($config['db_host']) && isset($config['db_name']) && isset($config['db_username']) && isset($config['db_password']);
 
@@ -120,7 +120,7 @@ class ConfigurationController extends Controller
 }';
             file_put_contents('manifest.json', $manifest);
 
-            $response = $response->withRedirect($this->router->pathFor('login'));
+            $response = $response->withRedirect($this->router->urlFor('login'));
         }
 
         return $response;

@@ -13,7 +13,7 @@
 
                 <p>
                     {{ 'Non siamo riusciti a trovare la pagina che stavi cercando'|trans }}.
-                    {{ 'Nel frattempo, puoi tornare alla _PAGE_'|trans({'_PAGE_': '<a href="' ~ path_for('login') ~ '">' ~ 'pagina principale'|trans ~ '</a>' })|raw }}.
+                    {{ 'Nel frattempo, puoi tornare alla _PAGE_'|trans({'_PAGE_': '<a href="' ~ url_for('login') ~ '">' ~ 'pagina principale'|trans ~ '</a>' })|raw }}.
                 </p>
             </div>
         </div>

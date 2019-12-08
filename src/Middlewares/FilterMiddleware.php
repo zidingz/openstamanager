@@ -2,7 +2,7 @@
 
 namespace Middlewares;
 
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -20,7 +20,7 @@ class FilterMiddleware extends Middleware
     /** @var array Elenco dei contenuti inviati via GET */
     protected $get = [];
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
     {
         $post = $request->getParsedBody();
         if (!empty($post)) {
@@ -34,9 +34,7 @@ class FilterMiddleware extends Middleware
             $this->get['parsed'] = [];
         }
 
-        $response = $next($request, $response);
-
-        return $response;
+        return $handler->handle($request);
     }
 
     /**

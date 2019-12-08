@@ -2,7 +2,7 @@
 
 namespace Middlewares;
 
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -10,18 +10,18 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 abstract class AuthorizationMiddleware extends Middleware
 {
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
     {
         if (!$this->hasAuthorization($request)) {
-            $response = $this->operation($request, $response);
+            $response = $this->operation($request);
         } else {
-            $response = $next($request, $response);
+            $response = $handler->handle($request);
         }
 
         return $response;
     }
 
-    abstract protected function operation(ServerRequestInterface $request, ResponseInterface $response);
+    abstract protected function operation(ServerRequestInterface $request);
 
     abstract protected function hasAuthorization($request);
 }

@@ -13,7 +13,7 @@
 
                 <p>
                     {{ 'Non possiedi permessi sufficienti per accedere alla pagina da te richiesta'|trans }}.
-                    {{ 'Nel frattempo, puoi tornare alla _PAGE_'|trans({'_PAGE_': '<a href="' ~ path_for('login') ~ '">' ~ 'pagina principale'|trans ~ '</a>' })|raw }}.
+                    {{ 'Nel frattempo, puoi tornare alla _PAGE_'|trans({'_PAGE_': '<a href="' ~ url_for('login') ~ '">' ~ 'pagina principale'|trans ~ '</a>' })|raw }}.
                 </p>
             </div>
         </div>

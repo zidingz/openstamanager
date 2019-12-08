@@ -6,7 +6,7 @@ use Auth;
 use Controllers\Config\ConfigurationController;
 use Controllers\Config\InitController;
 use Controllers\Config\RequirementsController;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Update;
 
@@ -17,11 +17,11 @@ use Update;
  */
 class ConfigMiddleware extends Middleware
 {
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
     {
-        $route = $request->getAttribute('route');
-        if (!$route) {
-            return $next($request, $response);
+        $route = $this->getRoute($request);
+        if (empty($route)) {
+            return $handler->handle($request);
         }
 
         $destination = [];
@@ -49,9 +49,9 @@ class ConfigMiddleware extends Middleware
         if (!empty($destination) && !in_array($route->getName(), $destination)) {
             Auth::logout();
 
-            return $response->withRedirect($this->router->pathFor($destination[0]));
+            return $response->withRedirect($this->router->urlFor($destination[0]));
         }
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 }

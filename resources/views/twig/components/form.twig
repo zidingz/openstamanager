@@ -1,4 +1,4 @@
-{%  set action_url = action_url ? action_url : path_for('module-record', {module_id: module_id, record_id: record_id}) %}
+{%  set action_url = action_url ? action_url : url_for('module-record', {module_id: module_id, record_id: record_id}) %}
 
 <form action="{{ action_url }}" method="post">
     <input type="hidden" name="id_plugin" value="{{ plugin_id }}">

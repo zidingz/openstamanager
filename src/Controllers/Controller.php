@@ -15,8 +15,8 @@ abstract class Controller
 
     public function __get($property)
     {
-        if (isset($this->container[$property])) {
-            return $this->container[$property];
+        if ($this->container->has($property)) {
+            return $this->container->get($property);
         }
     }
 }

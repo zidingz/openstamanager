@@ -12,7 +12,7 @@ class Module extends ModuleManager
 {
     public function page($request, $response, $args)
     {
-        $args['action_link'] = pathFor('module-action', [
+        $args['action_link'] = urlFor('module-action', [
             'module_id' => $args['module_id'],
             'action' => '|action|',
         ]);
@@ -110,7 +110,7 @@ class Module extends ModuleManager
         } catch (InvalidArgumentException $e) {
         }
 
-        $route = $this->router->pathFor('module', [
+        $route = $this->router->urlFor('module', [
             'module_id' => $args['module_id'],
         ]);
         $response = $response->withRedirect($route);
@@ -127,7 +127,7 @@ class Module extends ModuleManager
         } catch (InvalidArgumentException $e) {
         }
 
-        $route = $this->router->pathFor('module', [
+        $route = $this->router->urlFor('module', [
             'module_id' => $args['module_id'],
         ]);
         $response = $response->withRedirect($route);

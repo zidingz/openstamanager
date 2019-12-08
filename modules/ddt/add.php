@@ -20,7 +20,7 @@ if ($module['name'] == 'Ddt di vendita') {
 
 $id_anagrafica = !empty(get('idanagrafica')) ? get('idanagrafica') : '';
 
-?><form action="<?php pathFor('module-add-save', [
+?><form action="<?php urlFor('module-add-save', [
         'module_id' => $module_id,
         'reference_id' => $reference_id,
     ]); ?>" method="post" id="add-form">

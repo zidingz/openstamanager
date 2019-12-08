@@ -3,11 +3,12 @@
 namespace Middlewares;
 
 use Models\Module;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\NotFoundException;
 use Update;
 use Util\Query;
+use Slim\Routing\RouteContext;
 
 /**
  * Middleware per il blocco dei plugin senza riferimento al record genitore.
@@ -16,11 +17,11 @@ use Util\Query;
  */
 class ModuleMiddleware extends Middleware
 {
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
     {
-        $route = $request->getAttribute('route');
-        if (!$route || !$this->database->isConnected() || Update::isUpdateAvailable()) {
-            return $next($request, $response);
+        $route = $this->getRoute($request);
+        if (empty($route) || !$this->database->isConnected() || Update::isUpdateAvailable()) {
+            return $handler->handle($request);
         }
 
         $name = $route->getName();
@@ -52,6 +53,6 @@ class ModuleMiddleware extends Middleware
         // Impostazione degli argomenti
         $request = $this->setArgs($request, $args);
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 }

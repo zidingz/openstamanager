@@ -2,7 +2,7 @@
 
 unset($_SESSION['superselect']['id_categoria']);
 
-?><form action="<?php pathFor('module-add-save', [
+?><form action="<?php urlFor('module-add-save', [
         'module_id' => $module_id,
         'reference_id' => $reference_id,
     ]); ?>" method="post" id="add-form">

@@ -120,7 +120,7 @@
                 </h3>
             </div>
             <div class="card-body">
-                <form action="{{ path_for('module', {'module_id': module_id, 'reference_id': reference_id}) }}" method="post" enctype="multipart/form-data" id="update">
+                <form action="{{ url_for('module', {'module_id': module_id, 'reference_id': reference_id}) }}" method="post" enctype="multipart/form-data" id="update">
                     <input type="hidden" name="op" value="upload">
                     <input type="hidden" name="backto" value="record-list">
 

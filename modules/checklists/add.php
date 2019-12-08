@@ -3,7 +3,7 @@
 include_once __DIR__.'/../../core.php';
 
 echo '
-<form action="'.pathFor('module-add-save', [
+<form action="'.urlFor('module-add-save', [
         'module_id' => $module_id,
         'reference_id' => $reference_id,
     ]).'" method="post" id="add-form">
@@ -18,7 +18,7 @@ echo '
         <div class="col-md-3">
             {[ "type": "select", "label": "'.tr('Modulo del template').'", "name": "module", "values": "query=SELECT id, title AS descrizione FROM zz_modules WHERE enabled = 1", "value": "'.$record['id_module'].'", "disabled": "'.!empty($record['id_plugin']).'" ]}
         </div>
-        
+
         <div class="col-md-3">
             {[ "type": "select", "label": "'.tr('Plugin del template').'", "name": "plugin", "values": "query=SELECT id, title AS descrizione FROM zz_plugins WHERE enabled = 1", "value": "'.$record['id_plugin'].'", "disabled": "'.!empty($record['id_module']).'" ]}
         </div>
@@ -43,7 +43,7 @@ $(document).ready(function() {
             $("#plugin").val("").attr("disabled", false);
         }
     });
-    
+
     $("#plugin").change(function() {
         if ($(this).val()){
             $("#module").val("").attr("disabled", true);

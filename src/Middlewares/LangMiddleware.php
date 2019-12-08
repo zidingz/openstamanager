@@ -3,7 +3,7 @@
 namespace Middlewares;
 
 use Intl\Formatter;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Translator;
 
@@ -14,9 +14,9 @@ use Translator;
  */
 class LangMiddleware extends Middleware
 {
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
     {
-        $config = $this->container['config'];
+        $config = $this->container->get('config');
 
         $lang = !empty($config['lang']) ? $config['lang'] : $request->getQueryParam('lang');
         $formatter_options = !empty($config['formatter']) ? $config['formatter'] : [];
@@ -25,14 +25,14 @@ class LangMiddleware extends Middleware
         $translator = $this->getTranslator($lang);
 
         // Registrazione Twig
-        $twig = $this->container['twig'];
+        $twig = $this->container->get('twig');
         $twig->addExtension(new \Symfony\Bridge\Twig\Extension\TranslationExtension($translator->getTranslator()));
         $this->addFilters($twig);
         $this->addFunctions($twig);
 
         // Registrazione nel Container
-        $this->container['formatter'] = $formatter;
-        $this->container['translator'] = $translator;
+        $this->container->set('formatter', $formatter);
+        $this->container->set('translator', $translator);
 
         // Regostrazione informazioni per i template
         $this->addVariable('formatter', $formatter);
@@ -75,7 +75,7 @@ class LangMiddleware extends Middleware
         }
         $this->addVariable('i18n', $list);
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 
     protected function getTranslator($locale)

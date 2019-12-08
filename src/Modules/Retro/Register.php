@@ -7,6 +7,7 @@ use Middlewares\Authorization\UserMiddleware;
 use Middlewares\ModuleMiddleware;
 use Modules\Register as Original;
 use Slim\App as SlimApp;
+use Slim\Routing\RouteCollectorProxy;
 
 class Register extends Original
 {
@@ -20,7 +21,7 @@ class Register extends Original
             $name = $prefix.'-record';
         }
 
-        return pathFor($name, $parameters);
+        return urlFor($name, $parameters);
     }
 
     public function getData(?int $id_record)
@@ -89,25 +90,25 @@ class Register extends Original
     {
         // Percorsi raggiungibili
         $prefix = $this->module->id.'-module';
-        $app->group('/module-'.$this->module->id, function () use ($app, $prefix) {
-            $app->get('/[reference/{reference_id:[0-9]+}/]', ModuleController::class.':page')
+        $app->group('/module-'.$this->module->id, function (RouteCollectorProxy $group) use ($prefix) {
+            $group->get('/[reference/{reference_id:[0-9]+}/]', ModuleController::class.':page')
                 ->setName($prefix);
 
-            $app->get('/add/[reference/{reference_id:[0-9]+}/]', ModuleController::class.':add')
+            $group->get('/add/[reference/{reference_id:[0-9]+}/]', ModuleController::class.':add')
                 ->setName($prefix.'-add');
-            $app->post('/add/[reference/{reference_id:[0-9]+}/]', ModuleController::class.':create')
+            $group->post('/add/[reference/{reference_id:[0-9]+}/]', ModuleController::class.':create')
                 ->setName($prefix.'-add-save');
 
-            $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', ActionController::class.':moduleAction')
+            $group->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', ActionController::class.':moduleAction')
                 ->setName($prefix.'-action');
 
-            $app->group('/edit/{record_id:[0-9]+}', function () use ($app, $prefix) {
-                $app->get('/[reference/{reference_id:[0-9]+}/]', RecordController::class.':page')
+            $group->group('/edit/{record_id:[0-9]+}', function (RouteCollectorProxy $subgroup) use ($prefix) {
+                $subgroup->get('/[reference/{reference_id:[0-9]+}/]', RecordController::class.':page')
                     ->setName($prefix.'-record');
-                $app->post('/[reference/{reference_id:[0-9]+}/]', RecordController::class.':update')
+                $subgroup->post('/[reference/{reference_id:[0-9]+}/]', RecordController::class.':update')
                     ->setName($prefix.'-record-save');
 
-                $app->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', ActionController::class.':recordAction')
+                $subgroup->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', ActionController::class.':recordAction')
                     ->setName($prefix.'-record-action');
             });
         })

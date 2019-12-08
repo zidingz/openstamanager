@@ -2,7 +2,7 @@
 
 namespace Middlewares;
 
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class CalendarMiddleware extends Middleware
 {
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
     {
         // Calendario
         // Periodo di visualizzazione
@@ -32,6 +32,6 @@ class CalendarMiddleware extends Middleware
             'is_current' => ($_SESSION['period_start'] != date('Y').'-01-01' || $_SESSION['period_end'] != date('Y').'-12-31'),
         ]);
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 }

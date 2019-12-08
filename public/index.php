@@ -2,17 +2,19 @@
 
 use Models\Module;
 use Models\OperationLog;
+use DI\Container;
+use Slim\Factory\AppFactory;
 
 // Impostazioni di configurazione PHP
 date_default_timezone_set('Europe/Rome');
 // Disabilita i messaggi nativi di PHP
-//ini_set('display_startup_errors', 0);
-//ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+ini_set('display_errors', 0);
 // Ignora gli avvertimenti e le informazioni relative alla deprecazione di componenti
 //error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_USER_DEPRECATED & ~E_STRICT);
 
 // Controllo sulla versione PHP
-$minimum = '7.1.0';
+$minimum = '7.2.0';
 if (version_compare(phpversion(), $minimum) < 0) {
     echo '
 <p>Stai utilizzando la versione PHP '.phpversion().', non compatibile con OpenSTAManager.</p>
@@ -47,68 +49,54 @@ if (!empty($config['redirectHTTPS']) && !isHTTPS(true)) {
     exit();
 }
 
-$debug = App::debug();
-
 // Inizializzazione Dependency Injection
-$container = new \Slim\Container([
-    'settings' => [
-        'displayErrorDetails' => $debug,
-        'addContentLengthHeader' => false,
-        'determineRouteBeforeAppMiddleware' => true,
-    ],
-]);
+$container = new Container();
 App::setContainer($container);
+
+// Istanziamento dell'applicazione Slim
+AppFactory::setContainer($container);
+$app = AppFactory::create();
+
+// Impostazione percorso di base
+$app->setBasePath((function () {
+    $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+    $uri = (string) parse_url('http://a' . $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+    if (stripos($uri, $_SERVER['SCRIPT_NAME']) === 0) {
+        return $_SERVER['SCRIPT_NAME'];
+    }
+    if ($scriptDir !== '/' && stripos($uri, $scriptDir) === 0) {
+        return $scriptDir;
+    }
+    return '';
+})());
 
 // Istanziamento della sessione
 ini_set('session.use_trans_sid', '0');
 ini_set('session.use_only_cookies', '1');
 
-$container['uri'] = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
-
-session_set_cookie_params(0, $container['uri']->getBasePath());
+session_set_cookie_params(0, $app->getBasePath());
 session_cache_limiter(false);
 session_start();
 
-// Impostazione di debug
-$container['debug'] = $debug;
+// Routing
+$container->set('router', $app->getRouteCollector()->getRouteParser());
 
-// Logger
-$logger = new Logger($container);
-$container['logger'] = $logger;
+// Impostazione di debug
+$container->set('debug', $debug);
 
 // Configurazione
-$container['config'] = $config;
-
-// Database
-$database = new Database($config['db_host'], $config['db_username'], $config['db_password'], $config['db_name']);
-$container['database'] = $database;
+$container->set('config', $config);
 
 // Istanziamento delle dipendenze
 require __DIR__.'/../config/dependencies.php';
-
-// Debugbar
-if (App::debug()) {
-    $debugbar = new \DebugBar\StandardDebugBar();
-
-    $debugbar->addCollector(new \Extensions\EloquentCollector($container['database']->getCapsule()));
-    $debugbar->addCollector(new \DebugBar\Bridge\MonologCollector($container['logger']));
-
-    $paths = App::getPaths();
-    $debugbarRenderer = $debugbar->getJavascriptRenderer();
-    $debugbarRenderer->setIncludeVendors(false);
-    $debugbarRenderer->setBaseUrl($paths['assets'].'/php-debugbar');
-
-    $container['debugbar'] = $debugbarRenderer;
-}
-
-// Istanziamento dell'applicazione Slim
-$app = new \Slim\App($container);
 
 // Aggiunta dei percorsi
 require __DIR__.'/../routes/web.php';
 
 // Aggiunta dei middleware
 require __DIR__.'/../config/middlewares.php';
+
+$app->addRoutingMiddleware();
 
 // Inizializzazione percorsi per i moduli
 if (Update::isCoreUpdated()) {
@@ -122,11 +110,9 @@ if (Update::isCoreUpdated()) {
     }
 }
 // Run application
-$response = $app->run(true);
-dd("asass");exit();
-
-$html = $response->getBody()->__toString();
-
+ob_start();
+$app->run();
+$html = ob_get_clean();
 
 // Configurazione templating personalizzato
 if (!empty($config['HTMLWrapper'])) {
@@ -150,11 +136,7 @@ $html = str_replace('$id_plugin$', $id_plugin, $html);
 
 $html = \HTMLBuilder\HTMLBuilder::replace($html);
 
-$body = new Slim\Http\Body(fopen('php://temp', 'r+'));
-$body->write($html);
-
-$response = $response->withBody($body);
-$app->respond($response);
+echo $html;
 
 // Informazioni estese sulle azioni dell'utente
 $op = post('op');

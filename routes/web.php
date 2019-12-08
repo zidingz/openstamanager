@@ -13,6 +13,7 @@ use Middlewares\Authorization\GuestMiddleware;
 use Middlewares\Authorization\PermissionMiddleware;
 use Middlewares\Authorization\UserMiddleware;
 use Middlewares\ModuleMiddleware;
+use Slim\Routing\RouteCollectorProxy;
 
 // Pagina principale
 $app->get('/', 'Controllers\BaseController:index')
@@ -24,117 +25,117 @@ $app->get('/logout/', 'Controllers\BaseController:logout')
     ->add(UserMiddleware::class);
 
 // Configurazione iniziale
-$app->group('', function () use ($app) {
-    $app->get('/requirements/', 'Controllers\Config\RequirementsController:requirements')
+$app->group('', function (RouteCollectorProxy $group) {
+    $group->get('/requirements/', 'Controllers\Config\RequirementsController:requirements')
         ->setName('requirements');
 
-    $app->get('/configuration/', 'Controllers\Config\ConfigurationController:configuration')
+    $group->get('/configuration/', 'Controllers\Config\ConfigurationController:configuration')
         ->setName('configuration');
-    $app->post('/configuration/', 'Controllers\Config\ConfigurationController:configurationSave')
+    $group->post('/configuration/', 'Controllers\Config\ConfigurationController:configurationSave')
         ->setName('configuration-save');
 
-    $app->post('/configuration/test/', 'Controllers\Config\ConfigurationController:configurationTest')
+    $group->post('/configuration/test/', 'Controllers\Config\ConfigurationController:configurationTest')
         ->setName('configuration-test');
 
-    $app->get('/init/', 'Controllers\Config\InitController:init')
+    $group->get('/init/', 'Controllers\Config\InitController:init')
         ->setName('init');
-    $app->post('/init/', 'Controllers\Config\InitController:initSave')
+    $group->post('/init/', 'Controllers\Config\InitController:initSave')
         ->setName('init-save');
 
-    $app->get('/update/', 'Controllers\Config\UpdateController:update')
+    $group->get('/update/', 'Controllers\Config\UpdateController:update')
         ->setName('update');
-    $app->get('/update/progress/', 'Controllers\Config\UpdateController:updateProgress')
+    $group->get('/update/progress/', 'Controllers\Config\UpdateController:updateProgress')
         ->setName('update-progress');
 })->add(GuestMiddleware::class);
 
-$app->group('', function () use ($app) {
+$app->group('', function (RouteCollectorProxy $group) {
     // Informazioni su OpenSTAManager
-    $app->get('/info/', 'Controllers\InfoController:info')
+    $group->get('/info/', 'Controllers\InfoController:info')
         ->setName('info');
 
     // Segnalazione bug
-    $app->get('/bug/', 'Controllers\InfoController:bug')
+    $group->get('/bug/', 'Controllers\InfoController:bug')
         ->setName('bug');
-    $app->post('/bug/', 'Controllers\InfoController:bugSend');
+    $group->post('/bug/', 'Controllers\InfoController:bugSend');
 
     // Log di accesso
-    $app->get('/logs/', 'Controllers\InfoController:logs')
+    $group->get('/logs/', 'Controllers\InfoController:logs')
         ->setName('logs');
 
     // Informazioni sull'utente
-    $app->get('/user/', 'Controllers\InfoController:user')
+    $group->get('/user/', 'Controllers\InfoController:user')
         ->setName('user');
 
-    $app->get('/password/', 'Controllers\InfoController:password')
+    $group->get('/password/', 'Controllers\InfoController:password')
         ->setName('user-password');
-    $app->post('/password/', 'Controllers\InfoController:passwordPost');
+    $group->post('/password/', 'Controllers\InfoController:passwordPost');
 })->add(UserMiddleware::class);
 
 // Operazioni Ajax
-$app->group('/ajax', function () use ($app) {
-    $app->get('/select/', 'Controllers\AjaxController:select')
+$app->group('/ajax', function (RouteCollectorProxy $group) {
+    $group->get('/select/', 'Controllers\AjaxController:select')
         ->setName('ajax-select');
-    $app->get('/complete/', 'Controllers\AjaxController:complete')
+    $group->get('/complete/', 'Controllers\AjaxController:complete')
         ->setName('ajax-complete');
-    $app->get('/search/', 'Controllers\AjaxController:search')
+    $group->get('/search/', 'Controllers\AjaxController:search')
         ->setName('ajax-search');
 
     // Messaggi flash
-    $app->get('/flash/', 'Controllers\AjaxController:flash')
+    $group->get('/flash/', 'Controllers\AjaxController:flash')
         ->setName('ajax-flash');
 
     // Sessioni
-    $app->get('/session/', 'Controllers\AjaxController:sessionSet')
+    $group->get('/session/', 'Controllers\AjaxController:sessionSet')
         ->setName('ajax-session');
-    $app->get('/session-array/', 'Controllers\AjaxController:sessionSetArray')
+    $group->get('/session-array/', 'Controllers\AjaxController:sessionSetArray')
         ->setName('ajax-session-array');
 
     // Dataload
-    $app->get('/dataload/{module_id:[0-9]+}/[reference/{reference_id:[0-9]+}/]', 'Controllers\AjaxController:dataLoad')
+    $group->get('/dataload/{module_id:[0-9]+}/[reference/{reference_id:[0-9]+}/]', 'Controllers\AjaxController:dataLoad')
         ->setName('ajax-dataload')
         ->add(PermissionMiddleware::class)
         ->add(ModuleMiddleware::class);
 })->add(UserMiddleware::class);
 
 // Hooks
-$app->group('/hook', function () use ($app) {
-    $app->get('/list/', 'Controllers\HookController:hooks')
+$app->group('/hook', function (RouteCollectorProxy $group) {
+    $group->get('/list/', 'Controllers\HookController:hooks')
         ->setName('hooks');
 
-    $app->get('/lock/{hook_id:[0-9]+}/', 'Controllers\HookController:lock')
+    $group->get('/lock/{hook_id:[0-9]+}/', 'Controllers\HookController:lock')
         ->setName('hook-lock');
 
-    $app->get('/execute/{hook_id:[0-9]+}/{token/', 'Controllers\HookController:execute')
+    $group->get('/execute/{hook_id:[0-9]+}/{token/', 'Controllers\HookController:execute')
         ->setName('hook-execute');
 
-    $app->get('/response/{hook_id:[0-9]+}/', 'Controllers\HookController:response')
+    $group->get('/response/{hook_id:[0-9]+}/', 'Controllers\HookController:response')
         ->setName('hook-response');
 })->add(UserMiddleware::class);
 
 // Stampe
-$app->group('/print', function () use ($app) {
-    $app->get('/{print_id:[0-9]+}/[{record_id:[0-9]+}/]', 'Controllers\PrintController:view')
+$app->group('/print', function (RouteCollectorProxy $group) {
+    $group->get('/{print_id:[0-9]+}/[{record_id:[0-9]+}/]', 'Controllers\PrintController:view')
         ->setName('print');
 
-    $app->get('/open/{print_id:[0-9]+}/[{record_id:[0-9]+}/]', 'Controllers\PrintController:open')
+    $group->get('/open/{print_id:[0-9]+}/[{record_id:[0-9]+}/]', 'Controllers\PrintController:open')
         ->setName('print-open');
 })->add(UserMiddleware::class);
 
 // Moduli
-$app->group('/upload', function () use ($app) {
-    $app->get('/{upload_id:[0-9]+}/', 'Controllers\UploadController:view')
+$app->group('/upload', function (RouteCollectorProxy $group) {
+    $group->get('/{upload_id:[0-9]+}/', 'Controllers\UploadController:view')
         ->setName('upload-view');
 
-    $app->get('/open/{upload_id:[0-9]+}/', 'Controllers\UploadController:open')
+    $group->get('/open/{upload_id:[0-9]+}/', 'Controllers\UploadController:open')
         ->setName('upload-open');
 
-    $app->get('/download/{upload_id:[0-9]+}/', 'Controllers\UploadController:download')
+    $group->get('/download/{upload_id:[0-9]+}/', 'Controllers\UploadController:download')
         ->setName('upload-download');
 
-    $app->get('/add/{module_id:[0-9]+}/{record_id:[0-9]+}/', 'Controllers\UploadController:index')
+    $group->get('/add/{module_id:[0-9]+}/{record_id:[0-9]+}/', 'Controllers\UploadController:index')
         ->setName('upload');
 
-    $app->get('/remove/{upload_id:[0-9]+}/', 'Controllers\UploadController:remove')
+    $group->get('/remove/{upload_id:[0-9]+}/', 'Controllers\UploadController:remove')
         ->setName('upload-remove');
 })->add(UserMiddleware::class);
 
