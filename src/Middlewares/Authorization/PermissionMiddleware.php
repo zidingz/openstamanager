@@ -3,8 +3,8 @@
 namespace Middlewares\Authorization;
 
 use Middlewares\Middleware;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Exception\NotFoundException;
 
 /**

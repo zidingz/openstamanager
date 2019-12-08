@@ -7,7 +7,6 @@ use Middlewares\CSRFMiddleware;
 use Middlewares\LangMiddleware;
 use Slim\Views\TwigMiddleware;
 
-
 $app->add(new CalendarMiddleware($container));
 
 // Middleware per i contenuti di base

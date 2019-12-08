@@ -3,8 +3,8 @@
 namespace Middlewares;
 
 use Psr\Container\ContainerInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Middlware per la gestione della lingua del progetto.

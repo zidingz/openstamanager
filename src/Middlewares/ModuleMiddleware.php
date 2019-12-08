@@ -3,12 +3,11 @@
 namespace Middlewares;
 
 use Models\Module;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Exception\NotFoundException;
 use Update;
 use Util\Query;
-use Slim\Routing\RouteContext;
 
 /**
  * Middleware per il blocco dei plugin senza riferimento al record genitore.

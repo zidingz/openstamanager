@@ -38,10 +38,11 @@ class ModuleController extends RetroController implements ModuleInterface
     {
         $id_record = $this->actions($args);
         $params = [
-            'record_id' => $id_record
+            'record_id' => $id_record,
         ];
 
         $path = $args['module']->url('record', $params);
+
         return $response->withRedirect($path);
     }
 }

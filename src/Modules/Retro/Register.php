@@ -17,7 +17,7 @@ class Register extends Original
 
         if (empty($parameters['record_id'])) {
             $name = $prefix;
-        }else {
+        } else {
             $name = $prefix.'-record';
         }
 
@@ -58,6 +58,11 @@ class Register extends Original
         return $result;
     }
 
+    public function updates(): array
+    {
+        return \Update::getUpdates(__DIR__.'/../update');
+    }
+
     protected function autoload(): void
     {
         // Inclusione modutil.php
@@ -79,11 +84,6 @@ class Register extends Original
         $name = $this->module->directory;
 
         $this->addView($path, $name);
-    }
-
-    public function updates(): array
-    {
-        return \Update::getUpdates(__DIR__.'/../update');
     }
 
     protected function routes(SlimApp $app): void

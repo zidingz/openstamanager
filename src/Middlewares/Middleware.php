@@ -3,8 +3,8 @@
 namespace Middlewares;
 
 use Psr\Container\ContainerInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Routing\RouteContext;
 
 /**
@@ -63,8 +63,10 @@ abstract class Middleware
         $twig->offsetSet($name, $content);
     }
 
-    protected function getRoute(ServerRequestInterface $request){
+    protected function getRoute(ServerRequestInterface $request)
+    {
         $routeContext = RouteContext::fromRequest($request);
+
         return $routeContext->getRoute();
     }
 }

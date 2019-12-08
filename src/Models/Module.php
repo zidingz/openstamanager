@@ -15,7 +15,10 @@ use Util\Query;
 
 class Module extends Model
 {
-    use ManagerTrait, UploadTrait, StoreTrait, PermissionTrait;
+    use ManagerTrait;
+    use UploadTrait;
+    use StoreTrait;
+    use PermissionTrait;
     use NoteTrait;
     use ChecklistTrait;
 
@@ -65,7 +68,8 @@ class Module extends Model
         return $this->variables[$id_record];
     }
 
-    public function url(string $name, array $parameters = []){
+    public function url(string $name, array $parameters = [])
+    {
         return $this->manager->getUrl($name, $parameters);
     }
 
@@ -86,7 +90,7 @@ class Module extends Model
 
     public function getManagerAttribute()
     {
-        if (!isset($this->manager_object)){
+        if (!isset($this->manager_object)) {
             $class = $this->attributes['class'];
 
             $this->manager_object = new $class($this);

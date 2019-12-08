@@ -2,8 +2,8 @@
 
 namespace Middlewares;
 
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Middleware per l'implementazione del periodo temporale.

@@ -48,6 +48,34 @@ class Logger extends Monolog\Logger implements ErrorHandlerInterface
         register_shutdown_function([$this, 'commonHandler']);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function __invoke(\Psr\Http\Message\ServerRequestInterface $request, Throwable $exception, bool $displayErrorDetails, bool $logErrors, bool $logErrorDetails): \Psr\Http\Message\ResponseInterface
+    {
+        // Pulizia contenuti precedenti
+        ob_end_clean();
+
+        // Individuazione eccezione
+        if ($exception instanceof HttpSpecializedException) {
+            $status = $exception->getCode();
+        } else {
+            // Logging
+            $this->logException($exception);
+
+            $status = 500;
+        }
+
+        if ($this->container->get('debug')) {
+            return $this->debug_handler->__invoke($request, $exception, true, $logErrors, $logErrorDetails);
+        } else {
+            // Pulizia dell'errore
+            error_clear_last();
+
+            return $this->render($status);
+        }
+    }
+
     public function setDebugHandler($handler): void
     {
         $this->debug_handler = $handler;
@@ -73,9 +101,11 @@ class Logger extends Monolog\Logger implements ErrorHandlerInterface
      * Metodo per la gestione della grafica relativa agli errori.
      *
      * @param int $status
+     *
      * @return Response
      */
-    public function render(int $status): Response{
+    public function render(int $status): Response
+    {
         // Visualizzazione grafica
         $response = new Response();
         $response = $response->withStatus($status);
@@ -97,33 +127,5 @@ class Logger extends Monolog\Logger implements ErrorHandlerInterface
             'line' => $exception->getLine(),
             'trace' => $exception->getTraceAsString(),
         ]);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function __invoke(\Psr\Http\Message\ServerRequestInterface $request, Throwable $exception, bool $displayErrorDetails, bool $logErrors, bool $logErrorDetails): \Psr\Http\Message\ResponseInterface
-    {
-        // Pulizia contenuti precedenti
-        ob_end_clean();
-
-        // Individuazione eccezione
-        if ($exception instanceof HttpSpecializedException){
-            $status = $exception->getCode();
-        } else {
-            // Logging
-            $this->logException($exception);
-
-            $status = 500;
-        }
-
-        if ($this->container->get('debug')){
-            return $this->debug_handler->__invoke($request, $exception, true, $logErrors, $logErrorDetails);
-        } else {
-            // Pulizia dell'errore
-            error_clear_last();
-
-            return $this->render($status);
-        }
     }
 }

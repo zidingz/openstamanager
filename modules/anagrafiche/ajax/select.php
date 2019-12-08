@@ -293,15 +293,15 @@ switch ($resource) {
             $query = "SELECT id, CONCAT_WS(' - ', nomesede, citta) AS descrizione FROM an_sedi |where| ORDER BY descrizione";
 
             foreach ($elements as $element) {
-                $filter[] = 'id=' . prepare($element);
+                $filter[] = 'id='.prepare($element);
             }
 
-            $where[] = 'idanagrafica=' . prepare($id_azienda);
-            $where[] = 'id IN(' . implode(',', $user->sedi) . ')';
+            $where[] = 'idanagrafica='.prepare($id_azienda);
+            $where[] = 'id IN('.implode(',', $user->sedi).')';
 
             if (!empty($search)) {
-                $search_fields[] = 'nomesede LIKE ' . prepare('%' . $search . '%');
-                $search_fields[] = 'citta LIKE ' . prepare('%' . $search . '%');
+                $search_fields[] = 'nomesede LIKE '.prepare('%'.$search.'%');
+                $search_fields[] = 'citta LIKE '.prepare('%'.$search.'%');
             }
         }
 

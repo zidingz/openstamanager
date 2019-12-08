@@ -3,8 +3,8 @@
 namespace Middlewares;
 
 use Intl\Formatter;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Translator;
 
 /**

@@ -71,6 +71,11 @@ abstract class Register
     abstract public function render(array $args = []);
 
     /**
+     * Restutuisce un elenco di aggiornamenti presentati dal modulo.
+     */
+    abstract public function updates(): array;
+
+    /**
      * Gestisce l'inclusione delle componenti PHP necessarie al modulo.
      */
     abstract protected function autoload(): void;
@@ -86,11 +91,6 @@ abstract class Register
      * @param SlimApp $app
      */
     abstract protected function routes(SlimApp $app): void;
-
-    /**
-     * Restutuisce un elenco di aggiornamenti presentati dal modulo.
-     */
-    abstract public function updates(): array;
 
     /**
      * Registra un nuovo namespace Twig per l'applicazione.

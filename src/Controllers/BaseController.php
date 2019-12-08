@@ -6,10 +6,10 @@ use Auth;
 use Controllers\Config\ConfigurationController;
 use Controllers\Config\InitController;
 use Controllers\Config\RequirementsController;
+use Models\Module;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Update;
-use Models\Module;
 
 class BaseController extends Controller
 {

@@ -4,8 +4,8 @@ namespace Middlewares;
 
 use Models\Module;
 use Modules;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Update;
 
 /**

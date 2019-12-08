@@ -1,10 +1,9 @@
 <?php
 
+use DI\Container;
 use Models\Module;
 use Models\OperationLog;
-use DI\Container;
 use Slim\Factory\AppFactory;
-use Psr\Container\ContainerInterface;
 
 // Impostazioni di configurazione PHP
 date_default_timezone_set('Europe/Rome');
@@ -71,13 +70,14 @@ $container->set('logger', $logger);
 // Impostazione percorso di base
 $app->setBasePath((function () {
     $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
-    $uri = (string) parse_url('http://a' . $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+    $uri = (string) parse_url('http://a'.$_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
     if (stripos($uri, $_SERVER['SCRIPT_NAME']) === 0) {
         return $_SERVER['SCRIPT_NAME'];
     }
     if ($scriptDir !== '/' && stripos($uri, $scriptDir) === 0) {
         return $scriptDir;
     }
+
     return '';
 })());
 

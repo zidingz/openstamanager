@@ -4,22 +4,22 @@ use Psr\Container\ContainerInterface;
 use Slim\Views\Twig;
 
 // Auth manager
-$container->set('auth', function(ContainerInterface $container){
+$container->set('auth', function (ContainerInterface $container) {
     return new Auth();
 });
 
 // Flash messages
-$container->set('flash', function(ContainerInterface $container){
+$container->set('flash', function (ContainerInterface $container) {
     return new \Util\Messages();
 });
 
 // Sanitizing methods
-$container->set('filter', function(ContainerInterface $container){
+$container->set('filter', function (ContainerInterface $container) {
     return new \Middlewares\FilterMiddleware($container);
 });
 
 // Database
-$container->set('database', function(ContainerInterface $container){
+$container->set('database', function (ContainerInterface $container) {
     $config = $container->get('config');
 
     $database = new Database($config['db_host'], $config['db_username'], $config['db_password'], $config['db_name']);
@@ -68,7 +68,7 @@ $container->set('view', function(ContainerInterface $container){
 */
 
 // Templating Twig
-$container->set('twig', function(ContainerInterface $container){
+$container->set('twig', function (ContainerInterface $container) {
     $twig = new Twig(__DIR__.'/../resources/views/twig', [
         'cache' => false,
         'debug' => true,
