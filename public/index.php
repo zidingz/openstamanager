@@ -115,16 +115,18 @@ if (Update::isCoreUpdated()) {
     $modules = Module::withoutGlobalScope('enabled')
         ->get();
     foreach ($modules as $module) {
-        $class = $module->class;
+        $class = $module->manager;
         $class->boot($app, $module);
 
         Update::addModuleUpdates($class->updates());
     }
 }
-
 // Run application
 $response = $app->run(true);
+dd("asass");exit();
+
 $html = $response->getBody()->__toString();
+
 
 // Configurazione templating personalizzato
 if (!empty($config['HTMLWrapper'])) {

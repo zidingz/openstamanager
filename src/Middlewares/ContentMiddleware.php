@@ -78,9 +78,8 @@ class ContentMiddleware extends Middleware
             return '';
         }
 
-        $link = (!empty($element['option']) && $element['option'] != 'menu') ? pathFor('module', [
-            'module_id' => $element['id'],
-        ]) : 'javascript:;';
+        $link = (!empty($element['option']) && $element['option'] != 'menu') ? $element->url('module') : 'javascript:;';
+
         $title = $element['title'];
         $target = '_self'; // $target = ($element['new'] == 1) ? '_blank' : '_self';
         $active = ($actual == $element['name']);

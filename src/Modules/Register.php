@@ -48,7 +48,7 @@ abstract class Register
      *
      * @return mixed
      */
-    abstract public function getUrlName(array $parameters = []);
+    abstract public function getUrl(string $name, array $parameters = []);
 
     /**
      * Restituisce le informazioni disponibili al modulo a riguardo di un determinato record.

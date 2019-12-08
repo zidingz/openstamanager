@@ -36,6 +36,12 @@ class ModuleController extends RetroController implements ModuleInterface
 
     public function create(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        return $this->actions($args);
+        $id_record = $this->actions($args);
+        $params = [
+            'record_id' => $id_record
+        ];
+
+        $path = $args['module']->url('record', $params);
+        return $response->withRedirect($path);
     }
 }

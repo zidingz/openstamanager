@@ -250,12 +250,9 @@ class Modules
         $extra .= !empty($blank) ? ' target="_blank"' : '';
 
         if (!empty($module) && in_array($module->permission, ['r', 'rw'])) {
-            $link = !empty($id_record) ? pathFor('module-record', [
-                'module_id' => $module['id'],
+            $link = !empty($id_record) ? $module->url('record', [
                 'record_id' => $id_record,
-            ]) : pathFor('module', [
-                'module_id' => $module['id'],
-            ]);
+            ]) : $module->url('module');
 
             return '<a href="'.$link.'#'.$anchor.'" '.$extra.'>'.$testo.'</a>';
         } else {

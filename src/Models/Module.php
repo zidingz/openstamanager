@@ -24,6 +24,7 @@ class Module extends Model
     protected $component_identifier = 'id_module';
 
     protected $variables = [];
+    protected $manager_object;
 
     protected $appends = [
         'permission',
@@ -46,7 +47,7 @@ class Module extends Model
 
     public function getPlaceholders($id_record)
     {
-        if (!isset($variables[$id_record])) {
+        if (!isset($this->variables[$id_record])) {
             $dbo = $database = database();
 
             // Lettura delle variabili nei singoli moduli
@@ -64,9 +65,13 @@ class Module extends Model
         return $this->variables[$id_record];
     }
 
+    public function url(string $name, array $parameters = []){
+        return $this->manager->getUrl($name, $parameters);
+    }
+
     public function render(array $args = [])
     {
-        return $this->class->render($args);
+        return $this->manager->render($args);
     }
 
     public function getPlugins(string $type = 'module_plugin')
@@ -79,12 +84,15 @@ class Module extends Model
 
     // Attributi Eloquent
 
-    public function getClassAttribute()
+    public function getManagerAttribute()
     {
-        $class = $this->attributes['class'];
-        $result = new $class($this);
+        if (!isset($this->manager_object)){
+            $class = $this->attributes['class'];
 
-        return $result;
+            $this->manager_object = new $class($this);
+        }
+
+        return $this->manager_object;
     }
 
     /**

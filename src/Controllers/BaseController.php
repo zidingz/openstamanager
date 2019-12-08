@@ -9,6 +9,7 @@ use Controllers\Config\RequirementsController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Update;
+use Models\Module;
 
 class BaseController extends Controller
 {
@@ -101,11 +102,11 @@ class BaseController extends Controller
 
     protected function redirectFirstModule($request, $response)
     {
-        $module = $this->auth->getFirstModule();
+        $module_id = $this->auth->getFirstModule();
+        $module = Module::get($module_id);
+
         if (!empty($module)) {
-            $response = $response->withRedirect($this->router->pathFor('module', [
-                'module_id' => $module,
-            ]));
+            $response = $response->withRedirect($module->url('module'));
         } else {
             $response = $response->withRedirect($this->router->pathFor('logout'));
         }

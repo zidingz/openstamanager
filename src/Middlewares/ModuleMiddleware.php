@@ -24,7 +24,7 @@ class ModuleMiddleware extends Middleware
         }
 
         $name = $route->getName();
-        $module_id = explode('-', $name)[1];
+        $module_id = explode('-', $name)[0];
 
         $args = $route->getArguments();
         $args['module_id'] = $args['module_id'] ?: $module_id;

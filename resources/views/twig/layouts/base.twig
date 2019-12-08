@@ -9,20 +9,20 @@
         <meta name="robots" content="noindex,nofollow">
 
         <link href="{{ base_url() }}/assets/img/favicon.png" rel="icon" type="image/x-icon" />
-        <link rel="manifest" href="{{ base_url() }}/manifest.json">
+        <link rel="manifest" href="{{ base_url() }}/manifest.js?v={{ version }}on">
 
-        <link rel="stylesheet" type="text/css" media="all" href="{{ base_url() }}/assets/css/app.min.css"/>
-        <link rel="stylesheet" type="text/css" media="all" href="{{ base_url() }}/assets/css/style.min.css"/>
-        <link rel="stylesheet" type="text/css" media="all" href="{{ base_url() }}/assets/css/themes.min.css"/>
+        <link rel="stylesheet" type="text/css" media="all" href="{{ base_url() }}/assets/css/app.min.css?v={{ version }}"/>
+        <link rel="stylesheet" type="text/css" media="all" href="{{ base_url() }}/assets/css/style.min.css?v={{ version }}"/>
+        <link rel="stylesheet" type="text/css" media="all" href="{{ base_url() }}/assets/css/themes.min.css?v={{ version }}"/>
 
-        <link rel="stylesheet" type="text/css" media="print" href="{{ base_url() }}/assets/css/print.min.css"/>
+        <link rel="stylesheet" type="text/css" media="print" href="{{ base_url() }}/assets/css/print.min.css?v={{ version }}"/>
 
-        <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/app.min.js"></script>
-        <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/functions.min.js"></script>
-        <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/custom.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/app.min.js?v={{ version }}"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/functions.min.js?v={{ version }}"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ base_url() }}/assets/js/custom.min.js?v={{ version }}"></script>
 
         {% for script in i18n %}
-            <script type="text/javascript" charset="utf-8" src="{{ base_url() }}{{ script }}"></script>
+            <script type="text/javascript" charset="utf-8" src="{{ base_url() }}{{ script }}?v={{ version }}"></script>
         {% endfor %}
 
         <!-- Impostazioni di default per gli alert -->

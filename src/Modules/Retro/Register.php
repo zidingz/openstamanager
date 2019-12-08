@@ -10,15 +10,17 @@ use Slim\App as SlimApp;
 
 class Register extends Original
 {
-    public function getUrlName(array $parameters = [])
+    public function getUrl(string $name, array $parameters = [])
     {
-        $prefix = 'module-'.$this->module->id;
+        $prefix = $this->module->id.'-module';
 
         if (empty($parameters['record_id'])) {
-            return $prefix;
+            $name = $prefix;
+        }else {
+            $name = $prefix.'-record';
         }
 
-        return $prefix.'-record';
+        return pathFor($name, $parameters);
     }
 
     public function getData(?int $id_record)
@@ -86,8 +88,8 @@ class Register extends Original
     protected function routes(SlimApp $app): void
     {
         // Percorsi raggiungibili
-        $prefix = 'module-'.$this->module->id;
-        $app->group('/'.$prefix, function () use ($app, $prefix) {
+        $prefix = $this->module->id.'-module';
+        $app->group('/module-'.$this->module->id, function () use ($app, $prefix) {
             $app->get('/[reference/{reference_id:[0-9]+}/]', ModuleController::class.':page')
                 ->setName($prefix);
 
