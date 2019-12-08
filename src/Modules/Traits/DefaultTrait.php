@@ -24,8 +24,6 @@ trait DefaultTrait
         }
 
         $id_record = $this->getReferenceID($args);
-        dd($args);
-        exit();
         $data = Module::find($args['module']->parent)->manager->getData($id_record);
 
         return $data;
