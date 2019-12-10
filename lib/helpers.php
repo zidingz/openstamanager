@@ -262,6 +262,10 @@ function urlFor($name, $parameters = [])
 {
     $router = container()->get('router');
 
+    if (strpos($name, 'module') == 0) {
+        $name = str_replace('module', $parameters['module_id'].'-module', $name);
+    }
+
     return $router->urlFor($name, $parameters);
 }
 

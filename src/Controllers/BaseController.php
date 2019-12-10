@@ -54,7 +54,6 @@ class BaseController extends Controller
             ];
 
             $args['username'] = $this->flash->getFirstMessage('username');
-            $args['keep_alive'] = $this->flash->getFirstMessage('keep_alive');
 
             $response = $this->twig->render($response, 'user\login.twig', $args);
         }
@@ -80,7 +79,7 @@ class BaseController extends Controller
         } else {
             $status = $this->auth->getCurrentStatus();
 
-            flash()->error(Auth::getStatus()[$status]['message']);
+            $this->flash->error(Auth::getStatus()[$status]['message']);
 
             $this->flash->addMessage('username', $username);
             $this->flash->addMessage('keep_alive', $keep_alive);

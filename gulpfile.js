@@ -82,9 +82,7 @@ const CSS = gulp.parallel(() => {
             debugging: config.debug,
         }))
         .pipe(gulpIf('*.scss', sass(), gulpIf('*.less', less(), gulpIf('*.styl', stylus()))))
-        .pipe(autoprefixer({
-            browsers: 'last 2 version',
-        }))
+        .pipe(autoprefixer())
         .pipe(minifyCSS({
             rebase: false,
         }))
@@ -99,9 +97,7 @@ function srcCSS() {
             config.development + '/' + config.paths.css + '/*.{css,scss,less,styl}',
         ])
         .pipe(gulpIf('*.scss', sass(), gulpIf('*.less', less(), gulpIf('*.styl', stylus()))))
-        .pipe(autoprefixer({
-            browsers: 'last 2 version',
-        }))
+        .pipe(autoprefixer())
         .pipe(minifyCSS({
             rebase: false,
         }))
@@ -116,9 +112,7 @@ function srcCSS() {
         allowEmpty: true
     })
         .pipe(gulpIf('*.scss', sass(), gulpIf('*.less', less(), gulpIf('*.styl', stylus()))))
-        .pipe(autoprefixer({
-            browsers: 'last 2 version',
-        }))
+        .pipe(autoprefixer())
         .pipe(minifyCSS({
             rebase: false,
         }))
@@ -130,9 +124,7 @@ function srcCSS() {
             config.development + '/' + config.paths.css + '/themes/*.{css,scss,less,styl}',
         ])
         .pipe(gulpIf('*.scss', sass(), gulpIf('*.less', less(), gulpIf('*.styl', stylus()))))
-        .pipe(autoprefixer({
-            browsers: 'last 2 version',
-        }))
+        .pipe(autoprefixer())
         .pipe(minifyCSS({
             rebase: false,
         }))

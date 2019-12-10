@@ -15,10 +15,12 @@ class Register extends Original
     {
         $prefix = $this->module->id.'-module';
 
-        if (empty($parameters['record_id'])) {
+        if ($name == 'module') {
             $name = $prefix;
-        } else {
+        } elseif ($name == 'record' && !empty($parameters['record_id'])) {
             $name = $prefix.'-record';
+        } elseif ($name == 'add') {
+            $name = $prefix.'-add';
         }
 
         return urlFor($name, $parameters);
@@ -88,8 +90,10 @@ class Register extends Original
 
     protected function routes(SlimApp $app): void
     {
-        // Percorsi raggiungibili
         $prefix = $this->module->id.'-module';
+        $reference_suffix  = '[reference/{reference_id:[0-9]+}/]';
+
+        // Percorsi raggiungibili
         $app->group('/module-'.$this->module->id, function (RouteCollectorProxy $group) use ($prefix) {
             $group->get('/[reference/{reference_id:[0-9]+}/]', ModuleController::class.':page')
                 ->setName($prefix);

@@ -69,7 +69,7 @@ $container->set('view', function(ContainerInterface $container){
 
 // Templating Twig
 $container->set('twig', function (ContainerInterface $container) {
-    $twig = new Twig(__DIR__.'/../resources/views/twig', [
+    $twig = new Twig(__DIR__.'/../resources/views', [
         'cache' => false,
         'debug' => true,
     ]);

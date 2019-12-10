@@ -118,7 +118,7 @@ class ConfigurationController extends Controller
         }
     ]
 }';
-            file_put_contents('manifest.json', $manifest);
+            file_put_contents(DOCROOT.'/public/manifest.json', $manifest);
 
             $response = $response->withRedirect($this->router->urlFor('login'));
         }

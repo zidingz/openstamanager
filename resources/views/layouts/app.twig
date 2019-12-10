@@ -123,7 +123,7 @@
         dataload_url_plugin: "{{ url_for('ajax-dataload', {'module_id': '|module_id|', 'reference_id': '|reference_id|'}) }}",
         ajax_set_url: "{{ url_for('ajax-session') }}",
         ajax_array_set_url: "{{ url_for('ajax-session-array') }}",
-        ajax_flash: "{{ url_for('ajax-flash') }}",
+        messages_url: "{{ url_for('ajax-flash') }}",
         hooks: {
             list: "{{ url_for('hooks') }}",
             lock: "{{ url_for('hook-lock', {'hook_id': '|id|'}) }}",
@@ -258,7 +258,7 @@
         <section class="content">
             <div class="container-fluid">
 
-            {% include 'layouts/messages/messages.twig' %}
+            {# % include 'layouts/messages/messages.twig' %#}
 
             {% block content %}{% endblock %}
 
@@ -279,8 +279,6 @@
     <!-- Hooks -->
     <script>
         $(document).ready(function() {
-            alertPush();
-
             // Orologio
             clock();
 

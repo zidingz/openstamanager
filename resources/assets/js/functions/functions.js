@@ -447,7 +447,7 @@ function prepareForm(form) {
 function renderMessages() {
     // Visualizzazione messaggi
     $.ajax({
-        url: globals.ajax_flash,
+        url: globals.messages_url,
         type: 'get',
         success: function (flash) {
             messages = JSON.parse(flash);

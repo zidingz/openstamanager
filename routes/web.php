@@ -80,10 +80,6 @@ $app->group('/ajax', function (RouteCollectorProxy $group) {
     $group->get('/search/', 'Controllers\AjaxController:search')
         ->setName('ajax-search');
 
-    // Messaggi flash
-    $group->get('/flash/', 'Controllers\AjaxController:flash')
-        ->setName('ajax-flash');
-
     // Sessioni
     $group->get('/session/', 'Controllers\AjaxController:sessionSet')
         ->setName('ajax-session');
@@ -96,6 +92,10 @@ $app->group('/ajax', function (RouteCollectorProxy $group) {
         ->add(PermissionMiddleware::class)
         ->add(ModuleMiddleware::class);
 })->add(UserMiddleware::class);
+
+// Messaggi flash
+$app->get('/messages/', 'Controllers\AjaxController:flash')
+    ->setName('ajax-flash');
 
 // Hooks
 $app->group('/hook', function (RouteCollectorProxy $group) {

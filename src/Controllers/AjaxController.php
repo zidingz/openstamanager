@@ -50,7 +50,17 @@ class AjaxController extends Controller
 
     public function flash(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $results = flash()->getMessages();
+        $list = [
+            'error',
+            'warning',
+            'info',
+        ];
+
+        $results = [];
+        foreach ($list as $element) {
+            $results[$element] = $this->flash->getMessage($element);
+        }
+
         $response = $response->write(json_encode($results));
 
         return $response;
