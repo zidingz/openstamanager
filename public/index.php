@@ -113,11 +113,6 @@ if (Update::isCoreUpdated()) {
     }
 }
 
-// Run application
-ob_start();
-$app->run();
-$html = ob_get_clean();
-
 // Configurazione templating personalizzato
 if (!empty($config['HTMLWrapper'])) {
     HTMLBuilder\HTMLBuilder::setWrapper($config['HTMLWrapper']);
@@ -131,16 +126,8 @@ foreach ((array) $config['HTMLManagers'] as $key => $value) {
     HTMLBuilder\HTMLBuilder::setManager($key, $value);
 }
 
-$id_module = Modules::getCurrent()['id'];
-$id_plugin = Plugins::getCurrent()['id'];
-
-$html = str_replace('$id_module$', $id_module, $html);
-$html = str_replace('$id_plugin$', $id_plugin, $html);
-//$html = str_replace('$id_record$', $id_record, $html);
-
-$html = \HTMLBuilder\HTMLBuilder::replace($html);
-
-echo $html;
+// Run application
+$app->run();
 
 // Informazioni estese sulle azioni dell'utente
 $op = post('op');

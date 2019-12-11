@@ -3,9 +3,10 @@
 namespace Middlewares;
 
 use Models\Module;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Slim\Exception\NotFoundException;
+use Slim\Exception\HttpNotFoundException;
 use Update;
 use Util\Query;
 
@@ -14,9 +15,9 @@ use Util\Query;
  *
  * @since 2.5
  */
-class ModuleMiddleware extends Middleware
+class RetroModuleMiddleware extends Middleware
 {
-    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $route = $this->getRoute($request);
         if (empty($route) || !$this->database->isConnected() || Update::isUpdateAvailable()) {
@@ -46,7 +47,7 @@ class ModuleMiddleware extends Middleware
 
         // Gestione della visualizzazione plugin (reference_id obbligatorio)
         if (!empty($args['module']) && $args['module']->type == 'record_plugin' && !isset($args['reference_id'])) {
-            throw new NotFoundException($request, $response);
+            throw new HttpNotFoundException($request);
         }
 
         // Impostazione degli argomenti

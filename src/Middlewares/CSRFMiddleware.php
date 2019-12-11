@@ -3,6 +3,7 @@
 namespace Middlewares;
 
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
@@ -25,7 +26,7 @@ class CSRFMiddleware extends Middleware
         $this->csrf = $csrf;
     }
 
-    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $result = $this->csrf->__invoke($request, $handler, function ($a, $b) {
             return $a;

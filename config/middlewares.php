@@ -4,6 +4,7 @@ use Middlewares\CalendarMiddleware;
 use Middlewares\ConfigMiddleware;
 use Middlewares\ContentMiddleware;
 use Middlewares\CSRFMiddleware;
+use Middlewares\HTMLMiddleware;
 use Middlewares\LangMiddleware;
 use Slim\Views\TwigMiddleware;
 
@@ -18,11 +19,13 @@ $app->add($container->get('filter'));
 $app->add(new ConfigMiddleware($container));
 
 $app->addRoutingMiddleware();
-
 $app->add(TwigMiddleware::createFromContainer($app, 'twig'));
 
 // Middleware per la lingua
 $app->add(new LangMiddleware($container));
+
+// Middleware per HTML semplificato
+$app->add(new HTMLMiddleware($container));
 
 // Middleware CSRF
 //$app->add(new CSRFMiddleware($container));

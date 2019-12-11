@@ -8,6 +8,7 @@ use Modules;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Settings;
+use Slim\Exception\HttpNotFoundException;
 use Update;
 use Uploads;
 
@@ -179,7 +180,7 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
     protected function permission($request, $response)
     {
         if (!ConfigurationController::isConfigured() || Update::isUpdateAvailable() || self::isInitialized()) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new HttpNotFoundException($request);
         }
     }
 }

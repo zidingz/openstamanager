@@ -6,6 +6,7 @@ use Auth;
 use Controllers\Config\ConfigurationController;
 use Controllers\Config\InitController;
 use Controllers\Config\RequirementsController;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Update;
@@ -17,7 +18,7 @@ use Update;
  */
 class ConfigMiddleware extends Middleware
 {
-    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $route = $this->getRoute($request);
         if (empty($route)) {

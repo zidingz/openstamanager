@@ -180,9 +180,7 @@ class HTMLBuilder
         }
 
         // Ricorsione
-        if ($depth < self::$max_recursion) {
-            $result = self::replace($result, $depth + 1);
-        }
+        $result = self::replace($result);
 
         return !empty($result) ? $result : json_encode($json);
     }

@@ -3,6 +3,7 @@
 namespace Middlewares;
 
 use Intl\Formatter;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Translator;
@@ -14,7 +15,7 @@ use Translator;
  */
 class LangMiddleware extends Middleware
 {
-    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $config = $this->container->get('config');
 

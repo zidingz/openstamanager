@@ -2,6 +2,8 @@
 
 use Psr\Container\ContainerInterface;
 use Slim\Views\Twig;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 // Auth manager
 $container->set('auth', function (ContainerInterface $container) {
@@ -71,33 +73,35 @@ $container->set('view', function(ContainerInterface $container){
 $container->set('twig', function (ContainerInterface $container) {
     $twig = new Twig(__DIR__.'/../resources/views', [
         'cache' => false,
-        'debug' => true,
+        'debug' => $container->get('debug'),
     ]);
 
     $twig->offsetSet('auth', $container->get('auth'));
     $twig->offsetSet('user', $container->get('auth')->user());
     $twig->offsetSet('flash', $container->get('flash'));
 
-    $filter = new \Twig\TwigFilter('diffForHumans', 'diffForHumans');
-    $twig->getEnvironment()->addFilter($filter);
-
-    $function = new \Twig\TwigFunction('setting', 'setting');
-    $twig->getEnvironment()->addFunction($function);
-
-    $function = new \Twig\TwigFunction('searchFieldName', 'searchFieldName');
-    $twig->getEnvironment()->addFunction($function);
-
-    $function = new \Twig\TwigFunction('module_link', '\Modules::link');
-    $twig->getEnvironment()->addFunction($function);
-
-    $function = new \Twig\TwigFunction('module', '\Modules::get');
-    $twig->getEnvironment()->addFunction($function);
-
-    $twig->getEnvironment()->addExtension(new \Twig\Extension\DebugExtension());
-
     if ($container->has('debugbar')) {
         $twig->offsetSet('debugbar', $container->get('debugbar'));
     }
+
+    $environment = $twig->getEnvironment();
+
+    $filter = new TwigFilter('diffForHumans', 'diffForHumans');
+    $environment->addFilter($filter);
+
+    $function = new TwigFunction('setting', 'setting');
+    $environment->addFunction($function);
+
+    $function = new TwigFunction('searchFieldName', 'searchFieldName');
+    $environment->addFunction($function);
+
+    $function = new TwigFunction('module_link', '\Modules::link');
+    $environment->addFunction($function);
+
+    $function = new TwigFunction('module', '\Modules::get');
+    $environment->addFunction($function);
+
+    $environment->addExtension(new \Twig\Extension\DebugExtension());
 
     return $twig;
 });

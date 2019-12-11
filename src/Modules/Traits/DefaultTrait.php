@@ -18,13 +18,13 @@ trait DefaultTrait
 
     public function getReferenceData(array $args)
     {
-        $module = $args['structure'];
+        $module = $args['module'];
         if ($module->type == 'module') {
             return [];
         }
 
         $id_record = $this->getReferenceID($args);
-        $data = Module::find($args['module']->parent)->manager->getData($id_record);
+        $data = Module::find($module->parent)->manager->getData($id_record);
 
         return $data;
     }
@@ -54,12 +54,12 @@ trait DefaultTrait
         ]);
     }
 
-    public function getOperations()
+    public function getOperations(Module $module, ?int $id_record)
     {
         // Elenco delle operazioni
         $operations = $this->database->fetchArray('SELECT `zz_operations`.*, `zz_users`.`username` FROM `zz_operations`
             JOIN `zz_users` ON `zz_operations`.`id_utente` = `zz_users`.`id`
-            WHERE id_module = '.prepare($args['module_id']).' AND id_record = '.prepare($args['record_id']).'
+            WHERE id_module = '.prepare($module).' AND id_record = '.prepare($id_record).'
         ORDER BY `created_at` ASC LIMIT 200');
 
         foreach ($operations as $key => $operation) {

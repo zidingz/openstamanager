@@ -4,7 +4,7 @@ namespace Modules\Retro;
 
 use Middlewares\Authorization\PermissionMiddleware;
 use Middlewares\Authorization\UserMiddleware;
-use Middlewares\ModuleMiddleware;
+use Middlewares\RetroModuleMiddleware;
 use Modules\Register as Original;
 use Slim\App as SlimApp;
 use Slim\Routing\RouteCollectorProxy;
@@ -28,7 +28,7 @@ class Register extends Original
 
     public function getData(?int $id_record)
     {
-        $dbo = $database = self::$container->database;
+        $dbo = $database = self::$container->get('database');
         $defined_vars = get_defined_vars();
 
         // Lettura risultato query del modulo
@@ -91,7 +91,7 @@ class Register extends Original
     protected function routes(SlimApp $app): void
     {
         $prefix = $this->module->id.'-module';
-        $reference_suffix  = '[reference/{reference_id:[0-9]+}/]';
+        $reference_suffix = '[reference/{reference_id:[0-9]+}/]';
 
         // Percorsi raggiungibili
         $app->group('/module-'.$this->module->id, function (RouteCollectorProxy $group) use ($prefix) {
@@ -118,6 +118,6 @@ class Register extends Original
         })
             ->add(UserMiddleware::class)
             ->add(PermissionMiddleware::class)
-            ->add(ModuleMiddleware::class);
+            ->add(RetroModuleMiddleware::class);
     }
 }

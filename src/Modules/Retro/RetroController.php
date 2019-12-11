@@ -22,7 +22,7 @@ abstract class RetroController extends Controller
 
         $dbo = $database = $this->database;
 
-        if ($args['structure']->option == 'custom') {
+        if ($args['module']->option == 'custom') {
             // Lettura risultato query del modulo
             $init = $args['module']->filepath('init.php');
             if (!empty($init)) {
@@ -89,6 +89,9 @@ abstract class RetroController extends Controller
             'bulk' => $module_bulk,
         ]);
 
+        $args['include_operations'] = true;
+        $args['operations'] = $this->getOperations($args['module'], $args['id_record']);
+
         return $args;
     }
 
@@ -127,7 +130,7 @@ abstract class RetroController extends Controller
             include $init;
         }
 
-        $content = $args['structure']->getAddFile();
+        $content = $args['module']->getAddFile();
         if (!empty($content)) {
             ob_start();
             include $content;

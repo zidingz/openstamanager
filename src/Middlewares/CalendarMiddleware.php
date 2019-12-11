@@ -2,6 +2,7 @@
 
 namespace Middlewares;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
@@ -12,7 +13,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class CalendarMiddleware extends Middleware
 {
-    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         // Calendario
         // Periodo di visualizzazione

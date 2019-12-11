@@ -3,14 +3,17 @@
 namespace Middlewares;
 
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Slim\Interfaces\RouteInterface;
 use Slim\Routing\RouteContext;
 
 /**
  * @since 2.5
  */
-abstract class Middleware
+abstract class Middleware implements MiddlewareInterface
 {
     protected $container;
 
@@ -26,9 +29,9 @@ abstract class Middleware
         }
     }
 
-    abstract public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler);
+    abstract public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface;
 
-    protected function addArgs(ServerRequestInterface $request, $new)
+    protected function addArgs(ServerRequestInterface $request, $new): ServerRequestInterface
     {
         $route = $this->getRoute($request);
         if (empty($route)) {
@@ -41,7 +44,7 @@ abstract class Middleware
         return $this->setArgs($request, $args);
     }
 
-    protected function setArgs(ServerRequestInterface $request, $args)
+    protected function setArgs(ServerRequestInterface $request, $args): ServerRequestInterface
     {
         $route = $request->getAttribute('route');
 
@@ -63,7 +66,7 @@ abstract class Middleware
         $twig->offsetSet($name, $content);
     }
 
-    protected function getRoute(ServerRequestInterface $request)
+    protected function getRoute(ServerRequestInterface $request): ?RouteInterface
     {
         $routeContext = RouteContext::fromRequest($request);
 

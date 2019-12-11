@@ -7,6 +7,7 @@ use Controllers\Controller;
 use Database;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Exception\HttpNotFoundException;
 
 class ConfigurationController extends Controller
 {
@@ -203,7 +204,7 @@ class ConfigurationController extends Controller
     protected function permission($request, $response)
     {
         if (self::isConfigured()) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new HttpNotFoundException($request);
         }
     }
 }

@@ -5,6 +5,7 @@ namespace Controllers\Config;
 use Controllers\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Exception\HttpNotFoundException;
 use Update;
 
 class UpdateController extends Controller
@@ -20,7 +21,7 @@ class UpdateController extends Controller
         $updates = Update::getTodoUpdates();
 
         if (!Update::isUpdateAvailable()) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new HttpNotFoundException($request);
         }
 
         foreach ($updates as $update) {
@@ -99,7 +100,7 @@ class UpdateController extends Controller
     protected function permission($request, $response)
     {
         if (!ConfigurationController::isConfigured() || !Update::isUpdateAvailable()) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new HttpNotFoundException($request);
         }
     }
 }

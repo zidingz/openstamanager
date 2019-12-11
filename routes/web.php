@@ -12,7 +12,7 @@
 use Middlewares\Authorization\GuestMiddleware;
 use Middlewares\Authorization\PermissionMiddleware;
 use Middlewares\Authorization\UserMiddleware;
-use Middlewares\ModuleMiddleware;
+use Middlewares\RetroModuleMiddleware;
 use Slim\Routing\RouteCollectorProxy;
 
 // Pagina principale
@@ -90,7 +90,7 @@ $app->group('/ajax', function (RouteCollectorProxy $group) {
     $group->get('/dataload/{module_id:[0-9]+}/[reference/{reference_id:[0-9]+}/]', 'Controllers\AjaxController:dataLoad')
         ->setName('ajax-dataload')
         ->add(PermissionMiddleware::class)
-        ->add(ModuleMiddleware::class);
+        ->add(RetroModuleMiddleware::class);
 })->add(UserMiddleware::class);
 
 // Messaggi flash

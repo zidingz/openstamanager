@@ -1,4 +1,5 @@
 <!-- Informazioni sulle operazioni -->
+{% if operations is not empty %}
 <div class="timeline">
 {% for operation in operations.groupBy('') %}
     {% set icon = 'pencil-square-o' %}
@@ -54,4 +55,4 @@
     <i class="fa fa-info-circle"></i>
     {{ 'Nessun log disponibile per questa scheda'|trans }}.
 </div>
-{% endfor %}
+{% endif %}

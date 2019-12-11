@@ -4,6 +4,7 @@ namespace Middlewares;
 
 use Models\Module;
 use Modules;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Update;
@@ -15,7 +16,7 @@ use Update;
  */
 class ContentMiddleware extends Middleware
 {
-    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $route = $this->getRoute($request);
         if (empty($route) || !$this->database->isConnected() || Update::isUpdateAvailable()) {

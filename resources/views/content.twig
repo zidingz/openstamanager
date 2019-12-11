@@ -58,20 +58,20 @@
             {% set name = field|trim %}
 
             {% if name matches '/^color_/' %}
-                {% set tags = " width='140'" %}
+                {% set tags = ' width="140"' %}
                 {% set name = name|replace({'color_': ''}) %}
             {% elseif name matches '/^Data/' %}
-                {% set tags = " width='100'" %}
+                {% set tags = ' width="100"' %}
             {% elseif name == '_print_' %}
-                {% set tags = " width='30'" %}
+                {% set tags = ' width="30"' %}
                 {% set field = name|replace({'_print_': ''}) %}
             {% elseif name matches '/^icon_/' %}
-                {% set tags = " width='30'" %}
+                {% set tags = ' width="30"' %}
                 {% set name = name|replace({'icon_': 'icon_title_'}) %}
                 {% set field = field|replace({'icon_': ''}) %}
             {% endif %}
 
-            <th {{ tags }} id="th_{{ searchFieldName(name) }}" {{ table['search'][key] == 1 ? ' class="search"' : ' class="no-search"' }} {{ table['slow'][key] == 1 ? ' data-slow="1"' : '' }}>{{ field }}</th>
+            <th {{ tags }} id="th_{{ searchFieldName(name) }}" {{ table['search'][key] == 1 ? ' class="search"' : ' class="no-search"' }} {{ table['slow'][key] == 1 ? ' data-slow="1"' : '' }}>{{ name }}</th>
         {% endfor %}
 
     </tr>
