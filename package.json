@@ -86,7 +86,7 @@
                 "dist/js/adminlte.js"
             ],
             "dependencies": {
-                "jquery": ">=1.9.1",
+                "jquery": "*",
                 "bootstrap": "*"
             }
         },
@@ -100,11 +100,10 @@
         "bootstrap": {
             "main": [
                 "dist/js/bootstrap.min.js",
-                "dist/css/bootstrap.min.css",
                 "dist/fonts/*"
             ],
             "dependencies": {
-                "jquery": ">=1.9.1"
+                "jquery": "*"
             }
         },
         "datatables.net-bs4": {

@@ -52,7 +52,7 @@ class HTMLWrapper implements WrapperInterface
 
             if (!empty($values['validation'])) {
                 $result .= '
-                <span class="input-group-addon after" id="'.$pseudo_id.'_validation">
+                <span class="input-group-append input-group-text" id="'.$pseudo_id.'_validation">
                     <span class="tip" title="'.tr('Validazione').'"><i class="fa fa-question-circle "></i></span>
                 </span>';
             }

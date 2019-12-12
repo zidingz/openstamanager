@@ -16,7 +16,7 @@ foreach ($fields as $key => $field) {
     $editable = !($field['default'] && $enable_readonly);
 
     echo '
-                <div class="card card-outline card-'.($field['visible'] ? 'success' : 'danger').'">
+                <div class="card card-outline card-'.($field['visible'] ? 'success' : 'danger').' collapsed-card">
                     <div class="card-header">
                         <h3 class="card-title">'.
                             tr('Campo in posizione _POSITION_', [
@@ -39,7 +39,7 @@ foreach ($fields as $key => $field) {
 
     echo '
                     </div>
-                    <div id="field-'.$field['id'].'" class="card-body collapse">
+                    <div id="field-'.$field['id'].'" class="card-body">
                         <div class="row">
                             <input type="hidden" value="'.$field['id'].'" name="id['.$key.']">
 

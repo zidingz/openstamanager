@@ -9,7 +9,7 @@ $start = $_SESSION['period_start'];
 $end = $_SESSION['period_end'];
 
 echo '
-<div class="card card-outline card-warning">
+<div class="card card-outline card-warning collapsed-card">
     <div class="card-header">
         <h4 class="card-title">
             '.tr('Periodi temporali').'
@@ -24,7 +24,7 @@ echo '
         </div>
     </div>
 
-    <div class="card-body collapse in" id="calendars">
+    <div class="card-body" id="calendars">
 
     </div>
 </div>';

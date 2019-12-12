@@ -33,7 +33,7 @@ class EmailManager implements ManagerInterface
 
         // Codice HTML
         $result = '
-<div class="card card-outline card-info collapsable collapsed-box">
+<div class="card card-outline card-info collapsable collapsed-card">
     <div class="card-header">
         <h3 class="card-title"><i class="fa fa-envelope"></i> '.tr('Email inviate: _NUM_', [
             '_NUM_' => $emails->count(),

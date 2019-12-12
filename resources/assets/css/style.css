@@ -724,3 +724,7 @@ input.small-width {
 .register-card-body .input-group-preprend .input-group-text {
     border: 1px solid #ced4da;
 }
+
+.card-tools .btn {
+    padding: 0px .75rem;
+}

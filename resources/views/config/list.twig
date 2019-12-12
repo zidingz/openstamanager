@@ -4,7 +4,7 @@
         {% set general_status = general_status and element.status %}
     {% endfor %}
 
-    <div class="card card-outline card-{{ general_status ? 'success collapsed-box' : 'danger' }}">
+    <div class="card card-outline card-{{ general_status ? 'success collapsed-card' : 'danger' }}">
         <div class="card-header">
             <h3 class="card-title">{{ group }}</h3>
 

@@ -91,28 +91,31 @@ class Register extends Original
     protected function routes(SlimApp $app): void
     {
         $prefix = $this->module->id.'-module';
+
+        $reference_suffix ='';
+        if($this->module->type == 'record_plugin')
         $reference_suffix = '[reference/{reference_id:[0-9]+}/]';
 
         // Percorsi raggiungibili
-        $app->group('/module-'.$this->module->id, function (RouteCollectorProxy $group) use ($prefix) {
-            $group->get('/[reference/{reference_id:[0-9]+}/]', ModuleController::class.':page')
+        $app->group('/module-'.$this->module->id, function (RouteCollectorProxy $group) use ($prefix, $reference_suffix) {
+            $group->get('/'.$reference_suffix, ModuleController::class.':page')
                 ->setName($prefix);
 
-            $group->get('/add/[reference/{reference_id:[0-9]+}/]', ModuleController::class.':add')
+            $group->get('/add/'.$reference_suffix, ModuleController::class.':add')
                 ->setName($prefix.'-add');
-            $group->post('/add/[reference/{reference_id:[0-9]+}/]', ModuleController::class.':create')
+            $group->post('/add/'.$reference_suffix, ModuleController::class.':create')
                 ->setName($prefix.'-add-save');
 
-            $group->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', ActionController::class.':moduleAction')
+            $group->map(['GET', 'POST'], '/action/{action}/'.$reference_suffix, ActionController::class.':moduleAction')
                 ->setName($prefix.'-action');
 
-            $group->group('/edit/{record_id:[0-9]+}', function (RouteCollectorProxy $subgroup) use ($prefix) {
-                $subgroup->get('/[reference/{reference_id:[0-9]+}/]', RecordController::class.':page')
+            $group->group('/edit/{record_id:[0-9]+}', function (RouteCollectorProxy $subgroup) use ($prefix, $reference_suffix) {
+                $subgroup->get('/'.$reference_suffix, RecordController::class.':page')
                     ->setName($prefix.'-record');
-                $subgroup->post('/[reference/{reference_id:[0-9]+}/]', RecordController::class.':update')
+                $subgroup->post('/'.$reference_suffix, RecordController::class.':update')
                     ->setName($prefix.'-record-save');
 
-                $subgroup->map(['GET', 'POST'], '/action/{action}/[reference/{reference_id:[0-9]+}/]', ActionController::class.':recordAction')
+                $subgroup->map(['GET', 'POST'], '/action/{action}/'.$reference_suffix, ActionController::class.':recordAction')
                     ->setName($prefix.'-record-action');
             });
         })

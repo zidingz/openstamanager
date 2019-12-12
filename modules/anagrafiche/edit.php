@@ -234,13 +234,13 @@ echo '
         <div class="card-body">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs nav-justified">
-                    <li '.($is_cliente ? 'class="active"' : '').'><a href="#cliente" data-toggle="tab" class="'.($is_cliente ? '' : 'disabled').'" '.($is_cliente ? '' : 'disabled').'>'.tr('Cliente').'</a></li>
+                    <li class="nav-item '.($is_cliente ? 'active' : '').'"><a href="#cliente" data-toggle="tab" class="nav-link '.($is_cliente ? '' : 'disabled').'" '.($is_cliente ? '' : 'disabled').'>'.tr('Cliente').'</a></li>
 
-                    <li '.(!$is_cliente && $is_fornitore ? 'class="active"' : '').'><a href="#fornitore" data-toggle="tab" class="'.($is_fornitore ? '' : 'disabled').'" '.($is_fornitore ? '' : 'disabled').'>'.tr('Fornitore').'</a></li>
+                    <li class="nav-item '.(!$is_cliente && $is_fornitore ? 'active' : '').'"><a href="#fornitore" data-toggle="tab" class="nav-link '.($is_fornitore ? '' : 'disabled').'" '.($is_fornitore ? '' : 'disabled').'>'.tr('Fornitore').'</a></li>
 
-                    <li><a href="#cliente_fornitore" data-toggle="tab" class="'.($is_cliente || $is_fornitore ? '' : 'disabled').'" '.($is_cliente || $is_fornitore ? '' : 'disabled').'>'.tr('Cliente e fornitore').'</a></li>
+                    <li class="nav-item"><a href="#cliente_fornitore" data-toggle="tab" class="nav-link '.($is_cliente || $is_fornitore ? '' : 'disabled').'" '.($is_cliente || $is_fornitore ? '' : 'disabled').'>'.tr('Cliente e fornitore').'</a></li>
 
-                    <li '.(!$is_cliente && !$is_fornitore && $is_tecnico ? 'class="active"' : '').'><a href="#tecnico" data-toggle="tab" class="'.($is_tecnico ? '' : 'disabled').'" '.($is_tecnico ? '' : 'disabled').'>'.tr('Tecnico').'</a></li>
+                    <li class="nav-item '.(!$is_cliente && !$is_fornitore && $is_tecnico ? 'active' : '').'"><a href="#tecnico" data-toggle="tab" class="nav-link '.($is_tecnico ? '' : 'disabled').'" '.($is_tecnico ? '' : 'disabled').'>'.tr('Tecnico').'</a></li>
                 </ul>
 
                 <div class="tab-content '.(!$is_cliente && !$is_fornitore && !$is_tecnico ? 'd-none' : '').'">
@@ -544,7 +544,7 @@ ORDER BY `data`');
 
 if (!empty($elementi)) {
     echo '
-<div class="card card-outline card-warning collapsable collapsed-box">
+<div class="card card-outline card-warning collapsable collapsed-card">
     <div class="card-header">
         <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Documenti collegati: _NUM_', [
             '_NUM_' => count($elementi),

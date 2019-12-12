@@ -86,7 +86,7 @@ if (!empty($rs2)) {
             $collapsed = '';
             $icon = 'minus';
         } else {
-            $collapsed = 'collapsed-box';
+            $collapsed = 'collapsed-card';
             $icon = 'plus';
         }
 

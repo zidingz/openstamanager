@@ -341,7 +341,7 @@ UNION SELECT `co_preventivi`.`id`, `co_preventivi`.`data_bozza`, `co_preventivi`
 
 if (!empty($elementi)) {
     echo '
-<div class="card card-outline card-warning collapsable collapsed-box">
+<div class="card card-outline card-warning collapsable collapsed-card">
     <div class="card-header">
         <h3 class="card-title"><i class="fa fa-warning"></i> '.tr('Documenti collegati: _NUM_', [
             '_NUM_' => count($elementi),

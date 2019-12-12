@@ -5,223 +5,223 @@
 {% block body_class %}bg-light{% endblock %}
 
 {% block body %}
-    <div class="container bg-light">
-        <form action="" method="post" id="config-form" class="pb-5">
-            <input type="hidden" name="lang" value="{{ full_locale }}">
+<div class="container bg-light pb-5">
+    <form action="" method="post" id="config-form">
+        <input type="hidden" name="lang" value="{{ full_locale }}">
 
-            <div class="py-5 text-center">
-                <img class="d-block mx-auto mb-4" src="{{ base_path() }}/assets/img/full_logo.png" alt="{{ 'Logo OpenSTAManager'|trans }}">
-                <h2>{{ 'Benvenuto in _NAME_!'|trans({'_NAME_': '<strong>' ~ 'OpenSTAManager'|trans ~ '</strong>'})|raw }}</h2>
-                <p class="lead">{{ 'Puoi procedere alla configurazione tecnica del software attraverso i parametri seguenti, che potranno essere corretti secondo necessità tramite il file _FILE_'|trans({'_FILE_': '<i>config.inc.php</i>'})|raw }}. </p>
+        <div class="py-5 text-center">
+            <img class="d-block mx-auto mb-4" src="{{ base_path() }}/assets/img/full_logo.png" alt="{{ 'Logo OpenSTAManager'|trans }}">
+            <h2>{{ 'Benvenuto in _NAME_!'|trans({'_NAME_': '<strong>' ~ 'OpenSTAManager'|trans ~ '</strong>'})|raw }}</h2>
+            <p class="lead">{{ 'Puoi procedere alla configurazione tecnica del software attraverso i parametri seguenti, che potranno essere corretti secondo necessità tramite il file _FILE_'|trans({'_FILE_': '<i>config.inc.php</i>'})|raw }}. </p>
 
-                <p>{{ "Se necessiti supporto puoi contattarci tramite l'assistenza ufficiale: _LINK_"|trans({'_LINK_': '<a href="https://www.openstamanager.com/contattaci/?subject=Assistenza%20installazione%20OSM" target="_blank">https://www.openstamanager.com/contattaci/</a>' })|raw }}</p>
-            </div>
+            <p>{{ "Se necessiti supporto puoi contattarci tramite l'assistenza ufficiale: _LINK_"|trans({'_LINK_': '<a href="https://www.openstamanager.com/contattaci/?subject=Assistenza%20installazione%20OSM" target="_blank">https://www.openstamanager.com/contattaci/</a>' })|raw }}</p>
+        </div>
 
-            <div class="row">
-                <div class="col-md-4 order-md-2 mb-4">
-                    <h4 class="d-flex justify-content-between align-items-center mb-3 text-muted">{{ 'Lingua'|trans }}</h4>
-                    <select class="form-control d-none" id="language" required="1">
-                        {% for code, language in languages %}
-                            <option data-country="{{ language['flag'] }}" value="{{ code }}">{{ language['title'] }}</option>
-                        {% endfor %}
-                    </select>
-                    <p id="language-info">{{ 'Caricamento lingue in corso'|trans }}...</p>
+        <div class="row">
+            <div class="col-md-4 order-md-2 mb-4">
+                <h4 class="d-flex justify-content-between align-items-center mb-3 text-muted">{{ 'Lingua'|trans }}</h4>
+                <select class="form-control d-none" id="language" required="1">
+                    {% for code, language in languages %}
+                        <option data-country="{{ language['flag'] }}" value="{{ code }}">{{ language['title'] }}</option>
+                    {% endfor %}
+                </select>
+                <p id="language-info">{{ 'Caricamento lingue in corso'|trans }}...</p>
 
-                    <hr class="mb-4">
+                <hr class="mb-4">
 
-                    <h4 class="d-flex justify-content-between align-items-center mb-3 text-muted">{{ 'Licenza'|trans }}</h4>
-                    <p>{{ 'OpenSTAManager è tutelato dalla licenza _LICENSE_, da accettare obbligatoriamente per poter utilizzare il gestionale'|trans({'_LICENSE_': 'GPL 3.0'}) }}.</p>
+                <h4 class="d-flex justify-content-between align-items-center mb-3 text-muted">{{ 'Licenza'|trans }}</h4>
+                <p>{{ 'OpenSTAManager è tutelato dalla licenza _LICENSE_, da accettare obbligatoriamente per poter utilizzare il gestionale'|trans({'_LICENSE_': 'GPL 3.0'}) }}.</p>
 
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="agree" name="agree" required>
-                        <label class="custom-control-label" for="agree">{{ 'Ho visionato e accetto la licenza'|trans }}</label>
-                    </div>
-
-                    <textarea class="form-control" rows="15" readonly>{{ license }}</textarea><br>
-                    <a class="float-left" href="https://www.gnu.org/licenses/translations.en.html#GPL" target="_blank">[ {{ 'Versioni tradotte'|trans }} ]</a><br><br>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="agree" name="agree" required>
+                    <label class="custom-control-label" for="agree">{{ 'Ho visionato e accetto la licenza'|trans }}</label>
                 </div>
 
-                <div class="col-md-8 order-md-1">
-                    <h4 class="mb-3">{{ 'Formato date'|trans }}</h4>
-                    <div class="row">
-                        <div class="col-md-4">
-                            {[ "type": "text", "label": "{{ 'Formato data lunga'|trans }}", "name": "timestamp_format", "value": "d/m/Y H:i", "required": 1 ]}
-                        </div>
+                <textarea class="form-control" rows="15" readonly>{{ license }}</textarea><br>
+                <a class="float-left" href="https://www.gnu.org/licenses/translations.en.html#GPL" target="_blank">[ {{ 'Versioni tradotte'|trans }} ]</a><br><br>
+            </div>
 
-                        <div class="col-md-4">
-                            {[ "type": "text", "label": "{{ 'Formato data corta'|trans }}", "name": "date_format", "value": "d/m/Y", "required": 1 ]}
-                        </div>
-
-                        <div class="col-md-4">
-                            {[ "type": "text", "label": "{{ 'Formato orario'|trans }}", "name": "time_format", "value": "H:i", "required": 1 ]}
-                        </div>
+            <div class="col-md-8 order-md-1">
+                <h4 class="mb-3">{{ 'Formato date'|trans }}</h4>
+                <div class="row">
+                    <div class="col-md-4">
+                        {[ "type": "text", "label": "{{ 'Formato data lunga'|trans }}", "name": "timestamp_format", "value": "d/m/Y H:i", "required": 1 ]}
                     </div>
 
-                    <small>{{ 'I formati sono impostabili attraverso lo standard previsto da PHP: _LINK_'|trans({'_LINK_': '<a href="https://www.php.net/manual/en/function.date.php#refsect1-function.date-parameters">https://www.php.net/manual/en/function.date.php#refsect1-function.date-parameters</a>'})|raw }}.</small>
-                    <hr class="mb-4">
-
-                    <h4 class="mb-3">{{ 'Database'|trans }}</h4>
-
-                    <!-- db_host -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            {[ "type": "text", "label": "{{ 'Host del database'|trans }}", "name": "host", "placeholder": "{{ "Indirizzo dell'host del database"|trans }}", "value": "{{ host }}", "help": "{{ 'Esempio'|trans }}: localhost", "show-help": 0, "required": 1 ]}
-                        </div>
+                    <div class="col-md-4">
+                        {[ "type": "text", "label": "{{ 'Formato data corta'|trans }}", "name": "date_format", "value": "d/m/Y", "required": 1 ]}
                     </div>
 
-                    <!-- db_username -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            {[ "type": "text", "label": "{{ "Username dell'utente MySQL"|trans }}", "name": "username", "placeholder": "{{ "Username"|trans }}", "value": "{{ username }}", "help": "{{ 'Esempio'|trans }}: root", "show-help": 0, "required": 1 ]}
-                        </div>
+                    <div class="col-md-4">
+                        {[ "type": "text", "label": "{{ 'Formato orario'|trans }}", "name": "time_format", "value": "H:i", "required": 1 ]}
                     </div>
+                </div>
 
-                    <!-- db_password -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            {[ "type": "password", "label": "{{ "Password dell'utente MySQL"|trans }}", "name": "password", "placeholder": "{{ "Password"|trans }}", "value": "{{ password }}", "help": "{{ 'Esempio'|trans }}: mysql", "show-help": 0 ]}
-                        </div>
+                <small>{{ 'I formati sono impostabili attraverso lo standard previsto da PHP: _LINK_'|trans({'_LINK_': '<a href="https://www.php.net/manual/en/function.date.php#refsect1-function.date-parameters">https://www.php.net/manual/en/function.date.php#refsect1-function.date-parameters</a>'})|raw }}.</small>
+                <hr class="mb-4">
+
+                <h4 class="mb-3">{{ 'Database'|trans }}</h4>
+
+                <!-- db_host -->
+                <div class="row">
+                    <div class="col-md-12">
+                        {[ "type": "text", "label": "{{ 'Host del database'|trans }}", "name": "host", "placeholder": "{{ "Indirizzo dell'host del database"|trans }}", "value": "{{ host }}", "help": "{{ 'Esempio'|trans }}: localhost", "show-help": 0, "required": 1 ]}
                     </div>
+                </div>
 
-                    <!-- db_name -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            {[ "type": "text", "label": "{{ 'Nome del database'|trans }}", "name": "database_name", "placeholder": "{{ 'Database'|trans }}", "value": "{{ database_name }}", "help": "{{ 'Esempio'|trans }}: openstamanager", "show-help": 0, "required": 1 ]}
-                        </div>
+                <!-- db_username -->
+                <div class="row">
+                    <div class="col-md-12">
+                        {[ "type": "text", "label": "{{ "Username dell'utente MySQL"|trans }}", "name": "username", "placeholder": "{{ "Username"|trans }}", "value": "{{ username }}", "help": "{{ 'Esempio'|trans }}: root", "show-help": 0, "required": 1 ]}
                     </div>
+                </div>
 
-                    <hr class="mb-4">
+                <!-- db_password -->
+                <div class="row">
+                    <div class="col-md-12">
+                        {[ "type": "password", "label": "{{ "Password dell'utente MySQL"|trans }}", "name": "password", "placeholder": "{{ "Password"|trans }}", "value": "{{ password }}", "help": "{{ 'Esempio'|trans }}: mysql", "show-help": 0 ]}
+                    </div>
+                </div>
 
-                    <!-- PULSANTI -->
-                    <div class="row">
-                        <div class="col-md-4">
-                            <span>*<small><small>{{ 'Campi obbligatori'|trans }}</small></small></span>
-                        </div>
-                        <div class="col-md-4 text-right">
-                            <button type="button" id="test" class="btn btn-warning btn-block">
-                                <i class="fa fa-file-text"></i> {{ 'Testa il database'|trans }}
-                            </button>
-                        </div>
-                        <div class="col-md-4 text-right">
-                            <button type="submit" id="install" class="btn btn-success btn-block">
-                                <i class="fa fa-check"></i> {{ 'Installa'|trans }}
-                            </button>
-                        </div>
+                <!-- db_name -->
+                <div class="row">
+                    <div class="col-md-12">
+                        {[ "type": "text", "label": "{{ 'Nome del database'|trans }}", "name": "database_name", "placeholder": "{{ 'Database'|trans }}", "value": "{{ database_name }}", "help": "{{ 'Esempio'|trans }}: openstamanager", "show-help": 0, "required": 1 ]}
+                    </div>
+                </div>
+
+                <hr class="mb-4">
+
+                <!-- PULSANTI -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <span>*<small><small>{{ 'Campi obbligatori'|trans }}</small></small></span>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <button type="button" id="test" class="btn btn-warning btn-block">
+                            <i class="fa fa-file-text"></i> {{ 'Testa il database'|trans }}
+                        </button>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <button type="submit" id="install" class="btn btn-success btn-block">
+                            <i class="fa fa-check"></i> {{ 'Installa'|trans }}
+                        </button>
                     </div>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 </body>
 {% endblock %}
 
 {% block js %}
-    <!-- Controlli per essere sicuro che l'utente abbia letto la licenza -->
-    <script>
-        $(document).ready(function(){
-            $("#install").on("click", function(){
-                if($(this).closest("form").parsley().validate()){
-                    var restore = buttonLoading("#install");
-                    $("#config-form").submit();
+<!-- Controlli per essere sicuro che l'utente abbia letto la licenza -->
+<script>
+    $(document).ready(function(){
+        $("#install").on("click", function(){
+            if($(this).closest("form").parsley().validate()){
+                var restore = buttonLoading("#install");
+                $("#config-form").submit();
 
-                    //buttonRestore("#install", restore);
-                }
-            });
+                //buttonRestore("#install", restore);
+            }
+        });
 
-            $("#test").on("click", function(){
-                if($(this).closest("form").parsley().validate()){
-                    var restore = buttonLoading("#test");
-                    $("#install").prop('disabled', true);
+        $("#test").on("click", function(){
+            if($(this).closest("form").parsley().validate()){
+                var restore = buttonLoading("#test");
+                $("#install").prop('disabled', true);
 
-                    $(this).closest("form").ajaxSubmit({
-                        url: '{{ url_for('configuration-test') }}',
-                        data: {
-                            test: 1,
-                        },
-                        type: "post",
-                        success: function(data){
-                            data = parseFloat(data.trim());
+                $(this).closest("form").ajaxSubmit({
+                    url: '{{ url_for('configuration-test') }}',
+                    data: {
+                        test: 1,
+                    },
+                    type: "post",
+                    success: function(data){
+                        data = parseFloat(data.trim());
 
-                            buttonRestore("#test", restore);
-                            $("#install").prop('disabled', false);
+                        buttonRestore("#test", restore);
+                        $("#install").prop('disabled', false);
 
-                            if(data == 0){
-                                swal("{{ 'Errore della configurazione'|trans }}", "{{ 'La configurazione non è corretta'|trans }}.", "error");
-                            } else if(data == 1){
-                                swal("{{ 'Permessi insufficienti'|trans }}", "{{ "L'utente non possiede permessi sufficienti per il testing della connessione. Potresti rilevare problemi in fase di installazione."|trans }}.", "error");
-                            } else {
-                                swal("{{ 'Configurazione corretta'|trans }}", "{{ 'Ti sei connesso con successo al database'|trans }}. {{ "Clicca su 'Installa' per proseguire"|trans }}.", "success");
-                            }
-                        },
-                        error: function(xhr, error, thrown) {
-                            ajaxError(xhr, error, thrown);
+                        if(data == 0){
+                            swal("{{ 'Errore della configurazione'|trans }}", "{{ 'La configurazione non è corretta'|trans }}.", "error");
+                        } else if(data == 1){
+                            swal("{{ 'Permessi insufficienti'|trans }}", "{{ "L'utente non possiede permessi sufficienti per il testing della connessione. Potresti rilevare problemi in fase di installazione."|trans }}.", "error");
+                        } else {
+                            swal("{{ 'Configurazione corretta'|trans }}", "{{ 'Ti sei connesso con successo al database'|trans }}. {{ "Clicca su 'Installa' per proseguire"|trans }}.", "success");
                         }
-                    });
-                }
-            });
-        });
-
-        var flag_link = "https://lipis.github.io/flag-icon-css/flags/4x3/|flag|.svg";
-
-        $(document).ready(function() {
-            $.ajax({
-                url: flag_link.replace("|flag|", "it"),
-                success: function(){
-                    initLanguage(true);
-                },
-                error: function(){
-                    initLanguage(false);
-                },
-                timeout: 500
-            });
-        });
-
-        function languageFlag(item) {
-            if (!item.id) {
-                return item.text;
+                    },
+                    error: function(xhr, error, thrown) {
+                        ajaxError(xhr, error, thrown);
+                    }
+                });
             }
+        });
+    });
 
-            var element = $(item.element);
-            var img = $("<img>", {
-                class: "img-flag",
-                width: 26,
-                src: flag_link.replace("|flag|", element.data("country").toLowerCase()),
-            });
+    var flag_link = "https://lipis.github.io/flag-icon-css/flags/4x3/|flag|.svg";
 
-            var span = $("<span>", {
-                text: " " + item.text
-            });
-            span.prepend(img);
+    $(document).ready(function() {
+        $.ajax({
+            url: flag_link.replace("|flag|", "it"),
+            success: function(){
+                initLanguage(true);
+            },
+            error: function(){
+                initLanguage(false);
+            },
+            timeout: 500
+        });
+    });
 
-            return span;
+    function languageFlag(item) {
+        if (!item.id) {
+            return item.text;
         }
 
-        function initLanguage() {
-            $("#language").removeClass("d-none");
-            $("#language-info").addClass("d-none");
+        var element = $(item.element);
+        var img = $("<img>", {
+            class: "img-flag",
+            width: 26,
+            src: flag_link.replace("|flag|", element.data("country").toLowerCase()),
+        });
 
-            $("#language").select2({
-                theme: "bootstrap",
-                templateResult: languageFlag,
-                templateSelection:languageFlag,
-            });
+        var span = $("<span>", {
+            text: " " + item.text
+        });
+        span.prepend(img);
 
-            // Preselezione lingua
-            if (globals.full_locale) {
-                $("#language").selectSet(globals.full_locale);
-            }
+        return span;
+    }
 
-            $("#language").on("change", function(){
-                if ($(this).val()) {
-                    var location = window.location;
-                    var url = location.protocol + "//" + location.host + "" + location.pathname;
+    function initLanguage() {
+        $("#language").removeClass("d-none");
+        $("#language-info").addClass("d-none");
 
-                    var parameters = getUrlVars();
-                    parameters.lang = $(this).val();
+        $("#language").select2({
+            theme: "bootstrap",
+            templateResult: languageFlag,
+            templateSelection:languageFlag,
+        });
 
-                    redirect(url, parameters);
-                }
-            });
+        // Preselezione lingua
+        if (globals.full_locale) {
+            $("#language").selectSet(globals.full_locale);
         }
-    </script>
+
+        $("#language").on("change", function(){
+            if ($(this).val()) {
+                var location = window.location;
+                var url = location.protocol + "//" + location.host + "" + location.pathname;
+
+                var parameters = getUrlVars();
+                parameters.lang = $(this).val();
+
+                redirect(url, parameters);
+            }
+        });
+    }
+</script>
 {% endblock %}

@@ -256,7 +256,7 @@ if (!empty($id_intervento)) {
 	</div>
 
 	<!-- DATI INTERVENTO -->
-    <div class="card card-outline card-primary collapsable <?php echo get('ref') ? '' : 'collapsed-box'; ?>">
+    <div class="card card-outline card-primary collapsable <?php echo get('ref') ? '' : 'collapsed-card'; ?>">
         <div class="card-header">
 			<h3 class="card-title"><?php echo tr('Ore di lavoro'); ?></h3>
             <div class="card-tools float-right">

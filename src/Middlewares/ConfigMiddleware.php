@@ -58,6 +58,10 @@ class ConfigMiddleware extends Middleware
             $destination = ['init', 'init-save'];
         }
 
+        if (!empty($destination)){
+            $destination[] = 'ajax-flash';
+        }
+
         if (!empty($destination) && !in_array($route->getName(), $destination)) {
             Auth::logout();
 

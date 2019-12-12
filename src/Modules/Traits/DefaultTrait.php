@@ -57,7 +57,10 @@ trait DefaultTrait
     public function getOperations(Module $module, ?int $id_record)
     {
         // Elenco delle operazioni
-        $operations = $this->database->fetchArray('SELECT `zz_operations`.*, `zz_users`.`username` FROM `zz_operations`
+        $operations = $this->database->fetchArray('SELECT `zz_operations`.*,
+            `zz_users`.`username`,
+            DATE(`zz_users`.`created_at`) as date
+        FROM `zz_operations`
             JOIN `zz_users` ON `zz_operations`.`id_utente` = `zz_users`.`id`
             WHERE id_module = '.prepare($module->id).' AND id_record = '.prepare($id_record).'
         ORDER BY `created_at` ASC LIMIT 200');
@@ -100,7 +103,7 @@ trait DefaultTrait
             $operations[$key] = $operation;
         }
 
-        return $operations;
+        return collect($operations);
     }
 
     /**

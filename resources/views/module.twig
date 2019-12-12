@@ -18,7 +18,7 @@
     {{ block('top_content') }}
 
     <div class="content-header">
-        <a class="h2" data-toggle="tab" href="#tab_0" style="color: inherit; text-decoration: inherit;">
+        <a class="h2 clickable" id="main_tab" style="color: inherit; text-decoration: inherit;">
             {% if structure.help %}
             <span class="tip" title="{{ structure.help }}" data-position="bottom">
                 {% endif %}
@@ -38,15 +38,21 @@
             {% endif %}
         </a>
 
-        <ul class="nav nav-tabs float-right" id="tabs" role="tablist">
-            {% block plugins_list %}{% endblock %}
-
-            {% if include_operations and user.isAdmin() %}
-                <li class="nav-item float-right bg-warning">
-                    <a class="nav-link" data-toggle="tab" href="#tab_info" id="link-tab_info">{{ 'Info'|trans }}</a>
+        <div class="nav-tabs-custom float-right">
+            <ul class="nav nav-tabs" id="tabs" role="tablist">
+                <li class="nav-item">
+                    <a data-toggle="tab" href="#tab_0"></a>
                 </li>
-            {% endif %}
-        </ul>
+
+                {% block plugins_list %}{% endblock %}
+
+                {% if include_operations and user.isAdmin() %}
+                    <li class="nav-item float-right bg-warning">
+                        <a class="nav-link" data-toggle="tab" href="#tab_info" id="link-tab_info">{{ 'Info'|trans }}</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
 
     <div class="tab-content">
@@ -66,4 +72,11 @@
     </div>
 
     {{ block('bottom_content') }}
+
+    <script>
+        $('#main_tab').click(function (e) {
+            $('#tabs a[href="#tab_0"]').tab('show').trigger('show.bs.tab');
+            removeHash();
+        });
+    </script>
 {% endblock %}

@@ -22,9 +22,9 @@ function add_calendar() {
 
     $("#calendars").append(`<div class="col-md-4" id="group-` + name + `">
     <div class="input-group">
-        <span class="input-group-addon before">` + last_id + `</span>
+        <span class="input-group-prepend input-group-text">` + last_id + `</span>
         <input class="form-control calendar-input text-center" type="text" name="` + name + `" id="` + name + `"/>
-        <span class="input-group-addon after clickable btn btn-danger" onclick="remove_calendar(this)">
+        <span class="input-group-append input-group-text clickable btn btn-danger" onclick="remove_calendar(this)">
             <i class="fa fa-trash-o"></i>
         </span>
     </div>

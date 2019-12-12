@@ -29,7 +29,7 @@ function openModal(title, href, generate_id) {
         }
     });
 
-    var content = '<div class="modal-dialog modal-lg">\
+    var content = '<div class="modal-dialog modal-xl">\
     <div class="modal-content">\
         <div class="modal-header bg-light-blue">\
             <h4 class="modal-title">\

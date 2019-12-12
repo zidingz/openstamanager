@@ -34,9 +34,6 @@ switch (post('op')) {
         $sede->idzona = post('idzona');
         $sede->email = post('email');
 
-        $opt_out_newsletter = post('disable_newsletter');
-        $sede->enable_newsletter = empty($opt_out_newsletter);
-
         $sede->save();
 
         // Informazioni sull'anagrafica
@@ -86,6 +83,9 @@ switch (post('op')) {
         $anagrafica->id_ritenuta_acconto_acquisti = post('id_ritenuta_acconto_acquisti');
         $anagrafica->id_ritenuta_acconto_vendite = post('id_ritenuta_acconto_vendite');
         $anagrafica->split_payment = post('split_payment');
+
+        $opt_out_newsletter = post('disable_newsletter');
+        $anagrafica->enable_newsletter = empty($opt_out_newsletter);
 
         $anagrafica->tipologie = (array) post('id_tipo_anagrafica');
 

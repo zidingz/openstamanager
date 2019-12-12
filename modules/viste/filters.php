@@ -15,7 +15,7 @@ if (!empty($additionals)) {
         $editable = !($additional['default'] && $enable_readonly);
 
         echo '
-        <div class="card card-outline card-'.($additional['enabled'] ? 'success' : 'danger').'">
+        <div class="card card-outline card-'.($additional['enabled'] ? 'success' : 'danger').' collapsed-card">
             <div class="card-header">
                 <h3 class="card-title">'.
                     tr('Filtro: _NAME_', [
@@ -41,7 +41,7 @@ if (!empty($additionals)) {
                 </a>';
         echo '
             </div>
-            <div id="additional-'.$additional['id'].'" class="card-body collapse">
+            <div id="additional-'.$additional['id'].'" class="card-body">
 
                 <div class="row">
                     <div class="col-md-12">

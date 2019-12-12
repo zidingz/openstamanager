@@ -50,6 +50,8 @@ class RecordController extends RetroController implements RecordInterface
 
     public function update(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        return $this->actions($args);
+        $this->actions($args);
+
+        return $response->withRedirect($args['module']->url('record', $args));
     }
 }
