@@ -225,7 +225,7 @@ foreach ($righe as $row) {
 
     if ($record['stato'] != 'Pagato' && $record['stato'] != 'Emessa' && $riga['id'] != $fattura->rigaBollo->id) {
         echo "
-            <form action='".$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record."' method='post' id='delete-form-".$riga['id']."' role='form'>
+            <form action='".ROOTDIR.'/editor.php?id_module='.$id_module.'&id_record='.$id_record."' method='post' id='delete-form-".$riga['id']."' role='form'>
                 <input type='d-none' name='backto' value='record-edit'>
                 <input type='d-none' name='idriga' value='".$riga['id']."'>
                 <input type='d-none' name='op' value='".$delete."'>";
@@ -438,7 +438,7 @@ $(document).ready(function(){
                 });
                 order = order.replace(/^,/, "");
 
-				$.post("'.$rootdir.'/actions.php", {
+				$.post("'.ROOTDIR.'/actions.php", {
 					id: ui.item.data("id"),
 					id_module: '.$id_module.',
 					id_record: '.$id_record.',

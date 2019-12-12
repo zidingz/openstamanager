@@ -1,7 +1,7 @@
 <?php
 
 if (empty($id_record)) {
-    require $docroot.'/add.php';
+    require DOCROOT.'/add.php';
 } else {
     // Inclusione del file del modulo per eventuale HTML personalizzato
     include $imports[$id_record]['import'];
@@ -115,7 +115,7 @@ $(document).ready(function(){';
 
     echo '
     $("#save").html("<i class=\"fa fa-flag-checkered\"></i> '.tr('Avvia importazione').'");
-    
+
     $("#save").unbind("click");
     $("#save").on("click", function() {
         importPage(0);
@@ -132,16 +132,16 @@ function importPage(page){
         id_record: "'.$id_record.'",
         page: page,
     };
-    
+
     $("#edit-form").ajaxSubmit({
         url: globals.rootdir + "/actions.php",
         data: data,
         type: "post",
         success: function(data) {
             data = JSON.parse(data);
-            
+
             count += data.count;
-            
+
             if(data.more) {
                 importPage(page + 1);
             } else {

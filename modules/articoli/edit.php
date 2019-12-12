@@ -213,11 +213,11 @@
                     <div class="form-group">
                         <label for="componente_filename">'.tr('Seleziona un componente').':</label>';
     echo "
-                        <select class=\"form-control superselect\" id=\"componente_filename\" name=\"componente_filename\" onchange=\"$.post('".$rootdir."/modules/my_impianti/actions.php', {op: 'load_componente', idarticolo: '".$id_record."', filename: $(this).find('option:selected').val() }, function(response){ $('#info_componente').html( response ); start_superselect();    $('.datepicker').datetimepicker({  locale: globals.locale, format: 'L' } ); } );\">\n";
+                        <select class=\"form-control superselect\" id=\"componente_filename\" name=\"componente_filename\" onchange=\"$.post('".ROOTDIR."/modules/my_impianti/actions.php', {op: 'load_componente', idarticolo: '".$id_record."', filename: $(this).find('option:selected').val() }, function(response){ $('#info_componente').html( response ); start_superselect();    $('.datepicker').datetimepicker({  locale: globals.locale, format: 'L' } ); } );\">\n";
     echo '
                             <option value="0">'.tr('Nessuno').'</option>';
 
-    $cmp = \Util\Ini::getList($docroot.'/files/my_impianti/');
+    $cmp = \Util\Ini::getList(DOCROOT.'/files/my_impianti/');
 
     if (count($cmp) > 0) {
         for ($c = 0; $c < count($cmp); ++$c) {

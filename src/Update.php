@@ -42,7 +42,7 @@ class Update
         return self::$updates;
     }
 
-    public function addModuleUpdates(array $updates)
+    public static function addModuleUpdates(array $updates)
     {
         self::$module_updates = array_merge(self::$module_updates, $updates);
     }
@@ -129,7 +129,7 @@ class Update
      *
      * @return string
      */
-    public function isCoreUpdated()
+    public static function isCoreUpdated()
     {
         $database = database();
         $database_ready = $database->isConnected() && $database->tableExists('updates');

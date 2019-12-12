@@ -133,6 +133,10 @@
     };
 </script>
 
+    {% if debugbar %}
+    {{ debugbar.renderHead()|raw }}
+    {% endif %}
+
     {% if setting('Abilita esportazione Excel e PDF') %}
     <script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
@@ -286,6 +290,14 @@
             startHooks();
         });
     </script>
+
+    {% if debugbar %}
+        <!-- Fix per le icone di debug -->
+        <style>div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-copy-clipboard:before, div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-database:before, div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-duration:before, div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-memory:before, div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-row-count:before, div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-stmt-id:before {
+            font-family: FontAwesome;
+        }</style>
+        {{ debugbar.render()|raw }}
+    {% endif %}
 
     <!-- Modal di default -->
     <div class="modal fade" id="bs-popup" role="dialog" aria-labelledby="myModalLabel" aria-d-none="true" data-backdrop="static" data-keyboard="true"></div>

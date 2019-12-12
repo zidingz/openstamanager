@@ -184,13 +184,13 @@
 			<div class="row">
 				<div class="col-md-12" id="tecnici">
 					<?php
-                        if (file_exists($docroot.'/modules/interventi/custom/ajax_tecnici.php')) {
+                        if (file_exists(DOCROOT.'/modules/interventi/custom/ajax_tecnici.php')) {
                             ?>
-						<script>$('#tecnici').load('<?php echo $rootdir; ?>/modules/interventi/custom/ajax_tecnici.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');</script>
+						<script>$('#tecnici').load('<?php echo ROOTDIR; ?>/modules/interventi/custom/ajax_tecnici.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');</script>
 					<?php
                         } else {
                             ?>
-						<script>$('#tecnici').load('<?php echo $rootdir; ?>/modules/interventi/ajax_tecnici.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');</script>
+						<script>$('#tecnici').load('<?php echo ROOTDIR; ?>/modules/interventi/ajax_tecnici.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');</script>
 					<?php
                         }
                     ?>
@@ -257,13 +257,13 @@ include $structure->filepath('ajax_righe.php');
 			<div class="row">
 				<div class="col-md-12" id="costi">
 					<?php
-                        if (file_exists($docroot.'/modules/interventi/custom/ajax_costi.php')) {
+                        if (file_exists(DOCROOT.'/modules/interventi/custom/ajax_costi.php')) {
                             ?>
-						<script>$('#costi').load('<?php echo $rootdir; ?>/modules/interventi/custom/ajax_costi.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');</script>
+						<script>$('#costi').load('<?php echo ROOTDIR; ?>/modules/interventi/custom/ajax_costi.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');</script>
 					<?php
                         } else {
                             ?>
-						<script>$('#costi').load('<?php echo $rootdir; ?>/modules/interventi/ajax_costi.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');</script>
+						<script>$('#costi').load('<?php echo ROOTDIR; ?>/modules/interventi/ajax_costi.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');</script>
 					<?php
                         }
                     ?>
@@ -284,7 +284,7 @@ include $structure->filepath('ajax_righe.php');
 	    <div class="alert alert-warning"><i class="fa fa-warning"></i> '.tr('Questo intervento non è ancora stato firmato dal cliente').'.</div>';
         } else {
             echo '
-	    <img src="'.$rootdir.'/files/interventi/'.$record['firma_file'].'" class="img-thumbnail"><div>&nbsp;</div>
+	    <img src="'.ROOTDIR.'/files/interventi/'.$record['firma_file'].'" class="img-thumbnail"><div>&nbsp;</div>
 	   	<div class="col-md-6 col-md-offset-3 alert alert-success"><i class="fa fa-check"></i> '.tr('Firmato il _DATE_ alle _TIME_ da _PERSON_', [
             '_DATE_' => Translator::dateToLocale($record['firma_data']),
             '_TIME_' => Translator::timeToLocale($record['firma_data']),

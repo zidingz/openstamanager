@@ -13,7 +13,7 @@ echo '
     <div class="card-body">';
 
 // Elenca i componenti disponibili
-$cmp = \Util\Ini::getList($docroot.'/files/my_impianti/', $id_list);
+$cmp = \Util\Ini::getList(DOCROOT.'/files/my_impianti/', $id_list);
 
 echo '
         <div class="row">
@@ -38,7 +38,7 @@ echo '
 
             <div class="col-md-3">';
 echo "
-                <a class=\"btn btn-primary btn-block\" id=\"addta\" href=\"javascript:;\" onclick=\"if ( $('#filename').val()!='0' ){ redirect('".$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record."&op=linkcomponente&backto=record-edit&filename='+$('#filename').val() + '&hash=tab_".$id_plugin."');}else{ alert('".tr('Seleziona prima un componente')."'); $('#filename').focus(); }\"><i class='fa fa-plus'></i> ".tr('Aggiungi').'</a>';
+                <a class=\"btn btn-primary btn-block\" id=\"addta\" href=\"javascript:;\" onclick=\"if ( $('#filename').val()!='0' ){ redirect('".ROOTDIR.'/editor.php?id_module='.$id_module.'&id_record='.$id_record."&op=linkcomponente&backto=record-edit&filename='+$('#filename').val() + '&hash=tab_".$id_plugin."');}else{ alert('".tr('Seleziona prima un componente')."'); $('#filename').focus(); }\"><i class='fa fa-plus'></i> ".tr('Aggiungi').'</a>';
 echo '
             </div>
         </div>
@@ -109,7 +109,7 @@ if (!empty($rs2)) {
                     <div class="row">';
         // FORM COMPONENTE
         echo '
-                        <form method="post" action="'.$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'&op=updatecomponente&id='.$rs2[$j]['id'].'">
+                        <form method="post" action="'.ROOTDIR.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'&op=updatecomponente&id='.$rs2[$j]['id'].'">
                             <input type="hidden" name="backto" value="record-edit">';
 
         // Nome
@@ -191,7 +191,7 @@ if (!empty($rs2)) {
         // Sostituisci componente con un altro dello stesso tipo, posso sostituire solo i componenti installati
         if (empty($rs2[$j]['data_sostituzione'])) {
             echo "
-								<button  class=\"btn btn-warning\" onclick=\"if(confirm('".tr('Vuoi sostituire questo componente con un altro dello stesso tipo?')."')){ location.href='".$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'&op=sostituiscicomponente&backto=record-edit&filename='.$filename.'&id='.$rs2[$j]['id']."'; }else{ return false} \"><i class='fa fa-refresh'></i> ".tr('Sostituisci questo componente').'</button>';
+								<button  class=\"btn btn-warning\" onclick=\"if(confirm('".tr('Vuoi sostituire questo componente con un altro dello stesso tipo?')."')){ location.href='".ROOTDIR.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'&op=sostituiscicomponente&backto=record-edit&filename='.$filename.'&id='.$rs2[$j]['id']."'; }else{ return false} \"><i class='fa fa-refresh'></i> ".tr('Sostituisci questo componente').'</button>';
         } else {
             echo '
 								<button class="btn btn-warning disabled" disabled>'.tr('Componente già sostituito').'</button>';

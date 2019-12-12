@@ -203,7 +203,7 @@ if (!$block_edit) {
 
 		<div class="row">
 			<div class="col-md-12">
-				<?php include $docroot.'/modules/ordini/row-list.php'; ?>
+				<?php include DOCROOT.'/modules/ordini/row-list.php'; ?>
 			</div>
 		</div>
 	</div>

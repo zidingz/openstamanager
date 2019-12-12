@@ -196,7 +196,7 @@ $operations['registrazione-contabile'] = [
         'title' => tr('Registrazione contabile'),
         'type' => 'modal',
         'origine' => 'fatture',
-        'url' => $rootdir.'/add.php?id_module='.Modules::get('Prima nota')['id'],
+        'url' => ROOTDIR.'/add.php?id_module='.Modules::get('Prima nota')['id'],
     ],
 ];
 

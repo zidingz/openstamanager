@@ -2,7 +2,7 @@
 
 $block_edit = $record['is_completato'];
 
-?><script src="<?php echo $rootdir; ?>/modules/contratti/js/contratti_helper.js"></script>
+?><script src="<?php echo ROOTDIR; ?>/modules/contratti/js/contratti_helper.js"></script>
 
 <form action="" method="post" id="edit-form">
 	<input type="hidden" name="backto" value="record-edit">
@@ -219,7 +219,7 @@ if (!empty($rs)) {
                                 </td>
 
                                 <td>
-                                    <button type="button" class="btn btn-warning" data-toggle="tooltip" title="Importa valori da tariffe standard" onclick="if( confirm(\'Importare i valori dalle tariffe standard?\') ){ $.post( \''.$rootdir.'/modules/contratti/actions.php\', { op: \'import\', idcontratto: \''.$id_record.'\', idtipointervento: \''.$rs[$i]['idtipointervento'].'\' }, function(data){ location.href=\''.$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'\'; } ); }">
+                                    <button type="button" class="btn btn-warning" data-toggle="tooltip" title="Importa valori da tariffe standard" onclick="if( confirm(\'Importare i valori dalle tariffe standard?\') ){ $.post( \''.ROOTDIR.'/modules/contratti/actions.php\', { op: \'import\', idcontratto: \''.$id_record.'\', idtipointervento: \''.$rs[$i]['idtipointervento'].'\' }, function(data){ location.href=\''.ROOTDIR.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'\'; } ); }">
                                     <i class="fa fa-download"></i>
                                     </button>
                                 </td>
@@ -271,7 +271,7 @@ if (!empty($rs)) {
                                 </td>
 
                                 <td>
-                                <button type="button" class="btn btn-warning" data-toggle="tooltip" title="Importa valori da tariffe standard" onclick="if( confirm(\'Importare i valori dalle tariffe standard?\') ){ $.post( \''.$rootdir.'/modules/contratti/actions.php\', { op: \'import\', idcontratto: \''.$id_record.'\', idtipointervento: \''.$rs[$i]['idtipointervento'].'\' }, function(data){ location.href=\''.$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'\'; } ); }">
+                                <button type="button" class="btn btn-warning" data-toggle="tooltip" title="Importa valori da tariffe standard" onclick="if( confirm(\'Importare i valori dalle tariffe standard?\') ){ $.post( \''.ROOTDIR.'/modules/contratti/actions.php\', { op: \'import\', idcontratto: \''.$id_record.'\', idtipointervento: \''.$rs[$i]['idtipointervento'].'\' }, function(data){ location.href=\''.ROOTDIR.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'\'; } ); }">
                                     <i class="fa fa-download"></i>
                                 </button>
                                 </td>
@@ -327,7 +327,7 @@ if (!$block_edit) {
             <div class="col-md-12">
 <?php
 
-include $docroot.'/modules/contratti/row-list.php';
+include DOCROOT.'/modules/contratti/row-list.php';
 
 ?>
             </div>

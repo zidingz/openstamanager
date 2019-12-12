@@ -24,7 +24,7 @@ class EloquentCollector extends \DebugBar\DataCollector\PDO\PDOCollector
     {
         return [
             'eloquent' => [
-                'icon' => 'inbox',
+                'icon' => 'database',
                 'widget' => 'PhpDebugBar.Widgets.SQLQueriesWidget',
                 'map' => 'eloquent_pdo',
                 'default' => '[]',

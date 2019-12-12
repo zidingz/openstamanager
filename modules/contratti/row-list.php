@@ -217,7 +217,7 @@ $(document).ready(function(){
                 });
                 order = order.replace(/^,/, "");
 
-				$.post("'.$rootdir.'/actions.php", {
+				$.post("'.ROOTDIR.'/actions.php", {
 					id: ui.item.data("id"),
 					id_module: '.$id_module.',
 					id_record: '.$id_record.',

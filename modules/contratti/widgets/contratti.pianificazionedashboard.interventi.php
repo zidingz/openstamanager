@@ -86,7 +86,7 @@ if (!empty($rsp)) {
                 <td>';
         if (empty($r['idintervento'])) {
             echo "
-                    <a class=\"btn btn-primary\" title=\"Pianifica ora!\" onclick=\"launch_modal( '".tr('Pianifica intervento')."', '".$rootdir.'/add.php?id_module='.Modules::get('Interventi')['id'].'&ref=dashboard&idcontratto='.urlencode($r['idcontratto']).'&idcontratto_riga='.$r['id']."');\">
+                    <a class=\"btn btn-primary\" title=\"Pianifica ora!\" onclick=\"launch_modal( '".tr('Pianifica intervento')."', '".ROOTDIR.'/add.php?id_module='.Modules::get('Interventi')['id'].'&ref=dashboard&idcontratto='.urlencode($r['idcontratto']).'&idcontratto_riga='.$r['id']."');\">
                         <i class='fa fa-calendar'></i>
                     </a>";
         }
@@ -111,7 +111,7 @@ if (!empty($rsp)) {
 <script>
 $(document).ready(function() {
 	 $('.datatables').DataTable({
-		 	"oLanguage": { "sUrl": "<?php echo $rootdir; ?>/assets/js/i18n/datatables/<?php echo $lang; ?>.min.json" },
+		 	"oLanguage": { "sUrl": "<?php echo ROOTDIR; ?>/assets/js/i18n/datatables/<?php echo $lang; ?>.min.json" },
 		 	 "paging": false,
 			 "info":     false
 	 });

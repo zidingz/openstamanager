@@ -1,6 +1,6 @@
 <?php
 
-$path = $docroot.'/files/my_impianti/';
+$path = DOCROOT.'/files/my_impianti/';
 
 switch (post('op')) {
     case 'update':

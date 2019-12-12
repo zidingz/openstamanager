@@ -2,16 +2,16 @@
 
 use DI\Container;
 use Models\Module;
-use Models\OperationLog;
 use Slim\Factory\AppFactory;
 
 // Impostazioni di configurazione PHP
 date_default_timezone_set('Europe/Rome');
+
 // Disabilita i messaggi nativi di PHP
 ini_set('display_startup_errors', 0);
 ini_set('display_errors', 0);
 // Ignora gli avvertimenti e le informazioni relative alla deprecazione di componenti
-//error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_USER_DEPRECATED & ~E_STRICT);
+error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_USER_DEPRECATED & ~E_STRICT);
 
 // Controllo sulla versione PHP
 $minimum = '7.2.0';
@@ -32,23 +32,6 @@ foreach ($namespaces as $path => $namespace) {
     $loader->addPsr4($namespace.'\\', __DIR__.'/../'.$path.'/src');
 }
 
-// Individuazione dei percorsi di base
-App::definePaths(__DIR__.'/..');
-
-$docroot = DOCROOT;
-$rootdir = ROOTDIR;
-$baseurl = BASEURL;
-
-// Configurazione standard
-$config = App::getConfig();
-
-// Redirect al percorso HTTPS se impostato nella configurazione
-if (!empty($config['redirectHTTPS']) && !isHTTPS(true)) {
-    header('HTTP/1.1 301 Moved Permanently');
-    header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
-    exit();
-}
-
 // Inizializzazione Dependency Injection
 $container = new Container();
 App::setContainer($container);
@@ -57,15 +40,8 @@ App::setContainer($container);
 AppFactory::setContainer($container);
 $app = AppFactory::create();
 
-// Impostazione di debug
-$container->set('debug', App::debug());
-
-// Configurazione
-$container->set('config', $config);
-
-// Logger
-$logger = new Logger($container);
-$container->set('logger', $logger);
+$container->set('response_factory', $app->getResponseFactory());
+$container->set('router', $app->getRouteCollector()->getRouteParser());
 
 // Impostazione percorso di base
 $app->setBasePath((function () {
@@ -81,6 +57,11 @@ $app->setBasePath((function () {
     return '';
 })());
 
+// Individuazione dei percorsi di base
+define('DOCROOT', __DIR__.'/..');
+define('ROOTDIR', $app->getBasePath());
+define('BASEURL', (isHTTPS(true) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].ROOTDIR);
+
 // Istanziamento della sessione
 ini_set('session.use_trans_sid', '0');
 ini_set('session.use_only_cookies', '1');
@@ -88,9 +69,6 @@ ini_set('session.use_only_cookies', '1');
 session_set_cookie_params(0, $app->getBasePath());
 session_cache_limiter(false);
 session_start();
-
-// Routing
-$container->set('router', $app->getRouteCollector()->getRouteParser());
 
 // Istanziamento delle dipendenze
 require __DIR__.'/../config/dependencies.php';
@@ -114,6 +92,7 @@ if (Update::isCoreUpdated()) {
 }
 
 // Configurazione templating personalizzato
+$config = $container->get('config');
 if (!empty($config['HTMLWrapper'])) {
     HTMLBuilder\HTMLBuilder::setWrapper($config['HTMLWrapper']);
 }
@@ -128,18 +107,3 @@ foreach ((array) $config['HTMLManagers'] as $key => $value) {
 
 // Run application
 $app->run();
-
-// Informazioni estese sulle azioni dell'utente
-$op = post('op');
-if (!empty($op)) {
-    OperationLog::setInfo('id_module', $id_module);
-    OperationLog::setInfo('id_plugin', $id_plugin);
-    OperationLog::setInfo('id_record', $id_record);
-
-    OperationLog::build($op);
-}
-
-// Annullo le notifiche (AJAX)
-if (isAjaxRequest()) {
-    flash()->clearMessage('info');
-}

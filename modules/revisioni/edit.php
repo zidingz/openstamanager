@@ -1,5 +1,5 @@
 <?php
-echo "<form action='".$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record."' method='post'>";
+echo "<form action='".ROOTDIR.'/editor.php?id_module='.$id_module.'&id_record='.$id_record."' method='post'>";
 echo "  <input type='d-none' name='backto' value='record-edit'>";
 echo "  <input type='d-none' name='op' value='edit_revision'>";
 echo "  <input type='d-none' name='id_plugin' value='".$id_plugin."'>";
@@ -57,7 +57,7 @@ echo '      </div>';
 echo '  </div>';
 echo '</form>';
 
-echo "<form action='".$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record."' method='post' id='form_deleterevision'>";
+echo "<form action='".ROOTDIR.'/editor.php?id_module='.$id_module.'&id_record='.$id_record."' method='post' id='form_deleterevision'>";
 echo "  <input type='d-none' name='backto' value='record-edit'>";
 echo "  <input type='d-none' name='op' value='delete_revision'>";
 echo "  <input type='d-none' name='id_plugin' value='".$id_plugin."'>";

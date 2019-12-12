@@ -9,6 +9,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Exception\HttpNotFoundException;
 use Update;
 use Util\Query;
+use Models\OperationLog;
 
 /**
  * Middleware per il blocco dei plugin senza riferimento al record genitore.
@@ -52,6 +53,15 @@ class RetroModuleMiddleware extends Middleware
 
         // Impostazione degli argomenti
         $request = $this->setArgs($request, $args);
+
+        // Informazioni estese sulle azioni dell'utente
+        $op = $this->filter->post('op');
+        if (!empty($op)) {
+            OperationLog::setInfo('id_module', $args['id_module']);
+            OperationLog::setInfo('id_record', $args['id_record']);
+
+            OperationLog::build($op);
+        }
 
         return $handler->handle($request);
     }

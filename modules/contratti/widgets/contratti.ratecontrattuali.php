@@ -116,9 +116,9 @@ if (!empty($rsp)) {
         if ($r['iddocumento'] == 0) {
             echo "
             <tr id='fat_".$r['id']."'>
-                <td>".Translator::dateToLocale($r['data_scadenza'])."<br><a href='".$rootdir.'/editor.php?id_module='.Modules::get('Contratti')['id'].'&id_record='.$r['idcontratto']."'><small>rif. ".$r['nome']." </small></a></td>
+                <td>".Translator::dateToLocale($r['data_scadenza'])."<br><a href='".ROOTDIR.'/editor.php?id_module='.Modules::get('Contratti')['id'].'&id_record='.$r['idcontratto']."'><small>rif. ".$r['nome']." </small></a></td>
                 <td>
-                    <a href='".$rootdir.'/editor.php?id_module='.Modules::get('Anagrafiche')['id'].'&id_record='.$r['idcliente']."'>".nl2br($r['ragione_sociale']).'</a>
+                    <a href='".ROOTDIR.'/editor.php?id_module='.Modules::get('Anagrafiche')['id'].'&id_record='.$r['idcliente']."'>".nl2br($r['ragione_sociale']).'</a>
                 </td>
                 <td>'.$zona.' ('.$n_sedi.')</td>
                 <td>
@@ -130,7 +130,7 @@ if (!empty($rsp)) {
             echo '
                 <td>';
             if (empty($r['idintervento'])) {
-                echo '<button type="button" class="btn btn-primary btn-sm" onclick="launch_modal( \'Crea fattura\', \''.$rootdir.'/modules/contratti/plugins/addfattura.php?idcontratto='.$r['idcontratto'].'&idpianificazione='.$r['id'].'&importo='.$importo.'&n_rata='.$n_rata[$r['idzona']][$r['idcontratto']].'\');">
+                echo '<button type="button" class="btn btn-primary btn-sm" onclick="launch_modal( \'Crea fattura\', \''.ROOTDIR.'/modules/contratti/plugins/addfattura.php?idcontratto='.$r['idcontratto'].'&idpianificazione='.$r['id'].'&importo='.$importo.'&n_rata='.$n_rata[$r['idzona']][$r['idcontratto']].'\');">
 					<i class="fa fa-euro"></i> Crea fattura
 				</button>';
             }

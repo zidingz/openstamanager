@@ -9,6 +9,8 @@ use Controllers\Config\RequirementsController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Slim\Http\Response;
+use Slim\Psr7\Stream;
 use Update;
 
 /**
@@ -20,6 +22,15 @@ class ConfigMiddleware extends Middleware
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $config = $this->config;
+
+        // Redirect al percorso HTTPS se impostato nella configurazione
+        if (!empty($config['redirectHTTPS']) && !isHTTPS(true)) {
+            header('HTTP/1.1 301 Moved Permanently');
+            header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+            exit();
+        }
+
         $route = $this->getRoute($request);
         if (empty($route)) {
             return $handler->handle($request);
@@ -50,6 +61,7 @@ class ConfigMiddleware extends Middleware
         if (!empty($destination) && !in_array($route->getName(), $destination)) {
             Auth::logout();
 
+            $response = $this->response_factory->createResponse();
             return $response->withRedirect($this->router->urlFor($destination[0]));
         }
 

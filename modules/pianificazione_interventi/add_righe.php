@@ -38,7 +38,7 @@ if (empty($idriga)) {
 }
 
 echo '
-<form id="add-righe" action="'.$rootdir.'/actions.php" method="post">
+<form id="add-righe" action="'.ROOTDIR.'/actions.php" method="post">
     <input type="hidden" name="id_plugin" value="'.$id_plugin.'">
 	<input type="hidden" name="id_record" value="'.$id_record.'">
     <input type="hidden" name="op" value="'.$op.'">

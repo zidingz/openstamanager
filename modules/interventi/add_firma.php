@@ -11,7 +11,7 @@ if (get('anteprima') !== null) {
     }
 
     // Gestione della stampa
-    $directory = $docroot.'/files/interventi/';
+    $directory = DOCROOT.'/files/interventi/';
     $id_print = setting('Stampa per anteprima e firma');
 
     // HTML per la visualizzazione
@@ -29,7 +29,7 @@ if (get('anteprima') !== null) {
 }
 
 ?>
-<form action="<?php echo $rootdir; ?>/editor.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>" method="post" id="form-firma" class="d-none">
+<form action="<?php echo ROOTDIR; ?>/editor.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>" method="post" id="form-firma" class="d-none">
     <input type="hidden" name="op" value="firma">
     <input type="hidden" name="backto" value="record-edit">
 

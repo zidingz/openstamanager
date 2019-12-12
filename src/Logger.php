@@ -107,8 +107,7 @@ class Logger extends Monolog\Logger implements ErrorHandlerInterface
     public function render(int $status): Response
     {
         // Visualizzazione grafica
-        $response = new Response();
-        $response = $response->withStatus($status);
+        $response = $this->container->get('response_factory')->createResponse($status);
 
         return $this->container->get('twig')->render($response, 'errors/'.$status.'.twig');
     }

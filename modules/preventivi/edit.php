@@ -219,7 +219,7 @@ if (!$block_edit) {
             <div class="col-md-12">
 <?php
 
-include $docroot.'/modules/preventivi/row-list.php';
+include DOCROOT.'/modules/preventivi/row-list.php';
 
 ?>
             </div>

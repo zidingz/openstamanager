@@ -56,7 +56,7 @@ $orario_inizio = '09:00';
 $orario_fine = !empty($tempo_standard) ? date('H:i', strtotime($orario_inizio) + ((60 * 60) * $tempo_standard)) : '17:00';
 
 echo '
-<form id="add_form" action="'.$rootdir.'/controller.php" method="post" role="form">
+<form id="add_form" action="'.ROOTDIR.'/controller.php" method="post" role="form">
 
 	<input type="hidden" name="id_plugin" value="'.$id_plugin.'">
     <input type="hidden" name="id_parent" value="'.$reference_id.'">

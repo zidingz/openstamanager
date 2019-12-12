@@ -38,7 +38,7 @@
 
 	<div class="card-body">
 		<div class="float-left">
-			<a class="btn btn-primary" data-href="<?php echo $rootdir; ?>/add.php?id_module=<?php echo $id_module; ?>&id_original=<?php echo $id_record; ?>" data-toggle="modal" data-title="<?php echo tr('Aggiungi riga'); ?>"><i class="fa fa-plus"></i> <?php echo tr('Sottocategoria'); ?></a><br>
+			<a class="btn btn-primary" data-href="<?php echo ROOTDIR; ?>/add.php?id_module=<?php echo $id_module; ?>&id_original=<?php echo $id_record; ?>" data-toggle="modal" data-title="<?php echo tr('Aggiungi riga'); ?>"><i class="fa fa-plus"></i> <?php echo tr('Sottocategoria'); ?></a><br>
 		</div>
 		<div class="clearfix"></div>
 		<hr>
@@ -53,7 +53,7 @@
 					<th width="20%"><?php echo tr('Opzioni'); ?></th>
 				</tr>
 
-				<?php include $docroot.'/modules/'.Modules::get($id_module)['directory'].'/row-list.php'; ?>
+				<?php include DOCROOT.'/modules/'.Modules::get($id_module)['directory'].'/row-list.php'; ?>
 				</table>
 			</div>
 		</div>

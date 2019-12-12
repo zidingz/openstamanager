@@ -7,42 +7,11 @@
  */
 class App
 {
-    /** @var array Identificativo del modulo corrente */
-    protected static $current_module;
-    /** @var int Identificativo dell'elemento corrente */
-    protected static $current_element;
-
     /** @var \Slim\Container */
     protected static $container = null;
 
     /** @var bool Stato di debug */
     protected static $config = [];
-
-    /** @var array Elenco degli assets del progetto */
-    protected static $assets = [
-        // CSS
-        'css' => [
-            'app.min.css',
-            'style.min.css',
-            'themes.min.css',
-        ],
-
-        // Print CSS
-        'print' => [
-            'print.min.css',
-        ],
-
-        // JS
-        'js' => [
-            'app.min.js',
-            'functions.min.js',
-            'custom.min.js',
-            'i18n/parsleyjs/|lang|.min.js',
-            'i18n/select2/|lang|.min.js',
-            'i18n/moment/|lang|.min.js',
-            'i18n/fullcalendar/|lang|.min.js',
-        ],
-    ];
 
     /**
      * Restituisce la configurazione dell'installazione in utilizzo del progetto.
@@ -102,111 +71,6 @@ class App
     public static function getContainer()
     {
         return self::$container;
-    }
-
-    /**
-     * Individua i percorsi di base necessari per il funzionamento del gestionale.
-     * <b>Attenzione<b>: questo metodo deve essere eseguito all'interno di un file nella cartella principale del progetto per permettere il corretto funzionamento degli URL.
-     *
-     * @return array
-     */
-    public static function definePaths($docroot)
-    {
-        if (!defined('DOCROOT')) {
-            // Individuazione di $rootdir
-            $rootdir = substr($_SERVER['SCRIPT_NAME'], 0, strrpos($_SERVER['SCRIPT_NAME'], '/')).'/';
-            if (strrpos($rootdir, '/'.basename($docroot).'/') !== false) {
-                $rootdir = substr($rootdir, 0, strrpos($rootdir, '/'.basename($docroot).'/')).'/'.basename($docroot);
-            } else {
-                $rootdir = '/';
-            }
-            $rootdir = rtrim($rootdir, '/');
-            $rootdir = str_replace('%2F', '/', rawurlencode($rootdir));
-
-            // Individuazione di $baseurl
-            $baseurl = (isHTTPS(true) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].$rootdir;
-
-            // Impostazione delle variabili globali
-            define('DOCROOT', $docroot);
-            define('ROOTDIR', $rootdir);
-            define('BASEURL', $baseurl);
-        }
-    }
-
-    /**
-     * Individua i percorsi principali del progetto.
-     *
-     * @return array
-     */
-    public static function getPaths()
-    {
-        $assets = ROOTDIR.'/assets';
-
-        return [
-            'assets' => $assets,
-            'css' => $assets.'/css',
-            'js' => $assets.'/js',
-            'img' => $assets.'/img',
-        ];
-    }
-
-    /**
-     * Restituisce l'elenco degli assets del progetto.
-     *
-     * @return array
-     */
-    public static function getAssets()
-    {
-        // Assets aggiuntivi
-        $config = self::getConfig();
-
-        $version = Update::getVersion();
-
-        // Impostazione dei percorsi
-        $paths = self::getPaths();
-        $lang = trans()->getCurrentLocale();
-
-        // Sezioni: nome - percorso
-        $sections = [
-            'css' => 'css',
-            'print' => 'css',
-            'js' => 'js',
-        ];
-
-        $first_lang = explode('_', $lang);
-        $lang_replace = [
-            $lang,
-            strtolower($lang),
-            strtolower($first_lang[0]),
-            strtoupper($first_lang[0]),
-            str_replace('_', '-', $lang),
-            str_replace('_', '-', strtolower($lang)),
-        ];
-
-        $assets = [];
-
-        foreach ($sections as $section => $dir) {
-            $result = array_unique(array_merge(self::$assets[$section], $config['assets'][$section]));
-
-            foreach ($result as $key => $element) {
-                $element = $paths[$dir].'/'.$element;
-
-                foreach ($lang_replace as $replace) {
-                    $name = str_replace('|lang|', $replace, $element);
-
-                    if (file_exists(DOCROOT.str_replace(ROOTDIR, '', $name))) {
-                        $element = $name;
-                        break;
-                    }
-                }
-
-                $result[$key] = $element.'?v='.$version;
-            }
-
-            $assets[$section] = $result;
-        }
-
-        return $assets;
     }
 
     /**
