@@ -1,7 +1,7 @@
 <?php
 
 // Creazione righe fantasma
-$autofill = new \Util\Autofill($options['pricing'] ? 5 : 2);
+$autofill = new \Prints\Autofill($options['pricing'] ? 5 : 2);
 $rows_per_page = 16;
 if (!empty($options['last-page-footer'])) {
     $rows_per_page += 10;

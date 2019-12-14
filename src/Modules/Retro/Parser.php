@@ -7,7 +7,7 @@ use Controllers\Controller;
 use HTMLBuilder\HTMLBuilder;
 use Modules\Traits\DefaultTrait;
 
-abstract class RetroController extends Controller
+abstract class Parser extends Controller
 {
     use DefaultTrait;
 

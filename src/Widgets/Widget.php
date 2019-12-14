@@ -18,6 +18,26 @@ class Widget extends Model
         'permission',
     ];
 
+    protected $manager_object;
+
+    public function render(array $args = [])
+    {
+        return $this->manager->render($args);
+    }
+
+    // Attributi Eloquent
+
+    public function getManagerAttribute()
+    {
+        if (!isset($this->manager_object)) {
+            $class = $this->attributes['class'];
+
+            $this->manager_object = new $class($this);
+        }
+
+        return $this->manager_object;
+    }
+
     /* Relazioni Eloquent */
 
     public function module()

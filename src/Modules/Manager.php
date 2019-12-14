@@ -9,7 +9,7 @@ use Slim\App as SlimApp;
  *
  * @since 2.5
  */
-abstract class Register
+abstract class Manager
 {
     protected $module;
     protected static $container;

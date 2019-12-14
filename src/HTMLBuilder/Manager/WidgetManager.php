@@ -3,6 +3,7 @@
 namespace HTMLBuilder\Manager;
 
 use Modules\Module;
+use Widgets\Widget;
 
 /**
  * @since 2.4
@@ -25,6 +26,10 @@ class WidgetManager implements ManagerInterface
     protected function widget($options)
     {
         $database = database();
+
+        $widget = Widget::find($options['id']);
+
+        return $widget->render();
 
         // Widget richiesto
         $widget = $database->fetchArray('SELECT * FROM zz_widgets WHERE id = '.prepare($options['id']))[0];

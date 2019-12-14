@@ -4,7 +4,7 @@ $v_iva = [];
 $v_totale = [];
 
 // Creazione righe fantasma
-$autofill = new \Util\Autofill(5, 40);
+$autofill = new \Prints\Autofill(5, 40);
 $rows_per_page = $fattura_accompagnatoria ? 15 : 20;
 if (!empty($options['last-page-footer'])) {
     $rows_per_page += 7;

@@ -2,9 +2,9 @@
 
 namespace Modules\Retro;
 
-use Modules\ActionInterface;
+use Modules\Interfaces\ActionInterface;
 
-class ActionController extends RetroController implements ActionInterface
+class ActionController extends Parser implements ActionInterface
 {
     public function __call($name, $arguments)
     {

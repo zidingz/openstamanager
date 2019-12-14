@@ -2,32 +2,23 @@
 
 namespace Widgets;
 
-use Controllers\Controller;
-use Psr\Container\ContainerInterface;
-
-abstract class Manager extends Controller
+abstract class Manager
 {
     protected $widget;
     protected $record_id;
 
-    public function __construct(ContainerInterface $container, Widget $widget, ?int $record_id = null)
+    public function __construct(Widget $widget, ?int $record_id = null)
     {
-        parent::__construct($container);
-
         $this->widget = $widget;
         $this->record_id = $record_id;
     }
 
-    abstract protected function getTitle(): string;
-
-    abstract protected function getContent(): string;
-
-    protected function getAttributes(): string
+    public function getContainer()
     {
-        return 'href="#"';
+        return \App::getContainer();
     }
 
-    protected function render()
+    public function render(): string
     {
         $widget = $this->widget;
 
@@ -37,7 +28,7 @@ abstract class Manager extends Controller
         $result = '
 <a class="clickable" '.$this->getAttributes().'>
     <div class="info-box">
-        <button type="button" class="close" onclick="if(confirm(\'Disabilitare questo widget?\')) { $.post( \''.ROOTDIR.'/actions.php?id_module='.self::getModule()->id.'\', { op: \'disable_widget\', id: \''.$widget['id'].'\' }, function(response){ location.reload(); }); };" >
+        <button type="button" class="close" onclick="if(confirm(\'Disabilitare questo widget?\')) { $.post( \''.ROOTDIR.'/actions.php?id_module='.$widget->module->id.'\', { op: \'disable_widget\', id: \''.$widget['id'].'\' }, function(response){ location.reload(); }); };" >
             <span aria-d-none="true">&times;</span><span class="sr-only">'.tr('Chiudi').'</span>
         </button>
 
@@ -69,5 +60,14 @@ abstract class Manager extends Controller
 </a>';
 
         return $result;
+    }
+
+    abstract protected function getTitle(): string;
+
+    abstract protected function getContent(): string;
+
+    protected function getAttributes(): string
+    {
+        return 'href="#"';
     }
 }

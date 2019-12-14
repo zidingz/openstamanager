@@ -49,7 +49,7 @@ class ContentMiddleware extends Middleware
      */
     public function getMainMenu($depth = 3)
     {
-        $menus = Module::getHierarchy();
+        $menus = Module::getHierarchy()->sortBy('order');
 
         $module = Module::getCurrent();
         $module_name = isset($module) ? $module->name : '';

@@ -13,8 +13,6 @@ class DefaultUpload extends Model implements UploadAdapter
 {
     protected $table = 'zz_files';
 
-    protected $file_info;
-
     public function getCategoryAttribute()
     {
         return $this->attributes['category'] ?: 'Generale';
@@ -131,6 +129,14 @@ class DefaultUpload extends Model implements UploadAdapter
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDownloadName(): string
+    {
+        return $this->original_name;
     }
 
     /**

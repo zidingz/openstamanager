@@ -2,11 +2,11 @@
 
 namespace Modules\Retro;
 
-use Modules\ModuleInterface;
+use Modules\Interfaces\ModuleInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class ModuleController extends RetroController implements ModuleInterface
+class ModuleController extends Parser implements ModuleInterface
 {
     public function page(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {

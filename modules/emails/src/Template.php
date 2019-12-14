@@ -4,8 +4,8 @@ namespace Modules\Emails;
 
 use Common\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Models\Template;
 use Modules\Module;
+use Prints\Template as PrintTemplate;
 use Traits\StoreTrait;
 
 class Template extends Model
@@ -39,6 +39,6 @@ class Template extends Model
 
     public function prints()
     {
-        return $this->belongsToMany(Template::class, 'em_print_template', 'id_template', 'id_print');
+        return $this->belongsToMany(PrintTemplate::class, 'em_print_template', 'id_template', 'id_print');
     }
 }

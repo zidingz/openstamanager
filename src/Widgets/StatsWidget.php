@@ -13,7 +13,7 @@ abstract class StatsWidget extends Manager
         $widget = $this->widget;
 
         // Individuazione della query relativa
-        $query = $widget['query'];
+        $query = $this->getQuery();
 
         $module = Module::get($widget['id_module']);
         $additionals = $module->getAdditionalsQuery();

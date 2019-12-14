@@ -5,11 +5,11 @@ namespace Modules\Retro;
 use Middlewares\Authorization\PermissionMiddleware;
 use Middlewares\Authorization\UserMiddleware;
 use Middlewares\RetroModuleMiddleware;
-use Modules\Register as Original;
+use Modules\Manager as Original;
 use Slim\App as SlimApp;
 use Slim\Routing\RouteCollectorProxy;
 
-class Register extends Original
+class Manager extends Original
 {
     public function getUrl(string $name, array $parameters = [])
     {
@@ -32,7 +32,7 @@ class Register extends Original
         $defined_vars = get_defined_vars();
 
         // Lettura risultato query del modulo
-        $init = RetroController::filepath($this->module, 'init.php');
+        $init = Parser::filepath($this->module, 'init.php');
         if (!empty($init)) {
             include $init;
         }

@@ -1,7 +1,7 @@
 <?php
 
 // Creazione righe fantasma
-$autofill = new \Util\Autofill($options['pricing'] ? 5 : 2);
+$autofill = new \Prints\Autofill($options['pricing'] ? 5 : 2);
 $autofill->setRows(20, 10);
 
 echo '

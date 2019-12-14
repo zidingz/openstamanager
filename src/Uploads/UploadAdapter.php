@@ -18,6 +18,11 @@ interface UploadAdapter
     /**
      * @return string
      */
+    public function getDownloadName(): string;
+
+    /**
+     * @return string
+     */
     public function getExtension(): string;
 
     /**

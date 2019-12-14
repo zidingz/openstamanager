@@ -17,7 +17,7 @@ if ($has_image) {
 $columns = $options['pricing'] ? $columns : $columns - 3;
 
 // Creazione righe fantasma
-$autofill = new \Util\Autofill($columns, $char_number);
+$autofill = new \Prints\Autofill($columns, $char_number);
 $autofill->setRows(30);
 
 // Intestazione tabella per righe

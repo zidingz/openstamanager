@@ -1,6 +1,6 @@
 <?php
 
-namespace Util;
+namespace Prints;
 
 /**
  * Classe dedicata alla gestione delle righe fantasma per il miglioramento grafico delle stampe tabellari.
