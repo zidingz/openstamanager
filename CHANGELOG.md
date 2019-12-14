@@ -32,8 +32,15 @@ Il formato utilizzato è basato sulle linee guida di [Keep a Changelog](http://k
 
  - Separazione della gestione delle sedi legali dalle **Anagrafiche**
  - Miglioramenti della struttura del database
- - Miglioramento della procedura semplificata di aggiornamento
+ - Miglioramento della procedura di aggiornamento
  - Inversione del comportamento della classe **Filter** e degli helper *post*, *get* e *filter* (il secondo parametro restituisce il valore formattato)
+ - Introduzione della gestione di una gamma più varia di errori
+ - Aggiornamento grafico
+ - Gestione interna e strutturale
+    - Introduzione del framework Slim 4, con PHP minimo >= 7.2
+    - Revisione delle componenti del gestionale, ora obbligatoriamente legate ad una classe di gestione (*Manager*) che ne prevede la registrazione all'avvio (valido per moduli, plugin, stampe, widget, upload)
+    - Introduzione sistema di upload estendibile
+    - Gestione interna dei parametri select2 tramite Javascript al posto della sessione originale
 
 ## 2.4.11 (2019-11-29)
 

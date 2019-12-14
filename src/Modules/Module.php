@@ -6,6 +6,8 @@ use Auth;
 use Auth\Clause;
 use Auth\Group;
 use Common\Model;
+use Components\BootableInterface;
+use Components\BootrableTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Checklists\Traits\ChecklistTrait;
 use Prints\Template;
@@ -16,7 +18,7 @@ use Traits\PermissionTrait;
 use Traits\StoreTrait;
 use Util\Query;
 
-class Module extends Model
+class Module extends Model implements BootableInterface
 {
     use ManagerTrait;
     use UploadTrait;
@@ -24,6 +26,7 @@ class Module extends Model
     use PermissionTrait;
     use NoteTrait;
     use ChecklistTrait;
+    use BootrableTrait;
 
     protected $table = 'zz_modules';
     protected $main_folder = 'modules';
@@ -80,7 +83,7 @@ class Module extends Model
 
     public function url(string $name, array $parameters = [])
     {
-        return $this->manager->getUrl($name, $parameters);
+        return $this->getManager()->getUrl($name, $parameters);
     }
 
     /**
@@ -120,7 +123,7 @@ class Module extends Model
 
     public function render(array $args = [])
     {
-        return $this->manager->render($args);
+        return $this->getManager()->render($args);
     }
 
     public function getPlugins(string $type = 'module_plugin')
@@ -132,17 +135,6 @@ class Module extends Model
     }
 
     // Attributi Eloquent
-
-    public function getManagerAttribute()
-    {
-        if (!isset($this->manager_object)) {
-            $class = $this->attributes['class'];
-
-            $this->manager_object = new $class($this);
-        }
-
-        return $this->manager_object;
-    }
 
     /**
      * Restituisce i permessi relativi all'account in utilizzo.

@@ -2,25 +2,21 @@
 
 namespace Widgets;
 
-abstract class Manager
+use Components\Component;
+use Slim\App as SlimApp;
+
+abstract class Manager extends Component
 {
-    protected $widget;
     protected $record_id;
 
-    public function __construct(Widget $widget, ?int $record_id = null)
+    public function setRecord(?int $record_id = null)
     {
-        $this->widget = $widget;
         $this->record_id = $record_id;
     }
 
-    public function getContainer()
+    public function render(array $args = []): string
     {
-        return \App::getContainer();
-    }
-
-    public function render(): string
-    {
-        $widget = $this->widget;
+        $widget = $this->model;
 
         $title = $this->getTitle();
         $content = $this->getContent();
@@ -62,6 +58,11 @@ abstract class Manager
         return $result;
     }
 
+    public function updates(): array
+    {
+        return [];
+    }
+
     abstract protected function getTitle(): string;
 
     abstract protected function getContent(): string;
@@ -69,5 +70,19 @@ abstract class Manager
     protected function getAttributes(): string
     {
         return 'href="#"';
+    }
+
+    /* Standard Widget */
+
+    protected function autoload(): void
+    {
+    }
+
+    protected function views(): void
+    {
+    }
+
+    protected function routes(SlimApp $app): void
+    {
     }
 }

@@ -24,14 +24,14 @@ class ModalWidget extends Original
 
     protected function getTitle(): string
     {
-        return $this->widget['text'];
+        return $this->model['text'] ?: '';
     }
 
     protected function getContent(): string
     {
         $content = '';
 
-        $widget = $this->widget;
+        $widget = $this->model;
         if (!empty($widget['query'])) {
             $query = $widget['query'];
             $module = Module::get($widget['id_module']);

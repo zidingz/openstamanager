@@ -8,12 +8,12 @@ class LinkWidget extends Original
 {
     public function getLink(): string
     {
-        return $this->widget['more_link'];
+        return $this->model['more_link'];
     }
 
     protected function getTitle(): string
     {
-        return $this->widget['text'];
+        return $this->model['text'];
     }
 
     protected function getContent(): string

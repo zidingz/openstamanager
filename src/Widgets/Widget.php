@@ -3,14 +3,17 @@
 namespace Widgets;
 
 use Auth\Group;
+use Components\BootableInterface;
+use Components\BootrableTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Module;
 use Traits\PermissionTrait;
 
-class Widget extends Model
+class Widget extends Model implements BootableInterface
 {
     use PermissionTrait;
+    use BootrableTrait;
 
     protected $table = 'zz_widgets';
 
@@ -18,24 +21,9 @@ class Widget extends Model
         'permission',
     ];
 
-    protected $manager_object;
-
     public function render(array $args = [])
     {
-        return $this->manager->render($args);
-    }
-
-    // Attributi Eloquent
-
-    public function getManagerAttribute()
-    {
-        if (!isset($this->manager_object)) {
-            $class = $this->attributes['class'];
-
-            $this->manager_object = new $class($this);
-        }
-
-        return $this->manager_object;
+        return $this->getManager()->render($args);
     }
 
     /* Relazioni Eloquent */

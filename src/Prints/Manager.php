@@ -3,23 +3,17 @@
 namespace Prints;
 
 use App;
-use Controllers\Controller;
-use Models\Template;
-use Psr\Container\ContainerInterface;
+use Components\Component;
 
-abstract class Manager extends Controller
+abstract class Manager extends Component
 {
-    protected $print;
     protected $record_id;
 
     protected $manager;
     protected $replaces;
 
-    public function __construct(ContainerInterface $container, Template $print, ?int $record_id = null)
+    public function setRecord(?int $record_id = null)
     {
-        parent::__construct($container);
-
-        $this->print = $print;
         $this->record_id = $record_id;
     }
 
@@ -36,7 +30,7 @@ abstract class Manager extends Controller
     /**
      * Genera la stampa PDF richiesta e la visualizza nel browser.
      */
-    abstract public function render(): void;
+    abstract public function render(array $args = []): string;
 
     /**
      * Genera la stampa PDF richiesta.

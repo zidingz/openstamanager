@@ -10,6 +10,6 @@ abstract class ModalWidget extends Manager
     {
         $title = $this->getTitle();
 
-        return 'data-href="'.$this->widget['more_link'].'" data-toggle="modal" data-title="'.$title.'"';
+        return 'data-href="'.$this->model['more_link'].'" data-toggle="modal" data-title="'.$title.'"';
     }
 }

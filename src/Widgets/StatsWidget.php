@@ -10,7 +10,7 @@ abstract class StatsWidget extends Manager
 
     protected function getContent(): string
     {
-        $widget = $this->widget;
+        $widget = $this->model;
 
         // Individuazione della query relativa
         $query = $this->getQuery();

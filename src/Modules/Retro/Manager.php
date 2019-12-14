@@ -46,7 +46,7 @@ class Manager extends Original
         return $result;
     }
 
-    public function render(array $args = [])
+    public function render(array $args = []): string
     {
         $controller = new ModuleController(self::$container);
 

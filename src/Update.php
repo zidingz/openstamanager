@@ -11,7 +11,7 @@ class Update
     protected static $updates;
 
     /** @var array Elenco degli aggiornamenti dei moduli */
-    protected static $module_updates = [];
+    protected static $component_updates = [];
 
     /**
      * Restituisce l'elenco degli aggiornamento incompleti o non ancora effettuati.
@@ -42,9 +42,9 @@ class Update
         return self::$updates;
     }
 
-    public static function addModuleUpdates(array $updates)
+    public static function addComponentUpdates(array $updates)
     {
-        self::$module_updates = array_merge(self::$module_updates, $updates);
+        self::$component_updates = array_merge(self::$component_updates, $updates);
     }
 
     /**
@@ -472,7 +472,7 @@ class Update
      */
     protected static function getCustomUpdates()
     {
-        return self::$module_updates;
+        return self::$component_updates;
     }
 
     protected static function findUpdatePath($update)

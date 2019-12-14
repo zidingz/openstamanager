@@ -4,16 +4,18 @@ namespace Prints;
 
 use Auth\Group;
 use Common\Model;
+use Components\BootableInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Module;
 use Psr\Container\ContainerInterface;
 use Traits\PathTrait;
 use Traits\StoreTrait;
 
-class Template extends Model
+class Template extends Model implements BootableInterface
 {
     use PathTrait;
     use StoreTrait;
+    use BootrableTrait;
 
     protected $table = 'zz_prints';
     protected $main_folder = 'templates';
