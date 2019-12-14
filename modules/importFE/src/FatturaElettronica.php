@@ -2,7 +2,6 @@
 
 namespace Plugins\ImportFE;
 
-use Modules;
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Anagrafiche\Nazione;
 use Modules\Anagrafiche\Tipo as TipoAnagrafica;

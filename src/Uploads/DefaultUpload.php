@@ -2,12 +2,15 @@
 
 namespace Uploads;
 
+use ArrayAccess;
+use Auth\User;
+use Carbon\Carbon;
 use Common\Model;
 use Modules\Module;
-use Auth\User;
+use Psr\Http\Message\ResponseInterface;
 
-class DefaultUpload extends Model implements UploadAdapter {
-
+class DefaultUpload extends Model implements UploadAdapter
+{
     protected $table = 'zz_files';
 
     protected $file_info;
@@ -15,16 +18,6 @@ class DefaultUpload extends Model implements UploadAdapter {
     public function getCategoryAttribute()
     {
         return $this->attributes['category'] ?: 'Generale';
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getExtension()
-    {
-        $info = self::getInfo($this->getFullPath());
-
-        return strtolower($info['extension']);
     }
 
     /**
@@ -74,23 +67,6 @@ class DefaultUpload extends Model implements UploadAdapter {
         return $this->isImage() || $this->isFatturaElettronica() || $this->isPDF();
     }
 
-    public function delete()
-    {
-        $info = self::getInfo($this->getFullPath());
-        $directory = DOCROOT.'/'.$this->directory;
-
-        $files = [
-            $directory.'/'.$info['basename'],
-            $directory.'/'.$info['filename'].'_thumb600.'.$info['extension'],
-            $directory.'/'.$info['filename'].'_thumb100.'.$info['extension'],
-            $directory.'/'.$info['filename'].'_thumb250.'.$info['extension'],
-        ];
-
-        delete($files);
-
-        return parent::delete();
-    }
-
     public function save(array $options = [])
     {
         if ($this->isImage()) {
@@ -100,7 +76,7 @@ class DefaultUpload extends Model implements UploadAdapter {
         return parent::save($options);
     }
 
-    public static function getInfo($file)
+    public static function getInfo($file): array
     {
         return pathinfo($file);
     }
@@ -117,34 +93,123 @@ class DefaultUpload extends Model implements UploadAdapter {
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    /* Interfaccia pubblica */
+
     /**
-     * Genera casualmente il nome fisico per il file.
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    protected static function getNextFilename($file, $directory)
+    public function getExtension(): string
     {
-        $extension = self::getInfo($file)['extension'];
-        $extension = strtolower($extension);
+        $info = self::getInfo($this->getFullPath());
 
-        do {
-            $filename = random_string().'.'.$extension;
-        } while (file_exists($directory.'/'.$filename));
-
-        return $filename;
+        return strtolower($info['extension']);
     }
 
-    public function getName()
+    /**
+     * {@inheritdoc}
+     */
+    public function delete(): bool
+    {
+        $info = self::getInfo($this->getFullPath());
+        $directory = DOCROOT.'/'.$this->directory;
+
+        $files = [
+            $directory.'/'.$info['basename'],
+            $directory.'/'.$info['filename'].'_thumb600.'.$info['extension'],
+            $directory.'/'.$info['filename'].'_thumb100.'.$info['extension'],
+            $directory.'/'.$info['filename'].'_thumb250.'.$info['extension'],
+        ];
+
+        delete($files);
+
+        return parent::delete();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getMime()
+    /**
+     * {@inheritdoc}
+     */
+    public function getMime(): string
     {
         return mime_content_type($this->getFullPath());
     }
 
-    public static function put($path, $content, Module $module, Model $record = null)
+    /**
+     * {@inheritdoc}
+     */
+    public function move(string $path): bool
+    {
+        $filename = basename($path);
+        $result = $this->getPath().'/'.$filename;
+
+        rename($this->getFullPath(), $result);
+
+        $this->filename = $filename;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function copy(string $path, Module $module, Model $record = null): bool
+    {
+        $contents = $this->getContents();
+
+        return self::put($path, $contents, $module, $record);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPath(): string
+    {
+        return $this->module->upload_directory;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFullPath(): string
+    {
+        return $this->getPath().'/'.$this->filename;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSize(): int
+    {
+        return $this->size;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTimestamp(): Carbon
+    {
+        $time = filemtime($this->getFullPath());
+
+        return new Carbon($time);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContents(): string
+    {
+        return file_get_contents($this->getFullPath());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function put(string $path, string $content, Module $module, Model $record = null): bool
     {
         // Nome fisico del file
         $directory = DOCROOT.'/'.$module->upload_directory;
@@ -168,60 +233,57 @@ class DefaultUpload extends Model implements UploadAdapter {
         return $model;
     }
 
-    public function move($path)
+    /**
+     * {@inheritdoc}
+     */
+    public static function register(Module $module, Model $record = null, array $options = []): void
     {
-        $filename = basename($path);
-        $result = $this->getPath().'/'.$filename;
-
-        rename($this->getFullPath(), $result);
-
-        $this->filename = $filename;
+        return;
     }
 
-    public function copy($path, Module $module, Model $record = null)
+    /**
+     * {@inheritdoc}
+     */
+    public static function remove(Module $module, Model $record = null): void
     {
-        $contents = $this->getContents();
+        $uploads = self::locate($module, $record);
 
-        return self::put($path, $contents, $module, $record);
+        foreach ($uploads as $upload) {
+            $upload->delete();
+        }
+
+        return true;
     }
 
-    public function getPath()
+    /**
+     * {@inheritdoc}
+     */
+    public static function locate(Module $module, Model $record = null): ArrayAccess
     {
-        return $this->module->upload_directory;
+        return self::where('id_module', $module->id)->where('id_record', $record->id)->get();
     }
 
-    public function getFullPath()
+    /**
+     * {@inheritdoc}
+     */
+    public static function render(Module $module, Model $record = null): ResponseInterface
     {
-        return $this->getPath().'/'.$this->filename;
     }
 
-    public function getSize()
+    /**
+     * Genera casualmente il nome fisico per il file.
+     *
+     * @return string
+     */
+    protected static function getNextFilename($file, $directory)
     {
-        return $this->size;
-    }
+        $extension = self::getInfo($file)['extension'];
+        $extension = strtolower($extension);
 
-    public function getTimestamp()
-    {
-        // TODO: Implement getTimestamp() method.
-    }
+        do {
+            $filename = random_string().'.'.$extension;
+        } while (file_exists($directory.'/'.$filename));
 
-    public static function register(Module $module, Model $record = null, array $options)
-    {
-        // TODO: Implement registerRecord() method.
-    }
-
-    public static function remove(Module $module, Model $record = null)
-    {
-        // TODO: Implement deleteRecord() method.
-    }
-
-    public static function locate(Module $module, Model $record = null)
-    {
-        // TODO: Implement listRecord() method.
-    }
-
-    public function getContents()
-    {
-        return file_get_contents($this->getFullPath());
+        return $filename;
     }
 }

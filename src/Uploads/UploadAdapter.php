@@ -2,37 +2,111 @@
 
 namespace Uploads;
 
+use ArrayAccess;
+use Carbon\Carbon;
 use Common\Model;
+use Modules\Module;
+use Psr\Http\Message\ResponseInterface;
 
 interface UploadAdapter
 {
-    public function getName();
+    /**
+     * @return string
+     */
+    public function getName(): string;
 
-    public function getExtension();
+    /**
+     * @return string
+     */
+    public function getExtension(): string;
 
-    public function getMime();
+    /**
+     * @return string
+     */
+    public function getMime(): string;
 
-    public function getContents();
+    /**
+     * @return string
+     */
+    public function getContents(): string;
 
-    public function getPath();
+    /**
+     * @return string
+     */
+    public function getPath(): string;
 
-    public function getFullPath();
+    /**
+     * @return string
+     */
+    public function getFullPath(): string;
 
-    public function getSize();
+    /**
+     * @return int
+     */
+    public function getSize(): int;
 
-    public function getTimestamp();
+    /**
+     * @return Carbon
+     */
+    public function getTimestamp(): Carbon;
 
-    public function delete();
+    /**
+     * @return bool
+     */
+    public function delete(): bool;
 
-    public function move($path);
+    /**
+     * @param string $path
+     *
+     * @return bool
+     */
+    public function move(string $path): bool;
 
-    public function copy($path, Module $module, Model $record = null);
+    /**
+     * @param string     $path
+     * @param Module     $module
+     * @param Model|null $record
+     *
+     * @return bool
+     */
+    public function copy(string $path, Module $module, Model $record = null): bool;
 
-    public static function put($path, $content, Module $module, Model $record = null);
+    /**
+     * @param string     $path
+     * @param string     $content
+     * @param Module     $module
+     * @param Model|null $record
+     *
+     * @return bool
+     */
+    public static function put(string $path, string $content, Module $module, Model $record = null): bool;
 
-    public static function register(Module $module, Model $record = null, array $options);
+    /**
+     * @param Module     $module
+     * @param Model|null $record
+     * @param array      $options
+     */
+    public static function register(Module $module, Model $record = null, array $options = []): void;
 
-    public static function remove(Module $module, Model $record = null);
+    /**
+     * @param Module     $module
+     * @param Model|null $record
+     */
+    public static function remove(Module $module, Model $record = null): void;
 
-    public static function locate(Module $module, Model $record = null);
+    /**
+     * @param Module     $module
+     * @param Model|null $record
+     *
+     * @return ArrayAccess
+     */
+    public static function locate(Module $module, Model $record = null): ArrayAccess;
+
+    /**
+     * @param Module     $module
+     * @param Model|null $record
+     *
+     * @return ResponseInterface
+     */
+    public static function render(Module $module, Model $record = null): ResponseInterface;
 }

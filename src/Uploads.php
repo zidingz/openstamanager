@@ -4,7 +4,6 @@
  * Classe per la gestione degli upload del progetto.
  *
  * @since 2.4.1
- *
  * @deprecated
  */
 class Uploads

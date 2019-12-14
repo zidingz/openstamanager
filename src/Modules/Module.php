@@ -3,18 +3,18 @@
 namespace Modules;
 
 use Auth;
+use Auth\Clause;
+use Auth\Group;
 use Common\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Checklists\Traits\ChecklistTrait;
+use Prints\Template;
 use Traits\Components\NoteTrait;
 use Traits\Components\UploadTrait;
 use Traits\ManagerTrait;
 use Traits\PermissionTrait;
 use Traits\StoreTrait;
 use Util\Query;
-use Auth\Group;
-use Prints\Template;
-use Auth\Clause;
 
 class Module extends Model
 {
@@ -41,6 +41,13 @@ class Module extends Model
         'options',
         'options2',
     ];
+
+    /* Retrocompatibilità */
+    protected $segments;
+    protected $additionals;
+
+    protected $children_list;
+    protected static $hierarchy;
 
     public function replacePlaceholders($id_record, $value)
     {
@@ -79,12 +86,12 @@ class Module extends Model
     /**
      * Costruisce un link HTML per il modulo e il record indicati.
      *
-     * @param int        $id_record
-     * @param string     $testo
-     * @param bool       $alternativo
-     * @param string     $extra
-     * @param bool       $blank
-     * @param string     $anchor
+     * @param int    $id_record
+     * @param string $testo
+     * @param bool   $alternativo
+     * @param string $extra
+     * @param bool   $blank
+     * @param string $anchor
      *
      * @return string
      */
@@ -212,7 +219,6 @@ class Module extends Model
         return $this->morphToMany(Segment::class, 'permission', 'zz_permissions', 'external_id', 'group_id')->where('permission_level', '!=', '-')->withPivot('permission_level');
     }
 
-
     /**
      * Restituisce i filtri aggiuntivi dell'utente in relazione al modulo specificato.
      *
@@ -230,7 +236,7 @@ class Module extends Model
             $additionals['WHR'] = [];
             $additionals['HVN'] = [];
 
-            $results = $database->fetchArray('SELECT * FROM `zz_group_module` WHERE `idgruppo` = (SELECT `idgruppo` FROM `zz_users` WHERE `id` = ' . prepare($user['id']) . ') AND `enabled` = 1 AND `idmodule` = ' . prepare($this->id));
+            $results = $database->fetchArray('SELECT * FROM `zz_group_module` WHERE `idgruppo` = (SELECT `idgruppo` FROM `zz_users` WHERE `id` = '.prepare($user['id']).') AND `enabled` = 1 AND `idmodule` = '.prepare($this->id));
             foreach ($results as $result) {
                 if (!empty($result['clause'])) {
                     $result['clause'] = Util\Query::replacePlaceholder($result['clause']);
@@ -260,13 +266,6 @@ class Module extends Model
         return (array) $results;
     }
 
-    /* Retrocompatibilità */
-    protected $segments;
-    protected $additionals;
-
-    protected $children_list;
-    protected static $hierarchy;
-
     /**
      * Restituisce i filtri aggiuntivi dell'utente in relazione al modulo specificato.
      *
@@ -291,7 +290,7 @@ class Module extends Model
      * Restituisce le condizioni SQL aggiuntive del modulo.
      *
      * @param string $type
-     * @param bool $include_segments
+     * @param bool   $include_segments
      *
      * @return array
      */
@@ -319,7 +318,7 @@ class Module extends Model
         $result = str_replace('1=1', '1=1'.$this->getAdditionalsQuery('WHR'), $result);
 
         // Aggiunta delle condizione HAVING
-        $result = str_replace('2=2', '2=2'.$this->getAdditionalsQuery( 'HVN'), $result);
+        $result = str_replace('2=2', '2=2'.$this->getAdditionalsQuery('HVN'), $result);
 
         return $result;
     }
@@ -349,11 +348,13 @@ class Module extends Model
         return $this->belongsTo(self::class, 'parent')->withoutGlobalScope('enabled');
     }
 
-    public function setChildren($list){
+    public function setChildren($list)
+    {
         $this->children_list = $list;
     }
 
-    public function getChildren(){
+    public function getChildren()
+    {
         return $this->children_list;
     }
 

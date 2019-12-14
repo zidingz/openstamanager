@@ -2,10 +2,10 @@
 
 namespace Modules\Emails;
 
+use Auth\User;
 use Common\Model;
 use Models\Template;
 use Models\Upload;
-use Auth\User;
 use Modules\Newsletter\Newsletter;
 
 class Mail extends Model

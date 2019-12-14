@@ -3,13 +3,10 @@
 namespace Middlewares;
 
 use HTMLBuilder\HTMLBuilder;
-use Intl\Formatter;
-use Modules;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Psr7\Stream;
-use Translator;
 
 /**
  * Middlware per la gestione della lingua del progetto.

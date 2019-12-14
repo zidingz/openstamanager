@@ -9,8 +9,6 @@ use Controllers\Config\RequirementsController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Slim\Http\Response;
-use Slim\Psr7\Stream;
 use Update;
 
 /**
@@ -58,7 +56,7 @@ class ConfigMiddleware extends Middleware
             $destination = ['init', 'init-save'];
         }
 
-        if (!empty($destination)){
+        if (!empty($destination)) {
             $destination[] = 'ajax-flash';
         }
 
@@ -66,6 +64,7 @@ class ConfigMiddleware extends Middleware
             Auth::logout();
 
             $response = $this->response_factory->createResponse();
+
             return $response->withRedirect($this->router->urlFor($destination[0]));
         }
 

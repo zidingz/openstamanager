@@ -3,7 +3,6 @@
 namespace Plugins\ReceiptFE;
 
 use Hooks\CachedManager;
-use Modules;
 
 class ReceiptHook extends CachedManager
 {

@@ -2,8 +2,8 @@
 
 namespace Traits;
 
-use Modules\Module;
 use Models\Plugin;
+use Modules\Module;
 
 trait RecordTrait
 {

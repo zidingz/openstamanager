@@ -337,7 +337,7 @@ class Query
         $module_name = $element['attributes']['name'];
         $module = Modules\Module::get($module_name);
         if (!empty($module)) {
-            $query = str_replace('1=1', '1=1 ' . $module->getAdditionalsQuery(null, self::$segments), $query);
+            $query = str_replace('1=1', '1=1 '.$module->getAdditionalsQuery(null, self::$segments), $query);
         }
         $views = self::getViews($element);
 

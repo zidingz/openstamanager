@@ -2,7 +2,6 @@
 
 namespace Plugins\ReceiptFE;
 
-use Modules;
 use Modules\Fatture\Fattura;
 use Plugins;
 use UnexpectedValueException;

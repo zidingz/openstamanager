@@ -2,8 +2,8 @@
 
 namespace Modules;
 
-use Common\Model;
 use Auth\Group;
+use Common\Model;
 
 class View extends Model
 {

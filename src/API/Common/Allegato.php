@@ -5,7 +5,6 @@ namespace Api\Common;
 use API\Interfaces\CreateInterface;
 use API\Request;
 use Models\Upload;
-use Modules;
 
 class Allegato extends Request implements CreateInterface
 {

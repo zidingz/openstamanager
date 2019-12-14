@@ -3,7 +3,6 @@
 namespace Controllers;
 
 use AJAX;
-use Modules;
 use Prints;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

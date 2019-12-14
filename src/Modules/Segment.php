@@ -2,10 +2,10 @@
 
 namespace Modules;
 
+use Auth\Group;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Traits\PermissionTrait;
-use Auth\Group;
 
 class Segment extends Model
 {

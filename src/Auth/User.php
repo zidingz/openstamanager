@@ -4,9 +4,9 @@ namespace Auth;
 
 use Common\Model;
 use Intervention\Image\ImageManagerStatic;
-use Modules\Anagrafiche\Anagrafica;
 use Models\Note;
 use Models\Upload;
+use Modules\Anagrafiche\Anagrafica;
 
 class User extends Model
 {

@@ -4,7 +4,6 @@
  * Classe per la gestione delle informazioni relative alle stampe installate.
  *
  * @since 2.3
- *
  * @deprecated
  */
 class Prints

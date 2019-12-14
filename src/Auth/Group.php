@@ -4,10 +4,10 @@ namespace Auth;
 
 use Common\Model;
 use Modules\Module;
-use Widgets\Widget;
 use Modules\Segment;
 use Modules\View;
 use Prints\Template;
+use Widgets\Widget;
 
 class Group extends Model
 {

@@ -2,6 +2,7 @@
 
 namespace Middlewares;
 
+use Models\OperationLog;
 use Modules\Module;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -9,7 +10,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Exception\HttpNotFoundException;
 use Update;
 use Util\Query;
-use Models\OperationLog;
 
 /**
  * Middleware per il blocco dei plugin senza riferimento al record genitore.

@@ -6,7 +6,6 @@ use Modules\Module;
  * Classe per la gestione delle informazioni relative ai moduli installati.
  *
  * @since 2.3
- *
  * @deprecated
  */
 class Modules
@@ -35,7 +34,6 @@ class Modules
 
         return $results;
     }
-
 
     /**
      * Restituisce le informazioni relative a un singolo modulo specificato.

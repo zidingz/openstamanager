@@ -3,7 +3,6 @@
 namespace Middlewares;
 
 use Modules\Module;
-use Modules;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;

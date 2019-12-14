@@ -2,14 +2,13 @@
 
 namespace Prints;
 
+use Auth\Group;
 use Common\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Prints\Manager;
+use Modules\Module;
 use Psr\Container\ContainerInterface;
 use Traits\PathTrait;
 use Traits\StoreTrait;
-use Modules\Module;
-use Auth\Group;
 
 class Template extends Model
 {

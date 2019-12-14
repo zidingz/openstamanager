@@ -2,8 +2,6 @@
 
 namespace Hooks;
 
-use Hooks\Hook;
-
 abstract class Manager
 {
     /**

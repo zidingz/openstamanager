@@ -2,11 +2,11 @@
 
 namespace Widgets;
 
+use Auth\Group;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Traits\PermissionTrait;
 use Modules\Module;
-use Auth\Group;
+use Traits\PermissionTrait;
 
 class Widget extends Model
 {

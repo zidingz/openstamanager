@@ -2,9 +2,9 @@
 
 namespace Modules\Newsletter;
 
+use Auth\User;
 use Common\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Auth\User;
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Emails\Account;
 use Modules\Emails\Mail;

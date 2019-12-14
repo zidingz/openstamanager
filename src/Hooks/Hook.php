@@ -6,8 +6,8 @@ use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Common\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Traits\StoreTrait;
 use Modules\Module;
+use Traits\StoreTrait;
 
 class Hook extends Model
 {

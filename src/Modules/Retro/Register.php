@@ -92,9 +92,10 @@ class Register extends Original
     {
         $prefix = $this->module->id.'-module';
 
-        $reference_suffix ='';
-        if($this->module->type == 'record_plugin')
-        $reference_suffix = '[reference/{reference_id:[0-9]+}/]';
+        $reference_suffix = '';
+        if ($this->module->type == 'record_plugin') {
+            $reference_suffix = '[reference/{reference_id:[0-9]+}/]';
+        }
 
         // Percorsi raggiungibili
         $app->group('/module-'.$this->module->id, function (RouteCollectorProxy $group) use ($prefix, $reference_suffix) {

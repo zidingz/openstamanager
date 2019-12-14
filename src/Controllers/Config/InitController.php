@@ -4,7 +4,6 @@ namespace Controllers\Config;
 
 use Auth;
 use Controllers\Controller;
-use Modules;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Settings;

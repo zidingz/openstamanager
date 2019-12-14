@@ -2,14 +2,13 @@
 
 namespace Modules\Aggiornamenti;
 
+use Auth\Group;
 use Controllers\Config\RequirementsController as Requirements;
 use GuzzleHttp\Client;
 use InvalidArgumentException;
-use Auth\Group;
-use Modules\Module;
 use Modules;
+use Modules\Module;
 use Parsedown;
-use Plugins;
 use Symfony\Component\Finder\Finder;
 use Update;
 use Util\Ini;

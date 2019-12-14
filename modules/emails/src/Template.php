@@ -4,8 +4,8 @@ namespace Modules\Emails;
 
 use Common\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Modules\Module;
 use Models\Template;
+use Modules\Module;
 use Traits\StoreTrait;
 
 class Template extends Model
