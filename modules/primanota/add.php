@@ -5,9 +5,9 @@ include_once __DIR__.'/../../core.php';
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Fatture\Fattura;
 
-$module = Modules::get('Prima nota');
+$module = \Modules\Module::get('Prima nota');
 
-$variables = Modules::get('Fatture di vendita')->getPlaceholders($id_documento);
+$variables = \Modules\Module::get('Fatture di vendita')->getPlaceholders($id_documento);
 $righe = [];
 
 // Registrazione da remoto

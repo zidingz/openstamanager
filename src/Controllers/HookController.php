@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use Models\Hook;
+use Hooks\Hook;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

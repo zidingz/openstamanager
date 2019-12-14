@@ -1,8 +1,9 @@
 <?php
 
-namespace Models;
+namespace Modules;
 
 use Common\Model;
+use Auth\Group;
 
 class View extends Model
 {

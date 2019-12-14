@@ -2,7 +2,7 @@
 
 $block_edit = $record['flag_completato'];
 
-$module = Modules::get($id_module);
+$module = \Modules\Module::get($id_module);
 
 if ($module['name'] == 'Ordini cliente') {
     $dir = 'entrata';

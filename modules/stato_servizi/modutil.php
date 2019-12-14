@@ -4,7 +4,7 @@ function submodules($list, $depth = 0)
 {
     $osm_version = Update::getVersion();
 
-    $id_module = Modules::getCurrent()['id'];
+    $id_module = \Modules\Module::getCurrent()['id'];
 
     $result = '';
 

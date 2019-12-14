@@ -1,10 +1,12 @@
 <?php
 
-namespace Models;
+namespace Auth;
 
 use Common\Model;
 use Intervention\Image\ImageManagerStatic;
 use Modules\Anagrafiche\Anagrafica;
+use Models\Note;
+use Models\Upload;
 
 class User extends Model
 {
@@ -130,7 +132,7 @@ class User extends Model
 
     public function setPhotoAttribute($value)
     {
-        $module = \Modules::get('Utenti e permessi');
+        $module = \Modules\Module::get('Utenti e permessi');
 
         $data = [
             'id_module' => $module->id,

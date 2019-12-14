@@ -6,11 +6,11 @@ use API\Interfaces\CreateInterface;
 use API\Interfaces\DeleteInterface;
 use API\Interfaces\RetrieveInterface;
 use API\Interfaces\UpdateInterface;
-use API\Resource;
+use API\Request;
 use Modules;
 use Modules\Anagrafiche\Anagrafica;
 
-class Anagrafiche extends Resource implements RetrieveInterface, CreateInterface, UpdateInterface, DeleteInterface
+class Anagrafiche extends Request implements RetrieveInterface, CreateInterface, UpdateInterface, DeleteInterface
 {
     public function retrieve($request)
     {
@@ -52,8 +52,8 @@ class Anagrafiche extends Resource implements RetrieveInterface, CreateInterface
         HAVING 2=2
         ORDER BY an_anagrafiche.ragione_sociale';
 
-        $module = Modules::get('Anagrafiche');
-        $query = Modules::replaceAdditionals($module->id, $query);
+        $module = \Modules\Module::get('Anagrafiche');
+        $query = $module->replaceAdditionals($query);
 
         return [
             'query' => $query,

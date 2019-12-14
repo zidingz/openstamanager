@@ -5,8 +5,8 @@ namespace Modules\Aggiornamenti;
 use Controllers\Config\RequirementsController as Requirements;
 use GuzzleHttp\Client;
 use InvalidArgumentException;
-use Models\Group;
-use Models\Module;
+use Auth\Group;
+use Modules\Module;
 use Modules;
 use Parsedown;
 use Plugins;
@@ -128,12 +128,11 @@ class Aggiornamento
                 $is_plugin = basename($file->getRealPath()) == 'PLUGIN';
 
                 $info = Ini::readFile($file->getRealPath());
+                $installed = \Modules\Module::get($info['name']);
                 if ($is_module) {
                     $type = 'modules';
-                    $installed = Modules::get($info['name']);
                 } elseif ($is_plugin) {
                     $type = 'plugins';
-                    $installed = Plugins::get($info['name']);
                 }
 
                 if (!isset($results[$type])) {
@@ -203,7 +202,7 @@ class Aggiornamento
 
         // Informazioni aggiuntive per il database
         $insert = [
-            'parent' => Modules::get($info['parent']),
+            'parent' => \Modules\Module::get($info['parent']),
             'icon' => $info['icon'],
         ];
 

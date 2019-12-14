@@ -4,6 +4,8 @@
  * Classe per la gestione delle informazioni relative alle stampe installate.
  *
  * @since 2.3
+ *
+ * @deprecated
  */
 class Prints
 {
@@ -27,7 +29,7 @@ class Prints
             $prints = [];
 
             // Inizializzazione dei riferimenti
-            $modules = Modules::getModules();
+            $modules = \Modules\Module::getAll();
             foreach ($modules as $module) {
                 self::$modules[$module['id']] = [];
             }
@@ -72,7 +74,7 @@ class Prints
      */
     public static function getModulePrints($module)
     {
-        $module_id = Modules::get($module)['id'];
+        $module_id = \Modules\Module::get($module)['id'];
 
         self::getPrints();
 
@@ -127,7 +129,7 @@ class Prints
 
         $has_access = true;
         if (!empty($infos['is_record'])) {
-            $module = Modules::get($infos['id_module']);
+            $module = \Modules\Module::get($infos['id_module']);
 
             Util\Query::setSegments(false);
             $query = Util\Query::getQuery($module, [
@@ -374,7 +376,7 @@ class Prints
 
     protected static function getFile($record, $id_record, $directory, $original_replaces)
     {
-        $module = Modules::get($record['id_module']);
+        $module = \Modules\Module::get($record['id_module']);
 
         $name = $record['filename'].'.pdf';
         $name = $module->replacePlaceholders($id_record, $name);

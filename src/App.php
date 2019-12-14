@@ -20,27 +20,7 @@ class App
      */
     public static function getConfig()
     {
-        if (empty(self::$config['db_host'])) {
-            if (file_exists(DOCROOT.'/config.inc.php')) {
-                include DOCROOT.'/config.inc.php';
-
-                $config = get_defined_vars();
-            } else {
-                $config = [];
-            }
-
-            $defaultConfig = self::getDefaultConfig();
-
-            $result = array_merge($defaultConfig, $config);
-
-            // Operazioni di normalizzazione sulla configurazione
-            $result['debug'] = isset(self::$config['debug']) ? self::$config['debug'] : !empty($result['debug']);
-            $result['lang'] = $result['lang'] == 'it' ? 'it_IT' : $result['lang'];
-
-            self::$config = $result;
-        }
-
-        return self::$config;
+        return self::getContainer()->get('config');
     }
 
     /**
@@ -52,15 +32,7 @@ class App
      */
     public static function debug($value = null)
     {
-        if (is_bool($value)) {
-            self::$config['debug'] = $value;
-        }
-
-        if (!isset(self::$config['debug'])) {
-            App::getConfig();
-        }
-
-        return self::$config['debug'];
+        return self::getContainer()->get('debug');
     }
 
     public static function setContainer($container)
@@ -106,7 +78,7 @@ class App
      */
     public static function internalLoad($file, $result, $options, $directory = null)
     {
-        $module = Modules::getCurrent();
+        $module = \Modules\Module::getCurrent();
 
         $database = $dbo = database();
 
@@ -146,36 +118,5 @@ class App
         }
 
         return slashes($result);
-    }
-
-    /**
-     * Restituisce la configurazione di default del progetto.
-     *
-     * @return array
-     */
-    protected static function getDefaultConfig()
-    {
-        if (file_exists(DOCROOT.'/config.example.php')) {
-            include DOCROOT.'/config.example.php';
-        }
-
-        $db_host = '';
-        $db_username = '';
-        $db_password = '';
-        $db_name = '';
-        $port = '';
-        $lang = '';
-
-        $formatter = [
-            'timestamp' => 'd/m/Y H:i',
-            'date' => 'd/m/Y',
-            'time' => 'H:i',
-            'number' => [
-                'decimals' => ',',
-                'thousands' => '.',
-            ],
-        ];
-
-        return get_defined_vars();
     }
 }

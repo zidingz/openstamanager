@@ -67,7 +67,7 @@ class FatturaElettronica
     public static function getImportDirectory()
     {
         if (!isset(self::$directory)) {
-            $module = Modules::get('Fatture di acquisto');
+            $module = \Modules\Module::get('Fatture di acquisto');
 
             $plugins = $module->plugins;
             if (!empty($plugins)) {
@@ -151,7 +151,7 @@ class FatturaElettronica
     {
         $allegati = $this->getAllegati();
 
-        $module = Modules::get('Fatture di acquisto');
+        $module = \Modules\Module::get('Fatture di acquisto');
 
         $info = [
             'category' => tr('Fattura Elettronica'),

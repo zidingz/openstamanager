@@ -4,7 +4,7 @@ use Modules\Ordini\Ordine;
 
 $documento = Ordine::find($id_record);
 
-$module = Modules::get($documento->module);
+$module = \Modules\Module::get($documento->module);
 
 if (get('documento') == 'fattura') {
     $final_module = $module['name'] == 'Ordini cliente' ? 'Fatture di vendita' : 'Fatture di acquisto';

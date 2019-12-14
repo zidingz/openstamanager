@@ -5,7 +5,6 @@ namespace API;
 use API\Exceptions\InternalError;
 use API\Exceptions\ResourceNotFound;
 use Auth;
-use Models\ApiResource as Resource;
 
 /**
  * Classe per la gestione delle API del progetto.

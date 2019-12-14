@@ -1,13 +1,13 @@
 <?php
 
-namespace Models;
+namespace Hooks;
 
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Common\Model;
-use Hooks\Manager;
 use Illuminate\Database\Eloquent\Builder;
 use Traits\StoreTrait;
+use Modules\Module;
 
 class Hook extends Model
 {

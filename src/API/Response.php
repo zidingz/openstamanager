@@ -8,7 +8,6 @@ use API\Exceptions\ServiceError;
 use Auth;
 use Exception;
 use Filter;
-use Models\ApiResource as Resource;
 
 /**
  * Classe per la gestione delle API del progetto.

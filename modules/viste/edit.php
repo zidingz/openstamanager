@@ -1,6 +1,6 @@
 <?php
 
-use Models\Module;
+use Modules\Module;
 
 $enable_readonly = !setting('Modifica Viste di default');
 

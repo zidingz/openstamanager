@@ -3,9 +3,9 @@
 namespace Modules\Checklists;
 
 use Common\Model;
-use Models\Module;
+use Modules\Module;
 use Models\Plugin;
-use Models\User;
+use Auth\User;
 
 class Checklist extends Model
 {

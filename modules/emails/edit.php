@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    {[ "type": "span", "label": "<?php echo tr('Modulo del template'); ?>", "name": "module", "values": "query=SELECT id, title AS descrizione FROM zz_modules WHERE enabled = 1", "value": "<?php echo Modules::get($record['id_module'])['title']; ?>" ]}
+                    {[ "type": "span", "label": "<?php echo tr('Modulo del template'); ?>", "name": "module", "values": "query=SELECT id, title AS descrizione FROM zz_modules WHERE enabled = 1", "value": "<?php echo \Modules\Module::get($record['id_module'])['title']; ?>" ]}
                 </div>
             </div>
 
@@ -82,7 +82,8 @@ echo '
 <?php
 
 // Variabili utilizzabili
-$variables = include Modules::filepath($record['id_module'], 'variables.php');
+$modulo = \Modules\Module::get($record['id_module']);
+$variables = include $modulo->filepath('variables.php');
 
 echo '
 <!-- Istruzioni per il contenuto -->

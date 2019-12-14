@@ -1,7 +1,7 @@
 <?php
 
 use API\Response as API;
-use Models\User;
+use Auth\User;
 
 /**
  * Classe per la gestione delle utenze.

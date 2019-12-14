@@ -4,13 +4,13 @@ namespace Modules\Interventi\API\v1;
 
 use API\Interfaces\RetrieveInterface;
 use API\Interfaces\UpdateInterface;
-use API\Resource;
+use API\Request;
 use Carbon\Carbon;
 use DateTime;
 use iCalEasyReader;
 use Update;
 
-class Sync extends Resource implements RetrieveInterface, UpdateInterface
+class Sync extends Request implements RetrieveInterface, UpdateInterface
 {
     public function retrieve($request)
     {

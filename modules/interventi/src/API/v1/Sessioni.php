@@ -5,9 +5,9 @@ namespace Modules\Interventi\API\v1;
 use API\Interfaces\CreateInterface;
 use API\Interfaces\DeleteInterface;
 use API\Interfaces\RetrieveInterface;
-use API\Resource;
+use API\Request;
 
-class Sessioni extends Resource implements RetrieveInterface, CreateInterface, DeleteInterface
+class Sessioni extends Request implements RetrieveInterface, CreateInterface, DeleteInterface
 {
     public function retrieve($request)
     {

@@ -1,8 +1,13 @@
 <?php
 
-namespace Models;
+namespace Auth;
 
 use Common\Model;
+use Modules\Module;
+use Widgets\Widget;
+use Modules\Segment;
+use Modules\View;
+use Prints\Template;
 
 class Group extends Model
 {
@@ -20,11 +25,6 @@ class Group extends Model
         return $this->morphedByMany(Module::class, 'permission', 'zz_permissions', 'group_id', 'external_id')->where('permission_level', '!=', '-')->withPivot('permission_level');
     }
 
-    public function plugins()
-    {
-        return $this->morphedByMany(Plugin::class, 'permission', 'zz_permissions', 'group_id', 'external_id')->where('permission_level', '!=', '-')->withPivot('permission_level');
-    }
-
     public function widgets()
     {
         return $this->morphedByMany(Widget::class, 'permission', 'zz_permissions', 'group_id', 'external_id')->where('permission_level', '!=', '-')->withPivot('permission_level');
@@ -37,7 +37,7 @@ class Group extends Model
 
     public function prints()
     {
-        return $this->morphedByMany(PrintTemplate::class, 'permission', 'zz_permissions', 'group_id', 'external_id')->where('permission_level', '!=', '-')->withPivot('permission_level');
+        return $this->morphedByMany(Template::class, 'permission', 'zz_permissions', 'group_id', 'external_id')->where('permission_level', '!=', '-')->withPivot('permission_level');
     }
 
     public function views()

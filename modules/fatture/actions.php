@@ -11,7 +11,7 @@ use Modules\Fatture\Stato;
 use Modules\Fatture\Tipo;
 use Plugins\ExportFE\FatturaElettronica;
 
-$module = Modules::get($id_module);
+$module = \Modules\Module::get($id_module);
 
 if ($module['name'] == 'Fatture di vendita') {
     $dir = 'entrata';

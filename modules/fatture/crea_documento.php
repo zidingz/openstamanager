@@ -1,6 +1,6 @@
 <?php
 
-$module = Modules::get($id_module);
+$module = \Modules\Module::get($id_module);
 
 $options = [
     'op' => 'nota_credito',

@@ -82,8 +82,10 @@ echo '
 </form>
 
 <?php
+
 // Variabili utilizzabili
-$variables = include Modules::filepath(Modules::get('Fatture di vendita')['id'], 'variables.php');
+$modulo = \Modules\Module::get('Fatture di vendita');
+$variables = include $modulo->filepath('variables.php');
 
 echo '
     <!-- Istruzioni per il contenuto -->

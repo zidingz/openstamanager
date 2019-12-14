@@ -4,9 +4,10 @@ switch (post('op')) {
     case 'update':
         $pattern = str_contains(post('pattern'), '#') ? post('pattern') : '####';
         $predefined = post('predefined');
-        $module = post('module');
+        $module_id = post('module');
+        $module = \Modules\Module::get($module_id);
 
-        if (empty(Modules::getSegments($module))) {
+        if (empty($module->getSegments())) {
             $predefined = 1;
         }
 
@@ -44,9 +45,10 @@ switch (post('op')) {
     case 'add':
         $pattern = str_contains(post('pattern'), '#') ? post('pattern') : '####';
         $predefined = post('predefined');
-        $module = post('module');
+        $module_id = post('module');
+        $module = \Modules\Module::get($module_id);
 
-        if (empty(Modules::getSegments($module))) {
+        if (empty($module->getSegments())) {
             $predefined = 1;
         }
 

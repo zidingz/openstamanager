@@ -125,7 +125,7 @@ for ($i = 0; $i < count($rs2); ++$i) {
         foreach ($vendite as $vendita) {
             // Venduto su fatture
             if (!empty($vendita['id_riga_documento'])) {
-                $module_id = Modules::get('Fatture di vendita')['id'];
+                $module_id = \Modules\Module::get('Fatture di vendita')['id'];
 
                 // Ricerca vendite su fatture
                 $query = 'SELECT *, ( SELECT descrizione FROM co_tipidocumento WHERE id=(SELECT id_tipo_documento FROM co_documenti WHERE id=iddocumento) ) AS tipo_documento, ( SELECT `dir` FROM co_tipidocumento WHERE id=(SELECT id_tipo_documento FROM co_documenti WHERE id=iddocumento) ) AS `dir`, ( SELECT numero FROM co_documenti WHERE id=iddocumento ) AS numero, ( SELECT numero_esterno FROM co_documenti WHERE id=iddocumento ) AS numero_esterno, ( SELECT data FROM co_documenti WHERE id=iddocumento ) AS data FROM co_righe_documenti WHERE co_righe_documenti.id='.prepare($vendita['id_riga_documento']);
@@ -137,7 +137,7 @@ for ($i = 0; $i < count($rs2); ++$i) {
             // Venduto su ddt
             elseif (!empty($vendita['id_riga_ddt'])) {
                 $numero = ($rs3[0]['numero_esterno'] != '') ? $rs3[0]['numero_esterno'] : $rs3[0]['numero'];
-                $module_id = Modules::get('Ddt di vendita')['id'];
+                $module_id = \Modules\Module::get('Ddt di vendita')['id'];
 
                 $query = 'SELECT *, ( SELECT descrizione FROM dt_tipiddt WHERE id=(SELECT id_tipo_ddt FROM dt_ddt WHERE id=idddt) ) AS tipo_documento, ( SELECT `dir` FROM dt_tipiddt WHERE id=(SELECT id_tipo_ddt FROM dt_ddt WHERE id=idddt) ) AS `dir`, ( SELECT numero FROM dt_ddt WHERE id=idddt ) AS numero, ( SELECT numero_esterno FROM dt_ddt WHERE id=idddt ) AS numero_esterno, ( SELECT data FROM dt_ddt WHERE id=idddt ) AS data FROM dt_righe_ddt WHERE dt_righe_ddt.id='.prepare($vendita['id_riga_ddt']);
                 $data = $dbo->fetchArray($query);
@@ -147,7 +147,7 @@ for ($i = 0; $i < count($rs2); ++$i) {
 
             // Inserito su ordini
             elseif (!empty($vendita['id_riga_ordine'])) {
-                $module_id = Modules::get('Ordini cliente')['id'];
+                $module_id = \Modules\Module::get('Ordini cliente')['id'];
 
                 // Ricerca inserimenti su ordini
                 $query = 'SELECT *, ( SELECT descrizione FROM or_tipiordine WHERE id=(SELECT id_tipo_ordine FROM or_ordini WHERE id=idordine) ) AS tipo_documento, ( SELECT `dir` FROM or_tipiordine WHERE id=(SELECT id_tipo_ordine FROM or_ordini WHERE id=idordine) ) AS `dir`, ( SELECT numero FROM or_ordini WHERE id=idordine ) AS numero, ( SELECT numero_esterno FROM or_ordini WHERE id=idordine ) AS numero_esterno, ( SELECT data FROM or_ordini WHERE id=idordine ) AS data FROM or_righe_ordini WHERE  or_righe_ordini.id='.prepare($vendita['id_riga_ordine']);
@@ -158,7 +158,7 @@ for ($i = 0; $i < count($rs2); ++$i) {
 
             // Inserito su intervento
             elseif (!empty($vendita['id_riga_intervento'])) {
-                $module_id = Modules::get('Interventi')['id'];
+                $module_id = \Modules\Module::get('Interventi')['id'];
 
                 // Ricerca inserimenti su interventi
                 $query = 'SELECT mg_articoli_interventi.*, in_interventi.codice, ( SELECT orario_inizio FROM in_interventi_tecnici WHERE idintervento=mg_articoli_interventi.idintervento LIMIT 0,1 ) AS data FROM mg_articoli_interventi JOIN in_interventi ON in_interventi.id = mg_articoli_interventi.idintervento WHERE mg_articoli_interventi.id='.prepare($vendita['id_riga_intervento']);

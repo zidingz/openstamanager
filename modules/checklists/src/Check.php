@@ -3,10 +3,10 @@
 namespace Modules\Checklists;
 
 use Common\Model;
-use Models\Group;
-use Models\Module;
+use Auth\Group;
+use Modules\Module;
 use Models\Plugin;
-use Models\User;
+use Auth\User;
 use Modules\Checklists\Traits\ChecklistTrait;
 use Traits\HierarchyTrait;
 

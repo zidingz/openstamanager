@@ -1,6 +1,6 @@
 <?php
 
-$link_id = Modules::get('Preventivi')['id'];
+$link_id = \Modules\Module::get('Preventivi')['id'];
 
 $fields = [
     'Codice preventivo' => 'numero',
@@ -20,7 +20,7 @@ foreach ($fields as $name => $value) {
     $query .= ' OR '.$value.' LIKE "%'.$term.'%"';
 }
 
-$query .= Modules::getAdditionalsQuery('Preventivi');
+$query .= \Modules\Module::get('Preventivi')->getAdditionalsQuery();
 
 $rs = $dbo->fetchArray($query);
 

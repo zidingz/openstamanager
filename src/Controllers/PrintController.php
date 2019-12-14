@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use Models\PrintTemplate;
+use Models\Template;
 use Prints;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -24,7 +24,7 @@ class PrintController extends Controller
 
     public function open(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $print = PrintTemplate::find($args['print_id']);
+        $print = Template::find($args['print_id']);
         $manager = $print->getManager($this->container, $args['record_id']);
 
         $pdf = $manager->render();

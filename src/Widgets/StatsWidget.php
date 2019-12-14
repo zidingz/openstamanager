@@ -2,6 +2,8 @@
 
 namespace Widgets;
 
+use Modules\Module;
+
 abstract class StatsWidget extends Manager
 {
     abstract public function getQuery(): string;
@@ -13,7 +15,8 @@ abstract class StatsWidget extends Manager
         // Individuazione della query relativa
         $query = $widget['query'];
 
-        $additionals = \Modules::getAdditionalsQuery($widget['id_module']);
+        $module = Module::get($widget['id_module']);
+        $additionals = $module->getAdditionalsQuery();
         if (!empty($additionals)) {
             $query = str_replace('1=1', '1=1 '.$additionals, $query);
         }

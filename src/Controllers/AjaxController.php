@@ -158,7 +158,7 @@ class AjaxController extends Controller
         $order['column'] = $order['column'] - 1;
         array_shift($columns);
 
-        $total = Query::readQuery($structure);
+        $total = Query::readQuery($module);
 
         // Ricerca
         $search = [];
@@ -182,18 +182,16 @@ class AjaxController extends Controller
             'draw' => $draw_numer,
         ];
 
-        $query = Query::getQuery($structure);
+        $query = Query::getQuery($module);
         if (!empty($query)) {
             // CONTEGGIO TOTALE
             $results['recordsTotal'] = $this->database->fetchNum($query);
 
             // RISULTATI VISIBILI
-            $query = Query::getQuery($structure, $search, $order, $limit);
+            $query = Query::getQuery($module, $search, $order, $limit);
 
             // Filtri derivanti dai permessi (eventuali)
-            if (empty($id_plugin)) {
-                $query = Modules::replaceAdditionals($id_module, $query);
-            }
+            $query = $module->replaceAdditionals($query);
 
             // Conteggio dei record filtrati
             $data = Query::executeAndCount($query);
@@ -201,7 +199,7 @@ class AjaxController extends Controller
             $results['recordsFiltered'] = $data['count'];
 
             // SOMME
-            $results['summable'] = Query::getSums($structure, $search);
+            $results['summable'] = Query::getSums($module, $search);
 
             // Allineamento delle righe
             $align = [];

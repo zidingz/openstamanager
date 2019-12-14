@@ -9,7 +9,7 @@ use Modules\Ordini\Components\Sconto;
 use Modules\Ordini\Ordine;
 use Modules\Ordini\Tipo;
 
-$module = Modules::get($id_module);
+$module = \Modules\Module::get($id_module);
 
 if ($module['name'] == 'Ordini cliente') {
     $dir = 'entrata';

@@ -1,6 +1,6 @@
 <?php
 
-$link_id = Modules::get('MyImpianti')['id'];
+$link_id = \Modules\Module::get('MyImpianti')['id'];
 
 $fields = [
     'Matricola' => 'matricola',
@@ -23,7 +23,7 @@ foreach ($fields as $name => $value) {
     $query .= ' OR '.$value.' LIKE "%'.$term.'%"';
 }
 
-$query .= Modules::getAdditionalsQuery('MyImpianti');
+$query .= \Modules\Module::get('MyImpianti')->getAdditionalsQuery();
 
 $rs = $dbo->fetchArray($query);
 

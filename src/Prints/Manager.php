@@ -4,7 +4,7 @@ namespace Prints;
 
 use App;
 use Controllers\Controller;
-use Models\PrintTemplate;
+use Models\Template;
 use Psr\Container\ContainerInterface;
 
 abstract class Manager extends Controller
@@ -15,7 +15,7 @@ abstract class Manager extends Controller
     protected $manager;
     protected $replaces;
 
-    public function __construct(ContainerInterface $container, PrintTemplate $print, ?int $record_id = null)
+    public function __construct(ContainerInterface $container, Template $print, ?int $record_id = null)
     {
         parent::__construct($container);
 

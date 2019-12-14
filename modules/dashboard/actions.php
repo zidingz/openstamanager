@@ -4,6 +4,8 @@ if (!isset($user['idanagrafica'])) {
     $user['idanagrafica'] = '';
 }
 
+$additional_interventi = \Modules\Module::get('Interventi')->getAdditionalsQuery();
+
 switch (filter('op')) {
     // Lettura calendario tecnici
     case 'get_current_month':
@@ -15,7 +17,7 @@ switch (filter('op')) {
 
         $tipi = (array) $_SESSION['dashboard']['idtipiintervento'];
 
-        $query = 'SELECT in_interventi_tecnici.id, in_interventi_tecnici.idintervento, in_interventi.codice, colore, idtecnico, orario_inizio, orario_fine, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS nome_tecnico, (SELECT id FROM zz_files WHERE id_record=in_interventi.id AND id_module = '.Modules::get('Interventi')['id'].' LIMIT 1) AS have_attachments, (SELECT colore FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS colore_tecnico, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=in_interventi.idanagrafica) AS cliente, (SELECT idzona FROM an_sedi INNER JOIN an_anagrafiche ON an_anagrafiche.id_sede_legale = an_sedi.id WHERE an_anagrafiche.idanagrafica=in_interventi.idanagrafica) AS idzona FROM in_interventi_tecnici INNER JOIN (in_interventi LEFT OUTER JOIN in_statiintervento ON in_interventi.id_stato=in_statiintervento.id) ON in_interventi_tecnici.idintervento=in_interventi.id WHERE ( (in_interventi_tecnici.orario_inizio >= '.prepare($start).' AND in_interventi_tecnici.orario_fine <= '.prepare($end).') OR (in_interventi_tecnici.orario_inizio >= '.prepare($start).' AND in_interventi_tecnici.orario_inizio <= '.prepare($end).') OR (in_interventi_tecnici.orario_fine >= '.prepare($start).' AND in_interventi_tecnici.orario_fine <= '.prepare($end).')) AND idtecnico IN('.implode(',', $_SESSION['dashboard']['idtecnici']).') AND in_interventi.id_stato IN('.implode(',', $stati).') AND in_interventi_tecnici.id_tipo_intervento IN('.implode(',', $tipi).') '.Modules::getAdditionalsQuery('Interventi').' HAVING idzona IN ('.implode(',', $_SESSION['dashboard']['idzone']).')';
+        $query = 'SELECT in_interventi_tecnici.id, in_interventi_tecnici.idintervento, in_interventi.codice, colore, idtecnico, orario_inizio, orario_fine, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS nome_tecnico, (SELECT id FROM zz_files WHERE id_record=in_interventi.id AND id_module = '.\Modules\Module::get('Interventi')['id'].' LIMIT 1) AS have_attachments, (SELECT colore FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS colore_tecnico, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=in_interventi.idanagrafica) AS cliente, (SELECT idzona FROM an_sedi INNER JOIN an_anagrafiche ON an_anagrafiche.id_sede_legale = an_sedi.id WHERE an_anagrafiche.idanagrafica=in_interventi.idanagrafica) AS idzona FROM in_interventi_tecnici INNER JOIN (in_interventi LEFT OUTER JOIN in_statiintervento ON in_interventi.id_stato=in_statiintervento.id) ON in_interventi_tecnici.idintervento=in_interventi.id WHERE ( (in_interventi_tecnici.orario_inizio >= '.prepare($start).' AND in_interventi_tecnici.orario_fine <= '.prepare($end).') OR (in_interventi_tecnici.orario_inizio >= '.prepare($start).' AND in_interventi_tecnici.orario_inizio <= '.prepare($end).') OR (in_interventi_tecnici.orario_fine >= '.prepare($start).' AND in_interventi_tecnici.orario_fine <= '.prepare($end).')) AND idtecnico IN('.implode(',', $_SESSION['dashboard']['idtecnici']).') AND in_interventi.id_stato IN('.implode(',', $stati).') AND in_interventi_tecnici.id_tipo_intervento IN('.implode(',', $tipi).') '.$additional_interventi.' HAVING idzona IN ('.implode(',', $_SESSION['dashboard']['idzone']).')';
         $rs = $dbo->fetchArray($query);
 
         $results = [];
@@ -28,7 +30,7 @@ switch (filter('op')) {
                 'start' => $r['orario_inizio'],
                 'end' => $r['orario_fine'],
                 'url' => urlFor('module-record', [
-                    'module_id' => Modules::get('Interventi')['id'],
+                    'module_id' => \Modules\Module::get('Interventi')['id'],
                     'record_id' => $r['idintervento'],
                 ]),
                 'backgroundColor' => $r['colore'],
@@ -49,7 +51,7 @@ switch (filter('op')) {
         $orario_fine = post('timeEnd');
 
         // Aggiornamento prezzo totale
-        $q = 'SELECT in_interventi_tecnici.prezzo_ore_unitario, idtecnico, in_statiintervento.completato FROM in_interventi_tecnici INNER JOIN in_interventi ON in_interventi_tecnici.idintervento=in_interventi.id LEFT OUTER JOIN in_statiintervento ON in_interventi.id_stato = in_statiintervento.id WHERE in_interventi.id='.prepare($idintervento).' AND in_statiintervento.completato = 0 '.Modules::getAdditionalsQuery('Interventi');
+        $q = 'SELECT in_interventi_tecnici.prezzo_ore_unitario, idtecnico, in_statiintervento.completato FROM in_interventi_tecnici INNER JOIN in_interventi ON in_interventi_tecnici.idintervento=in_interventi.id LEFT OUTER JOIN in_statiintervento ON in_interventi.id_stato = in_statiintervento.id WHERE in_interventi.id='.prepare($idintervento).' AND in_statiintervento.completato = 0 '.$additional_interventi;
         $rs = $dbo->fetchArray($q);
         $prezzo_ore = 0.00;
 
@@ -76,7 +78,7 @@ switch (filter('op')) {
         $timeEnd = post('timeEnd');
 
         //Lettura dati intervento di riferimento
-        $query = 'SELECT in_interventi_tecnici.idintervento, in_interventi.id, idtecnico, orario_inizio, orario_fine, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS nome_tecnico, (SELECT colore FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS colore FROM in_interventi_tecnici INNER JOIN in_interventi ON in_interventi_tecnici.idintervento=in_interventi.id WHERE in_interventi.id='.prepare($id).' '.Modules::getAdditionalsQuery('Interventi');
+        $query = 'SELECT in_interventi_tecnici.idintervento, in_interventi.id, idtecnico, orario_inizio, orario_fine, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS nome_tecnico, (SELECT colore FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS colore FROM in_interventi_tecnici INNER JOIN in_interventi ON in_interventi_tecnici.idintervento=in_interventi.id WHERE in_interventi.id='.prepare($id).' '.$additional_interventi;
         $rs = $dbo->fetchArray($query);
 
         if (!empty($rs)) {
@@ -86,7 +88,7 @@ switch (filter('op')) {
             }
 
             // Lettura dati intervento
-            $query = 'SELECT *, in_interventi.codice, id_stato AS parent_id_stato, id_tipo_intervento AS parent_idtipo, (SELECT descrizione FROM in_statiintervento WHERE id=parent_id_stato) AS stato, (SELECT descrizione FROM in_tipiintervento WHERE id_tipo_intervento=parent_idtipo) AS tipo, (SELECT nomesede FROM an_sedi WHERE id=idsede_destinazione) AS sede, (SELECT idzona FROM an_anagrafiche WHERE idanagrafica=in_interventi.idanagrafica) AS idzona FROM in_interventi LEFT JOIN an_anagrafiche ON in_interventi.idanagrafica=an_anagrafiche.idanagrafica WHERE in_interventi.id='.prepare($id).' '.Modules::getAdditionalsQuery('Interventi');
+            $query = 'SELECT *, in_interventi.codice, id_stato AS parent_id_stato, id_tipo_intervento AS parent_idtipo, (SELECT descrizione FROM in_statiintervento WHERE id=parent_id_stato) AS stato, (SELECT descrizione FROM in_tipiintervento WHERE id_tipo_intervento=parent_idtipo) AS tipo, (SELECT nomesede FROM an_sedi WHERE id=idsede_destinazione) AS sede, (SELECT idzona FROM an_anagrafiche WHERE idanagrafica=in_interventi.idanagrafica) AS idzona FROM in_interventi LEFT JOIN an_anagrafiche ON in_interventi.idanagrafica=an_anagrafiche.idanagrafica WHERE in_interventi.id='.prepare($id).' '.$additional_interventi;
             $rs = $dbo->fetchArray($query);
 
             $desc_tipointervento = $rs[0]['tipo'];

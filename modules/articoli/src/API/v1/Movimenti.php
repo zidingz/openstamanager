@@ -3,10 +3,10 @@
 namespace Modules\Articoli\API\v1;
 
 use API\Interfaces\CreateInterface;
-use API\Resource;
+use API\Request;
 use Modules\Articoli\Articolo;
 
-class Movimenti extends Resource implements CreateInterface
+class Movimenti extends Request implements CreateInterface
 {
     public function create($request)
     {

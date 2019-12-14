@@ -5,7 +5,7 @@ include_once __DIR__.'/../../core.php';
 $date_start = $_SESSION['period_start'];
 $date_end = $_SESSION['period_end'];
 
-$module = Modules::get('Interventi');
+$module = \Modules\Module::get('Interventi');
 $id_module = $module['id'];
 
 $total = Util\Query::readQuery($module);
@@ -31,7 +31,7 @@ if (!empty($search_filters)) {
 }
 
 // Filtri derivanti dai permessi (eventuali)
-$module_query = Modules::replaceAdditionals($id_module, $module_query);
+$module_query = $module->replaceAdditionals($module_query);
 
 // Scadenze
 $records = $dbo->fetchArray($module_query);

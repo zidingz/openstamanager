@@ -3,15 +3,15 @@
 namespace Api\Common;
 
 use API\Interfaces\CreateInterface;
-use API\Resource;
+use API\Request;
 use Models\Upload;
 use Modules;
 
-class Allegato extends Resource implements CreateInterface
+class Allegato extends Request implements CreateInterface
 {
     public function create($request)
     {
-        $module = Modules::get($request['module']);
+        $module = \Modules\Module::get($request['module']);
 
         $name = !empty($request['name']) ? $request['name'] : null;
         $category = !empty($request['category']) ? $request['category'] : null;

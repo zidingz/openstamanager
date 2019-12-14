@@ -1,6 +1,6 @@
 <?php
 
-namespace Models;
+namespace Prints;
 
 use Common\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -8,8 +8,10 @@ use Prints\Manager;
 use Psr\Container\ContainerInterface;
 use Traits\PathTrait;
 use Traits\StoreTrait;
+use Modules\Module;
+use Auth\Group;
 
-class PrintTemplate extends Model
+class Template extends Model
 {
     use PathTrait;
     use StoreTrait;

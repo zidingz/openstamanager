@@ -35,10 +35,10 @@ switch (filter('op')) {
         break;
 
     case 'disable':
-        $dbo->query('UPDATE `zz_modules` SET `enabled` = 0 WHERE (`id` = '.prepare($id).' OR `parent` = '.prepare($id).') AND `id` != '.prepare(Modules::get('Stato dei servizi')['id']));
+        $dbo->query('UPDATE `zz_modules` SET `enabled` = 0 WHERE (`id` = '.prepare($id).' OR `parent` = '.prepare($id).') AND `id` != '.prepare(\Modules\Module::get('Stato dei servizi')['id']));
 
         flash()->info(tr('Modulo "_MODULE_" disabilitato!', [
-            '_MODULE_' => Modules::get($id)['title'],
+            '_MODULE_' => \Modules\Module::get($id)['title'],
         ]));
 
         break;
@@ -47,7 +47,7 @@ switch (filter('op')) {
         $dbo->query('UPDATE `zz_modules` SET `enabled` = 1 WHERE `id` = '.prepare($id).' OR `parent` = '.prepare($id));
 
         flash()->info(tr('Modulo "_MODULE_" abilitato!', [
-            '_MODULE_' => Modules::get($id)['title'],
+            '_MODULE_' => \Modules\Module::get($id)['title'],
         ]));
 
         break;

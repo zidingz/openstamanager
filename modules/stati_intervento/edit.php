@@ -35,7 +35,7 @@ if ($record['can_delete']) {
 		</div>
 
 		<div class="col-md-5">
-			{[ "type": "select", "label": "<?php echo tr('Template email'); ?>", "name": "email", "value": "$id_email$", "values": "query=SELECT id, name AS descrizione FROM em_templates WHERE id_module = <?php echo Modules::get('Interventi')['id']; ?> AND deleted_at IS NULL", "disabled": <?php echo intval(empty($record['notifica'])); ?> ]}
+			{[ "type": "select", "label": "<?php echo tr('Template email'); ?>", "name": "email", "value": "$id_email$", "values": "query=SELECT id, name AS descrizione FROM em_templates WHERE id_module = <?php echo \Modules\Module::get('Interventi')['id']; ?> AND deleted_at IS NULL", "disabled": <?php echo intval(empty($record['notifica'])); ?> ]}
 		</div>
 
         <div class="col-md-5">

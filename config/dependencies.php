@@ -154,7 +154,7 @@ $container->set('twig', function (ContainerInterface $container) {
     $function = new TwigFunction('module_link', '\Modules::link');
     $environment->addFunction($function);
 
-    $function = new TwigFunction('module', '\Modules::get');
+    $function = new TwigFunction('module', '\Modules\Module::get');
     $environment->addFunction($function);
 
     $environment->addExtension(new \Twig\Extension\DebugExtension());

@@ -170,7 +170,7 @@ echo '
                 url: globals.rootdir + "/actions.php",
                 type: "post",
                 data: {
-                    id_module: '.Modules::get('Backup')->id.',
+                    id_module: '.\Modules\Module::get('Backup')->id.',
                     op: "backup",
                 },
                 success: function(data){

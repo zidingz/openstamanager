@@ -181,7 +181,7 @@ if (!empty($id_intervento)) {
 			<!-- RIGA 1 -->
 			<div class="row">
 				<div class="col-md-4">
-					{[ "type": "select", "label": "<?php echo tr('Cliente'); ?>", "name": "idanagrafica", "required": 1, "value": "<?php echo $idanagrafica; ?>", "ajax-source": "clienti", "icon-after": "add|<?php echo Modules::get('Anagrafiche')['id']; ?>|tipoanagrafica=Cliente||<?php echo (empty($idanagrafica)) ? '' : 'disabled'; ?>", "data-heavy": 0 ]}
+					{[ "type": "select", "label": "<?php echo tr('Cliente'); ?>", "name": "idanagrafica", "required": 1, "value": "<?php echo $idanagrafica; ?>", "ajax-source": "clienti", "icon-after": "add|<?php echo \Modules\Module::get('Anagrafiche')['id']; ?>|tipoanagrafica=Cliente||<?php echo (empty($idanagrafica)) ? '' : 'disabled'; ?>", "data-heavy": 0 ]}
 				</div>
 
 				<div class="col-md-4">
@@ -210,7 +210,7 @@ if (!empty($id_intervento)) {
 
 			<div class="row">
                 <div class="col-md-6" id='impianti'>
-                    {[ "type": "select", "label": "<?php echo tr('Impianto'); ?>", "multiple": 1, "name": "idimpianti[]", "value": "<?php echo $idimpianto; ?>"<?php echo !empty($idanagrafica) ? '' : ', "placeholder": "'.tr('Seleziona prima un cliente').'..."'; ?>, "ajax-source": "impianti-cliente", "icon-after": "add|<?php echo Modules::get('MyImpianti')['id']; ?>|source=Attività|<?php echo (empty($idimpianto)) ? '' : 'disabled'; ?>", "data-heavy": 0 ]}
+                    {[ "type": "select", "label": "<?php echo tr('Impianto'); ?>", "multiple": 1, "name": "idimpianti[]", "value": "<?php echo $idimpianto; ?>"<?php echo !empty($idanagrafica) ? '' : ', "placeholder": "'.tr('Seleziona prima un cliente').'..."'; ?>, "ajax-source": "impianti-cliente", "icon-after": "add|<?php echo \Modules\Module::get('MyImpianti')['id']; ?>|source=Attività|<?php echo (empty($idimpianto)) ? '' : 'disabled'; ?>", "data-heavy": 0 ]}
                 </div>
 
                 <div class="col-md-6">
@@ -279,7 +279,7 @@ if (!empty($id_intervento)) {
 
 			<div class="row">
 				<div class="col-md-12">
-					{[ "type": "select", "label": "<?php echo tr('Tecnici'); ?>", "multiple": "1", "name": "idtecnico[]", "required": <?php echo get('ref') ? 1 : 0; ?>, "ajax-source": "tecnici", "value": "<?php echo $idtecnico; ?>", "icon-after": "add|<?php echo Modules::get('Anagrafiche')['id']; ?>|tipoanagrafica=Tecnico||<?php echo (empty($idtecnico)) ? '' : 'disabled'; ?>" ]}
+					{[ "type": "select", "label": "<?php echo tr('Tecnici'); ?>", "multiple": "1", "name": "idtecnico[]", "required": <?php echo get('ref') ? 1 : 0; ?>, "ajax-source": "tecnici", "value": "<?php echo $idtecnico; ?>", "icon-after": "add|<?php echo \Modules\Module::get('Anagrafiche')['id']; ?>|tipoanagrafica=Tecnico||<?php echo (empty($idtecnico)) ? '' : 'disabled'; ?>" ]}
 				</div>
 			</div>
 		</div>
@@ -461,7 +461,7 @@ if (!empty($id_intervento)) {
             $('#add-form').find('input:disabled, select:disabled, textarea:disabled').removeAttr('disabled');
 
             $.post('<?php echo urlFor('module-add', [
-                'module_id' => Modules::get('Interventi')['id'],
+                'module_id' => \Modules\Module::get('Interventi')['id'],
             ]); ?>', $('#add-form').serialize(), function(data,response){
                 if(response=="success"){
                     // Se l'aggiunta intervento proviene dalla scheda di pianificazione ordini di servizio della dashboard, la ricarico

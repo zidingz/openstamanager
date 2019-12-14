@@ -21,7 +21,7 @@ class InvoiceHook extends CachedManager
         $count = count($results);
         $notify = false;
 
-        $module = Modules::get('Fatture di acquisto');
+        $module = \Modules\Module::get('Fatture di acquisto');
         $plugins = $module->plugins;
 
         if (!empty($plugins)) {

@@ -2,7 +2,7 @@
 
 namespace Middlewares;
 
-use Models\Module;
+use Modules\Module;
 use Modules;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,7 +25,7 @@ class ContentMiddleware extends Middleware
 
         $this->addVariable('user', auth()->getUser());
 
-        $this->addVariable('order_manager_id', $this->database->isInstalled() ? Modules::get('Stato dei serivizi')['id'] : null);
+        $this->addVariable('order_manager_id', $this->database->isInstalled() ? \Modules\Module::get('Stato dei serivizi')['id'] : null);
         $this->addVariable('is_mobile', isMobile());
 
         // Versione
@@ -86,7 +86,7 @@ class ContentMiddleware extends Middleware
         $active = ($actual == $element['name']);
         $show = ($element->permission != '-' && !empty($element['enabled'])) ? true : false;
 
-        $submenus = $element['children'];
+        $submenus = $element->getChildren();
         if (!empty($submenus)) {
             $temp = '';
             foreach ($submenus as $submenu) {

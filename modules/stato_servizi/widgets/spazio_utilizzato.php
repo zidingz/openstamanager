@@ -1,6 +1,6 @@
 <?php
 
-$module = Modules::get('Stato dei servizi');
+$module = \Modules\Module::get('Stato dei servizi');
 
 echo '
 <script src="'.ROOTDIR.'/assets/dist/js/chartjs/Chart.min.js"></script>';
@@ -19,7 +19,7 @@ $(document).ready(function() {
         },
         success: function(data) {
             data = JSON.parse(data);
-            
+
             crea_grafico(data);
         }
     });
@@ -32,10 +32,10 @@ function crea_grafico(values){
 	$labels = [];
 	values.forEach(function(element) {
         $data.push(element.size);
-        
+
         $labels.push(element.description + " (" + element.formattedSize + ")")
     });
-	
+
 	options = {
 		legend: {
 			display: true,
@@ -46,7 +46,7 @@ function crea_grafico(values){
 			animateRotate: true,
 		},
 	};
-	
+
 	data = {
 		datasets: [{
 			data: $data,
@@ -67,7 +67,7 @@ function crea_grafico(values){
                 \'rgba(255, 159, 64, 1)\'
             ],
 		}],
-		
+
 		labels: $labels,
 	};
 

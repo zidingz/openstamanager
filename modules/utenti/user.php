@@ -1,7 +1,7 @@
 <?php
 
-use Models\Group;
-use Models\User;
+use Auth\Group;
+use Auth\User;
 
 Permissions::check('rw');
 
@@ -49,7 +49,7 @@ if (!empty($user)) {
             $("#password").attr("disabled", true);
             $("#submit-button").attr("disabled", false).removeClass("disabled");
         }
-        
+
         $("#bs-popup").on("shown.bs.modal", function () {
             no_check_pwd();
         });

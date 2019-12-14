@@ -278,5 +278,5 @@ UPDATE `my_impianto_componenti` SET `data_sostituzione` = NULL WHERE `data_sosti
 ALTER TABLE `zz_permissions` DROP FOREIGN KEY `zz_permissions_ibfk_1`, DROP FOREIGN KEY`zz_permissions_ibfk_2`;
 ALTER TABLE `zz_permissions` CHANGE `idmodule` `external_id` int(11), CHANGE `idgruppo` `group_id` int(11), CHANGE `permessi` `permission_level` enum('-', 'r', 'rw'), ADD `permission_type` varchar(255);
 ALTER TABLE `zz_permissions` ADD FOREIGN KEY (`group_id`) REFERENCES `zz_groups`(`id`) ON DELETE CASCADE;
-UPDATE `zz_permissions` SET `permission_type` = 'Models\Module';
+UPDATE `zz_permissions` SET `permission_type` = 'Modules\Module';
 DELETE FROM `zz_permissions` WHERE `permission_level` = '-';

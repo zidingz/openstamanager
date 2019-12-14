@@ -1,16 +1,17 @@
 <?php
 
-namespace Models;
+namespace Modules;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Traits\PermissionTrait;
+use Auth\Group;
 
-class Widget extends Model
+class Segment extends Model
 {
     use PermissionTrait;
 
-    protected $table = 'zz_widgets';
+    protected $table = 'zz_segments';
 
     protected $appends = [
         'permission',
@@ -31,10 +32,6 @@ class Widget extends Model
     protected static function boot()
     {
         parent::boot();
-
-        static::addGlobalScope('enabled', function (Builder $builder) {
-            $builder->where('enabled', true);
-        });
 
         static::addGlobalScope('permission', function (Builder $builder) {
             $builder->with('groups');

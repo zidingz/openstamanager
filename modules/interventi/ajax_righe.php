@@ -46,7 +46,7 @@ if (!$righe->isEmpty()) {
         echo '
         <tr '.$extra.'>
             <td>
-                '.Modules::link($riga->isArticolo() ? Modules::get('Articoli')['id'] : null, $riga->isArticolo() ? $riga['idarticolo'] : null, $descrizione);
+                '.Modules::link($riga->isArticolo() ? \Modules\Module::get('Articoli')['id'] : null, $riga->isArticolo() ? $riga['idarticolo'] : null, $descrizione);
 
         if ($riga->isArticolo()) {
             if (!empty($mancanti)) {

@@ -4,7 +4,7 @@ namespace Modules\Newsletter;
 
 use Common\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Models\User;
+use Auth\User;
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Emails\Account;
 use Modules\Emails\Mail;

@@ -2,7 +2,7 @@
 
 namespace Modules;
 
-use Models\Module;
+use Modules\Module;
 use Slim\App as SlimApp;
 
 /**

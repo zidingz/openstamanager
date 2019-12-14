@@ -178,7 +178,7 @@ class HTMLWrapper implements WrapperInterface
         $pieces = explode('|', $string);
 
         $module_id = $pieces[1];
-        $module = Modules::get($module_id);
+        $module = \Modules\Module::get($module_id);
 
         $get = !empty($pieces[2]) ? $pieces[2] : null;
         $classes = !empty($pieces[3]) ? ' '.$pieces[3] : null;

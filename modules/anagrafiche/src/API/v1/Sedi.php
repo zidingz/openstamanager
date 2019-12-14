@@ -3,10 +3,10 @@
 namespace Modules\Anagrafiche\API\v1;
 
 use API\Interfaces\RetrieveInterface;
-use API\Resource;
+use API\Request;
 use Modules;
 
-class Sedi extends Resource implements RetrieveInterface
+class Sedi extends Request implements RetrieveInterface
 {
     public function retrieve($request)
     {

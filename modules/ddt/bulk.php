@@ -13,12 +13,15 @@ if ($module['name'] == 'Ddt di vendita') {
 }
 
 // Segmenti
-$id_fatture = Modules::get($module_name)['id'];
+$modulo = \Modules\Module::get($module_name);
+$id_fatture = $modulo['id'];
 if (!isset($_SESSION['module_'.$id_fatture]['id_segment'])) {
-    $segments = Modules::getSegments($id_fatture);
+    $segments = $modulo->getSegments();
     $_SESSION['module_'.$id_fatture]['id_segment'] = isset($segments[0]['id']) ? $segments[0]['id'] : null;
 }
 $id_segment = $_SESSION['module_'.$id_fatture]['id_segment'];
+
+$additionals = \Modules\Module::get($id_module)->getAdditionalsQuery();
 
 switch (post('op')) {
     case 'crea_fattura':
@@ -115,9 +118,9 @@ switch (post('op')) {
     case 'delete-bulk':
 
         foreach ($id_records as $id) {
-            $dbo->query('DELETE  FROM dt_ddt  WHERE id = '.prepare($id).Modules::getAdditionalsQuery($id_module));
-            $dbo->query('DELETE FROM dt_righe_ddt WHERE idddt='.prepare($id).Modules::getAdditionalsQuery($id_module));
-            $dbo->query('DELETE FROM mg_movimenti WHERE idddt='.prepare($id).Modules::getAdditionalsQuery($id_module));
+            $dbo->query('DELETE  FROM dt_ddt  WHERE id = '.prepare($id).$additionals);
+            $dbo->query('DELETE FROM dt_righe_ddt WHERE idddt='.prepare($id).$additionals);
+            $dbo->query('DELETE FROM mg_movimenti WHERE idddt='.prepare($id).$additionals);
         }
 
         flash()->info(tr('Ddt eliminati!'));

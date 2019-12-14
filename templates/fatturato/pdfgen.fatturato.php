@@ -17,11 +17,9 @@ $totale_imponibile = 0;
 $totale_iva = 0;
 $totale = 0;
 
-if ($dir == 'entrata') {
-    $addwhere = Modules::getAdditionalsQuery('Fatture di vendita');
-} else {
-    $addwhere = Modules::getAdditionalsQuery('Fatture di acquisto');
-}
+$module_name = $dir == 'entrata' ? 'Fatture di vendita' : 'Fatture di acquisto';
+$modulo = \Modules\Module::get($module_name);
+$add_where = $modulo->getAdditionalsQuery();
 
 // Ciclo tra le fatture selezionate
 $query = "SELECT DATE_FORMAT( data, '%m-%Y' ) AS periodo, data FROM co_documenti INNER JOIN co_tipidocumento ON co_documenti.id_tipo_documento=co_tipidocumento.id GROUP BY periodo, dir HAVING (data BETWEEN '".$date_start."' AND '".$date_end."') AND dir='".$dir."' ".$add_where.' ORDER BY data ASC';

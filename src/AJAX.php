@@ -163,9 +163,9 @@ class AJAX
 
         // Individuazione delle cartelle accessibili
         if (!empty($permissions)) {
-            $modules = Modules::getAvailableModules();
+            $modules = \Modules\Module::getAvailableModules();
         } else {
-            $modules = Models\Module::withoutGlobalScope('enabled')->get();
+            $modules = Modules\Module::withoutGlobalScope('enabled')->get();
         }
 
         $modules = $modules->toArray();

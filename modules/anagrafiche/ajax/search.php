@@ -4,7 +4,8 @@
     Anagrafiche
 */
 
-$link_id = Modules::get('Anagrafiche')['id'];
+$module = \Modules\Module::get('Anagrafiche');
+$link_id = $module['id'];
 
 $fields = [
     'Codice' => 'codice',
@@ -41,7 +42,7 @@ foreach ($fields as $name => $value) {
     $query .= ' OR '.$value.' LIKE "%'.$term.'%"';
 }
 
-$query .= Modules::getAdditionalsQuery('Anagrafiche');
+$query .= $module->getAdditionalsQuery();
 
 $rs = $dbo->fetchArray($query);
 
@@ -85,8 +86,6 @@ $query .= ' FROM an_referenti WHERE idanagrafica IN('.implode(',', $idanagrafich
 foreach ($fields as $name => $value) {
     $query .= ' OR '.$value.' LIKE "%'.$term.'%"';
 }
-
-//$query .= Modules::getAdditionalsQuery('Anagrafiche');
 
 $rs = $dbo->fetchArray($query);
 

@@ -3,7 +3,6 @@
 namespace Widgets;
 
 use Controllers\Controller;
-use Models\Widget;
 use Psr\Container\ContainerInterface;
 
 abstract class Manager extends Controller
@@ -41,7 +40,7 @@ abstract class Manager extends Controller
         <button type="button" class="close" onclick="if(confirm(\'Disabilitare questo widget?\')) { $.post( \''.ROOTDIR.'/actions.php?id_module='.self::getModule()->id.'\', { op: \'disable_widget\', id: \''.$widget['id'].'\' }, function(response){ location.reload(); }); };" >
             <span aria-d-none="true">&times;</span><span class="sr-only">'.tr('Chiudi').'</span>
         </button>
-                
+
         <span class="info-box-icon" style="background-color:'.$widget['bgcolor'].'">';
 
         if (!empty($widget['icon'])) {
@@ -55,7 +54,7 @@ abstract class Manager extends Controller
         <div class="info-box-content">
             <span class="info-box-text'.(!empty($widget['help']) ? ' tip' : '').'"'.(!empty($widget['help']) ? ' title="'.prepareToField($widget['help']).'" data-position="bottom"' : '').'>
                 '.$title.'
-    
+
                 '.(!empty($widget['help']) ? '<i class="fa fa-question-circle-o"></i>' : '').'
             </span>';
 

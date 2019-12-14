@@ -1,6 +1,6 @@
 <?php
 
-$link_id = Modules::get('Interventi')['id'];
+$link_id = \Modules\Module::get('Interventi')['id'];
 
 $fields = [
     'Codice intervento' => 'codice',
@@ -27,7 +27,7 @@ foreach ($fields as $name => $value) {
 
 $query .= ' WHERE ('.implode(' OR ', $where).') ';
 
-$query .= ' '.Modules::getAdditionalsQuery('Interventi');
+$query .= ' '.\Modules\Module::get('Interventi')->getAdditionalsQuery();
 
 $rs = $dbo->fetchArray($query);
 

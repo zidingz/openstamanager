@@ -14,7 +14,7 @@ echo '
                 <th>'.tr('Opzioni').'</th>
             </tr>';
 
-$modules = Modules::getHierarchy();
+$modules = \Modules\Module::getHierarchy();
 
 $osm_version = Update::getVersion();
 

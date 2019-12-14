@@ -1,9 +1,11 @@
 <?php
 
+$additionals = \Modules\Module::get('Anagrafiche')->getAdditionalsQuery();
+
 switch ($resource) {
     case 'get_sedi':
         $idanagrafica = get('idanagrafica');
-        $q = "SELECT id, CONCAT_WS( ' - ', nomesede, citta ) AS descrizione FROM an_sedi WHERE idanagrafica='".$idanagrafica."' ".Modules::getAdditionalsQuery('Anagrafiche').' ORDER BY id';
+        $q = "SELECT id, CONCAT_WS( ' - ', nomesede, citta ) AS descrizione FROM an_sedi WHERE idanagrafica='".$idanagrafica."' ".$additionals.' ORDER BY id';
         $rs = $dbo->fetchArray($q);
         $n = sizeof($rs);
 
@@ -18,7 +20,7 @@ switch ($resource) {
     // Elenco sedi con <option>
     case 'get_sedi_select':
         $idanagrafica = get('idanagrafica');
-        $q = "SELECT id, CONCAT_WS( ' - ', nomesede, citta ) AS descrizione FROM an_sedi WHERE idanagrafica='".$idanagrafica."' ".Modules::getAdditionalsQuery('Anagrafiche').' ORDER BY id';
+        $q = "SELECT id, CONCAT_WS( ' - ', nomesede, citta ) AS descrizione FROM an_sedi WHERE idanagrafica='".$idanagrafica."' ".$additionals.' ORDER BY id';
         $rs = $dbo->fetchArray($q);
         $n = sizeof($rs);
 

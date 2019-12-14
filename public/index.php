@@ -1,7 +1,7 @@
 <?php
 
 use DI\Container;
-use Models\Module;
+use Modules\Module;
 use Slim\Factory\AppFactory;
 
 // Impostazioni di configurazione PHP

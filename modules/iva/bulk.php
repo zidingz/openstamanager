@@ -2,6 +2,8 @@
 
 include_once __DIR__.'/../../core.php';
 
+$module = \Modules\Module::get($id_module);
+
 switch (post('op')) {
     case 'delete-bulk':
         $count_iva = $dbo->fetchNum('SELECT id FROM `co_iva` WHERE deleted_at IS NOT NULL');
@@ -15,7 +17,7 @@ switch (post('op')) {
             ' UNION SELECT `an_anagrafiche`.`idanagrafica` AS `id` FROM `an_anagrafiche` WHERE `an_anagrafiche`.`idiva_vendite` = '.prepare($id).' OR `an_anagrafiche`.`idiva_acquisti` = '.prepare($id));
 
             if (empty($res)) {
-                $dbo->query('UPDATE `co_iva` SET deleted_at = NOW() WHERE id = '.prepare($id).Modules::getAdditionalsQuery($id_module));
+                $dbo->query('UPDATE `co_iva` SET deleted_at = NOW() WHERE id = '.prepare($id).$module->getAdditionalsQuery());
             }
         }
         $count_iva = $dbo->fetchNum('SELECT id FROM `co_iva` WHERE deleted_at IS NOT NULL') - $count_iva;

@@ -2,6 +2,8 @@
 
 namespace HTMLBuilder\Manager;
 
+use Modules\Module;
+
 /**
  * @since 2.4
  */
@@ -61,7 +63,7 @@ class WidgetManager implements ManagerInterface
 
     protected static function getModule()
     {
-        return \Modules::get('Stato dei servizi');
+        return \Modules\Module::get('Stato dei servizi');
     }
 
     protected function prints($widget)
@@ -74,7 +76,8 @@ class WidgetManager implements ManagerInterface
         // Individuazione della query relativa
         $query = $widget['query'];
 
-        $additionals = \Modules::getAdditionalsQuery($widget['id_module']);
+        $module = Module::get($widget['id_module']);
+        $additionals = $module->getAdditionalsQuery();
         if (!empty($additionals)) {
             $query = str_replace('1=1', '1=1 '.$additionals, $query);
         }
@@ -156,7 +159,7 @@ class WidgetManager implements ManagerInterface
             <button type="button" class="close" onclick="if(confirm(\'Disabilitare questo widget?\')) { $.post( \''.ROOTDIR.'/actions.php?id_module='.self::getModule()->id.'\', { op: \'disable_widget\', id: \''.$widget['id'].'\' }, function(response){ location.reload(); }); };" >
                 <span aria-d-none="true">&times;</span><span class="sr-only">'.tr('Chiudi').'</span>
             </button>
-        
+
             <span class="info-box-icon" style="background-color:'.$widget['bgcolor'].'">';
 
         if (!empty($widget['icon'])) {

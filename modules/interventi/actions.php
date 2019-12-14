@@ -122,7 +122,7 @@ switch (post('op')) {
 
                 // Copia degli allegati
                 $allegati = Uploads::copy([
-                    'id_module' => Modules::get('Pianificazione interventi')['id'],
+                    'id_module' => \Modules\Module::get('Pianificazione interventi')['id'],
                     'id_record' => $idcontratto_riga,
                 ], [
                     'id_module' => $id_module,

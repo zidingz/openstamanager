@@ -82,7 +82,7 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
 
         // Form dell'anagrafica Azienda
         ob_start();
-        $module_id = Modules::get('Anagrafiche')->id;
+        $module_id = \Modules\Module::get('Anagrafiche')->id;
         $id_tipo_anagrafica = $this->database->fetchOne("SELECT id FROM an_tipianagrafiche WHERE descrizione='Azienda'")['id'];
         $readonly_tipo = true;
         include DOCROOT.'/modules/anagrafiche/add.php';
@@ -162,7 +162,7 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
         $dbo = $database = $this->database;
 
         $this->filter->set('post', 'op', 'add');
-        $id_module = Modules::get('Anagrafiche')['id'];
+        $id_module = \Modules\Module::get('Anagrafiche')['id'];
         include DOCROOT.'/modules/anagrafiche/actions.php';
 
         // Logo stampe

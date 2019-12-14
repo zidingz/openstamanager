@@ -5,6 +5,8 @@ use Plugins\ExportFE\FatturaElettronica;
 use Plugins\ExportFE\Interaction;
 use Util\Zip;
 
+$additionals = \Modules\Module::get($id_module)->getAdditionalsQuery();
+
 switch (post('op')) {
     case 'export-bulk':
         $dir = DOCROOT.'/files/export_fatture/';
@@ -44,12 +46,11 @@ switch (post('op')) {
         break;
 
     case 'delete-bulk':
-
         foreach ($id_records as $id) {
-            $dbo->query('DELETE FROM co_documenti  WHERE id = '.prepare($id).Modules::getAdditionalsQuery($id_module));
-            $dbo->query('DELETE FROM co_righe_documenti WHERE iddocumento='.prepare($id).Modules::getAdditionalsQuery($id_module));
-            $dbo->query('DELETE FROM co_scadenziario WHERE iddocumento='.prepare($id).Modules::getAdditionalsQuery($id_module));
-            $dbo->query('DELETE FROM mg_movimenti WHERE iddocumento='.prepare($id).Modules::getAdditionalsQuery($id_module));
+            $dbo->query('DELETE FROM co_documenti  WHERE id = '.prepare($id).$additionals);
+            $dbo->query('DELETE FROM co_righe_documenti WHERE iddocumento='.prepare($id).$additionals);
+            $dbo->query('DELETE FROM co_scadenziario WHERE iddocumento='.prepare($id).$additionals);
+            $dbo->query('DELETE FROM mg_movimenti WHERE iddocumento='.prepare($id).$additionals);
         }
 
         flash()->info(tr('Fatture eliminate!'));
@@ -196,7 +197,7 @@ $operations['registrazione-contabile'] = [
         'title' => tr('Registrazione contabile'),
         'type' => 'modal',
         'origine' => 'fatture',
-        'url' => ROOTDIR.'/add.php?id_module='.Modules::get('Prima nota')['id'],
+        'url' => ROOTDIR.'/add.php?id_module='.\Modules\Module::get('Prima nota')['id'],
     ],
 ];
 

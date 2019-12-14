@@ -80,7 +80,7 @@
                 </div>
 
 				<div class="col-md-2">
-					{[ "type": "select", "label": "<?php echo tr('Unità di misura'); ?>", "name": "um", "value": "$um$", "ajax-source": "misure", "icon-after": "add|<?php echo Modules::get('Unità di misura')['id']; ?>" ]}
+					{[ "type": "select", "label": "<?php echo tr('Unità di misura'); ?>", "name": "um", "value": "$um$", "ajax-source": "misure", "icon-after": "add|<?php echo \Modules\Module::get('Unità di misura')['id']; ?>" ]}
 				</div>
 
                 <div class="col-md-2">
@@ -131,7 +131,7 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            {[ "type": "select", "label": "<?php echo tr('Fornitore predefinito'); ?>", "name": "id_fornitore", "value": "$id_fornitore$", "ajax-source": "fornitori", "icon-after": "add|<?php echo Modules::get('Anagrafiche')['id']; ?>|tipoanagrafica=Fornitore" ]}
+                            {[ "type": "select", "label": "<?php echo tr('Fornitore predefinito'); ?>", "name": "id_fornitore", "value": "$id_fornitore$", "ajax-source": "fornitori", "icon-after": "add|<?php echo \Modules\Module::get('Anagrafiche')['id']; ?>|tipoanagrafica=Fornitore" ]}
                         </div>
                     </div>
 

@@ -18,7 +18,7 @@ class Import
     public static function getImports()
     {
         if (empty(self::$imports)) {
-            $modules = Modules::getModules();
+            $modules = \Modules\Module::getAll();
 
             $database = database();
 
@@ -31,7 +31,7 @@ class Import
 
                 if (file_exists($custom_file) || file_exists($original_file)) {
                     $files = Uploads::get([
-                        'id_module' => Modules::get('Import')['id'],
+                        'id_module' => \Modules\Module::get('Import')['id'],
                         'id_record' => $module['id'],
                     ]);
 
@@ -57,7 +57,7 @@ class Import
      */
     public static function get($module)
     {
-        $module = Modules::get($module)['id'];
+        $module = \Modules\Module::get($module)['id'];
 
         return self::getImports()[$module];
     }
@@ -118,7 +118,7 @@ class Import
             return [];
         }
 
-        $file = Modules::get('Import')->upload_directory.'/'.$import['files'][$find]['filename'];
+        $file = \Modules\Module::get('Import')->upload_directory.'/'.$import['files'][$find]['filename'];
 
         // Impostazione automatica per i caratteri di fine riga
         if (!ini_get('auto_detect_line_endings')) {
@@ -134,7 +134,7 @@ class Import
 
     public static function createExample($module, array $content)
     {
-        $module = Modules::get($module);
+        $module = \Modules\Module::get($module);
         $upload_dir = Uploads::getDirectory($module->id, null);
 
         $filename = $upload_dir.'/example-'.strtolower($module->title).'.csv';

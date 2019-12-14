@@ -1,6 +1,6 @@
 <?php
 
-$module->parent = Modules::get('Contratti')['id'];
+$module->parent = \Modules\Module::get('Contratti')['id'];
 
 $contratto = $dbo->fetchOne('SELECT * FROM co_contratti WHERE id = :id', [
     ':id' => $id_record,
@@ -139,7 +139,7 @@ if (!empty($records)) {
                     <i class="fa fa-clock-o"></i>
                 </button>
 
-                <button type="button" '.$disabled.' class="btn btn-primary btn-sm '.$disabled.' " title="Pianifica intervento ora..." data-toggle="tooltip" onclick="launch_modal(\'Pianifica intervento\', \''.ROOTDIR.'/add.php?id_module='.Modules::get('Interventi')['id'].'&ref=interventi_contratti&idcontratto='.$id_record.'&idcontratto_riga='.$record['id'].'\');"'.(!empty($pianificabile) ? '' : ' disabled').'>
+                <button type="button" '.$disabled.' class="btn btn-primary btn-sm '.$disabled.' " title="Pianifica intervento ora..." data-toggle="tooltip" onclick="launch_modal(\'Pianifica intervento\', \''.ROOTDIR.'/add.php?id_module='.\Modules\Module::get('Interventi')['id'].'&ref=interventi_contratti&idcontratto='.$id_record.'&idcontratto_riga='.$record['id'].'\');"'.(!empty($pianificabile) ? '' : ' disabled').'>
                     <i class="fa fa-calendar"></i>
                 </button>
 

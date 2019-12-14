@@ -2,7 +2,7 @@
 
 namespace Modules\Traits;
 
-use Models\Module;
+use Modules\Module;
 
 /**
  * Trait dedicato alla gestione delle operazioni di visualizzazione per i template di modifica e aggiunta righe.

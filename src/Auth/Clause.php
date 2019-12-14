@@ -1,8 +1,9 @@
 <?php
 
-namespace Models;
+namespace Auth;
 
 use Common\Model;
+use Modules\Module;
 
 class Clause extends Model
 {

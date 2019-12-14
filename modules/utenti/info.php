@@ -19,7 +19,7 @@ if (!empty($rs)) {
 }
 
 $api = BASEURL.'/api/?token='.$token;
-$module = Modules::get('Utenti e permessi');
+$module = \Modules\Module::get('Utenti e permessi');
 
 echo '
 <div class="card card-outline card-widget widget-user">

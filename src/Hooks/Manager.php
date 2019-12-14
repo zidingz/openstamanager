@@ -2,7 +2,7 @@
 
 namespace Hooks;
 
-use Models\Hook;
+use Hooks\Hook;
 
 abstract class Manager
 {

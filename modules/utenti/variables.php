@@ -1,6 +1,6 @@
 <?php
 
-$record = \Models\User::find($id_record);
+$record = \Auth\User::find($id_record);
 
 $reset_token = $record->reset_token;
 

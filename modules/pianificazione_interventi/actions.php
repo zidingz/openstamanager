@@ -127,10 +127,10 @@ switch ($operazione) {
 
                                 // Copia degli allegati
                                 Uploads::copy([
-                                    'id_module' => Modules::get('Pianificazione interventi')['id'],
+                                    'id_module' => \Modules\Module::get('Pianificazione interventi')['id'],
                                     'id_record' => $id_record,
                                 ], [
-                                    'id_module' => Modules::get('Pianificazione interventi')['id'],
+                                    'id_module' => \Modules\Module::get('Pianificazione interventi')['id'],
                                     'id_record' => $idriga,
                                 ]);
 
@@ -176,10 +176,10 @@ switch ($operazione) {
 
                             // Copia degli allegati
                             Uploads::copy([
-                                'id_plugin' => Modules::get('Pianificazione interventi')['id'],
+                                'id_plugin' => \Modules\Module::get('Pianificazione interventi')['id'],
                                 'id_record' => $id_record,
                             ], [
-                                'id_module' => Modules::get('Interventi')['id'],
+                                'id_module' => \Modules\Module::get('Interventi')['id'],
                                 'id_record' => $idintervento,
                             ]);
 

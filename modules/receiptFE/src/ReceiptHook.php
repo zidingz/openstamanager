@@ -21,7 +21,7 @@ class ReceiptHook extends CachedManager
         $count = count($results);
         $notify = false;
 
-        $module = Modules::get('Fatture di vendita');
+        $module = \Modules\Module::get('Fatture di vendita');
         $plugins = $module->plugins;
 
         if (!empty($plugins)) {

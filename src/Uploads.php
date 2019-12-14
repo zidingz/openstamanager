@@ -4,6 +4,8 @@
  * Classe per la gestione degli upload del progetto.
  *
  * @since 2.4.1
+ *
+ * @deprecated
  */
 class Uploads
 {
@@ -149,11 +151,7 @@ class Uploads
      */
     public static function getDirectory($id_module, $id_plugin = null)
     {
-        if (empty($id_plugin)) {
-            $structure = Modules::get($id_module);
-        } else {
-            $structure = Plugins::get($id_plugin);
-        }
+        $structure = \Modules\Module::get($id_module);
 
         return $structure->upload_directory;
     }

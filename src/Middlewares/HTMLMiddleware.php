@@ -23,7 +23,7 @@ class HTMLMiddleware extends Middleware
         $response = $handler->handle($request);
         $html = $response->getBody();
 
-        $id_module = Modules::getCurrent()['id'];
+        $id_module = \Modules\Module::getCurrent()['id'];
         $html = str_replace('$id_module$', $id_module, $html);
         //$html = str_replace('$id_plugin$', $id_plugin, $html);
         //$html = str_replace('$id_record$', $id_record, $html);

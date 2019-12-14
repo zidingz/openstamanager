@@ -338,10 +338,10 @@ switch (post('op')) {
 
             // Copia degli allegati
             Uploads::copy([
-                'id_module' => Modules::get('Pianificazione interventi')['id'],
+                'id_module' => \Modules\Module::get('Pianificazione interventi')['id'],
                 'id_record' => $p['id'],
             ], [
-                'id_module' => Modules::get('Pianificazione interventi')['id'],
+                'id_module' => \Modules\Module::get('Pianificazione interventi')['id'],
                 'id_record' => $id_promemoria,
             ]);
         }

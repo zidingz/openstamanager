@@ -1,6 +1,6 @@
 <?php
 
-namespace Models;
+namespace Auth;
 
 use Common\Model;
 

@@ -3,9 +3,9 @@
 namespace Modules\Utenti\API\v1;
 
 use API\Interfaces\CreateInterface;
-use API\Resource;
+use API\Request;
 
-class Logout extends Resource implements CreateInterface
+class Logout extends Request implements CreateInterface
 {
     public function create($request)
     {

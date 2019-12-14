@@ -1,7 +1,7 @@
 <?php
 
 // Permessi avanzati
-$groups = Models\Group::all();
+$groups = Auth\Group::all();
 
 $array = [];
 foreach ($groups as $group) {
@@ -15,23 +15,23 @@ foreach ($plugins as $element) {
     $element->groups()->sync($array);
 }
 
-$widgets = Models\Widget::all();
+$widgets = Widgets\Widget::all();
 foreach ($widgets as $element) {
     $element->groups()->sync($array);
 }
 
-$segments = Models\Segment::all();
+$segments = Modules\Segment::all();
 foreach ($segments as $element) {
     $element->groups()->sync($array);
 }
 
-$prints = Models\PrintTemplate::all();
+$prints = Models\Template::all();
 foreach ($prints as $element) {
     $element->groups()->sync($array);
 }
 
-$admin = Models\Group::where('nome', 'Amministratori')->first();
-$modules = Models\Module::all();
+$admin = Auth\Group::where('nome', 'Amministratori')->first();
+$modules = Modules\Module::all();
 foreach ($modules as $element) {
     $element->groups()->syncWithoutDetaching([
         $admin->id => [

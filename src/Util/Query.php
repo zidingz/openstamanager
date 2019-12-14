@@ -62,7 +62,7 @@ class Query
     {
         $reference_id = self::$reference_id;
 
-        $id_module = Modules::getCurrent()['id'];
+        $id_module = \Modules\Module::getCurrent()['id'];
         $segment = !empty(self::$segments) ? $_SESSION['module_'.$id_module]['id_segment'] : null;
 
         $user = Auth::user();
@@ -272,7 +272,7 @@ class Query
 
         // Filtri derivanti dai permessi (eventuali)
         if (empty($structure->originalModule)) {
-            $result_query = Modules::replaceAdditionals($structure->id, $result_query);
+            $result_query = $structure->replaceAdditionals($result_query);
         }
 
         $query = self::str_replace_once('SELECT', 'SELECT '.implode(', ', $total['summable']).' FROM(SELECT ', $result_query).') AS `z`';
@@ -334,7 +334,11 @@ class Query
         $query = $element['option'];
 
         // Aggiunta eventuali filtri dai segmenti per eseguire la query filtrata
-        $query = str_replace('1=1', '1=1 '.Modules::getAdditionalsQuery($element['attributes']['name'], null, self::$segments), $query);
+        $module_name = $element['attributes']['name'];
+        $module = Modules\Module::get($module_name);
+        if (!empty($module)) {
+            $query = str_replace('1=1', '1=1 ' . $module->getAdditionalsQuery(null, self::$segments), $query);
+        }
         $views = self::getViews($element);
 
         $select = [];

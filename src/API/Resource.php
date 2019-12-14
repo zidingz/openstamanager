@@ -2,18 +2,11 @@
 
 namespace API;
 
-class Resource
+use Common\Model;
+
+class Resource extends Model
 {
-    public function open($request)
-    {
-    }
+    protected $table = 'zz_api_resources';
 
-    public function close($request, $response)
-    {
-    }
-
-    public function getUser()
-    {
-        return auth()->getUser();
-    }
+    /* Relazioni Eloquent */
 }

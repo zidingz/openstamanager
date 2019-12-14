@@ -20,15 +20,13 @@ foreach ($fields as $name => $value) {
     $query .= ' OR '.$value.' LIKE "%'.$term.'%"';
 }
 
-//$query .= Modules::getAdditionalsQuery('Interventi');
-
 $rs = $dbo->fetchArray($query);
 
 foreach ($rs as $r) {
     $result = [];
 
     $module = ($r['dir'] == 'uscita') ? 'Ddt di acquisto' : 'Ddt di vendita';
-    $link_id = Modules::get($module)['id'];
+    $link_id = \Modules\Module::get($module)['id'];
 
     $numero = empty($r['numero_esterno']) ? $r['numero'] : $r['numero_esterno'];
 

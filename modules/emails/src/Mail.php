@@ -3,9 +3,9 @@
 namespace Modules\Emails;
 
 use Common\Model;
-use Models\PrintTemplate;
+use Models\Template;
 use Models\Upload;
-use Models\User;
+use Auth\User;
 use Modules\Newsletter\Newsletter;
 
 class Mail extends Model
@@ -194,7 +194,7 @@ class Mail extends Model
 
     public function prints()
     {
-        return $this->belongsToMany(PrintTemplate::class, 'em_email_print', 'id_email', 'id_print')->withPivot('name');
+        return $this->belongsToMany(Template::class, 'em_email_print', 'id_email', 'id_print')->withPivot('name');
     }
 
     protected function resetFromTemplate()
