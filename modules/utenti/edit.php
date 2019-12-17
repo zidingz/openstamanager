@@ -33,7 +33,7 @@ if (!empty($utenti)) {
 
         if (!empty($utente['idanagrafica'])) {
             echo '
-			<td>'.Modules::link('Anagrafiche', $utente['idanagrafica'], $utente['ragione_sociale']).'</td>
+			<td>'.module('Anagrafiche')->link($utente['idanagrafica'], $utente['ragione_sociale']).'</td>
 			<td>'.$utente['tipo'].'</td>';
         } else {
             echo '
@@ -148,7 +148,7 @@ if ($record['nome'] != 'Amministratori') {
 					<th>'.tr('Permessi').'</th>
                 </tr>';
 
-    $moduli = \Modules\Module::getHierarchy();
+    $moduli = moduleHierarchy();
 
     $permissions = [
         '-' => tr('Nessun permesso'),

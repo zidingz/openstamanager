@@ -48,28 +48,28 @@ if (!empty($rsi)) {
             <a href="javascript:;" class="btn btn-primary btn-sm" onclick="$(\'#dettagli_'.$int['id'].'\').toggleClass(\'hide\'); $(this).find(\'i\').toggleClass(\'fa-plus\').toggleClass(\'fa-minus\');"><i class="fa fa-plus"></i></a>
             '.Modules::link('Interventi', $int['id'], tr('Intervento num. _NUM_ del _DATE_', [
                 '_NUM_' => $int['codice'],
-                '_DATE_' => Translator::dateToLocale($int['inizio']),
+                '_DATE_' => dateFormat($int['inizio']),
             ])).'
         </td>
 
         <td class="text-right">
-            '.Translator::numberToLocale($int['ore']).'
+            '.numberFormat($int['ore']).'
         </td>
 
         <td class="text-right">
-            '.Translator::numberToLocale($int['km']).'
+            '.numberFormat($int['km']).'
         </td>
 
         <td class="text-right">
-            '.Translator::numberToLocale($intervento->spesa).'
+            '.numberFormat($intervento->spesa).'
         </td>
 
         <td class="text-right">
-            '.Translator::numberToLocale($intervento->imponibile).'
+            '.numberFormat($intervento->imponibile).'
         </td>
 
         <td class="text-right">
-            '.Translator::numberToLocale($intervento->totale_imponibile).'
+            '.numberFormat($intervento->totale_imponibile).'
         </td>
     </tr>';
 
@@ -112,14 +112,14 @@ if (!empty($rsi)) {
                 <tr>
                     <td>'.$r['ragione_sociale'].'</td>
                     <td>'.$r['id_tipo_intervento'].'</td>
-                    <td class="text-right">'.Translator::numberToLocale($r['ore']).'</td>
-                    <td class="text-right">'.Translator::numberToLocale($r['km']).'</td>
-                    <td class="text-right danger">'.Translator::numberToLocale($r['prezzo_ore_consuntivo_tecnico']).'</td>
-                    <td class="text-right danger">'.Translator::numberToLocale($r['prezzo_km_consuntivo_tecnico']).'</td>
-                    <td class="text-right danger">'.Translator::numberToLocale($r['prezzo_dirittochiamata_tecnico']).'</td>
-                    <td class="text-right success">'.Translator::numberToLocale($r['prezzo_ore_consuntivo']).$sconto_ore.'</td>
-                    <td class="text-right success">'.Translator::numberToLocale($r['prezzo_km_consuntivo']).$sconto_km.'</td>
-                    <td class="text-right success">'.Translator::numberToLocale($r['prezzo_dirittochiamata']).'</td>
+                    <td class="text-right">'.numberFormat($r['ore']).'</td>
+                    <td class="text-right">'.numberFormat($r['km']).'</td>
+                    <td class="text-right danger">'.numberFormat($r['prezzo_ore_consuntivo_tecnico']).'</td>
+                    <td class="text-right danger">'.numberFormat($r['prezzo_km_consuntivo_tecnico']).'</td>
+                    <td class="text-right danger">'.numberFormat($r['prezzo_dirittochiamata_tecnico']).'</td>
+                    <td class="text-right success">'.numberFormat($r['prezzo_ore_consuntivo']).$sconto_ore.'</td>
+                    <td class="text-right success">'.numberFormat($r['prezzo_km_consuntivo']).$sconto_km.'</td>
+                    <td class="text-right success">'.numberFormat($r['prezzo_dirittochiamata']).'</td>
                 </tr>';
             }
 
@@ -148,11 +148,11 @@ if (!empty($rsi)) {
                 echo '
                 <tr>
                     <td>
-                        '.Modules::link('Articoli', $r['idarticolo'], $r['descrizione']).(!empty($extra) ? '<small class="form-text">'.implode(', ', $extra).'</small>' : '').'
+                        '.module('Articoli')->link($r['idarticolo'], $r['descrizione']).(!empty($extra) ? '<small class="form-text">'.implode(', ', $extra).'</small>' : '').'
                     </td>
-                    <td class="text-right">'.Translator::numberToLocale($r['qta'], 'qta').'</td>
-                    <td class="text-right danger">'.Translator::numberToLocale($r['prezzo_acquisto'] * $r['qta']).'</td>
-                    <td class="text-right success">'.Translator::numberToLocale($r['prezzo_vendita'] * $r['qta']).$sconto.'</td>
+                    <td class="text-right">'.numberFormat($r['qta'], 'qta').'</td>
+                    <td class="text-right danger">'.numberFormat($r['prezzo_acquisto'] * $r['qta']).'</td>
+                    <td class="text-right success">'.numberFormat($r['prezzo_vendita'] * $r['qta']).$sconto.'</td>
                 </tr>';
             }
 
@@ -183,9 +183,9 @@ if (!empty($rsi)) {
                     <td>
                         '.$r['descrizione'].'
                     </td>
-                    <td class="text-right">'.Translator::numberToLocale($r['qta'], 'qta').'</td>
-                    <td class="text-right danger">'.Translator::numberToLocale($r['prezzo_acquisto'] * $r['qta']).'</td>
-                    <td class="text-right success">'.Translator::numberToLocale($r['prezzo_vendita'] * $r['qta']).$sconto.'</td>
+                    <td class="text-right">'.numberFormat($r['qta'], 'qta').'</td>
+                    <td class="text-right danger">'.numberFormat($r['prezzo_acquisto'] * $r['qta']).'</td>
+                    <td class="text-right success">'.numberFormat($r['prezzo_vendita'] * $r['qta']).$sconto.'</td>
                 </tr>';
             }
 
@@ -213,27 +213,27 @@ if (!empty($rsi)) {
 
     echo '
         <td align="right">
-            <big><b>'.Translator::numberToLocale($totale_ore).'</b></big>
+            <big><b>'.numberFormat($totale_ore).'</b></big>
         </td>';
 
     echo '
         <td align="right">
-            <big><b>'.Translator::numberToLocale($totale_km).'</b></big>
+            <big><b>'.numberFormat($totale_km).'</b></big>
         </td>';
 
     echo '
         <td align="right">
-            <big><b>'.Translator::numberToLocale($totale_costo).'</b></big>
+            <big><b>'.numberFormat($totale_costo).'</b></big>
         </td>';
 
     echo '
         <td align="right">
-            <big><b>'.Translator::numberToLocale($totale_addebito).'</b></big>
+            <big><b>'.numberFormat($totale_addebito).'</b></big>
         </td>';
 
     echo '
         <td align="right">
-            <big><b>'.Translator::numberToLocale($totale).'</b></big>
+            <big><b>'.numberFormat($totale).'</b></big>
         </td>
     </tr>';
 
@@ -255,7 +255,7 @@ if (!empty($rsi)) {
         </td>
 
         <td align="right">
-            <big><b>'.Translator::numberToLocale($tot).'</b></big>
+            <big><b>'.numberFormat($tot).'</b></big>
         </td>
     </tr>';
     }

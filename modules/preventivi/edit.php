@@ -39,7 +39,7 @@ $block_edit = $record['is_completato'];
 			<div class="row">
                 <div class="col-md-3">
                     <?php
-                    echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="float-right"');
+                    echo module('Anagrafiche')->link($record['idanagrafica'], null, null, 'class="float-right"');
                     ?>
                     {[ "type": "select", "label": "<?php echo tr('Cliente'); ?>", "name": "idanagrafica", "required": 1, "value": "$idanagrafica$", "ajax-source": "clienti" ]}
                 </div>
@@ -51,7 +51,7 @@ $block_edit = $record['is_completato'];
 				<div class="col-md-3">
                     <?php
                     if (!empty($record['idreferente'])) {
-                        echo Modules::link('Referenti', $record['idanagrafica'], null, null, 'class="float-right"');
+                        echo module('Referenti')->link($record['idanagrafica'], null, null, 'class="float-right"');
                     }
                     ?>
 
@@ -61,7 +61,7 @@ $block_edit = $record['is_completato'];
 				<div class="col-md-3">
                     <?php
                         if ($record['idagente'] != 0) {
-                            echo Modules::link('Anagrafiche', $record['idagente'], null, null, 'class="float-right"');
+                            echo module('Anagrafiche')->link($record['idagente'], null, null, 'class="float-right"');
                         }
                     ?>
 					{[ "type": "select", "label": "<?php echo tr('Agente'); ?>", "name": "idagente", "values": "query=SELECT an_anagrafiche.idanagrafica AS id, ragione_sociale AS descrizione FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.id_tipo_anagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE descrizione='Agente' AND deleted_at IS NULL ORDER BY ragione_sociale", "value": "$idagente$" ]}
@@ -301,7 +301,7 @@ if (!empty($elementi)) {
         $descrizione = tr('_DOC_ num. _NUM_ del _DATE_', [
             '_DOC_' => $elemento['tipo_documento'],
             '_NUM_' => !empty($elemento['numero_esterno']) ? $elemento['numero_esterno'] : $elemento['numero'],
-            '_DATE_' => Translator::dateToLocale($elemento['data']),
+            '_DATE_' => dateFormat($elemento['data']),
         ]);
 
         if (in_array($elemento['tipo_documento'], ['Ordine cliente'])) {

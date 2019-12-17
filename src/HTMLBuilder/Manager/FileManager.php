@@ -118,7 +118,7 @@ class FileManager implements ManagerInterface
                 <small> ('.$file->extension.')'.((!empty($file->size)) ? ' ('.\Util\FileSystem::formatBytes($file->size).')' : '').'</small>'.'
             </td>
 
-            <td>'.\Translator::timestampToLocale($r['created_at']).'</td>
+            <td>'.\timestampFormat($r['created_at']).'</td>
 
             <td class="text-center">
                 <a class="btn btn-sm btn-primary" href="'.ROOTDIR.'/actions.php?id_module='.$options['id_module'].'&op=download_file&id='.$r['id'].'&filename='.$r['filename'].'" target="_blank">

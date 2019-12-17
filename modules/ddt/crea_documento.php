@@ -4,7 +4,7 @@ use Modules\DDT\DDT;
 
 $documento = DDT::find($id_record);
 
-$module = \Modules\Module::get($id_module);
+$module = module($id_module);
 
 $final_module = $module['name'] == 'Ddt di vendita' ? 'Fatture di vendita' : 'Fatture di acquisto';
 $dir = $module['name'] == 'Ddt di vendita' ? 'entrata' : 'uscita';

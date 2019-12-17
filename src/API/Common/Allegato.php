@@ -10,7 +10,7 @@ class Allegato extends Request implements CreateInterface
 {
     public function create($request)
     {
-        $module = \Modules\Module::get($request['module']);
+        $module = module($request['module']);
 
         $name = !empty($request['name']) ? $request['name'] : null;
         $category = !empty($request['category']) ? $request['category'] : null;

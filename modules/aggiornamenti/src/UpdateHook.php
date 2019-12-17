@@ -18,7 +18,7 @@ class UpdateHook extends CachedManager
     {
         $update = self::getCache()['results'];
 
-        $module = \Modules\Module::get('Aggiornamenti');
+        $module = module('Aggiornamenti');
         $link = ROOTDIR.'/controller.php?id_module='.$module->id;
 
         $message = tr("E' disponibile la versione _VERSION_ del gestionale", [

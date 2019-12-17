@@ -10,7 +10,7 @@ echo '
         <div class="text-center" style="height:5mm;">
             <b>'.tr('Preventivo num. _NUM_ del _DATE_', [
                 '_NUM_' => $documento['numero'],
-                '_DATE_' => Translator::dateToLocale($documento['data_bozza']),
+                '_DATE_' => dateFormat($documento['data_bozza']),
             ], ['upper' => true]).'</b>
         </div>
     </div>
@@ -104,7 +104,7 @@ foreach ($righe as $riga) {
     if (!$riga->isDescrizione()) {
         echo '
             <td class="text-center">
-                '.Translator::numberToLocale(abs($riga->qta), 'qta').' '.$r['um'].'
+                '.numberFormat(abs($riga->qta), 'qta').' '.$r['um'].'
             </td>';
 
         if ($options['pricing']) {
@@ -115,7 +115,7 @@ foreach ($righe as $riga) {
 
             if ($riga->sconto > 0) {
                 $text = tr('sconto _TOT_ _TYPE_', [
-                    '_TOT_' => Translator::numberToLocale($riga->sconto_unitario),
+                    '_TOT_' => numberFormat($riga->sconto_unitario),
                     '_TYPE_' => ($riga->tipo_sconto == 'PRC' ? '%' : currency()),
                 ]);
 
@@ -137,7 +137,7 @@ foreach ($righe as $riga) {
             // Iva
             echo '
             <td class="text-center">
-                '.Translator::numberToLocale($riga->aliquota->percentuale, 0).'
+                '.numberFormat($riga->aliquota->percentuale, 0).'
             </td>';
         }
     } else {

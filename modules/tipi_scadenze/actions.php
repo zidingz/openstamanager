@@ -25,7 +25,7 @@ switch (filter('op')) {
                 ], [
                     'clause' => 'co_scadenziario.tipo="'.$nome_prev.'"',
                     'name' => 'Scadenzario '.$nome_prev,
-                    'id_module' => \Modules\Module::get('Scadenzario')['id'],
+                    'id_module' => module('Scadenzario')['id'],
                 ]);
 
                 flash()->info(tr('Salvataggio completato!'));
@@ -56,7 +56,7 @@ switch (filter('op')) {
 
                 //Aggiungo anche il segmento
                 $dbo->insert('zz_segments', [
-                    'id_module' => \Modules\Module::get('Scadenzario')['id'],
+                    'id_module' => module('Scadenzario')['id'],
                     'name' => 'Scadenzario '.$nome,
                     'clause' => 'co_scadenziario.tipo="'.$nome.'"',
                     'position' => 'WHR',

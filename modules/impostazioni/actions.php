@@ -5,10 +5,10 @@ switch (filter('op')) {
         $is_all_valid = true;
 
         foreach (post('setting') as $id => $value) {
-            $is_valid = Settings::setValue($id, $value);
+            $is_valid = \Models\Setting::get($id)->setValue($value);
 
             if (!$is_valid) {
-                $result = Settings::get($id);
+                $result = \Models\Setting::get($id);
 
                 // integer
                 if ($result['tipo'] == 'integer') {

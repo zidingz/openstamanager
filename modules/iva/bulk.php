@@ -2,7 +2,7 @@
 
 include_once __DIR__.'/../../core.php';
 
-$module = \Modules\Module::get($id_module);
+$module = module($id_module);
 
 switch (post('op')) {
     case 'delete-bulk':

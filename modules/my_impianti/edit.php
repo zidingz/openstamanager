@@ -41,7 +41,7 @@ if (!empty($record['immagine'])) {
 
 						<div class="col-md-6">
 							<?php
-                                echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="float-right"');
+                                echo module('Anagrafiche')->link($record['idanagrafica'], null, null, 'class="float-right"');
                             ?>
 							{[ "type": "select", "label": "<?php echo tr('Cliente'); ?>", "name": "idanagrafica", "required": 1, "value": "$idanagrafica$", "extra": "", "ajax-source": "clienti" ]}
 						</div>

@@ -38,7 +38,7 @@ if (!empty($documento)) {
                         <tr>
                             <th width="120">'.($dir == 'entrata' ? tr('Cliente') : tr('Fornitore')).':</th>
                             <td>
-                                '.Modules::link('Anagrafiche', $documento->anagrafica->id, $documento->anagrafica->ragione_sociale).'
+                                '.module('Anagrafiche')->link($documento->anagrafica->id, $documento->anagrafica->ragione_sociale).'
                             </td>
                         </tr>';
     echo '
@@ -54,7 +54,7 @@ if (!empty($documento)) {
     echo '
                         <tr>
                             <th>'.tr('Data').':</th>
-                            <td>'.Translator::dateToLocale($documento->data).'</td>
+                            <td>'.dateFormat($documento->data).'</td>
                         </tr>
                     </table>
 
@@ -118,11 +118,11 @@ foreach ($rs as $i => $scadenza) {
                             </td>
 
                             <td align="right">
-                                {[ "type": "number", "name": "da_pagare['.$i.']", "decimals": 2, "value": "'.Translator::numberToLocale($scadenza['da_pagare'], 2).'", "onchange": "controlloTotale()" ]}
+                                {[ "type": "number", "name": "da_pagare['.$i.']", "decimals": 2, "value": "'.numberFormat($scadenza['da_pagare'], 2).'", "onchange": "controlloTotale()" ]}
                             </td>
 
                             <td align="right">
-                                {[ "type": "number", "name": "pagato['.$i.']", "decimals": 2, "value": "'.Translator::numberToLocale($scadenza['pagato']).'"  ]}
+                                {[ "type": "number", "name": "pagato['.$i.']", "decimals": 2, "value": "'.numberFormat($scadenza['pagato']).'"  ]}
                             </td>
 
                             <td align="center">
@@ -148,7 +148,7 @@ echo '
                         <tfoot>
                             <tr>
                                 <td align="right"><b>'.tr('Totale').'</b></td>
-                                <td align="right" id="totale_utente">'.Translator::numberToLocale($totale_da_pagare).'</td>
+                                <td align="right" id="totale_utente">'.numberFormat($totale_da_pagare).'</td>
                                 <td align="right"></td>
                             </tr>
                         </tfoot>';
@@ -158,7 +158,7 @@ echo '
 					</table>
 
                     <div class='float-right'>
-                        <a onclick="launch_modal( 'Registra contabile pagamento', '<?php echo ROOTDIR; ?>/add.php?id_module=<?php echo \Modules\Module::get('Prima nota')['id']; ?>&<?php echo !empty($record['iddocumento']) ? 'id_documenti='.$record['iddocumento'].'&single=1' : 'id_scadenze='.$id_record; ?>');" class="btn btn-sm btn-primary"><i class="fa fa-euro"></i> <?php echo tr('Registra contabile pagamento...'); ?></a>
+                        <a onclick="launch_modal( 'Registra contabile pagamento', '<?php echo ROOTDIR; ?>/add.php?id_module=<?php echo module('Prima nota')['id']; ?>&<?php echo !empty($record['iddocumento']) ? 'id_documenti='.$record['iddocumento'].'&single=1' : 'id_scadenze='.$id_record; ?>');" class="btn btn-sm btn-primary"><i class="fa fa-euro"></i> <?php echo tr('Registra contabile pagamento...'); ?></a>
                     </div>
 
 					<div class="clearfix"></div>
@@ -171,7 +171,7 @@ echo '
                         ]); ?>.
 					</div>
 
-					<input type="hidden" id="totale_da_pagare" value="<?php echo Translator::numberToLocale($totale_da_pagare, 2); ?>">
+					<input type="hidden" id="totale_da_pagare" value="<?php echo numberFormat($totale_da_pagare, 2); ?>">
 				</div>
 			</div>
 		</div>

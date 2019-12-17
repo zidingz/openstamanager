@@ -6,7 +6,6 @@ use Auth;
 use Controllers\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Settings;
 use Slim\Exception\HttpNotFoundException;
 use Update;
 use Uploads;
@@ -75,13 +74,13 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
         $settings = [];
         foreach ($values['settings'] as $setting => $required) {
             if (empty(setting($setting))) {
-                $settings[] = Settings::input($setting, $required);
+                $settings[] = \Models\Setting::get($setting)->input($required);
             }
         }
 
         // Form dell'anagrafica Azienda
         ob_start();
-        $module_id = \Modules\Module::get('Anagrafiche')->id;
+        $module_id = module('Anagrafiche')->id;
         $id_tipo_anagrafica = $this->database->fetchOne("SELECT id FROM an_tipianagrafiche WHERE descrizione='Azienda'")['id'];
         $readonly_tipo = true;
         include DOCROOT.'/modules/anagrafiche/add.php';
@@ -144,11 +143,11 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
 
         if (!$has_settings) {
             foreach ($settings as $setting => $required) {
-                $setting = Settings::get($setting);
+                $setting = \Models\Setting::get($setting);
 
                 $value = post('setting')[$setting['id']];
                 if (!empty($value)) {
-                    Settings::setValue($setting['nome'], $value);
+                    \Models\Setting::get($setting['nome'])->setValue($value);
                 }
             }
         }
@@ -161,7 +160,7 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
         $dbo = $database = $this->database;
 
         $this->filter->set('post', 'op', 'add');
-        $id_module = \Modules\Module::get('Anagrafiche')['id'];
+        $id_module = module('Anagrafiche')['id'];
         include DOCROOT.'/modules/anagrafiche/actions.php';
 
         // Logo stampe
@@ -172,7 +171,7 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
                 'id_record' => $id_record,
             ]);
 
-            Settings::setValue('Logo stampe', $file);
+            \Models\Setting::get('Logo stampe')->setValue($file);
         }
     }
 

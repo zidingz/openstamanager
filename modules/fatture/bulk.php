@@ -5,7 +5,7 @@ use Plugins\ExportFE\FatturaElettronica;
 use Plugins\ExportFE\Interaction;
 use Util\Zip;
 
-$additionals = \Modules\Module::get($id_module)->getAdditionalsQuery();
+$additionals = module($id_module)->getAdditionalsQuery();
 
 switch (post('op')) {
     case 'export-bulk':
@@ -197,7 +197,7 @@ $operations['registrazione-contabile'] = [
         'title' => tr('Registrazione contabile'),
         'type' => 'modal',
         'origine' => 'fatture',
-        'url' => ROOTDIR.'/add.php?id_module='.\Modules\Module::get('Prima nota')['id'],
+        'url' => ROOTDIR.'/add.php?id_module='.module('Prima nota')['id'],
     ],
 ];
 

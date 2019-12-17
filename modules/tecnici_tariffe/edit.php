@@ -10,7 +10,7 @@ echo '
         <div class="card-header">
             <h3 class="card-title"><i class="fa fa-user"></i> '.$record['ragione_sociale'].'</h3>
             <div class="card-tools float-right">
-                '.Modules::link('Anagrafiche', $record['idanagrafica']).'
+                '.module('Anagrafiche')->link($record['idanagrafica']).'
             </div>
         </div>
 

@@ -109,10 +109,10 @@ if (!empty($record['codice_stato_fe'])) {
 
         echo '
 		<div class="alert text-left alert-'.$class.'">
-		    <big><i class="'.$stato_fe['icon'].'" style="color:#fff;"></i> 
+		    <big><i class="'.$stato_fe['icon'].'" style="color:#fff;"></i>
 		    <b>'.$stato_fe['codice'].'</b> - '.$stato_fe['descrizione'].'</big> '.(!empty($record['descrizione_ricevuta_fe']) ? '<br><b>NOTE:</b><br>'.$record['descrizione_ricevuta_fe'] : '').'
 		    <div class="float-right">
-		        <i class="fa fa-clock-o"></i> '.Translator::timestampToLocale($record['data_stato_fe']).'
+		        <i class="fa fa-clock-o"></i> '.timestampFormat($record['data_stato_fe']).'
             </div>
         </small>
 		';
@@ -166,7 +166,7 @@ echo '
         var form = $("#edit-form");
         form.find("*").prop("disabled", false);
         valid = submitAjax(form);
-        
+
         if (valid) {';
 
 if ($generated) {
@@ -186,7 +186,7 @@ if ($generated) {
             });';
 } else {
     echo '
-    
+
             $("#form-xml").submit();';
 }
 echo '

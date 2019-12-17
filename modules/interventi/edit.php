@@ -14,7 +14,7 @@
 			<div class="row">
 				<div class="col-md-3">
                     <?php
-                        echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="float-right"');
+                        echo module('Anagrafiche')->link($record['idanagrafica'], null, null, 'class="float-right"');
                     ?>
 					{[ "type": "select", "label": "<?php echo tr('Cliente'); ?>", "name": "idanagrafica", "required": 1, "values": "query=SELECT an_anagrafiche.idanagrafica AS id, ragione_sociale AS descrizione FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.id_tipo_anagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE descrizione='Cliente' AND deleted_at IS NULL ORDER BY ragione_sociale", "value": "$idanagrafica$", "ajax-source": "clienti", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
 				</div>
@@ -25,7 +25,7 @@
 
 				<div class="col-md-3">
 					<?php
-                        echo Modules::link('Anagrafiche', $record['idclientefinale'], null, null, 'class="float-right"');
+                        echo module('Anagrafiche')->link($record['idclientefinale'], null, null, 'class="float-right"');
                     ?>
 					{[ "type": "select", "label": "<?php echo tr('Per conto di'); ?>", "name": "idclientefinale", "value": "$idclientefinale$", "ajax-source": "clienti", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
 				</div>
@@ -41,7 +41,7 @@
 					<?php
                     if (!empty($record['idpreventivo'])) {
                         echo '
-                        '.Modules::link('Preventivi', $record['idpreventivo'], null, null, 'class="float-right"');
+                        '.module('Preventivi')->link($record['idpreventivo'], null, null, 'class="float-right"');
                     }
                     ?>
 
@@ -54,7 +54,7 @@
 
                         if (!empty($record['idcontratto'])) {
                             echo '
-                            '.Modules::link('Contratti', $record['idcontratto'], null, null, 'class="float-right"');
+                            '.module('Contratti')->link($record['idcontratto'], null, null, 'class="float-right"');
                         }
                     ?>
 
@@ -286,8 +286,8 @@ include $structure->filepath('ajax_righe.php');
             echo '
 	    <img src="'.ROOTDIR.'/files/interventi/'.$record['firma_file'].'" class="img-thumbnail"><div>&nbsp;</div>
 	   	<div class="col-md-6 col-md-offset-3 alert alert-success"><i class="fa fa-check"></i> '.tr('Firmato il _DATE_ alle _TIME_ da _PERSON_', [
-            '_DATE_' => Translator::dateToLocale($record['firma_data']),
-            '_TIME_' => Translator::timeToLocale($record['firma_data']),
+            '_DATE_' => dateFormat($record['firma_data']),
+            '_TIME_' => timeFormat($record['firma_data']),
             '_PERSON_' => '<b>'.$record['firma_nome'].'</b>',
         ]).'</div>';
         }
@@ -384,7 +384,7 @@ if (!empty($elementi)) {
         $descrizione = tr('_DOC_ num. _NUM_ del _DATE_', [
             '_DOC_' => $fattura['tipo_documento'],
             '_NUM_' => !empty($fattura['numero_esterno']) ? $fattura['numero_esterno'] : $fattura['numero'],
-            '_DATE_' => Translator::dateToLocale($fattura['data']),
+            '_DATE_' => dateFormat($fattura['data']),
         ]);
 
         $modulo = ($fattura['dir'] == 'entrata') ? 'Fatture di vendita' : 'Fatture di acquisto';

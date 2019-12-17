@@ -14,10 +14,10 @@ if (!empty($rs)) {
         echo '
     <tr>
         <td>
-            '.Modules::link('Articoli', $r['id'], $r['descrizione']).'
+            '.module('Articoli')->link($r['id'], $r['descrizione']).'
         </td>
         <td>
-            '.Translator::numberToLocale($r['qta'], 'qta').' '.$r['unitamisura'].'
+            '.numberFormat($r['qta'], 'qta').' '.$r['unitamisura'].'
         </td>
     </tr>';
     }

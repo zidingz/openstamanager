@@ -25,7 +25,7 @@ foreach ($righe as $riga) {
     // Descrizione
     $descrizione = nl2br($riga->descrizione);
     if ($riga->isArticolo()) {
-        $descrizione = Modules::link('Articoli', $riga->idarticolo, $riga->articolo->codice.' - '.$descrizione);
+        $descrizione = module('Articoli')->link($riga->idarticolo, $riga->articolo->codice.' - '.$descrizione);
     }
     echo '
             <td>
@@ -43,7 +43,7 @@ foreach ($righe as $riga) {
         // Q.tà
         echo '
             <td class="text-center">
-                '.Translator::numberToLocale($riga->qta_rimanente, 'qta').' / '.Translator::numberToLocale($riga->qta, 'qta').'
+                '.numberFormat($riga->qta_rimanente, 'qta').' / '.numberFormat($riga->qta, 'qta').'
             </td>';
 
         // Unità di misura
@@ -62,7 +62,7 @@ foreach ($righe as $riga) {
 
             echo '
                 <br><small class="label label-danger">'.replace($text, [
-                    '_TOT_' => Translator::numberToLocale(abs($riga->sconto_unitario)),
+                    '_TOT_' => numberFormat(abs($riga->sconto_unitario)),
                     '_TYPE_' => ($riga->tipo_sconto == 'PRC' ? '%' : currency()),
                 ]).'</small>';
         }

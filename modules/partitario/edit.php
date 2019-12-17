@@ -108,7 +108,7 @@ foreach ($primo_livello as $conto_primo) {
 
             echo  '
                         </span>
-                            &nbsp;'.$conto_secondo['numero'].'.'.$conto_terzo['numero'].' '.$conto_terzo['descrizione'].' '.(isset($id_anagrafica) ? Modules::link('Anagrafiche', $id_anagrafica, 'Anagrafica', null) : '').'
+                            &nbsp;'.$conto_secondo['numero'].'.'.$conto_terzo['numero'].' '.$conto_terzo['descrizione'].' '.(isset($id_anagrafica) ? module('Anagrafiche')->link($id_anagrafica, 'Anagrafica', null) : '').'
                         </span>
 
                         <div id="conto_'.$conto_terzo['id'].'" style="display:none;"></div>

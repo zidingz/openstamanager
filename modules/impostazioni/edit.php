@@ -18,7 +18,7 @@ echo '
 foreach ($records as $record) {
     echo '
             <div class="col-md-6">
-                '.Settings::input($record['id']).'
+                '.\Models\Setting::get($record['id'])->input().'
             </div>';
 }
 

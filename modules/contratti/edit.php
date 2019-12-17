@@ -41,7 +41,7 @@ $block_edit = $record['is_completato'];
 			<div class="row">
                 <div class="col-md-3">
                     <?php
-                    echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="float-right"');
+                    echo module('Anagrafiche')->link($record['idanagrafica'], null, null, 'class="float-right"');
                     ?>
 
                     {[ "type": "select", "label": "<?php echo tr('Cliente'); ?>", "name": "idanagrafica", "id": "idanagrafica_c", "required": 1, "value": "$idanagrafica$", "ajax-source": "clienti" ]}
@@ -53,7 +53,7 @@ $block_edit = $record['is_completato'];
 
 				<div class="col-md-3">
                     <?php
-                    echo Modules::link('Referenti', $record['idanagrafica'], null, null, 'class="float-right"');
+                    echo module('Referenti')->link($record['idanagrafica'], null, null, 'class="float-right"');
                     ?>
 
 					{[ "type": "select", "label": "<?php echo tr('Referente'); ?>", "name": "idreferente", "value": "$idreferente$", "ajax-source": "referenti", "ajax-info": "idanagrafica=$idanagrafica$" ]}
@@ -62,7 +62,7 @@ $block_edit = $record['is_completato'];
 				<div class="col-md-3">
                     <?php
                         if ($record['idagente'] != 0) {
-                            echo Modules::link('Anagrafiche', $record['idagente'], null, null, 'class="float-right"');
+                            echo module('Anagrafiche')->link($record['idagente'], null, null, 'class="float-right"');
                         }
                     ?>
 					{[ "type": "select", "label": "<?php echo tr('Agente'); ?>", "name": "idagente", "values": "query=SELECT an_anagrafiche.idanagrafica AS id, ragione_sociale AS descrizione FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.id_tipo_anagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica WHERE descrizione='Agente' AND deleted_at IS NULL ORDER BY ragione_sociale", "value": "$idagente$" ]}
@@ -109,7 +109,7 @@ $block_edit = $record['is_completato'];
 
 			<div class="row">
 				<div class="col-md-6">
-					{[ "type": "select", "multiple": "1", "label": "<?php echo tr('Impianti'); ?>", "name": "matricolaimpianto[]", "values": "query=SELECT idanagrafica, id AS id, IF(nome = '', matricola, CONCAT(matricola, ' - ', nome)) AS descrizione FROM my_impianti WHERE idanagrafica='$idanagrafica$' ORDER BY descrizione", "value": "$idimpianti$", "icon-after": "add|<?php echo \Modules\Module::get('MyImpianti')['id']; ?>|||<?php echo (empty($block_edit)) ? '' : 'disabled'; ?>" ]}
+					{[ "type": "select", "multiple": "1", "label": "<?php echo tr('Impianti'); ?>", "name": "matricolaimpianto[]", "values": "query=SELECT idanagrafica, id AS id, IF(nome = '', matricola, CONCAT(matricola, ' - ', nome)) AS descrizione FROM my_impianti WHERE idanagrafica='$idanagrafica$' ORDER BY descrizione", "value": "$idimpianti$", "icon-after": "add|<?php echo module('MyImpianti')['id']; ?>|||<?php echo (empty($block_edit)) ? '' : 'disabled'; ?>" ]}
 				</div>
             </div>
 
@@ -407,7 +407,7 @@ if (!empty($elementi)) {
             $descrizione = tr('_DOC_ num. _NUM_ del _DATE_', [
                 '_DOC_' => $riga['tipo_documento'],
                 '_NUM_' => !empty($riga['numero_esterno']) ? $riga['numero_esterno'] : $riga['numero'],
-                '_DATE_' => Translator::dateToLocale($riga['data']),
+                '_DATE_' => dateFormat($riga['data']),
             ]);
 
             $modulo = ($riga['dir'] == 'entrata') ? 'Fatture di vendita' : 'Fatture di acquisto';
@@ -418,7 +418,7 @@ if (!empty($elementi)) {
         } else {
             $descrizione = tr('Intervento num. _NUM_ del _DATE_', [
                 '_NUM_' => $riga['codice'],
-                '_DATE_' => Translator::dateToLocale($riga['data']),
+                '_DATE_' => dateFormat($riga['data']),
             ]);
 
             $modulo = 'Interventi';

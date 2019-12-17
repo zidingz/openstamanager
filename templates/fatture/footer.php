@@ -51,7 +51,7 @@ if (!empty($rs2)) {
         echo "
                             <tr>
                                 <td style='width:50%;'>
-                                    <small>".Translator::dateToLocale($rs2[$i]['scadenza'])."</small>
+                                    <small>".dateFormat($rs2[$i]['scadenza'])."</small>
                                 </td>
                                 <td style='width:50%;' class='text-right'>
                                     <small>".moneyFormat($rs2[$i]['da_pagare'], 2).'</small>
@@ -195,7 +195,7 @@ if (!empty($record['rivalsainps'])) {
     <tr>
         <th class="text-center small" colspan="'.$first_colspan.'">
             '.tr('Rivalsa _PRC_%', [
-                '_PRC_' => Translator::numberToLocale($rs2[0]['percentuale'], 0),
+                '_PRC_' => numberFormat($rs2[0]['percentuale'], 0),
             ], ['upper' => true]).'
         </th>';
 
@@ -232,10 +232,10 @@ if (!empty($record['ritenutaacconto']) || !empty($documento->totale_ritenuta_con
     }
 
     $contributi = (!empty($record['ritenutaacconto']) ? ' - ' : '').tr('contributi: _PRC_%', [
-        '_PRC_' => Translator::numberToLocale($documento->ritenutaContributi->percentuale, 2),
+        '_PRC_' => numberFormat($documento->ritenutaContributi->percentuale, 2),
     ]);
     $acconto = tr('acconto: _PRC_%', [
-        '_PRC_' => Translator::numberToLocale($rs2[0]['percentuale'], 0),
+        '_PRC_' => numberFormat($rs2[0]['percentuale'], 0),
     ]);
 
     echo '
@@ -336,11 +336,11 @@ if ($fattura_accompagnatoria) {
 
     <tr>
         <td class="cell-padded">
-        '.(!empty($peso_lordo) ? Translator::numberToLocale($peso_lordo).'&nbsp;KG' : '').'
+        '.(!empty($peso_lordo) ? numberFormat($peso_lordo).'&nbsp;KG' : '').'
         </td>
 
         <td class="cell-padded">
-            '.(!empty($volume) ? Translator::numberToLocale($volume).'&nbsp;M<sup>3</sup>' : '').'
+            '.(!empty($volume) ? numberFormat($volume).'&nbsp;M<sup>3</sup>' : '').'
         </td>
 
         <td class="cell-padded">

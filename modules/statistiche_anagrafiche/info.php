@@ -87,7 +87,7 @@ echo '
                     <span class="info-card-icon bg-'.($preventivi->count() == 0 ? 'gray' : 'aqua').'"><i class="fa fa-question"></i></span>
                     <div class="info-card-content">
                         <span class="info-card-text pull-left">'.tr('Preventivi').'</span>
-                        '.($preventivi->count() > 0 ? '<span class="info-card-text float-right"><a href="'.ROOTDIR.'/controller.php?id_module='.\Modules\Module::get('Preventivi')['id'].'&search_Cliente='.$anagrafica['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
+                        '.($preventivi->count() > 0 ? '<span class="info-card-text float-right"><a href="'.ROOTDIR.'/controller.php?id_module='.module('Preventivi')['id'].'&search_Cliente='.$anagrafica['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
                         <br class="clearfix">
                         <span class="info-card-number">
                             <big>'.$preventivi->count().'</big><br>
@@ -102,7 +102,7 @@ echo '
                     <span class="info-card-icon bg-'.($contratti->count() == 0 ? 'gray' : 'purple').'"><i class="fa fa-refresh"></i></span>
                     <div class="info-card-content">
                         <span class="info-card-text pull-left">'.tr('Contratti').'</span>
-                        '.($contratti->count() > 0 ? '<span class="info-card-text float-right"><a href="'.ROOTDIR.'/controller.php?id_module='.\Modules\Module::get('Contratti')['id'].'&search_Cliente='.$anagrafica['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
+                        '.($contratti->count() > 0 ? '<span class="info-card-text float-right"><a href="'.ROOTDIR.'/controller.php?id_module='.module('Contratti')['id'].'&search_Cliente='.$anagrafica['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
                         <br class="clearfix">
                         <span class="info-card-number">
                             <big>'.$contratti->count().'</big><br>
@@ -117,7 +117,7 @@ echo '
                     <span class="info-card-icon bg-'.($ordini_cliente->count() == 0 ? 'gray' : 'blue').'"><i class="fa fa-file-text"></i></span>
                     <div class="info-card-content">
                         <span class="info-card-text pull-left">'.tr('Ordini cliente').'</span>
-                        '.($ordini_cliente->count() > 0 ? '<span class="info-card-text float-right"><a href="'.ROOTDIR.'/controller.php?id_module='.\Modules\Module::get('Ordini cliente')['id'].'&search_Ragione-sociale='.$anagrafica['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
+                        '.($ordini_cliente->count() > 0 ? '<span class="info-card-text float-right"><a href="'.ROOTDIR.'/controller.php?id_module='.module('Ordini cliente')['id'].'&search_Ragione-sociale='.$anagrafica['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
                         <br class="clearfix">
                         <span class="info-card-number">
                             <big>'.$ordini_cliente->count().'</big><br>
@@ -134,7 +134,7 @@ echo '
                     <span class="info-card-icon bg-'.($interventi->count() == 0 ? 'gray' : 'red').'"><i class="fa fa-cog"></i></span>
                     <div class="info-card-content">
                         <span class="info-card-text pull-left">'.tr('Attività').'</span>
-                        '.($interventi->count() > 0 ? '<span class="info-card-text float-right"><a href="'.ROOTDIR.'/controller.php?id_module='.\Modules\Module::get('Interventi')['id'].'&search_Ragione-sociale='.$anagrafica['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
+                        '.($interventi->count() > 0 ? '<span class="info-card-text float-right"><a href="'.ROOTDIR.'/controller.php?id_module='.module('Interventi')['id'].'&search_Ragione-sociale='.$anagrafica['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
                         <br class="clearfix">
                         <span class="info-card-number">
                             <big>'.$interventi->count().'</big><br>
@@ -149,7 +149,7 @@ echo '
                     <span class="info-card-icon bg-'.($ddt_uscita->count() == 0 ? 'gray' : 'maroon').'"><i class="fa fa-truck"></i></span>
                     <div class="info-card-content">
                         <span class="info-card-text pull-left">'.tr('Ddt in uscita').'</span>
-                        '.($ddt_uscita->count() > 0 ? '<span class="info-card-text float-right"><a href="'.ROOTDIR.'/controller.php?id_module='.\Modules\Module::get('Ddt di vendita')['id'].'&search_Ragione-sociale='.$anagrafica['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
+                        '.($ddt_uscita->count() > 0 ? '<span class="info-card-text float-right"><a href="'.ROOTDIR.'/controller.php?id_module='.module('Ddt di vendita')['id'].'&search_Ragione-sociale='.$anagrafica['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
                         <br class="clearfix">
                         <span class="info-card-number">
                             <big>'.$ddt_uscita->count().'</big><br>
@@ -164,7 +164,7 @@ echo '
                     <span class="info-card-icon bg-'.($fatture_vendita->count() == 0 ? 'gray' : 'green').'"><i class="fa fa-money"></i></span>
                     <div class="info-card-content">
                         <span class="info-card-text pull-left">'.tr('Fatture').'</span>
-                        '.($fatture_vendita->count() > 0 ? '<span class="info-card-text float-right"><a href="'.ROOTDIR.'/controller.php?id_module='.\Modules\Module::get('Fatture di vendita')['id'].'&search_Ragione-sociale='.$anagrafica['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
+                        '.($fatture_vendita->count() > 0 ? '<span class="info-card-text float-right"><a href="'.ROOTDIR.'/controller.php?id_module='.module('Fatture di vendita')['id'].'&search_Ragione-sociale='.$anagrafica['ragione_sociale'].'">'.tr('Visualizza').' <i class="fa fa-chevron-circle-right"></i></a></span>' : '').'
                         <br class="clearfix">
                         <span class="info-card-number">
                             <big>'.$fatture_vendita->count().'</big><br>

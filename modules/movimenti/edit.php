@@ -13,10 +13,10 @@ $qta_totale = $dbo->fetchOne('SELECT SUM(qta) AS qta FROM mg_movimenti WHERE ida
 $qta_totale_attuale = $dbo->fetchOne('SELECT SUM(qta) AS qta FROM mg_movimenti WHERE idarticolo='.prepare($id_record).' AND data <= CURDATE()')['qta'];
 
 echo '
-<p>'.tr('Quantità calcolata dai movimenti').': <b>'.Translator::numberToLocale($qta_totale, 'qta').' '.$record['um'].'</b> <span  class=\'tip\' title=\''.tr('Quantità calcolata da tutti i movimenti registrati').'.\' ><i class="fa fa-question-circle-o"></i></span></p>';
+<p>'.tr('Quantità calcolata dai movimenti').': <b>'.numberFormat($qta_totale, 'qta').' '.$record['um'].'</b> <span  class=\'tip\' title=\''.tr('Quantità calcolata da tutti i movimenti registrati').'.\' ><i class="fa fa-question-circle-o"></i></span></p>';
 
 echo '
-<p>'.tr('Quantità calcolata attuale').': <b>'.Translator::numberToLocale($qta_totale_attuale, 'qta').' '.$record['um'].'</b> <span  class=\'tip\' title=\''.tr('Quantità calcolata secondo i movimenti registrati con data oggi o date trascorse').'.\' ><i class="fa fa-question-circle-o"></i></span></p>';
+<p>'.tr('Quantità calcolata attuale').': <b>'.numberFormat($qta_totale_attuale, 'qta').' '.$record['um'].'</b> <span  class=\'tip\' title=\''.tr('Quantità calcolata secondo i movimenti registrati con data oggi o date trascorse').'.\' ><i class="fa fa-question-circle-o"></i></span></p>';
 
 // Elenco movimenti magazzino
 $query = 'SELECT * FROM mg_movimenti WHERE idarticolo='.prepare($id_record).' ORDER BY data DESC, id DESC';
@@ -78,14 +78,14 @@ if (!empty($movimenti)) {
 
         echo '
                 <td>'.$movimento['movimento'].'
-				'.((!empty($movimento['idintervento'])) ? Modules::link('Interventi', $movimento['idintervento']) : '').'
+				'.((!empty($movimento['idintervento'])) ? module('Interventi')->link($movimento['idintervento']) : '').'
 				'.((!empty($movimento['idddt'])) ? (Modules::link('DDt di '.$dir, $movimento['idddt'], null, null, (intval($database->fetchOne('SELECT * FROM `dt_ddt` WHERE `id` ='.prepare($movimento['idddt'])))) ? '' : 'class="disabled"')) : '').'
 				'.((!empty($movimento['iddocumento'])) ? (Modules::link('Fatture di '.$dir, $movimento['iddocumento'], null, null, (intval($database->fetchOne('SELECT * FROM `co_documenti` WHERE `id` ='.prepare($movimento['iddocumento'])))) ? '' : 'class="disabled"')) : '').'
 				</td>';
 
         // Data
         echo '
-                <td class="text-center" >'.Translator::dateToLocale($movimento['data']).' <span  class=\'tip\' title=\''.tr('Data del movimento: ').Translator::timestampToLocale($movimento['created_at']).'\' ><i class="fa fa-question-circle-o"></i></span> </td>';
+                <td class="text-center" >'.dateFormat($movimento['data']).' <span  class=\'tip\' title=\''.tr('Data del movimento: ').timestampFormat($movimento['created_at']).'\' ><i class="fa fa-question-circle-o"></i></span> </td>';
 
         // Operazioni
         echo '

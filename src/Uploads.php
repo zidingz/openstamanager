@@ -150,7 +150,7 @@ class Uploads
      */
     public static function getDirectory($id_module, $id_plugin = null)
     {
-        $structure = \Modules\Module::get($id_module);
+        $structure = module($id_module);
 
         return $structure->upload_directory;
     }

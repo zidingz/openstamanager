@@ -53,7 +53,7 @@
 					<th width="20%"><?php echo tr('Opzioni'); ?></th>
 				</tr>
 
-				<?php include DOCROOT.'/modules/'.\Modules\Module::get($id_module)['directory'].'/row-list.php'; ?>
+				<?php include DOCROOT.'/modules/'.module($id_module)['directory'].'/row-list.php'; ?>
 				</table>
 			</div>
 		</div>

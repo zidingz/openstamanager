@@ -116,9 +116,9 @@ if (!empty($rsp)) {
         if ($r['iddocumento'] == 0) {
             echo "
             <tr id='fat_".$r['id']."'>
-                <td>".Translator::dateToLocale($r['data_scadenza'])."<br><a href='".ROOTDIR.'/editor.php?id_module='.\Modules\Module::get('Contratti')['id'].'&id_record='.$r['idcontratto']."'><small>rif. ".$r['nome']." </small></a></td>
+                <td>".dateFormat($r['data_scadenza'])."<br><a href='".ROOTDIR.'/editor.php?id_module='.module('Contratti')['id'].'&id_record='.$r['idcontratto']."'><small>rif. ".$r['nome']." </small></a></td>
                 <td>
-                    <a href='".ROOTDIR.'/editor.php?id_module='.\Modules\Module::get('Anagrafiche')['id'].'&id_record='.$r['idcliente']."'>".nl2br($r['ragione_sociale']).'</a>
+                    <a href='".ROOTDIR.'/editor.php?id_module='.module('Anagrafiche')['id'].'&id_record='.$r['idcliente']."'>".nl2br($r['ragione_sociale']).'</a>
                 </td>
                 <td>'.$zona.' ('.$n_sedi.')</td>
                 <td>

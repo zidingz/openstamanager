@@ -14,7 +14,7 @@
 	</div>
 	<div class='row'>
 		<div class="col-md-6">
-			{[ "type": "select", "label": "Categoria", "name": "idcategoria", "required": 1, "ajax-source": "categorie_documenti" , "value": "", "extra": "", "icon-after": "add|<?php echo \Modules\Module::get('Categorie documenti')['id']; ?>"  ]}
+			{[ "type": "select", "label": "Categoria", "name": "idcategoria", "required": 1, "ajax-source": "categorie_documenti" , "value": "", "extra": "", "icon-after": "add|<?php echo module('Categorie documenti')['id']; ?>"  ]}
 		</div>
 
 		<div class="col-md-6">

@@ -1,6 +1,6 @@
 <?php
 
-$module = \Modules\Module::get($id_module);
+$module = module($id_module);
 
 // Controllo sulla direzione monetaria
 $uscite = [

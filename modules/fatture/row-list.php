@@ -106,7 +106,7 @@ foreach ($righe as $row) {
     echo '
     <tr data-id="'.$riga['id'].'" '.$extra.'>
         <td>
-            '.Modules::link($row->isArticolo() ? \Modules\Module::get('Articoli')['id'] : null, $row->isArticolo() ? $riga['idarticolo'] : null, $riga['descrizione']).'
+            '.Modules::link($row->isArticolo() ? module('Articoli')['id'] : null, $row->isArticolo() ? $riga['idarticolo'] : null, $riga['descrizione']).'
             <small class="float-right text-muted">'.$extra_riga.'</small>';
 
     if (!empty($riga['abilita_serial'])) {
@@ -128,7 +128,7 @@ foreach ($righe as $row) {
 
         $text = tr('Rif. fattura _NUM_ del _DATE_', [
                 '_NUM_' => $data[0]['numero'],
-                '_DATE_' => Translator::dateToLocale($data[0]['data']),
+                '_DATE_' => dateFormat($data[0]['data']),
             ]);
 
         echo '
@@ -149,7 +149,7 @@ foreach ($righe as $row) {
 
     if (!$row->isDescrizione()) {
         echo '
-            '.Translator::numberToLocale($riga['qta'], 'qta');
+            '.numberFormat($riga['qta'], 'qta');
     }
 
     echo '
@@ -187,7 +187,7 @@ foreach ($righe as $row) {
 
             echo '
             <br><small class="label label-danger">'.replace($text, [
-                '_TOT_' => Translator::numberToLocale(abs($row->sconto_unitario)),
+                '_TOT_' => numberFormat(abs($row->sconto_unitario)),
                 '_TYPE_' => ($row->tipo_sconto == 'PRC' ? '%' : currency()),
             ]).'</small>';
         }

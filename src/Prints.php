@@ -73,7 +73,7 @@ class Prints
      */
     public static function getModulePrints($module)
     {
-        $module_id = \Modules\Module::get($module)['id'];
+        $module_id = module($module)['id'];
 
         self::getPrints();
 
@@ -128,7 +128,7 @@ class Prints
 
         $has_access = true;
         if (!empty($infos['is_record'])) {
-            $module = \Modules\Module::get($infos['id_module']);
+            $module = module($infos['id_module']);
 
             Util\Query::setSegments(false);
             $query = Util\Query::getQuery($module, [
@@ -375,7 +375,7 @@ class Prints
 
     protected static function getFile($record, $id_record, $directory, $original_replaces)
     {
-        $module = \Modules\Module::get($record['id_module']);
+        $module = module($record['id_module']);
 
         $name = $record['filename'].'.pdf';
         $name = $module->replacePlaceholders($id_record, $name);

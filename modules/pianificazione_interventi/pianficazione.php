@@ -1,6 +1,6 @@
 <?php
 
-$id_module = \Modules\Module::get('Contratti')['id'];
+$id_module = module('Contratti')['id'];
 $is_add = filter('add') ? true : false;
 
 // Informazioni contratto

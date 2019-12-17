@@ -8,7 +8,6 @@ use Modules;
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Fatture\Fattura;
 use Prints;
-use Translator;
 use UnexpectedValueException;
 use Uploads;
 use Validate;
@@ -249,7 +248,7 @@ class FatturaElettronica
 
     public static function getDirectory()
     {
-        return Uploads::getDirectory(\Modules\Module::get('Fatture di vendita')['id']);
+        return Uploads::getDirectory(module('Fatture di vendita')['id']);
     }
 
     /**
@@ -377,7 +376,7 @@ class FatturaElettronica
         }
 
         if (!empty($missing)) {
-            $link = Modules::link('Fatture di vendita', $fattura->id);
+            $link = module('Fatture di vendita')->link($fattura->id);
             $errors[] = [
                 'link' => $link,
                 'name' => tr('Fattura'),
@@ -402,7 +401,7 @@ class FatturaElettronica
             }
 
             if (!empty($missing)) {
-                $link = Modules::link('IVA', $data['id']);
+                $link = module('IVA')->link($data['id']);
                 $errors[] = [
                     'link' => $link,
                     'name' => tr('IVA _DESC_', [
@@ -429,7 +428,7 @@ class FatturaElettronica
         }
 
         if (!empty($missing)) {
-            $link = Modules::link('Pagamenti', $data['id']);
+            $link = module('Pagamenti')->link($data['id']);
             $errors[] = [
                 'link' => $link,
                 'name' => tr('Pagamento'),
@@ -458,7 +457,7 @@ class FatturaElettronica
         }
 
         if (!empty($missing)) {
-            $link = Modules::link('Anagrafiche', $data['id']);
+            $link = module('Anagrafiche')->link($data['id']);
             $errors[] = [
                 'link' => $link,
                 'name' => tr('Anagrafica Azienda'),
@@ -500,7 +499,7 @@ class FatturaElettronica
         }
 
         if (!empty($missing)) {
-            $link = Modules::link('Anagrafiche', $data['id']);
+            $link = module('Anagrafiche')->link($data['id']);
             $errors[] = [
                 'link' => $link,
                 'name' => tr('Anagrafica Cliente'),
@@ -1227,7 +1226,7 @@ class FatturaElettronica
             if (!empty($riga['ritenuta_contributi'])) {
                 $dettaglio[]['AltriDatiGestionali'] = [
                     'TipoDato' => 'CASSA-PREV',
-                    'RiferimentoTesto' => setting('Tipo Cassa Previdenziale').' - '.$ritenuta_contributi->descrizione.' ('.Translator::numberToLocale($ritenuta_contributi->percentuale).'%)',
+                    'RiferimentoTesto' => setting('Tipo Cassa Previdenziale').' - '.$ritenuta_contributi->descrizione.' ('.numberFormat($ritenuta_contributi->percentuale).'%)',
                     'RiferimentoNumero' => $riga->ritenuta_contributi,
                 ];
             }
@@ -1416,7 +1415,7 @@ class FatturaElettronica
         $attachments = [];
 
         // Informazioni sul modulo
-        $id_module = \Modules\Module::get('Fatture di vendita')['id'];
+        $id_module = module('Fatture di vendita')['id'];
         $directory = Uploads::getDirectory($id_module);
 
         // Allegati
@@ -1541,7 +1540,7 @@ class FatturaElettronica
     {
         return [
             'category' => tr('Fattura Elettronica'),
-            'id_module' => \Modules\Module::get('Fatture di vendita')['id'],
+            'id_module' => module('Fatture di vendita')['id'],
             'id_record' => $this->getDocumento()['id'],
         ];
     }

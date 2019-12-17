@@ -1,6 +1,6 @@
 <?php
 
-$module = \Modules\Module::get($id_module);
+$module = module($id_module);
 
 if ($module['name'] == 'Fatture di vendita') {
     $dir = 'entrata';
@@ -47,7 +47,7 @@ foreach ($rs as $key => $value) {
     $intervento = \Modules\Interventi\Intervento::find($value['id']);
     $prezzo = $intervento->totale;
 
-    $rs[$key]['prezzo'] = Translator::numberToLocale($prezzo);
+    $rs[$key]['prezzo'] = numberFormat($prezzo);
     $rs[$key]['descrizione_intervento'] = strip_tags($rs[$key]['descrizione_intervento']);
 
     if ($prezzo <= 0) {

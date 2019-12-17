@@ -46,7 +46,7 @@ if (!$righe->isEmpty()) {
         echo '
         <tr '.$extra.'>
             <td>
-                '.Modules::link($riga->isArticolo() ? \Modules\Module::get('Articoli')['id'] : null, $riga->isArticolo() ? $riga['idarticolo'] : null, $descrizione);
+                '.Modules::link($riga->isArticolo() ? module('Articoli')['id'] : null, $riga->isArticolo() ? $riga['idarticolo'] : null, $descrizione);
 
         if ($riga->isArticolo()) {
             if (!empty($mancanti)) {
@@ -69,7 +69,7 @@ if (!$righe->isEmpty()) {
         // Quantità
         echo '
             <td class="text-right">
-                '.Translator::numberToLocale($r['qta'], 'qta').' '.$r['um'].'
+                '.numberFormat($r['qta'], 'qta').' '.$r['um'].'
             </td>';
 
         //Costo unitario
@@ -89,7 +89,7 @@ if (!$righe->isEmpty()) {
 
                 echo '
                 <br><small class="label label-danger">'.replace($text, [
-                    '_TOT_' => Translator::numberToLocale(abs($r['sconto_unitario'])),
+                    '_TOT_' => numberFormat(abs($r['sconto_unitario'])),
                     '_TYPE_' => ($r['tipo_sconto'] == 'PRC' ? '%' : currency()),
                 ]).'</small>';
             }

@@ -132,7 +132,7 @@ class User extends Model
 
     public function setPhotoAttribute($value)
     {
-        $module = \Modules\Module::get('Utenti e permessi');
+        $module = module('Utenti e permessi');
 
         $data = [
             'id_module' => $module->id,

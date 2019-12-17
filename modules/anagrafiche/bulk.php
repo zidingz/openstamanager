@@ -11,7 +11,7 @@ switch (post('op')) {
 
             // Se l'anagrafica non è di tipo Azienda
             if (!in_array($id_tipo_anagrafica_azienda, $tipi)) {
-                $dbo->query('UPDATE an_anagrafiche SET deleted_at = NOW() WHERE idanagrafica = '.prepare($id).\Modules\Module::get($id_module)->getAdditionalsQuery());
+                $dbo->query('UPDATE an_anagrafiche SET deleted_at = NOW() WHERE idanagrafica = '.prepare($id).module($id_module)->getAdditionalsQuery());
             }
         }
 

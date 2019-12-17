@@ -80,7 +80,7 @@ foreach ($righe as $riga) {
     if (!$riga->isDescrizione()) {
         echo '
             <td class="text-center">
-                '.Translator::numberToLocale(abs($riga->qta), 'qta').' '.$r['um'].'
+                '.numberFormat(abs($riga->qta), 'qta').' '.$r['um'].'
             </td>';
 
         if ($options['pricing']) {
@@ -91,7 +91,7 @@ foreach ($righe as $riga) {
 
             if ($riga->sconto > 0) {
                 $text = tr('sconto _TOT_ _TYPE_', [
-                    '_TOT_' => Translator::numberToLocale($riga->sconto_unitario),
+                    '_TOT_' => numberFormat($riga->sconto_unitario),
                     '_TYPE_' => ($riga->tipo_sconto == 'PRC' ? '%' : currency()),
                 ]);
 
@@ -113,7 +113,7 @@ foreach ($righe as $riga) {
             // Iva
             echo '
             <td class="text-center">
-                '.Translator::numberToLocale($riga->aliquota->percentuale, 0).'
+                '.numberFormat($riga->aliquota->percentuale, 0).'
             </td>';
         }
     } else {

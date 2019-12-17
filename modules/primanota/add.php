@@ -5,9 +5,9 @@ include_once __DIR__.'/../../core.php';
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Fatture\Fattura;
 
-$module = \Modules\Module::get('Prima nota');
+$module = module('Prima nota');
 
-$variables = \Modules\Module::get('Fatture di vendita')->getPlaceholders($id_documento);
+$variables = module('Fatture di vendita')->getPlaceholders($id_documento);
 $righe = [];
 
 // Registrazione da remoto
@@ -202,13 +202,13 @@ if ($numero_documenti + $numero_scadenze > 1) {
         '_OP_' => $operation,
         '_DOC_' => strtolower($tipo_fattura),
         '_NUM_' => $numero_fattura,
-        '_DATE_' => Translator::dateToLocale($fattura['data']),
+        '_DATE_' => dateFormat($fattura['data']),
         '_NAME_' => $fattura->anagrafica['ragione_sociale'],
     ]);
 } elseif ($numero_scadenze == 1) {
     $descrizione = tr('Pag. _OP_ del _DATE_', [
         '_OP_' => $scadenza['descrizione'],
-        '_DATE_' => Translator::dateToLocale($scadenza['scadenza']),
+        '_DATE_' => dateFormat($scadenza['scadenza']),
     ]);
 }
 

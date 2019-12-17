@@ -9,6 +9,6 @@ return [
     'email' => $r['email'],
     'numero' => $r['numero'],
     'descrizione' => $r['descrizione'],
-    'data' => Translator::dateToLocale($r['data_bozza']),
+    'data' => dateFormat($r['data_bozza']),
     'id_anagrafica' => $r['idanagrafica'],
 ];

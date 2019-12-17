@@ -95,7 +95,7 @@ if (!$anagrafiche->isEmpty()) {
     foreach ($anagrafiche as $anagrafica) {
         echo '
                 <tr '.(empty($anagrafica->email) ? 'class="bg-danger"' : '').'>
-                    <td>'.Modules::link('Anagrafiche', $anagrafica->id, $anagrafica->ragione_sociale).'</td>
+                    <td>'.module('Anagrafiche')->link($anagrafica->id, $anagrafica->ragione_sociale).'</td>
                     <td class="text-center">'.$anagrafica->email.'</td>
                     <td class="text-center">
                         <a class="btn btn-danger ask btn-sm '.(!empty($lista->query) ? 'disabled' : '').'" data-backto="record-edit" data-op="remove_receiver" data-id="'.$anagrafica->id.'" '.(!empty($lista->query) ? 'disabled' : '').'>

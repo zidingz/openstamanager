@@ -4,7 +4,7 @@
     Anagrafiche
 */
 
-$module = \Modules\Module::get('Anagrafiche');
+$module = module('Anagrafiche');
 $link_id = $module['id'];
 
 $fields = [

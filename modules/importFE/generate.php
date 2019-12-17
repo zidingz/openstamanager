@@ -108,7 +108,7 @@ echo '
 			<h4>
 			    '.$ragione_sociale.'
 
-			    '.(empty($anagrafica) ? '<span class="badge badge-success">'.tr('Nuova anagrafica').'</span>' : '<small>'.Modules::link('Anagrafiche', $anagrafica->id, '', null, '')).'</small><br>
+			    '.(empty($anagrafica) ? '<span class="badge badge-success">'.tr('Nuova anagrafica').'</span>' : '<small>'.module('Anagrafiche')->link($anagrafica->id, '', null, '')).'</small><br>
 
 				<small>
 					'.(!empty($codice_fiscale) ? (tr('Codice Fiscale').': '.$codice_fiscale.'<br>') : '').'
@@ -128,7 +128,7 @@ echo '
 
 				<br><small>
 					'.$tipo_documento.'
-					<br>'.Translator::dateToLocale($dati_generali['Data']).'
+					<br>'.dateFormat($dati_generali['Data']).'
 					<br>'.$dati_generali['Divisa'].'
 				</small>
 			</h4>
@@ -149,7 +149,7 @@ if (!empty($pagamenti)) {
     // Scadenze di pagamento
     foreach ($metodi as $metodo) {
         $descrizione = !empty($metodo['ModalitaPagamento']) ? $database->fetchOne('SELECT descrizione FROM fe_modalita_pagamento WHERE codice = '.prepare($metodo['ModalitaPagamento']))['descrizione'] : '';
-        $data = !empty($metodo['DataScadenzaPagamento']) ? Translator::dateToLocale($metodo['DataScadenzaPagamento']).' ' : '';
+        $data = !empty($metodo['DataScadenzaPagamento']) ? dateFormat($metodo['DataScadenzaPagamento']).' ' : '';
 
         echo '
 				<li>
@@ -300,7 +300,7 @@ if (!empty($righe)) {
 				'.(!empty($codici_articoli) ? '<small>'.implode(', ', $codici_articoli).'</small><br>' : '').'
 
                 <small>'.tr('Q.tà: _QTA_ _UM_', [
-                    '_QTA_' => Translator::numberToLocale($riga['Quantita']),
+                    '_QTA_' => numberFormat($riga['Quantita']),
                     '_UM_' => $riga['UnitaMisura'],
                 ]).'</small><br>
 
@@ -315,7 +315,7 @@ if (!empty($righe)) {
                 {[ "type": "select", "name": "conto['.$key.']", "ajax-source": "conti-acquisti", "required": 1, "placeholder": "Conto acquisti" ]}
             </td>
             <td>
-                {[ "type": "select", "name": "articoli['.$key.']", "ajax-source": "articoli", "icon-after": "add|'.\Modules\Module::get('Articoli')['id'].'|codice='.htmlentities($codice_principale).'&descrizione='.htmlentities($riga['Descrizione']).'", "value": "'.$id_articolo.'" ]}
+                {[ "type": "select", "name": "articoli['.$key.']", "ajax-source": "articoli", "icon-after": "add|'.module('Articoli')['id'].'|codice='.htmlentities($codice_principale).'&descrizione='.htmlentities($riga['Descrizione']).'", "value": "'.$id_articolo.'" ]}
             </td>
         </tr>';
     }

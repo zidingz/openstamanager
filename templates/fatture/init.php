@@ -77,7 +77,7 @@ if (!empty($record['idsede_destinazione'])) {
 $custom = [
     'tipo_doc' => Stringy\Stringy::create($tipo_doc)->toUpperCase(),
     'numero' => $numero,
-    'data' => Translator::dateToLocale($record['data']),
+    'data' => dateFormat($record['data']),
     'pagamento' => $record['tipo_pagamento'],
     'c_destinazione' => $destinazione,
     'aspettobeni' => $record['aspettobeni'],
@@ -95,7 +95,7 @@ $custom = [
 // - cliente se è impostato l'idanagrafica di un Cliente
 // - utente qualsiasi con permessi almeno in lettura sul modulo
 // - admin
-if ((Auth::user()['gruppo'] == 'Clienti' && $id_cliente != Auth::user()['idanagrafica'] && !Auth::admin()) || \Modules\Module::get($module_name)->permission == '-') {
+if ((Auth::user()['gruppo'] == 'Clienti' && $id_cliente != Auth::user()['idanagrafica'] && !Auth::admin()) || module($module_name)->permission == '-') {
     die(tr('Non hai i permessi per questa stampa!'));
 }
 

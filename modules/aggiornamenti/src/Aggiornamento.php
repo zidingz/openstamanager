@@ -127,7 +127,7 @@ class Aggiornamento
                 $is_plugin = basename($file->getRealPath()) == 'PLUGIN';
 
                 $info = Ini::readFile($file->getRealPath());
-                $installed = \Modules\Module::get($info['name']);
+                $installed = module($info['name']);
                 if ($is_module) {
                     $type = 'modules';
                 } elseif ($is_plugin) {
@@ -201,7 +201,7 @@ class Aggiornamento
 
         // Informazioni aggiuntive per il database
         $insert = [
-            'parent' => \Modules\Module::get($info['parent']),
+            'parent' => module($info['parent']),
             'icon' => $info['icon'],
         ];
 

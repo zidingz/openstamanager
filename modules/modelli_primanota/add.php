@@ -46,7 +46,7 @@
         </table>';
 
     // Variabili utilizzabili
-    $modulo = \Modules\Module::get('Fatture di vendita');
+    $modulo = module('Fatture di vendita');
     $variables = include $modulo->filepath('variables.php');
 
     echo '

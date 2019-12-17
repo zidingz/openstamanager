@@ -6,7 +6,6 @@ use AJAX;
 use Prints;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Translator;
 use Util\Query;
 
 class AjaxController extends Controller
@@ -240,13 +239,13 @@ class AjaxController extends Controller
                     // Formattazione automatica
                     if (!empty($total['format'][$pos]) && !empty($value)) {
                         if (formatter()->isStandardDate($value)) {
-                            $value = Translator::dateToLocale($value);
+                            $value = dateFormat($value);
                         } elseif (formatter()->isStandardTime($value)) {
-                            $value = Translator::timeToLocale($value);
+                            $value = timeFormat($value);
                         } elseif (formatter()->isStandardTimestamp($value)) {
-                            $value = Translator::timestampToLocale($value);
+                            $value = timestampFormat($value);
                         } elseif (formatter()->isStandardNumber($value)) {
-                            $value = Translator::numberToLocale($value);
+                            $value = numberFormat($value);
                         }
                     }
 

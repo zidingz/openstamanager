@@ -1,6 +1,6 @@
 <?php
 
-$additionals = \Modules\Module::get('Anagrafiche')->getAdditionalsQuery();
+$additionals = module('Anagrafiche')->getAdditionalsQuery();
 
 switch ($resource) {
     case 'get_sedi':

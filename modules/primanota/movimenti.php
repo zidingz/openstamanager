@@ -148,7 +148,7 @@ echo '
 
 echo '
 <script>
-var formatted_zero = "'.Translator::numberToLocale(0).'";
+var formatted_zero = "'.numberFormat(0).'";
 var n = '.$counter.';
 
 function addRiga(btn) {

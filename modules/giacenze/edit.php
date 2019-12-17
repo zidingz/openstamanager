@@ -47,7 +47,7 @@ if (!empty($ordini)) {
 
                     <tbody>';
 
-    $modulo = \Modules\Module::get('Ordini cliente');
+    $modulo = module('Ordini cliente');
     foreach ($ordini as $documento) {
         $numero = !empty($documento['numero_esterno']) ? $documento['numero_esterno'] : $documento['numero'];
         $qta = $documento['qta_ordinata'];
@@ -112,7 +112,7 @@ if (!empty($ordini)) {
 
                     <tbody>';
 
-    $modulo = \Modules\Module::get('Ordini fornitore');
+    $modulo = module('Ordini fornitore');
     foreach ($ordini as $documento) {
         $numero = !empty($documento['numero_esterno']) ? $documento['numero_esterno'] : $documento['numero'];
         $qta = $documento['qta_ordinata'];
@@ -237,7 +237,7 @@ foreach ($sedi as $sede) {
     echo '
                         <tr>
                             <td>'.$sede['nomesede'].'</td>
-                            <td class="text-right">'.Translator::numberToLocale($qta_azienda['qta'] - $qta_controparte['qta']).'</td>
+                            <td class="text-right">'.numberFormat($qta_azienda['qta'] - $qta_controparte['qta']).'</td>
                         </tr>';
 }
 

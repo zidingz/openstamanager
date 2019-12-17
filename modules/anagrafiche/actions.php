@@ -98,7 +98,7 @@ switch (post('op')) {
                 foreach ($array as $value) {
                     flash()->warning(tr('Attenzione: il codice fiscale _COD_ è già stato censito _LINK_', [
                         '_COD_' => post('codice_fiscale'),
-                        '_LINK_' => Modules::link('Anagrafiche', $value, null, null, ''),
+                        '_LINK_' => module('Anagrafiche')->link($value, null, null, ''),
                     ]));
                 }
             } else {
@@ -117,7 +117,7 @@ switch (post('op')) {
                 foreach ($array as $value) {
                     flash()->warning(tr('Attenzione: la partita IVA _IVA_ è già stata censita. _LINK_', [
                         '_IVA_' => post('piva'),
-                        '_LINK_' => Modules::link('Anagrafiche', $value, null, null, ''),
+                        '_LINK_' => module('Anagrafiche')->link($value, null, null, ''),
                     ]));
                 }
             } else {
@@ -187,7 +187,7 @@ switch (post('op')) {
                 foreach ($array as $value) {
                     flash()->warning(tr('Attenzione: il codice fiscale _COD_ è già stato censito. _LINK_', [
                         '_COD_' => post('codice_fiscale'),
-                        '_LINK_' => Modules::link('Anagrafiche', $value, null, null, ''),
+                        '_LINK_' => module('Anagrafiche')->link($value, null, null, ''),
                     ]));
                 }
             } else {
@@ -206,7 +206,7 @@ switch (post('op')) {
                 foreach ($array as $value) {
                     flash()->warning(tr('Attenzione: la partita IVA _IVA_ è già stata censita. _LINK_', [
                     '_IVA_' => post('piva'),
-                    '_LINK_' => Modules::link('Anagrafiche', $value, null, null, ''),
+                    '_LINK_' => module('Anagrafiche')->link($value, null, null, ''),
                     ]));
                 }
             } else {
@@ -290,7 +290,7 @@ if (filter('op') == 'link_file') {
     $nome = 'Logo stampe';
 
     if (setting('Azienda predefinita') == $id_record && filter('nome_allegato') == $nome) {
-        Settings::setValue($nome, $upload);
+        \Models\Setting::get($nome)->setValue($upload);
     }
 }
 // Operazioni aggiuntive per il logo
@@ -298,6 +298,6 @@ elseif (filter('op') == 'unlink_file') {
     $nome = 'Logo stampe';
 
     if (setting('Azienda predefinita') == $id_record && filter('filename') == setting($nome)) {
-        Settings::setValue($nome, '');
+        \Models\Setting::get($nome)->setValue('');
     }
 }

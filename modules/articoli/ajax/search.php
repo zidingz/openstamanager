@@ -1,6 +1,6 @@
 <?php
 
-$link_id = \Modules\Module::get('Articoli')['id'];
+$link_id = module('Articoli')['id'];
 
 $fields = [
     'Codice' => 'codice',
@@ -22,7 +22,7 @@ foreach ($fields as $name => $value) {
     $query .= ' OR '.$value.' LIKE "%'.$term.'%"';
 }
 
-$query .= \Modules\Module::get('Articoli')->getAdditionalsQuery();
+$query .= module('Articoli')->getAdditionalsQuery();
 
 $rs = $dbo->fetchArray($query);
 

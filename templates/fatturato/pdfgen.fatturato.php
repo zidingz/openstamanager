@@ -18,7 +18,7 @@ $totale_iva = 0;
 $totale = 0;
 
 $module_name = $dir == 'entrata' ? 'Fatture di vendita' : 'Fatture di acquisto';
-$modulo = \Modules\Module::get($module_name);
+$modulo = module($module_name);
 $add_where = $modulo->getAdditionalsQuery();
 
 // Ciclo tra le fatture selezionate
@@ -28,9 +28,9 @@ $rs = $dbo->fetchArray($query);
 $totrows = sizeof($rs);
 
 if ($dir == 'entrata') {
-    $body .= '<h3>FATTURATO MENSILE DAL '.Translator::dateToLocale($date_start).' AL '.Translator::dateToLocale($date_end)."</h3>\n";
+    $body .= '<h3>FATTURATO MENSILE DAL '.dateFormat($date_start).' AL '.dateFormat($date_end)."</h3>\n";
 } else {
-    $body .= '<h3>ACQUISTI MENSILI DAL '.Translator::dateToLocale($date_start).' AL '.Translator::dateToLocale($date_end)."</h3>\n";
+    $body .= '<h3>ACQUISTI MENSILI DAL '.dateFormat($date_start).' AL '.dateFormat($date_end)."</h3>\n";
 }
 
 $body .= "<table cellspacing='0' style='table-layout:fixed;'>\n";

@@ -66,11 +66,11 @@ if (!empty($rs2)) {
 
         if (empty($rs2[$j]['data_sostituzione'])) {
             $statocomponente = tr('INSTALLATO in data _DATE_', [
-                '_DATE_' => Translator::dateToLocale($rs2[$j]['data']),
+                '_DATE_' => dateFormat($rs2[$j]['data']),
             ]);
         } else {
             $statocomponente = tr('SOSTITUITO in data _DATE_', [
-                '_DATE_' => Translator::dateToLocale($rs2[$j]['data_sostituzione']),
+                '_DATE_' => dateFormat($rs2[$j]['data_sostituzione']),
             ]);
         }
 
@@ -156,7 +156,7 @@ if (!empty($rs2)) {
                                         <td>'.$intervento['tipo'].'</td>
                                         <td>'.$intervento['stato'].'</td>
                                         <td>'.$intervento['data_richiesta'].'</td>
-                                        <td>'.Modules::link('Interventi', $intervento['id_intervento'], null, '-').'</td>
+                                        <td>'.module('Interventi')->link($intervento['id_intervento'], null, '-').'</td>
                                     </tr>';
             }
 
@@ -175,7 +175,7 @@ if (!empty($rs2)) {
             echo '
                             '.Modules::link('Interventi', $rs2[$j]['idintervento'], tr('Intervento num. _NUM_ del _DATE_', [
                                 '_NUM_' => $rs2[$j]['codice'],
-                                '_DATE_' => Translator::dateToLocale($rs2[$j]['data_intervento']),
+                                '_DATE_' => dateFormat($rs2[$j]['data_intervento']),
                             ])).'<br>';
         }
 

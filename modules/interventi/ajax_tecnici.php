@@ -79,39 +79,39 @@ if (!empty($sessioni)) {
         // Orario di inizio
         echo '
             <td>
-                '.Translator::timestampToLocale($sessione['orario_inizio']).'
+                '.timestampFormat($sessione['orario_inizio']).'
             </td>';
 
         // Orario di fine
         echo '
             <td>
-                '.Translator::timestampToLocale($sessione['orario_fine']).'
+                '.timestampFormat($sessione['orario_fine']).'
             </td>';
 
         // ORE
         echo '
             <td style="border-right:1px solid #aaa;">
-                '.Translator::numberToLocale($ore).'
+                '.numberFormat($ore).'
 
                 <div class="extra d-none">
                     <table class="table table-condensed table-bordered">
                         <tr>
                             <th class="text-danger">'.tr('Costo').':</th>
                             <td align="right">
-                                '.Translator::numberToLocale($costo_ore_consuntivo_tecnico)."
-                                <small class='form-text'>".Translator::numberToLocale($costo_ore_unitario_tecnico).'x'.Translator::numberToLocale($ore).'<br>+'.Translator::numberToLocale($costo_dirittochiamata_tecnico).'</small>
+                                '.numberFormat($costo_ore_consuntivo_tecnico)."
+                                <small class='form-text'>".numberFormat($costo_ore_unitario_tecnico).'x'.numberFormat($ore).'<br>+'.numberFormat($costo_dirittochiamata_tecnico).'</small>
                             </td>
                         </tr>
                         <tr>
                             <th>'.tr('Addebito').':</th>
                             <td align="right">
-                                '.Translator::numberToLocale($costo_ore_consuntivo).'
-                                <small class="form-text">'.Translator::numberToLocale($costo_ore_unitario).'x'.Translator::numberToLocale($ore).'<br>+'.Translator::numberToLocale($costo_dirittochiamata).'</small>
+                                '.numberFormat($costo_ore_consuntivo).'
+                                <small class="form-text">'.numberFormat($costo_ore_unitario).'x'.numberFormat($ore).'<br>+'.numberFormat($costo_dirittochiamata).'</small>
                             </td>
                         </tr>
                         <tr>
                             <th>'.tr('Scontato').':</th>
-                            <td align="right">'.Translator::numberToLocale($costo_ore_consuntivo - $sconto).'</td>
+                            <td align="right">'.numberFormat($costo_ore_consuntivo - $sconto).'</td>
                         </tr>
                     </table>
                 </div>
@@ -120,31 +120,31 @@ if (!empty($sessioni)) {
         // KM
         echo '
             <td style="border-right:1px solid #aaa;">
-                '.Translator::numberToLocale($km).'
+                '.numberFormat($km).'
 
                 <div class="extra d-none">
                     <table class="table table-condensed table-bordered">
                     <tr>
                         <th class="text-danger">'.tr('Costo').':</th>
                         <td align="right">
-                            '.Translator::numberToLocale($costo_km_consuntivo_tecnico).'
+                            '.numberFormat($costo_km_consuntivo_tecnico).'
                             <small class="form-text">
-                                '.Translator::numberToLocale($costo_km_unitario_tecnico).'x'.Translator::numberToLocale($km).'
+                                '.numberFormat($costo_km_unitario_tecnico).'x'.numberFormat($km).'
                             </small><br>
                         </td>
                     </tr>
                     <tr>
                         <th>'.tr('Addebito').':</th>
                         <td align="right">
-                            '.Translator::numberToLocale($costo_km_consuntivo).'
+                            '.numberFormat($costo_km_consuntivo).'
                             <small class="form-text">
-                                '.Translator::numberToLocale($costo_km_unitario).'x'.Translator::numberToLocale($km).'
+                                '.numberFormat($costo_km_unitario).'x'.numberFormat($km).'
                             </small><br>
                         </td>
                     </tr>
                     <tr>
                         <th>'.tr('Scontato').':</th>
-                        <td align="right">'.Translator::numberToLocale($costo_km_consuntivo - $scontokm).'</td>
+                        <td align="right">'.numberFormat($costo_km_consuntivo - $scontokm).'</td>
                     </tr>
                     </table>
                 </div>
@@ -155,7 +155,7 @@ if (!empty($sessioni)) {
             echo '
             <td style="border-right:1px solid #aaa;">
                 '.tr('_TOT_ _TYPE_', [
-                    '_TOT_' => Translator::numberToLocale($sessione['sconto_unitario']),
+                    '_TOT_' => numberFormat($sessione['sconto_unitario']),
                     '_TYPE_' => ($sessione['tipo_sconto'] == 'PRC' ? '%' : currency()),
                 ]).'
             </td>';
@@ -166,7 +166,7 @@ if (!empty($sessioni)) {
             echo '
             <td style="border-right:1px solid #aaa;">
                 '.tr('_TOT_ _TYPE_', [
-                    '_TOT_' => Translator::numberToLocale($sessione['scontokm_unitario']),
+                    '_TOT_' => numberFormat($sessione['scontokm_unitario']),
                     '_TYPE_' => ($sessione['tipo_sconto_km'] == 'PRC' ? '%' : currency()),
                 ]).'
             </td>';
@@ -202,7 +202,7 @@ if (!$is_completato) {
 <!-- AGGIUNTA TECNICO -->
 <div class="row">
     <div class="col-md-offset-6 col-md-4">
-        {[ "type": "select", "label": "'.tr('Tecnico').'", "name": "nuovotecnico", "placeholder": "'.tr('Seleziona un tecnico').'", "ajax-source": "tecnici", "icon-after": "add|'.\Modules\Module::get('Anagrafiche')['id'].'|tipoanagrafica=Tecnico" ]}
+        {[ "type": "select", "label": "'.tr('Tecnico').'", "name": "nuovotecnico", "placeholder": "'.tr('Seleziona un tecnico').'", "ajax-source": "tecnici", "icon-after": "add|'.module('Anagrafiche')['id'].'|tipoanagrafica=Tecnico" ]}
     </div>
 
     <div class="col-md-2">

@@ -157,10 +157,10 @@ if (!empty($clienti)) {
     foreach ($clienti as $cliente) {
         echo '
                     <tr>
-                        <td>'.Modules::link('Anagrafiche', $cliente['idanagrafica'], $cliente['ragione_sociale']).'</td>
+                        <td>'.module('Anagrafiche')->link($cliente['idanagrafica'], $cliente['ragione_sociale']).'</td>
                         <td class="text-center">'.intval($cliente['qta']).'</td>
                         <td class="text-right">'.moneyFormat($cliente['totale']).'</td>
-                        <td class="text-right">'.Translator::numberToLocale($cliente['totale'] * 100 / $totale[0]['totale']).' %</td>
+                        <td class="text-right">'.numberFormat($cliente['totale'] * 100 / $totale[0]['totale']).' %</td>
                     </tr>';
     }
     echo '
@@ -206,10 +206,10 @@ if (!empty($articoli)) {
     foreach ($articoli as $articolo) {
         echo '
                     <tr>
-                        <td>'.Modules::link('Articoli', $articolo['id'], $articolo['codice']).'</td>
+                        <td>'.module('Articoli')->link($articolo['id'], $articolo['codice']).'</td>
                         <td>'.$articolo['descrizione'].'</td>
-                        <td class="text-right">'.Translator::numberToLocale($articolo['qta']).' '.$articolo['um'].'</td>
-                        <td class="text-right">'.Translator::numberToLocale($articolo['qta'] * 100 / $totale[0]['totale_qta']).' %</td>
+                        <td class="text-right">'.numberFormat($articolo['qta']).' '.$articolo['um'].'</td>
+                        <td class="text-right">'.numberFormat($articolo['qta'] * 100 / $totale[0]['totale_qta']).' %</td>
                         <td class="text-right">'.moneyFormat($articolo['totale']).'</td>
                     </tr>';
     }

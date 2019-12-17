@@ -52,7 +52,7 @@ if (!empty($rs)) {
     <tr '.$extra.'>
         <td>
             <input type="hidden" name="id" value="'.$r['id'].'">
-            '.Modules::link('Articoli', $r['idarticolo'], (!empty($r['codice']) ? $r['codice'].' - ' : '').$r['descrizione']);
+            '.module('Articoli')->link($r['idarticolo'], (!empty($r['codice']) ? $r['codice'].' - ' : '').$r['descrizione']);
 
         // Info extra (lotto, serial, altro)
         if (!empty($r['abilita_serial'])) {
@@ -74,7 +74,7 @@ if (!empty($rs)) {
         // Quantità
         echo '
         <td class="text-right">
-            '.Translator::numberToLocale($r['qta'], 'qta').' '.$r['um'].'
+            '.numberFormat($r['qta'], 'qta').' '.$r['um'].'
         </td>';
 
         if ($pricing) {
@@ -94,7 +94,7 @@ if (!empty($rs)) {
                 echo '
             <br><span class="label label-danger">
                 - '.tr('sconto _TOT_ _TYPE_', [
-                    '_TOT_' => Translator::numberToLocale($r['sconto_unitario']),
+                    '_TOT_' => numberFormat($r['sconto_unitario']),
                     '_TYPE_' => ($r['tipo_sconto'] == 'PRC' ? '%' : currency()),
                 ]).'
             </span>';
@@ -111,7 +111,7 @@ if (!empty($rs)) {
             // Prezzo di vendita
             echo '
         <td class="text-right">
-            <span class="prezzo_articolo">'.Translator::numberToLocale(sum($r['prezzo_vendita'] * $r['qta'], -$r['sconto'])).'</span> '.currency().'
+            <span class="prezzo_articolo">'.numberFormat(sum($r['prezzo_vendita'] * $r['qta'], -$r['sconto'])).'</span> '.currency().'
         </td>';
         }
 

@@ -44,7 +44,7 @@ foreach ($rs as $r) {
                     <tr>
                         <td align="right">'.tr('Nome').':</td>
                         <td valign="top">
-                            '.Modules::link('MyImpianti', $r['id'], $r['nome']).'
+                            '.module('MyImpianti')->link($r['id'], $r['nome']).'
                         </td>
                     </tr>';
 
@@ -52,7 +52,7 @@ foreach ($rs as $r) {
     echo '
                     <tr>
                         <td align="right">'.tr('Data').':</td>
-                        <td valign="top">'.Translator::dateToLocale($r['data']).'</td>
+                        <td valign="top">'.dateFormat($r['data']).'</td>
                     </tr>';
 
     // DESCRIZIONE
@@ -110,7 +110,7 @@ echo '
             <br><br>
             <button type="submit" class="btn btn-success" '.$disabled.'><i class="fa fa-check"></i> '.tr('Salva impianti').'</button>
 
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-title="'.tr('Aggiungi impianto').'" data-href="'.ROOTDIR.'/add.php?id_module='.\Modules\Module::get('MyImpianti')['id'].'&source=Attività&select=idimpianti&ajax=yes" data-target="#bs-popup2"><i class="fa fa-plus"></i> '.tr('Aggiungi impianto').'</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-title="'.tr('Aggiungi impianto').'" data-href="'.ROOTDIR.'/add.php?id_module='.module('MyImpianti')['id'].'&source=Attività&select=idimpianti&ajax=yes" data-target="#bs-popup2"><i class="fa fa-plus"></i> '.tr('Aggiungi impianto').'</button>
 
         </form>';
 

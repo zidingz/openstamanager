@@ -158,7 +158,7 @@ $totale_tecnici = 0; // conteggia tecnici eliminati e non
 
 $rs = $dbo->fetchArray("SELECT an_anagrafiche.idanagrafica AS id, ragione_sociale, colore FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.id_tipo_anagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica
 LEFT OUTER JOIN in_interventi_tecnici ON  in_interventi_tecnici.idtecnico = an_anagrafiche.idanagrafica  INNER JOIN in_interventi ON in_interventi_tecnici.idintervento=in_interventi.id
-WHERE an_anagrafiche.deleted_at IS NULL AND an_tipianagrafiche.descrizione='Tecnico' ".\Modules\Module::get('Interventi')->getAdditionalsQuery().' GROUP BY an_anagrafiche.idanagrafica ORDER BY ragione_sociale ASC');
+WHERE an_anagrafiche.deleted_at IS NULL AND an_tipianagrafiche.descrizione='Tecnico' ".module('Interventi')->getAdditionalsQuery().' GROUP BY an_anagrafiche.idanagrafica ORDER BY ragione_sociale ASC');
 $total = count($rs);
 
 $totale_tecnici += $total;
@@ -608,7 +608,7 @@ echo "
                 }
             },
 <?php
-if (\Modules\Module::get('Interventi')->permission == 'rw') {
+if (module('Interventi')->permission == 'rw') {
     ?>
             droppable: true,
             drop: function(date, jsEvent, ui, resourceId) {
@@ -626,7 +626,7 @@ if (\Modules\Module::get('Interventi')->permission == 'rw') {
                 }
 
                 launch_modal('<?php echo tr('Pianifica intervento'); ?>', '<?php echo urlFor('module-add', [
-                    'module_id' => \Modules\Module::get('Interventi')['id'],
+                    'module_id' => module('Interventi')['id'],
                 ]); ?>?&data='+data+'&orario_inizio='+ora_dal+'&orario_fine='+ora_al+'&ref=dashboard&idcontratto=' + $(this).data('idcontratto') + '&' + name + '=' + $(this).data('id'), 1);
 
                 $(this).remove();
@@ -643,7 +643,7 @@ if (\Modules\Module::get('Interventi')->permission == 'rw') {
 				ora_al = moment(end).format("HH:mm");
 
                 launch_modal('<?php echo tr('Aggiungi intervento'); ?>', '<?php echo urlFor('module-add', [
-                    'module_id' => \Modules\Module::get('Interventi')['id'],
+                    'module_id' => module('Interventi')['id'],
                 ]); ?>?ref=dashboard&data='+data+'&orario_inizio='+ora_dal+'&orario_fine='+ora_al, 1 );
 
 				$('#calendar').fullCalendar('unselect');

@@ -29,7 +29,7 @@ if (!empty($results)) {
                 <td>
                     '.Modules::link('Interventi', $result['id'], tr('Intervento num. _NUM_ del _DATE_', [
                         '_NUM_' => $result['codice'],
-                        '_DATE_' => Translator::dateToLocale($result['data']),
+                        '_DATE_' => dateFormat($result['data']),
                     ])).'
                 </td>
                 <td>'.nl2br($result['descrizione']).'</td>

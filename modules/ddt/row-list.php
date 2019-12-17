@@ -43,7 +43,7 @@ if (!empty($rs)) {
 
         if (!empty($r['idarticolo'])) {
             echo '
-            '.Modules::link('Articoli', $r['idarticolo'], $r['codice'].' - '.$r['descrizione']);
+            '.module('Articoli')->link($r['idarticolo'], $r['codice'].' - '.$r['descrizione']);
 
             if (!empty($r['abilita_serial'])) {
                 if (!empty($mancanti)) {
@@ -77,7 +77,7 @@ if (!empty($rs)) {
         <td class="text-center">';
         if (empty($r['is_descrizione'])) {
             echo '
-                <span >'.Translator::numberToLocale($r['qta'] - $r['qta_evasa'], 'qta').' / '.Translator::numberToLocale($r['qta'], 'qta').'</span>';
+                <span >'.numberFormat($r['qta'] - $r['qta_evasa'], 'qta').' / '.numberFormat($r['qta'], 'qta').'</span>';
         }
         echo '
         </td>';
@@ -104,7 +104,7 @@ if (!empty($rs)) {
 
                 echo '
             <br><small class="label label-danger">'.replace($text, [
-                '_TOT_' => Translator::numberToLocale(abs($r['sconto_unitario'])),
+                '_TOT_' => numberFormat(abs($r['sconto_unitario'])),
                 '_TYPE_' => ($r['tipo_sconto'] == 'PRC' ? '%' : currency()),
             ]).'</small>';
             }

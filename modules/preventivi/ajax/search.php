@@ -1,6 +1,6 @@
 <?php
 
-$link_id = \Modules\Module::get('Preventivi')['id'];
+$link_id = module('Preventivi')['id'];
 
 $fields = [
     'Codice preventivo' => 'numero',
@@ -20,7 +20,7 @@ foreach ($fields as $name => $value) {
     $query .= ' OR '.$value.' LIKE "%'.$term.'%"';
 }
 
-$query .= \Modules\Module::get('Preventivi')->getAdditionalsQuery();
+$query .= module('Preventivi')->getAdditionalsQuery();
 
 $rs = $dbo->fetchArray($query);
 
@@ -31,7 +31,7 @@ foreach ($rs as $r) {
     $result['title'] = 'Preventivo '.$r['numero'];
 
     if (!empty($rs[$r]['data_accettazione'])) {
-        $result['title'] .= ' del '.Translator::dateToLocale($rs[$r]['data_accettazione']);
+        $result['title'] .= ' del '.dateFormat($rs[$r]['data_accettazione']);
     }
 
     $result['category'] = 'Preventivi';

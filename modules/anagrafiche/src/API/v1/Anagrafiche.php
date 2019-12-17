@@ -52,7 +52,7 @@ class Anagrafiche extends Request implements RetrieveInterface, CreateInterface,
         HAVING 2=2
         ORDER BY an_anagrafiche.ragione_sociale';
 
-        $module = \Modules\Module::get('Anagrafiche');
+        $module = module('Anagrafiche');
         $query = $module->replaceAdditionals($query);
 
         return [

@@ -58,9 +58,9 @@ if (!empty($rsp)) {
 
         echo '
             <tr id="int_'.$r['id'].'">
-                <td>'.Translator::dateToLocale($r['data_scadenza']).'</td>
+                <td>'.dateFormat($r['data_scadenza']).'</td>
                 <td>
-                    '.Modules::link('Anagrafiche', $r['idcliente'], $r['ragione_sociale']).'
+                    '.module('Anagrafiche')->link($r['idcliente'], $r['ragione_sociale']).'
                 </td>';
 
         echo '
@@ -80,7 +80,7 @@ if (!empty($rsp)) {
 
         echo
                 '<td>
-                    '.Modules::link('MyImpianti', $r['idimpianto'], $r['matricola'].' - '.$r['impianto']).'
+                    '.module('MyImpianti')->link($r['idimpianto'], $r['matricola'].' - '.$r['impianto']).'
                 </td>';
 
         // Pulsanti
@@ -88,7 +88,7 @@ if (!empty($rsp)) {
                 <td>';
         if (empty($r['idintervento'])) {
             echo "
-                    <a class=\"btn btn-primary\" title=\"Pianifica ora!\" onclick=\"launch_modal( 'Pianifica intervento', '".ROOTDIR.'/add.php?id_module='.\Modules\Module::get('Interventi')['id'].'&ref=dashboard&idcontratto='.urlencode($r['idcontratto']).'&idordineservizio='.$r['id']."');\">
+                    <a class=\"btn btn-primary\" title=\"Pianifica ora!\" onclick=\"launch_modal( 'Pianifica intervento', '".ROOTDIR.'/add.php?id_module='.module('Interventi')['id'].'&ref=dashboard&idcontratto='.urlencode($r['idcontratto']).'&idordineservizio='.$r['id']."');\">
                         <i class='fa fa-calendar'></i>
                     </a>";
         }

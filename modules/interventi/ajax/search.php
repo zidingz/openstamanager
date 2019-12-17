@@ -1,6 +1,6 @@
 <?php
 
-$link_id = \Modules\Module::get('Interventi')['id'];
+$link_id = module('Interventi')['id'];
 
 $fields = [
     'Codice intervento' => 'codice',
@@ -27,7 +27,7 @@ foreach ($fields as $name => $value) {
 
 $query .= ' WHERE ('.implode(' OR ', $where).') ';
 
-$query .= ' '.\Modules\Module::get('Interventi')->getAdditionalsQuery();
+$query .= ' '.module('Interventi')->getAdditionalsQuery();
 
 $rs = $dbo->fetchArray($query);
 
@@ -35,7 +35,7 @@ foreach ($rs as $r) {
     $result = [];
 
     $result['link'] = ROOTDIR.'/editor.php?id_module='.$link_id.'&id_record='.$r['id'];
-    $result['title'] = 'Intervento '.$r['codice'].' del '.Translator::dateToLocale($r['data']);
+    $result['title'] = 'Intervento '.$r['codice'].' del '.dateFormat($r['data']);
     $result['category'] = 'Interventi';
 
     // Campi da evidenziare

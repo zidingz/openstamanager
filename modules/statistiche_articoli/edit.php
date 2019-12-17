@@ -76,7 +76,7 @@ echo '
     </div>
 </div>';
 
-$statistiche = \Modules\Module::get('Statistiche');
+$statistiche = module('Statistiche');
 
 echo '
 <script src="'.$statistiche->fileurl('js/functions.js').'"></script>

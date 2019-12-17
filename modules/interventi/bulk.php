@@ -6,7 +6,7 @@ use Modules\Fatture\Tipo;
 use Util\Zip;
 
 // Segmenti
-$modulo = \Modules\Module::get('Fatture di vendita');
+$modulo = module('Fatture di vendita');
 $id_fatture = $modulo['id'];
 if (!isset($_SESSION['module_'.$id_fatture]['id_segment'])) {
     $segments = $modulo->getSegments();
@@ -95,7 +95,7 @@ switch (post('op')) {
 
             $descrizione = tr('Intervento numero _NUM_ del _DATE_ [_STATE_]', [
                 '_NUM_' => $intervento['codice'],
-                '_DATE_' => Translator::dateToLocale($intervento['data']),
+                '_DATE_' => dateFormat($intervento['data']),
                 '_STATE_' => $intervento['stato'],
             ]);
 

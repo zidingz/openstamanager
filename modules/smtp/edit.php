@@ -102,7 +102,7 @@ if (!empty($elementi)) {
 
     foreach ($elementi as $elemento) {
         echo '
-            <li>'.Modules::link('Template email', $elemento['id'], $elemento['name']).'</li>';
+            <li>'.module('Template email')->link($elemento['id'], $elemento['name']).'</li>';
     }
 
     echo '

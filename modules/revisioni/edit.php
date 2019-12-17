@@ -37,7 +37,7 @@ for ($i = 0; $i < sizeof($rs_revisioni); ++$i) {
                             <input type='radio' class='revision_changer' name='idrevisione' value='".$rs_revisioni[$i]['id']."' ".$cheched.'>
                         </td>
                         <td>
-                            Revisione '.($i + 1).' creata il '.Translator::dateToLocale($rs_revisioni[$i]['created_at']).' alle '.date('H:i', strtotime($rs_revisioni[$i]['created_at']))."
+                            Revisione '.($i + 1).' creata il '.dateFormat($rs_revisioni[$i]['created_at']).' alle '.date('H:i', strtotime($rs_revisioni[$i]['created_at']))."
                         </td>
                         <td class='text-center'>"; ?>
                             <button type='button' class='btn btn-danger <?php echo $disabled; ?>' onclick='if(confirm("Vuoi cancellare questa revisione?")){$("#idrevisione").val("<?php echo $rs_revisioni[$i]['id']; ?>");$("#form_deleterevision").submit();}' <?php echo $disabled; ?>><i class='fa fa-trash'></i></button>

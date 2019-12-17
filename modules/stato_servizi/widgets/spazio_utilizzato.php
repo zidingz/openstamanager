@@ -1,6 +1,6 @@
 <?php
 
-$module = \Modules\Module::get('Stato dei servizi');
+$module = module('Stato dei servizi');
 
 echo '
 <script src="'.ROOTDIR.'/assets/dist/js/chartjs/Chart.min.js"></script>';

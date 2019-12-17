@@ -102,7 +102,7 @@ if ($dir == 'entrata' && !empty($fattura->dichiarazione) && $fattura->stato->des
 
                     if (sizeof($campi_mancanti) > 0) {
                         echo "<div class='alert alert-warning'><i class='fa fa-warning'></i> Prima di procedere alla stampa completa i seguenti campi dell'anagrafica Cliente: <b>".implode(', ', $campi_mancanti).'</b><br/>
-						'.Modules::link('Anagrafiche', $record['idanagrafica'], tr('Vai alla scheda anagrafica'), null).'</div>';
+						'.module('Anagrafiche')->link($record['idanagrafica'], tr('Vai alla scheda anagrafica'), null).'</div>';
                     }
                 }
             ?>
@@ -162,7 +162,7 @@ if (empty($record['is_fiscale'])) {
                         ?>
 
                 <div class="col-md-2">
-                    {[ "type": "select", "label": "<?php echo tr('Stato FE'); ?>", "name": "codice_stato_fe", "required": 0, "values": "query=SELECT codice as id, CONCAT_WS(' - ',codice,descrizione) as text FROM fe_stati_documento", "value": "$codice_stato_fe$", "disabled": <?php echo intval(API\Services::isEnabled() || $record['stato'] == 'Bozza'); ?>, "class": "unblockable", "help": "<?php echo (!empty($record['data_stato_fe'])) ? Translator::timestampToLocale($record['data_stato_fe']) : ''; ?>" ]}
+                    {[ "type": "select", "label": "<?php echo tr('Stato FE'); ?>", "name": "codice_stato_fe", "required": 0, "values": "query=SELECT codice as id, CONCAT_WS(' - ',codice,descrizione) as text FROM fe_stati_documento", "value": "$codice_stato_fe$", "disabled": <?php echo intval(API\Services::isEnabled() || $record['stato'] == 'Bozza'); ?>, "class": "unblockable", "help": "<?php echo (!empty($record['data_stato_fe'])) ? timestampFormat($record['data_stato_fe']) : ''; ?>" ]}
                 </div>
 
                         <?php
@@ -179,7 +179,7 @@ if (empty($record['is_fiscale'])) {
 				<div class="col-md-3">
 					<?php
 
-                    echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="float-right"');
+                    echo module('Anagrafiche')->link($record['idanagrafica'], null, null, 'class="float-right"');
 
                     if ($dir == 'entrata') {
                         ?>
@@ -199,7 +199,7 @@ if (empty($record['is_fiscale'])) {
                 if ($dir == 'uscita') {
                     ?>
                     <div class="col-md-3">
-                        {[ "type": "select", "label": "<?php echo tr('Partenza merce'); ?>", "name": "idsede_partenza", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$", "placeholder": "Sede legale", "value": "$idsede_partenza$", "icon-after": "add|<?php echo \Modules\Module::get('Anagrafiche')['id']; ?>|id_plugin=<?php echo \Modules\Module::get('Sedi')['id']; ?>&id_parent=<?php echo $record['idanagrafica']; ?>||<?php echo (intval($block_edit)) ? 'disabled' : ''; ?>" ]}
+                        {[ "type": "select", "label": "<?php echo tr('Partenza merce'); ?>", "name": "idsede_partenza", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$", "placeholder": "Sede legale", "value": "$idsede_partenza$", "icon-after": "add|<?php echo module('Anagrafiche')['id']; ?>|id_plugin=<?php echo module('Sedi')['id']; ?>&id_parent=<?php echo $record['idanagrafica']; ?>||<?php echo (intval($block_edit)) ? 'disabled' : ''; ?>" ]}
                     </div>
 
                     <div class="col-md-3">
@@ -213,7 +213,7 @@ if (empty($record['is_fiscale'])) {
                     </div>
 
                     <div class="col-md-3">
-                        {[ "type": "select", "label": "<?php echo tr('Destinazione merce'); ?>", "name": "idsede_destinazione", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$",  "value": "$idsede_destinazione$", "readonly": "", "icon-after": "add|<?php echo \Modules\Module::get('Anagrafiche')['id']; ?>|id_plugin=<?php echo \Modules\Module::get('Sedi')['id']; ?>&id_parent=<?php echo $record['idanagrafica']; ?>||<?php echo (intval($block_edit)) ? 'disabled' : ''; ?>" ]}
+                        {[ "type": "select", "label": "<?php echo tr('Destinazione merce'); ?>", "name": "idsede_destinazione", "ajax-source": "sedi", "ajax-info": "idanagrafica=$idanagrafica$",  "value": "$idsede_destinazione$", "readonly": "", "icon-after": "add|<?php echo module('Anagrafiche')['id']; ?>|id_plugin=<?php echo module('Sedi')['id']; ?>&id_parent=<?php echo $record['idanagrafica']; ?>||<?php echo (intval($block_edit)) ? 'disabled' : ''; ?>" ]}
                     </div>
                 <?php
                 }
@@ -242,7 +242,7 @@ if (empty($record['is_fiscale'])) {
 				</div>
 
 				<div class="col-md-3">
-					{[ "type": "select", "label": "<?php echo tr('Banca'); ?>", "name": "idbanca", "values": "query=SELECT id, CONCAT (nome, ' - ' , iban) AS descrizione FROM co_banche WHERE deleted_at IS NULL ORDER BY nome ASC", "value": "$idbanca$", "icon-after": "add|<?php echo \Modules\Module::get('Banche')['id']; ?>||", "extra": " <?php echo (intval($block_edit)) ? 'disabled' : ''; ?> " ]}
+					{[ "type": "select", "label": "<?php echo tr('Banca'); ?>", "name": "idbanca", "values": "query=SELECT id, CONCAT (nome, ' - ' , iban) AS descrizione FROM co_banche WHERE deleted_at IS NULL ORDER BY nome ASC", "value": "$idbanca$", "icon-after": "add|<?php echo module('Banche')['id']; ?>||", "extra": " <?php echo (intval($block_edit)) ? 'disabled' : ''; ?> " ]}
 				</div>
 
 
@@ -256,7 +256,7 @@ if (empty($record['is_fiscale'])) {
                     <p><strong>'.tr('Scadenze').'</strong></p>';
                     foreach ($scadenze as $scadenza) {
                         echo '
-                    <p>'.Translator::dateToLocale($scadenza['scadenza']).': ';
+                    <p>'.dateFormat($scadenza['scadenza']).': ';
 
                         if ($scadenza['pagato'] == $scadenza['da_pagare']) {
                             echo '
@@ -380,11 +380,11 @@ if ($tipodoc == 'Fattura accompagnatoria di vendita') {
         <div class="card-body">
             <div class="row">
                 <div class="col-md-3">
-                    {[ "type": "select", "label": "'.tr('Aspetto beni').'", "name": "idaspettobeni", "placeholder": "", "ajax-source": "aspetto-beni", "value": "$idaspettobeni$", "icon-after": "add|'.\Modules\Module::get('Aspetto beni')['id'].'||'.(($record['stato'] != 'Bozza') ? 'disabled' : '').'" ]}
+                    {[ "type": "select", "label": "'.tr('Aspetto beni').'", "name": "idaspettobeni", "placeholder": "", "ajax-source": "aspetto-beni", "value": "$idaspettobeni$", "icon-after": "add|'.module('Aspetto beni')['id'].'||'.(($record['stato'] != 'Bozza') ? 'disabled' : '').'" ]}
                 </div>
 
                 <div class="col-md-3">
-                    {[ "type": "select", "label": "'.tr('Causale trasporto').'", "name": "idcausalet", "placeholder": "", "ajax-source": "causali", "value": "$idcausalet$", "icon-after": "add|'.\Modules\Module::get('Causali')['id'].'||'.(($record['stato'] != 'Bozza') ? 'disabled' : '').'" ]}
+                    {[ "type": "select", "label": "'.tr('Causale trasporto').'", "name": "idcausalet", "placeholder": "", "ajax-source": "causali", "value": "$idcausalet$", "icon-after": "add|'.module('Causali')['id'].'||'.(($record['stato'] != 'Bozza') ? 'disabled' : '').'" ]}
                 </div>
 
                 <div class="col-md-3">
@@ -402,7 +402,7 @@ if ($tipodoc == 'Fattura accompagnatoria di vendita') {
                 </div>
 
                 <div class="col-md-3">
-                    {[ "type": "select", "label": "'.tr('Vettore').'", "name": "idvettore",  "ajax-source": "vettori",  "value": "$idvettore$", "icon-after": "add|'.\Modules\Module::get('Anagrafiche')['id'].'|tipoanagrafica=Vettore|'.((($record['idspedizione'] != 3) and ($record['stato'] == 'Bozza')) ? '' : 'disabled').'", "disabled": '.intval($record['idspedizione'] == 3).', "required": '.intval($record['idspedizione'] != 3).' ]}
+                    {[ "type": "select", "label": "'.tr('Vettore').'", "name": "idvettore",  "ajax-source": "vettori",  "value": "$idvettore$", "icon-after": "add|'.module('Anagrafiche')['id'].'|tipoanagrafica=Vettore|'.((($record['idspedizione'] != 3) and ($record['stato'] == 'Bozza')) ? '' : 'disabled').'", "disabled": '.intval($record['idspedizione'] == 3).', "required": '.intval($record['idspedizione'] != 3).' ]}
                 </div>
 
                 <script>
@@ -724,11 +724,11 @@ if (!empty($note_accredito)) {
     foreach ($note_accredito as $nota) {
         $text = tr('Rif. fattura _NUM_ del _DATE_', [
             '_NUM_' => $nota['numero'],
-            '_DATE_' => Translator::dateToLocale($nota['data']),
+            '_DATE_' => dateFormat($nota['data']),
         ]);
 
         echo '
-    <br>'.Modules::link('Fatture di vendita', $nota['id'], $text, $text);
+    <br>'.module('Fatture di vendita')->link($nota['id'], $text, $text);
     }
     echo '
 </div>';

@@ -11,7 +11,7 @@ echo '
 
     <tr>
         <td class="text-left" style="width:30%">'.tr('Intervento num.').': <b>'.$documento['codice'].'</b></td>
-        <td class="text-left" style="width:20%">'.tr('Data').': <b>'.Translator::dateToLocale($documento['data_richiesta']).'</b></td>
+        <td class="text-left" style="width:20%">'.tr('Data').': <b>'.dateFormat($documento['data_richiesta']).'</b></td>
         <td class="text-left" style="width:25%">'.tr('Preventivo num.').': <b>'.(!empty($preventivo) ? $preventivo['numero'] : '').'</b></td>
         <td class="text-left" style="width:25%">'.tr('Contratto num.').': <b>'.(!empty($contratto) ? $contratto['numero'] : '').'</b></td>
     </tr>';
@@ -171,7 +171,7 @@ if (!$righe->isEmpty()) {
         // Quantità
         echo '
         <td class="text-center">
-            '.Translator::numberToLocale($r['qta'], 'qta').' '.$r['um'].'
+            '.numberFormat($r['qta'], 'qta').' '.$r['um'].'
         </td>';
 
         // Prezzo unitario
@@ -182,7 +182,7 @@ if (!$righe->isEmpty()) {
         if ($options['pricing'] && $r['sconto'] > 0) {
             echo "
             <br><small class='text-muted'>".tr('sconto _TOT_ _TYPE_', [
-                '_TOT_' => Translator::numberToLocale($r['sconto_unitario']),
+                '_TOT_' => numberFormat($r['sconto_unitario']),
                 '_TYPE_' => ($r['tipo_sconto'] == 'PRC' ? '%' : currency()),
             ]).'</small>';
         }
@@ -193,7 +193,7 @@ if (!$righe->isEmpty()) {
         // Prezzo totale
         echo '
         <td class="text-center">
-            '.($options['pricing'] ? Translator::numberToLocale($riga->totale_imponibile) : '-').'
+            '.($options['pricing'] ? numberFormat($riga->totale_imponibile) : '-').'
         </td>
     </tr>';
     }
@@ -269,19 +269,19 @@ foreach ($sessioni as $i => $sessione) {
     // Data
     echo '
     	<td class="text-center">
-            '.Translator::dateToLocale($sessione['orario_inizio'], '-').'
+            '.dateFormat($sessione['orario_inizio'], '-').'
     	</td>';
 
     // Ora inizio
     echo '
     	<td class="text-center">
-            '.Translator::timeToLocale($sessione['orario_inizio'], '-').'
+            '.timeFormat($sessione['orario_inizio'], '-').'
     	</td>';
 
     // Ora fine
     echo '
     	<td class="text-center">
-            '.Translator::timeToLocale($sessione['orario_fine'], '-').'
+            '.timeFormat($sessione['orario_fine'], '-').'
         </td>';
 
     // Spazio aggiuntivo
@@ -303,7 +303,7 @@ foreach ($sessioni as $i => $sessione) {
 echo '
     <tr>
         <td class="text-center">
-            <small>'.tr('Ore lavorate').':</small><br/><b>'.Translator::numberToLocale($documento->ore_totali, 2).'</b>
+            <small>'.tr('Ore lavorate').':</small><br/><b>'.numberFormat($documento->ore_totali, 2).'</b>
         </td>';
 
 // Costo totale manodopera
@@ -330,7 +330,7 @@ echo '
 echo '
     <tr>
         <td class="text-center">
-            <small>'.tr('Km percorsi').':</small><br/><b>'.Translator::numberToLocale($documento->km_totali, 2).'</b>
+            <small>'.tr('Km percorsi').':</small><br/><b>'.numberFormat($documento->km_totali, 2).'</b>
         </td>';
 
 // Costo trasferta

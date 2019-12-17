@@ -159,7 +159,7 @@ if (!$anagrafiche->isEmpty()) {
 
         echo '
                 <tr '.(empty($anagrafica->email) ? 'class="bg-danger"' : '').'>
-                    <td>'.Modules::link('Anagrafiche', $anagrafica->id, $anagrafica->ragione_sociale).'</td>
+                    <td>'.module('Anagrafiche')->link($anagrafica->id, $anagrafica->ragione_sociale).'</td>
                     <td class="text-center">'.$anagrafica->email.'</td>
                     <td class="text-center">'.$data.'</td>
                     <td class="text-center">

@@ -11,8 +11,8 @@ echo '
         <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title">'.tr('Registri iva dal _START_ al _END_', [
-                    '_START_' => Translator::dateToLocale($_SESSION['period_start']),
-                    '_END_' => Translator::dateToLocale($_SESSION['period_end']),
+                    '_START_' => dateFormat($_SESSION['period_start']),
+                    '_END_' => dateFormat($_SESSION['period_end']),
                 ]).'</h3>
             </div>
 
@@ -28,8 +28,8 @@ echo '
         <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title">'.tr('Comunicazione dati fatture (ex-spesometro) dal _START_ al _END_', [
-                    '_START_' => Translator::dateToLocale($_SESSION['period_start']),
-                    '_END_' => Translator::dateToLocale($_SESSION['period_end']),
+                    '_START_' => dateFormat($_SESSION['period_start']),
+                    '_END_' => dateFormat($_SESSION['period_end']),
                 ]).'</h3>
             </div>
 
@@ -43,8 +43,8 @@ echo '
         <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title">'.tr('Fatturato dal _START_ al _END_', [
-                    '_START_' => Translator::dateToLocale($_SESSION['period_start']),
-                    '_END_' => Translator::dateToLocale($_SESSION['period_end']),
+                    '_START_' => dateFormat($_SESSION['period_start']),
+                    '_END_' => dateFormat($_SESSION['period_end']),
                 ]).'</h3>
             </div>
 

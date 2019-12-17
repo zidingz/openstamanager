@@ -80,7 +80,7 @@
                 </div>
 
 				<div class="col-md-2">
-					{[ "type": "select", "label": "<?php echo tr('Unità di misura'); ?>", "name": "um", "value": "$um$", "ajax-source": "misure", "icon-after": "add|<?php echo \Modules\Module::get('Unità di misura')['id']; ?>" ]}
+					{[ "type": "select", "label": "<?php echo tr('Unità di misura'); ?>", "name": "um", "value": "$um$", "ajax-source": "misure", "icon-after": "add|<?php echo module('Unità di misura')['id']; ?>" ]}
 				</div>
 
                 <div class="col-md-2">
@@ -131,7 +131,7 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            {[ "type": "select", "label": "<?php echo tr('Fornitore predefinito'); ?>", "name": "id_fornitore", "value": "$id_fornitore$", "ajax-source": "fornitori", "icon-after": "add|<?php echo \Modules\Module::get('Anagrafiche')['id']; ?>|tipoanagrafica=Fornitore" ]}
+                            {[ "type": "select", "label": "<?php echo tr('Fornitore predefinito'); ?>", "name": "id_fornitore", "value": "$id_fornitore$", "ajax-source": "fornitori", "icon-after": "add|<?php echo module('Anagrafiche')['id']; ?>|tipoanagrafica=Fornitore" ]}
                         </div>
                     </div>
 
@@ -288,7 +288,7 @@ echo '
         } else {
             echo '
             <div class="alert alert-info">
-                '.tr('Non ci sono listini caricati').'... '.Modules::link('Listini', null, tr('Crea il primo listino')).'
+                '.tr('Non ci sono listini caricati').'... '.module('Listini')->link(null, tr('Crea il primo listino')).'
             </div>';
         }
 echo '
@@ -357,7 +357,7 @@ if (!empty($elementi)) {
         $descrizione = tr('_DOC_ num. _NUM_ del _DATE_', [
             '_DOC_' => $elemento['tipo_documento'],
             '_NUM_' => !empty($elemento['numero_esterno']) ? $elemento['numero_esterno'] : $elemento['numero'],
-            '_DATE_' => Translator::dateToLocale($elemento['data']),
+            '_DATE_' => dateFormat($elemento['data']),
         ]);
 
         //se non è un preventivo è un ddt o una fattura

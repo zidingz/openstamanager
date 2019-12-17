@@ -2,7 +2,7 @@
 
 $op = post('op');
 
-$upload_dir = DOCROOT.'/files/'.\Modules\Module::get('MyImpianti')['directory'];
+$upload_dir = DOCROOT.'/files/'.module('MyImpianti')['directory'];
 
 switch ($op) {
     // Aggiorno informazioni di base impianto

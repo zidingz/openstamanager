@@ -4,26 +4,26 @@ switch ($resource) {
     case 'articoli':
         // Se non ci sono sedi settate, carico tutti gli articoli
         if (!isset($superselect['idsede_partenza']) && (!isset($superselect['idsede_destinazione']))) {
-            $query = 'SELECT 
-                mg_articoli.id, 
-                mg_articoli.codice, 
+            $query = 'SELECT
+                mg_articoli.id,
+                mg_articoli.codice,
                 mg_articoli.descrizione,
-                round(mg_articoli.qta,'.setting('Cifre decimali per quantità').') AS qta, 
-                mg_articoli.um, 
-                mg_articoli.idiva_vendita, 
-                mg_articoli.idconto_vendita, 
-                mg_articoli.idconto_acquisto, 
-                mg_articoli.prezzo_vendita, 
+                round(mg_articoli.qta,'.setting('Cifre decimali per quantità').') AS qta,
+                mg_articoli.um,
+                mg_articoli.idiva_vendita,
+                mg_articoli.idconto_vendita,
+                mg_articoli.idconto_acquisto,
+                mg_articoli.prezzo_vendita,
                 mg_articoli.prezzo_acquisto,
                 categoria.`nome` AS categoria,
                 sottocategoria.`nome` AS sottocategoria,
                 co_iva.descrizione AS iva_vendita,
-                CONCAT(conto_vendita_categoria .numero, ".", conto_vendita_sottocategoria.numero, " ", conto_vendita_sottocategoria.descrizione) AS idconto_vendita_title, 
+                CONCAT(conto_vendita_categoria .numero, ".", conto_vendita_sottocategoria.numero, " ", conto_vendita_sottocategoria.descrizione) AS idconto_vendita_title,
                 CONCAT(conto_acquisto_categoria .numero, ".", conto_acquisto_sottocategoria.numero, " ", conto_acquisto_sottocategoria.descrizione) AS idconto_acquisto_title
             FROM mg_articoli
                 LEFT JOIN co_iva ON mg_articoli.idiva_vendita = co_iva.id
                 LEFT JOIN `mg_categorie` AS categoria ON `categoria`.`id` = `mg_articoli`.`id_categoria`
-                LEFT JOIN `mg_categorie` AS sottocategoria ON `sottocategoria`.`id` = `mg_articoli`.`id_sottocategoria` 
+                LEFT JOIN `mg_categorie` AS sottocategoria ON `sottocategoria`.`id` = `mg_articoli`.`id_sottocategoria`
                 LEFT JOIN co_pianodeiconti3 AS conto_vendita_sottocategoria ON conto_vendita_sottocategoria.id=mg_articoli.idconto_vendita
                     LEFT JOIN co_pianodeiconti2 AS conto_vendita_categoria ON conto_vendita_sottocategoria.idpianodeiconti2=conto_vendita_categoria.id
                 LEFT JOIN co_pianodeiconti3 AS conto_acquisto_sottocategoria ON conto_acquisto_sottocategoria.id=mg_articoli.idconto_acquisto
@@ -38,31 +38,31 @@ switch ($resource) {
 
         // Se c'è una sede settata, carico tutti gli articoli presenti in quella sede
         else {
-            $query = 'SELECT 
-                mg_articoli.id, 
-                mg_articoli.codice, 
-                mg_articoli.descrizione,	
-                mg_articoli.um, 
-                mg_articoli.idiva_vendita, 
-                mg_articoli.idconto_vendita, 
-                mg_articoli.idconto_acquisto, 
-                mg_articoli.prezzo_vendita, 
+            $query = 'SELECT
+                mg_articoli.id,
+                mg_articoli.codice,
+                mg_articoli.descrizione,
+                mg_articoli.um,
+                mg_articoli.idiva_vendita,
+                mg_articoli.idconto_vendita,
+                mg_articoli.idconto_acquisto,
+                mg_articoli.prezzo_vendita,
                 mg_articoli.prezzo_acquisto,
                 categoria.`nome` AS categoria,
                 sottocategoria.`nome` AS sottocategoria,
                 co_iva.descrizione AS iva_vendita,
-                CONCAT(conto_vendita_categoria .numero, ".", conto_vendita_sottocategoria.numero, " ", conto_vendita_sottocategoria.descrizione) AS idconto_vendita_title, 
+                CONCAT(conto_vendita_categoria .numero, ".", conto_vendita_sottocategoria.numero, " ", conto_vendita_sottocategoria.descrizione) AS idconto_vendita_title,
                 CONCAT(conto_acquisto_categoria .numero, ".", conto_acquisto_sottocategoria.numero, " ", conto_acquisto_sottocategoria.descrizione) AS idconto_acquisto_title
             FROM mg_articoli
                 LEFT JOIN co_iva ON mg_articoli.idiva_vendita = co_iva.id
                 LEFT JOIN `mg_categorie` AS categoria ON `categoria`.`id` = `mg_articoli`.`id_categoria`
-                LEFT JOIN `mg_categorie` AS sottocategoria ON `sottocategoria`.`id` = `mg_articoli`.`id_sottocategoria` 
+                LEFT JOIN `mg_categorie` AS sottocategoria ON `sottocategoria`.`id` = `mg_articoli`.`id_sottocategoria`
                 LEFT JOIN co_pianodeiconti3 AS conto_vendita_sottocategoria ON conto_vendita_sottocategoria.id=mg_articoli.idconto_vendita
                     LEFT JOIN co_pianodeiconti2 AS conto_vendita_categoria ON conto_vendita_sottocategoria.idpianodeiconti2=conto_vendita_categoria.id
                 LEFT JOIN co_pianodeiconti3 AS conto_acquisto_sottocategoria ON conto_acquisto_sottocategoria.id=mg_articoli.idconto_acquisto
                     LEFT JOIN co_pianodeiconti2 AS conto_acquisto_categoria ON conto_acquisto_sottocategoria.idpianodeiconti2=conto_acquisto_categoria.id
                 LEFT JOIN mg_movimenti ON mg_movimenti.idarticolo=mg_articoli.id
-                LEFT JOIN an_sedi ON an_sedi.id = mg_movimenti.idsede_azienda           
+                LEFT JOIN an_sedi ON an_sedi.id = mg_movimenti.idsede_azienda
             |where|
             GROUP BY
                 mg_articoli.id
@@ -172,7 +172,7 @@ switch ($resource) {
 
             $results[count($results) - 1]['children'][] = [
                 'id' => $r['id'],
-                'text' => $r['codice'].' - '.$r['descrizione'].' ('.Translator::numberToLocale($qta).(!empty($r['um']) ? ' '.$r['um'] : '').')',
+                'text' => $r['codice'].' - '.$r['descrizione'].' ('.numberFormat($qta).(!empty($r['um']) ? ' '.$r['um'] : '').')',
                 'codice' => $r['codice'],
                 'descrizione' => $r['descrizione'],
                 'qta' => $r['qta'],

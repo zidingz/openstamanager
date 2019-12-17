@@ -14,12 +14,12 @@ echo '
         <div class="row">
             <div class="col-md-3">
                 <h4>'.tr('Template').'</h4>
-                '.Modules::link('Template email', $mail->template->id, $mail->template->name).'
+                '.module('Template email')->link($mail->template->id, $mail->template->name).'
             </div>
 
             <div class="col-md-3">
                 <h4>'.tr('Utente').'</h4>
-                '.Modules::link('Anagrafiche', $mail->user->anagrafica->id, $mail->user->nome_completo).'
+                '.module('Anagrafiche')->link($mail->user->anagrafica->id, $mail->user->nome_completo).'
             </div>
 
             <div class="col-md-3">

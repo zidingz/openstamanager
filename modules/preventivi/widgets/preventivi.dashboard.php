@@ -9,8 +9,8 @@
         echo "<th width='15%'>Data conclusione</th></tr>\n";
 
         for ($i = 0; $i < sizeof($rs); ++$i) {
-            $data_accettazione = ($rs[$i]['data_accettazione'] != '0000-00-00') ? Translator::dateToLocale($rs[$i]['data_accettazione']) : '';
-            $data_conclusione = ($rs[$i]['data_conclusione'] != '0000-00-00') ? Translator::dateToLocale($rs[$i]['data_conclusione']) : '';
+            $data_accettazione = ($rs[$i]['data_accettazione'] != '0000-00-00') ? dateFormat($rs[$i]['data_accettazione']) : '';
+            $data_conclusione = ($rs[$i]['data_conclusione'] != '0000-00-00') ? dateFormat($rs[$i]['data_conclusione']) : '';
 
             if (strtotime($rs[$i]['data_conclusione']) < strtotime(date('Y-m-d')) && $data_conclusione != '') {
                 $attr = ' class="danger"';
@@ -18,7 +18,7 @@
                 $attr = '';
             }
 
-            echo '<tr '.$attr.'><td><a href="'.ROOTDIR.'/editor.php?id_module='.\Modules\Module::get('Preventivi')['id'].'&id_record='.$rs[$i]['id'].'">'.$rs[$i]['nome']."</a><br><small class='form-text'>".$rs[$i]['ragione_sociale']."</small></td>\n";
+            echo '<tr '.$attr.'><td><a href="'.ROOTDIR.'/editor.php?id_module='.module('Preventivi')['id'].'&id_record='.$rs[$i]['id'].'">'.$rs[$i]['nome']."</a><br><small class='form-text'>".$rs[$i]['ragione_sociale']."</small></td>\n";
             echo "<td $attr>".$data_accettazione."</td>\n";
             echo "<td $attr>".$data_conclusione."</td></tr>\n";
         }

@@ -1,6 +1,6 @@
 <?php
 
-$module->parent = \Modules\Module::get('Contratti')['id'];
+$module->parent = module('Contratti')['id'];
 
 $contratto = $dbo->fetchOne('SELECT * FROM co_contratti WHERE id = :id', [
     ':id' => $id_record,
@@ -66,7 +66,7 @@ if (!empty($records)) {
 
             $info_intervento = Modules::link('Interventi', $intervento['id'], tr('Intervento num. _NUM_ del _DATE_', [
                 '_NUM_' => $intervento['codice'],
-                '_DATE_' => Translator::dateToLocale($intervento['data']),
+                '_DATE_' => dateFormat($intervento['data']),
             ]));
 
             $disabled = 'disabled';
@@ -88,7 +88,7 @@ if (!empty($records)) {
             $impianti = $dbo->fetchArray('SELECT id, matricola, nome FROM my_impianti WHERE id IN ('.($record['idimpianti']).')');
 
             foreach ($impianti as $impianto) {
-                $info_impianti .= Modules::link('MyImpianti', $impianto['id'], tr('_NOME_ (_MATRICOLA_)', [
+                $info_impianti .= module('MyImpianti')->link($impianto['id'], tr('_NOME_ (_MATRICOLA_)', [
                     '_NOME_' => $impianto['nome'],
                     '_MATRICOLA_' => $impianto['matricola'],
                 ])).'<br>';
@@ -102,8 +102,8 @@ if (!empty($records)) {
         $info_materiali = '';
         foreach ($materiali as $materiale) {
             $info_materiali .= tr(' _QTA_ _UM_ x _DESC_', [
-                '_DESC_' => ((!empty($materiale['idarticolo'])) ? Modules::link('Articoli', $materiale['idarticolo'], $materiale['descrizione']) : $materiale['descrizione']),
-                '_QTA_' => Translator::numberToLocale($materiale['qta']),
+                '_DESC_' => ((!empty($materiale['idarticolo'])) ? module('Articoli')->link($materiale['idarticolo'], $materiale['descrizione']) : $materiale['descrizione']),
+                '_QTA_' => numberFormat($materiale['qta']),
                 '_UM_' => $materiale['um'],
                 '_PREZZO_' => $materiale['prezzo_vendita'],
             ]).'<br>';
@@ -125,7 +125,7 @@ if (!empty($records)) {
 
         echo '
             <tr>
-                <td>'.Translator::dateToLocale($record['data_richiesta']).'<!--br><small>'.Translator::dateToLocale($contratto['data_conclusione']).'</small--></td>
+                <td>'.dateFormat($record['data_richiesta']).'<!--br><small>'.dateFormat($contratto['data_conclusione']).'</small--></td>
                 <td>'.$record['tipointervento'].'</td>
                 <td>'.nl2br($record['richiesta']).'</td>
                 <td>'.$info_intervento.'</td>
@@ -139,7 +139,7 @@ if (!empty($records)) {
                     <i class="fa fa-clock-o"></i>
                 </button>
 
-                <button type="button" '.$disabled.' class="btn btn-primary btn-sm '.$disabled.' " title="Pianifica intervento ora..." data-toggle="tooltip" onclick="launch_modal(\'Pianifica intervento\', \''.ROOTDIR.'/add.php?id_module='.\Modules\Module::get('Interventi')['id'].'&ref=interventi_contratti&idcontratto='.$id_record.'&idcontratto_riga='.$record['id'].'\');"'.(!empty($pianificabile) ? '' : ' disabled').'>
+                <button type="button" '.$disabled.' class="btn btn-primary btn-sm '.$disabled.' " title="Pianifica intervento ora..." data-toggle="tooltip" onclick="launch_modal(\'Pianifica intervento\', \''.ROOTDIR.'/add.php?id_module='.module('Interventi')['id'].'&ref=interventi_contratti&idcontratto='.$id_record.'&idcontratto_riga='.$record['id'].'\');"'.(!empty($pianificabile) ? '' : ' disabled').'>
                     <i class="fa fa-calendar"></i>
                 </button>
 

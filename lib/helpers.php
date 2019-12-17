@@ -90,7 +90,7 @@ function get($param, $parse = false)
  */
 function setting($name, $again = false)
 {
-    return \Settings::getValue($name);
+    return \Models\Setting::get($name)->valore;
 }
 
 /**
@@ -322,4 +322,16 @@ function moneyFormat($number, $decimals = null)
 function input(array $json)
 {
     return HTMLBuilder::parse($json);
+}
+
+/*
+ * Restituisce il modulo relativo all'identificativo.
+
+ * @since 2.5
+ *
+ * @return \Modules\Module
+ */
+function module($identifier)
+{
+    return \Modules\Module::get($identifier);
 }

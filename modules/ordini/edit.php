@@ -2,7 +2,7 @@
 
 $block_edit = $record['flag_completato'];
 
-$module = \Modules\Module::get($id_module);
+$module = module($id_module);
 
 if ($module['name'] == 'Ordini cliente') {
     $dir = 'entrata';
@@ -66,7 +66,7 @@ $_SESSION['superselect']['idanagrafica'] = $record['idanagrafica'];
 				<div class="col-md-3">
                     <?php
 
-                    echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="float-right"');
+                    echo module('Anagrafiche')->link($record['idanagrafica'], null, null, 'class="float-right"');
 
                     if ($dir == 'entrata') {
                         ?>
@@ -238,7 +238,7 @@ if (!empty($elementi)) {
         $descrizione = tr('_DOC_ num. _NUM_ del _DATE_', [
             '_DOC_' => $elemento['tipo_documento'],
             '_NUM_' => !empty($elemento['numero_esterno']) ? $elemento['numero_esterno'] : $elemento['numero'],
-            '_DATE_' => Translator::dateToLocale($elemento['data']),
+            '_DATE_' => dateFormat($elemento['data']),
         ]);
 
         if (!in_array($elemento['tipo_documento'], ['Ddt in uscita', 'Ddt in entrata'])) {

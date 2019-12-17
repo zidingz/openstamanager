@@ -69,7 +69,7 @@ FROM in_interventi_tecnici
 WHERE ".$where.'
     idtecnico IN('.implode(',', $tecnici).') AND
     in_interventi.id_stato IN('.implode(',', $stati).') AND
-    in_interventi_tecnici.id_tipo_intervento IN('.implode(',', $tipi).') '.\Modules\Module::get('Interventi')->getAdditionalsQuery().'
+    in_interventi_tecnici.id_tipo_intervento IN('.implode(',', $tipi).') '.module('Interventi')->getAdditionalsQuery().'
 GROUP BY in_interventi.id, data';
 $sessioni = $dbo->fetchArray($query);
 

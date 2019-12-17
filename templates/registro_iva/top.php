@@ -11,13 +11,13 @@ $esercizio = $year_start == $year_end ? ' - '.tr('Esercizio _YEAR_', [
 
 if ('entrata' == $dir) {
     $titolo = tr('Registro iva vendita dal _START_ al _END_', [
-        '_START_' => Translator::dateToLocale($date_start),
-        '_END_' => Translator::dateToLocale($date_end),
+        '_START_' => dateFormat($date_start),
+        '_END_' => dateFormat($date_end),
     ], ['upper' => true]);
 } elseif ('uscita' == $dir) {
     $titolo = tr('Registro iva acquisto dal _START_ al _END_', [
-        '_START_' => Translator::dateToLocale($date_start),
-        '_END_' => Translator::dateToLocale($date_end),
+        '_START_' => dateFormat($date_start),
+        '_END_' => dateFormat($date_end),
     ], ['upper' => true]);
 }
 

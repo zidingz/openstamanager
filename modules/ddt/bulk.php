@@ -13,7 +13,7 @@ if ($module['name'] == 'Ddt di vendita') {
 }
 
 // Segmenti
-$modulo = \Modules\Module::get($module_name);
+$modulo = module($module_name);
 $id_fatture = $modulo['id'];
 if (!isset($_SESSION['module_'.$id_fatture]['id_segment'])) {
     $segments = $modulo->getSegments();
@@ -21,7 +21,7 @@ if (!isset($_SESSION['module_'.$id_fatture]['id_segment'])) {
 }
 $id_segment = $_SESSION['module_'.$id_fatture]['id_segment'];
 
-$additionals = \Modules\Module::get($id_module)->getAdditionalsQuery();
+$additionals = module($id_module)->getAdditionalsQuery();
 
 switch (post('op')) {
     case 'crea_fattura':

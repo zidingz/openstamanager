@@ -60,9 +60,9 @@ if (!empty($rsp)) {
 
         echo '
             <tr id="int_'.$r['id'].'">
-				<td><a target="_blank" >'.Modules::link(\Modules\Module::get('Anagrafiche')['id'], $r['idcliente'], $r['ragione_sociale']).'</a></td>
-				<td><a target="_blank" >'.Modules::link(\Modules\Module::get('Contratti')['id'], $r['idcontratto'], $r['contratto']).'</a></td>
-                <td>'.Translator::dateToLocale($r['data_richiesta']).'</td>
+				<td><a target="_blank" >'.Modules::link(module('Anagrafiche')['id'], $r['idcliente'], $r['ragione_sociale']).'</a></td>
+				<td><a target="_blank" >'.Modules::link(module('Contratti')['id'], $r['idcontratto'], $r['contratto']).'</a></td>
+                <td>'.dateFormat($r['data_richiesta']).'</td>
                 <td>'.$r['tipointervento'].'</td>
                 <td>'.nl2br($r['richiesta']).'</td>';
 
@@ -86,7 +86,7 @@ if (!empty($rsp)) {
                 <td>';
         if (empty($r['idintervento'])) {
             echo "
-                    <a class=\"btn btn-primary\" title=\"Pianifica ora!\" onclick=\"launch_modal( '".tr('Pianifica intervento')."', '".ROOTDIR.'/add.php?id_module='.\Modules\Module::get('Interventi')['id'].'&ref=dashboard&idcontratto='.urlencode($r['idcontratto']).'&idcontratto_riga='.$r['id']."');\">
+                    <a class=\"btn btn-primary\" title=\"Pianifica ora!\" onclick=\"launch_modal( '".tr('Pianifica intervento')."', '".ROOTDIR.'/add.php?id_module='.module('Interventi')['id'].'&ref=dashboard&idcontratto='.urlencode($r['idcontratto']).'&idcontratto_riga='.$r['id']."');\">
                         <i class='fa fa-calendar'></i>
                     </a>";
         }

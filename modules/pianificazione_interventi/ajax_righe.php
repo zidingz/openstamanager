@@ -39,7 +39,7 @@ if (!empty($rs2)) {
         // Quantità
         echo '
         <td class="text-right">
-            '.Translator::numberToLocale($r['qta'], 'qta').' '.$r['um'].'
+            '.numberFormat($r['qta'], 'qta').' '.$r['um'].'
         </td>';
 
         //Costo unitario
@@ -60,7 +60,7 @@ if (!empty($rs2)) {
                 echo '
             <br><span class="label label-danger">
                 - '.tr('sconto _TOT_ _TYPE_', [
-                    '_TOT_' => Translator::numberToLocale($r['sconto_unitario']),
+                    '_TOT_' => numberFormat($r['sconto_unitario']),
                     '_TYPE_' => ($r['tipo_sconto'] == 'PRC' ? '%' : currency()),
                 ]).'
             </span>';

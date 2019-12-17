@@ -26,12 +26,12 @@ foreach ($rs as $r) {
     $result = [];
 
     $module = ($r['dir'] == 'uscita') ? 'Ddt di acquisto' : 'Ddt di vendita';
-    $link_id = \Modules\Module::get($module)['id'];
+    $link_id = module($module)['id'];
 
     $numero = empty($r['numero_esterno']) ? $r['numero'] : $r['numero_esterno'];
 
     $result['link'] = ROOTDIR.'/editor.php?id_module='.$link_id.'&id_record='.$r['id'];
-    $result['title'] = $r['tipologia'].' num. '.$numero.' del '.Translator::dateToLocale($r['data']);
+    $result['title'] = $r['tipologia'].' num. '.$numero.' del '.dateFormat($r['data']);
     $result['category'] = $r['tipologia'];
 
     // Campi da evidenziare

@@ -127,10 +127,10 @@ switch ($operazione) {
 
                                 // Copia degli allegati
                                 Uploads::copy([
-                                    'id_module' => \Modules\Module::get('Pianificazione interventi')['id'],
+                                    'id_module' => module('Pianificazione interventi')['id'],
                                     'id_record' => $id_record,
                                 ], [
-                                    'id_module' => \Modules\Module::get('Pianificazione interventi')['id'],
+                                    'id_module' => module('Pianificazione interventi')['id'],
                                     'id_record' => $idriga,
                                 ]);
 
@@ -138,7 +138,7 @@ switch ($operazione) {
                             }
                         } else {
                             flash()->warning(tr('Esiste già un promemoria pianificato per il _DATE_', [
-                                '_DATE_' => Translator::dateToLocale($data_richiesta),
+                                '_DATE_' => dateFormat($data_richiesta),
                             ]));
                         }
 
@@ -176,10 +176,10 @@ switch ($operazione) {
 
                             // Copia degli allegati
                             Uploads::copy([
-                                'id_plugin' => \Modules\Module::get('Pianificazione interventi')['id'],
+                                'id_plugin' => module('Pianificazione interventi')['id'],
                                 'id_record' => $id_record,
                             ], [
-                                'id_module' => \Modules\Module::get('Interventi')['id'],
+                                'id_module' => module('Interventi')['id'],
                                 'id_record' => $idintervento,
                             ]);
 
@@ -200,7 +200,7 @@ switch ($operazione) {
                             flash()->info(tr('Interventi pianificati correttamente'));
                         } elseif (post('pianifica_intervento')) {
                             flash()->warning(tr('Esiste già un intervento pianificato per il _DATE_', [
-                                '_DATE_' => Translator::dateToLocale($data_richiesta),
+                                '_DATE_' => dateFormat($data_richiesta),
                             ]));
                         }
                     }

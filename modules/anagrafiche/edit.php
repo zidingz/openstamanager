@@ -149,7 +149,7 @@ if (!$is_cliente) {
                 </div>
 
                 <div class="col-md-3">
-                    {[ "type": "select", "label": "<?php echo tr('Zona'); ?>", "name": "idzona", "values": "query=SELECT id, CONCAT_WS( ' - ', nome, descrizione) AS descrizione FROM an_zone ORDER BY descrizione ASC", "value": "$idzona$", "placeholder": "<?php echo tr('Nessuna zona'); ?>", "icon-after": "add|<?php echo \Modules\Module::get('Zone')['id']; ?>" ]}
+                    {[ "type": "select", "label": "<?php echo tr('Zona'); ?>", "name": "idzona", "values": "query=SELECT id, CONCAT_WS( ' - ', nome, descrizione) AS descrizione FROM an_zone ORDER BY descrizione ASC", "value": "$idzona$", "placeholder": "<?php echo tr('Nessuna zona'); ?>", "icon-after": "add|<?php echo module('Zone')['id']; ?>" ]}
                 </div>
 
                 <div class="col-md-3">
@@ -216,7 +216,7 @@ if (!empty($google)) {
 } else {
     echo '
             <div class="alert alert-info">
-                '.Modules::link('Impostazioni', $dbo->fetchOne("SELECT `id` FROM `zz_settings` WHERE sezione='Generali'")['id'], tr('Per abilitare la visualizzazione delle anagrafiche nella mappa, inserire la Google Maps API Key nella scheda Impostazioni')).'.
+                '.module('Impostazioni')->link($dbo->fetchOne("SELECT `id` FROM `zz_settings` WHERE sezione='Generali'")['id'], tr('Per abilitare la visualizzazione delle anagrafiche nella mappa, inserire la Google Maps API Key nella scheda Impostazioni')).'.
             </div>';
 }
 
@@ -293,7 +293,7 @@ echo '
                             </div>
 
                             <div class="col-md-6">
-                                {[ "type": "select", "label": "'.tr('Banca predefinita').'", "name": "idbanca_vendite", "values": "query=SELECT id, nome AS descrizione FROM co_banche ORDER BY nome ASC", "value": "$idbanca_vendite$", "icon-after": "add|'.\Modules\Module::get('Banche')['id'].'", "help": "'.tr('Banca predefinita su cui accreditare i pagamenti.').'" ]}
+                                {[ "type": "select", "label": "'.tr('Banca predefinita').'", "name": "idbanca_vendite", "values": "query=SELECT id, nome AS descrizione FROM co_banche ORDER BY nome ASC", "value": "$idbanca_vendite$", "icon-after": "add|'.module('Banche')['id'].'", "help": "'.tr('Banca predefinita su cui accreditare i pagamenti.').'" ]}
                             </div>
                         </div>
 
@@ -339,7 +339,7 @@ echo '
                                 $piano_dei_conti_cliente = tr('_NAME_', [
                                     '_NAME_' => $conto['numero'].'.'.$conto['numero_conto'].' '.$conto['descrizione'],
                                 ]);
-                                echo Modules::link('Piano dei conti', null, null, null, 'class="float-right"');
+                                echo module('Piano dei conti')->link(null, null, null, 'class="float-right"');
                             } else {
                                 $piano_dei_conti_cliente = tr('Nessuno');
                             }
@@ -358,7 +358,7 @@ echo '
                             </div>
 
                             <div class="col-md-6">
-                                {[ "type": "select", "label": "'.tr('Banca predefinita').'", "name": "idbanca_acquisti", "values": "query=SELECT id, nome AS descrizione FROM co_banche ORDER BY nome ASC", "value": "$idbanca_acquisti$", "icon-after": "add|'.\Modules\Module::get('Banche')['id'].'" ]}
+                                {[ "type": "select", "label": "'.tr('Banca predefinita').'", "name": "idbanca_acquisti", "values": "query=SELECT id, nome AS descrizione FROM co_banche ORDER BY nome ASC", "value": "$idbanca_acquisti$", "icon-after": "add|'.module('Banche')['id'].'" ]}
                             </div>
                         </div>
 
@@ -383,7 +383,7 @@ echo '
                             /*echo '
                             <p>'.tr('Piano dei conti collegato: _NAME_', [
                                 '_NAME_' => $conto['numero'].'.'.$conto['numero_conto'].' '.$conto['descrizione'],
-                            ]).Modules::link('Piano dei conti', null, '').'</p>';*/
+                            ]).module('Piano dei conti')->link(null, '').'</p>';*/
 
                             // Collegamento con il conto
                             $conto = $dbo->fetchOne('SELECT co_pianodeiconti2.numero as numero, co_pianodeiconti3.numero as numero_conto, co_pianodeiconti3.descrizione as descrizione FROM co_pianodeiconti3 INNER JOIN co_pianodeiconti2 ON co_pianodeiconti3.idpianodeiconti2=co_pianodeiconti2.id WHERE co_pianodeiconti3.id = '.prepare($record['idconto_fornitore']));
@@ -392,7 +392,7 @@ echo '
                                 $piano_dei_conti_fornitore = tr('_NAME_', [
                                     '_NAME_' => $conto['numero'].'.'.$conto['numero_conto'].' '.$conto['descrizione'],
                                 ]);
-                                echo Modules::link('Piano dei conti', null, null, null, 'class="float-right"');
+                                echo module('Piano dei conti')->link(null, null, null, 'class="float-right"');
                             } else {
                                 $piano_dei_conti_fornitore = tr('Nessuno');
                             }
@@ -560,8 +560,8 @@ if (!empty($elementi)) {
         $descrizione = tr('_DOC_  _NUM_ del _DATE_ _DELETED_AT_', [
         '_DOC_' => $elemento['tipo_documento'],
         '_NUM_' => !empty($elemento['numero_esterno']) ? $elemento['numero_esterno'] : $elemento['numero'],
-        '_DATE_' => Translator::dateToLocale($elemento['data']),
-        '_DELETED_AT_' => (!empty($elemento['deleted_at']) ? tr('Eliminato il:').' '.Translator::dateToLocale($elemento['deleted_at']) : ''),
+        '_DATE_' => dateFormat($elemento['data']),
+        '_DELETED_AT_' => (!empty($elemento['deleted_at']) ? tr('Eliminato il:').' '.dateFormat($elemento['deleted_at']) : ''),
     ]);
 
         //se non è un preventivo è un ddt o una fattura

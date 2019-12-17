@@ -58,7 +58,7 @@ $rs = $dbo->fetchArray($query);
 
 echo '
 <h3>'.tr('Inventario al _DATE_', [
-    '_DATE_' => Translator::dateToLocale($period_end),
+    '_DATE_' => dateFormat($period_end),
 ], ['upper' => true]).'</h3>
 
 <table class="table table-bordered">
@@ -72,7 +72,7 @@ echo '
             <th class="text-center" width="90">'.tr('Valore totale', [], ['upper' => true]).'</th>
         </tr>
     </thead>
-    
+
     <tbody>';
 
 $totali = [];
@@ -84,7 +84,7 @@ foreach ($rs as $r) {
             <td>'.$r['codice'].'</td>
             <td>'.$r['descrizione'].'</td>
             <td class="text-right">'.moneyFormat($r['prezzo_vendita']).'</td>
-            <td class="text-right">'.Translator::numberToLocale($r['qta']).' '.$r['um'].'</td>
+            <td class="text-right">'.numberFormat($r['qta']).' '.$r['um'].'</td>
             <td class="text-right">'.moneyFormat($r['prezzo_acquisto']).'</td>
             <td class="text-right">'.moneyFormat($valore_magazzino).'</td>
         </tr>';
@@ -101,7 +101,7 @@ echo '
     <tr>
         <td colspan="2" class="text-right border-top"><b>'.tr('Totale', [], ['upper' => true]).':</b></td>
         <td class="border-top"></td>
-        <td class="text-right border-top"><b>'.Translator::numberToLocale($totale_qta).'</b></td>
+        <td class="text-right border-top"><b>'.numberFormat($totale_qta).'</b></td>
         <td class="border-top"></td>
         <td class="text-right border-top"><b>'.moneyFormat($totale_acquisto).'</b></td>
     </tr>

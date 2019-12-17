@@ -4,7 +4,7 @@ if (!isset($user['idanagrafica'])) {
     $user['idanagrafica'] = '';
 }
 
-$additional_interventi = \Modules\Module::get('Interventi')->getAdditionalsQuery();
+$additional_interventi = module('Interventi')->getAdditionalsQuery();
 
 switch (filter('op')) {
     // Lettura calendario tecnici
@@ -17,7 +17,7 @@ switch (filter('op')) {
 
         $tipi = (array) $_SESSION['dashboard']['idtipiintervento'];
 
-        $query = 'SELECT in_interventi_tecnici.id, in_interventi_tecnici.idintervento, in_interventi.codice, colore, idtecnico, orario_inizio, orario_fine, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS nome_tecnico, (SELECT id FROM zz_files WHERE id_record=in_interventi.id AND id_module = '.\Modules\Module::get('Interventi')['id'].' LIMIT 1) AS have_attachments, (SELECT colore FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS colore_tecnico, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=in_interventi.idanagrafica) AS cliente, (SELECT idzona FROM an_sedi INNER JOIN an_anagrafiche ON an_anagrafiche.id_sede_legale = an_sedi.id WHERE an_anagrafiche.idanagrafica=in_interventi.idanagrafica) AS idzona FROM in_interventi_tecnici INNER JOIN (in_interventi LEFT OUTER JOIN in_statiintervento ON in_interventi.id_stato=in_statiintervento.id) ON in_interventi_tecnici.idintervento=in_interventi.id WHERE ( (in_interventi_tecnici.orario_inizio >= '.prepare($start).' AND in_interventi_tecnici.orario_fine <= '.prepare($end).') OR (in_interventi_tecnici.orario_inizio >= '.prepare($start).' AND in_interventi_tecnici.orario_inizio <= '.prepare($end).') OR (in_interventi_tecnici.orario_fine >= '.prepare($start).' AND in_interventi_tecnici.orario_fine <= '.prepare($end).')) AND idtecnico IN('.implode(',', $_SESSION['dashboard']['idtecnici']).') AND in_interventi.id_stato IN('.implode(',', $stati).') AND in_interventi_tecnici.id_tipo_intervento IN('.implode(',', $tipi).') '.$additional_interventi.' HAVING idzona IN ('.implode(',', $_SESSION['dashboard']['idzone']).')';
+        $query = 'SELECT in_interventi_tecnici.id, in_interventi_tecnici.idintervento, in_interventi.codice, colore, idtecnico, orario_inizio, orario_fine, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS nome_tecnico, (SELECT id FROM zz_files WHERE id_record=in_interventi.id AND id_module = '.module('Interventi')['id'].' LIMIT 1) AS have_attachments, (SELECT colore FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS colore_tecnico, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=in_interventi.idanagrafica) AS cliente, (SELECT idzona FROM an_sedi INNER JOIN an_anagrafiche ON an_anagrafiche.id_sede_legale = an_sedi.id WHERE an_anagrafiche.idanagrafica=in_interventi.idanagrafica) AS idzona FROM in_interventi_tecnici INNER JOIN (in_interventi LEFT OUTER JOIN in_statiintervento ON in_interventi.id_stato=in_statiintervento.id) ON in_interventi_tecnici.idintervento=in_interventi.id WHERE ( (in_interventi_tecnici.orario_inizio >= '.prepare($start).' AND in_interventi_tecnici.orario_fine <= '.prepare($end).') OR (in_interventi_tecnici.orario_inizio >= '.prepare($start).' AND in_interventi_tecnici.orario_inizio <= '.prepare($end).') OR (in_interventi_tecnici.orario_fine >= '.prepare($start).' AND in_interventi_tecnici.orario_fine <= '.prepare($end).')) AND idtecnico IN('.implode(',', $_SESSION['dashboard']['idtecnici']).') AND in_interventi.id_stato IN('.implode(',', $stati).') AND in_interventi_tecnici.id_tipo_intervento IN('.implode(',', $tipi).') '.$additional_interventi.' HAVING idzona IN ('.implode(',', $_SESSION['dashboard']['idzone']).')';
         $rs = $dbo->fetchArray($query);
 
         $results = [];
@@ -30,7 +30,7 @@ switch (filter('op')) {
                 'start' => $r['orario_inizio'],
                 'end' => $r['orario_fine'],
                 'url' => urlFor('module-record', [
-                    'module_id' => \Modules\Module::get('Interventi')['id'],
+                    'module_id' => module('Interventi')['id'],
                     'record_id' => $r['idintervento'],
                 ]),
                 'backgroundColor' => $r['colore'],
@@ -84,7 +84,7 @@ switch (filter('op')) {
         if (!empty($rs)) {
             $tecnici = [];
             foreach ($rs as $r) {
-                $tecnici[] = $r['nome_tecnico'].' ('.Translator::timestampToLocale($r['orario_inizio']).' - '.Translator::timeToLocale($r['orario_fine']).')';
+                $tecnici[] = $r['nome_tecnico'].' ('.timestampFormat($r['orario_inizio']).' - '.timeFormat($r['orario_fine']).')';
             }
 
             // Lettura dati intervento
@@ -112,7 +112,7 @@ switch (filter('op')) {
                 $tooltip_text .= '<b>'.tr('Note').'</b>: '.nl2br($rs[0]['note']).'<br/>';
             }
 
-            $tooltip_text .= '<b>'.tr('Data richiesta').'</b>: '.Translator::timestampToLocale($rs[0]['data_richiesta']).'<br/>';
+            $tooltip_text .= '<b>'.tr('Data richiesta').'</b>: '.timestampFormat($rs[0]['data_richiesta']).'<br/>';
 
             $tooltip_text .= '<b>'.tr('Tipo intervento').'</b>: '.nl2br($desc_tipointervento).'<br/>';
 
@@ -165,8 +165,8 @@ switch (filter('op')) {
 
                     echo '
                     <div class="fc-event '.$class.'" data-id="'.$r['id'].'" data-idcontratto="'.$r['idcontratto'].'" data-ref="'.$r['ref'].'">'.(($r['ref'] == 'intervento') ? '<i class=\'fa fa-wrench float-right\'></i>' : '<i class=\'fa fa-file-text-o float-right\'></i>').'
-                        <b>'.$r['ragione_sociale'].'</b><br>'.Translator::dateToLocale($r['data_richiesta']).' ('.$r['tipointervento'].')<div class="request" >'.(!empty($r['richiesta']) ? ' - '.$r['richiesta'] : '').'</div>'.(!empty($r['nomecontratto']) ? '<br><b>Contratto:</b> '.$r['nomecontratto'] : '').
-                        (!empty($r['data_scadenza'] and $r['data_scadenza'] != '0000-00-00 00:00:00') ? '<br><small>'.tr('entro il: ').''.Translator::dateToLocale($r['data_scadenza']).'</small>' : '').'
+                        <b>'.$r['ragione_sociale'].'</b><br>'.dateFormat($r['data_richiesta']).' ('.$r['tipointervento'].')<div class="request" >'.(!empty($r['richiesta']) ? ' - '.$r['richiesta'] : '').'</div>'.(!empty($r['nomecontratto']) ? '<br><b>Contratto:</b> '.$r['nomecontratto'] : '').
+                        (!empty($r['data_scadenza'] and $r['data_scadenza'] != '0000-00-00 00:00:00') ? '<br><small>'.tr('entro il: ').''.dateFormat($r['data_scadenza']).'</small>' : '').'
                     </div>';
                 }
             } ?>

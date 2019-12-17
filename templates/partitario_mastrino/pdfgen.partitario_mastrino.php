@@ -43,8 +43,8 @@ if ($_GET['lev'] == '3') {
 
 $body = str_replace('|percorso|', $percorso, $body);
 $body = str_replace('|info_fornitore|', $f_ragione_sociale.'<br>'.$f_indirizzo.'<br>'.$f_citta, $body);
-$body = str_replace('|period_start|', Translator::dateToLocale($date_start), $body);
-$body = str_replace('|period_end|', Translator::dateToLocale($date_end), $body);
+$body = str_replace('|period_start|', dateFormat($date_start), $body);
+$body = str_replace('|period_end|', dateFormat($date_end), $body);
 
 // Stampa da livello 3
 if ($_GET['lev'] == '3') {
@@ -89,7 +89,7 @@ if ($_GET['lev'] == '3') {
             $avere = moneyFormat(abs($rs[$i]['totale']), 2);
         }
 
-        $body .= "		<tr><td class='br bb padded text-center'>".Translator::dateToLocale($rs[$i]['data'])."</td><td class='br bb padded'>".$rs[$i]['descrizione']."</td><td class='br bb padded text-right'>".$dare."</td><td class='bb padded text-right'>".$avere."</td></tr>\n";
+        $body .= "		<tr><td class='br bb padded text-center'>".dateFormat($rs[$i]['data'])."</td><td class='br bb padded'>".$rs[$i]['descrizione']."</td><td class='br bb padded text-right'>".$dare."</td><td class='bb padded text-right'>".$avere."</td></tr>\n";
 
         $saldo_finale2[] = $rs[$i]['totale'];
     }

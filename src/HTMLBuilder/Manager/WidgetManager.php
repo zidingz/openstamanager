@@ -68,7 +68,7 @@ class WidgetManager implements ManagerInterface
 
     protected static function getModule()
     {
-        return \Modules\Module::get('Stato dei servizi');
+        return module('Stato dei servizi');
     }
 
     protected function prints($widget)

@@ -13,12 +13,12 @@ if (!empty($rs)) {
     </tr>';
 
     foreach ($rs as $r) {
-        $data_richiesta = !empty($r['data_richiesta']) ? Translator::dateToLocale($r['data_richiesta']) : '';
+        $data_richiesta = !empty($r['data_richiesta']) ? dateFormat($r['data_richiesta']) : '';
 
         echo '
     <tr >
         <td>
-            '.Modules::link('Interventi', $r['id'], 'Intervento n. '.$r['codice'].' del '.$data_richiesta).'<br>
+            '.module('Interventi')->link($r['id'], 'Intervento n. '.$r['codice'].' del '.$data_richiesta).'<br>
             <small class="form-text">'.$r['ragione_sociale'].'</small>
         </td>
         <td class="text-center">'.$data_richiesta.'</td>

@@ -5,7 +5,7 @@ switch (post('op')) {
         $pattern = str_contains(post('pattern'), '#') ? post('pattern') : '####';
         $predefined = post('predefined');
         $module_id = post('module');
-        $module = \Modules\Module::get($module_id);
+        $module = module($module_id);
 
         if (empty($module->getSegments())) {
             $predefined = 1;
@@ -46,7 +46,7 @@ switch (post('op')) {
         $pattern = str_contains(post('pattern'), '#') ? post('pattern') : '####';
         $predefined = post('predefined');
         $module_id = post('module');
-        $module = \Modules\Module::get($module_id);
+        $module = module($module_id);
 
         if (empty($module->getSegments())) {
             $predefined = 1;

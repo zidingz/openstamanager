@@ -75,7 +75,7 @@ class Ricevuta
     public static function getImportDirectory()
     {
         if (!isset(self::$directory)) {
-            $plugin = \Modules\Module::get('Ricevute FE');
+            $plugin = module('Ricevute FE');
 
             self::$directory = DOCROOT.'/'.$plugin->upload_directory;
         }
@@ -85,7 +85,7 @@ class Ricevuta
 
     public function saveAllegato($codice)
     {
-        $module = \Modules\Module::get('Fatture di vendita');
+        $module = module('Fatture di vendita');
 
         $info = [
             'category' => tr('Fattura Elettronica'),
