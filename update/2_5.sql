@@ -17,13 +17,7 @@ UPDATE `zz_modules` SET `name` = 'Interventi impianto', `directory` = 'intervent
 UPDATE `zz_modules` SET `name` = 'Seriali', `directory` = 'seriali', `default` = 1 WHERE `name` = 'Serial';
 UPDATE `zz_modules` SET `directory` = 'movimenti', `default` = 1 WHERE `name` = 'Movimenti';
 
-UPDATE `zz_modules` SET `class` = 'Modules\\Retro\\Register';
-
-UPDATE `zz_modules` SET `namespace` = 'Modules\\Fatture\\Controllers' WHERE `name` = 'Fatture di vendita';
-UPDATE `zz_modules` SET `namespace` = 'Modules\\Fatture\\Controllers' WHERE `name` = 'Fatture di acquisto';
-UPDATE `zz_modules` SET `namespace` = 'Modules\\Dashboard\\Controllers' WHERE `name` = 'Dashboard';
-UPDATE `zz_modules` SET `namespace` = 'Modules\\Aggiornamenti\\Controllers' WHERE `name` = 'Aggiornamenti';
-UPDATE `zz_modules` SET `namespace` = 'Modules\\Anagrafiche\\Controllers' WHERE `name` = 'Anagrafiche';
+UPDATE `zz_modules` SET `class` = 'Modules\\Retro\\Manager';
 
 -- Aggiornamento allegati
 UPDATE `zz_files` SET `id_module` = (SELECT `id` FROM `zz_modules` WHERE `title` = (SELECT `title` FROM `zz_plugins` WHERE `id` = `zz_files`.`id_plugin`) AND `parent` = (SELECT `idmodule_to` FROM `zz_plugins` WHERE `id` = `zz_files`.`id_plugin`))  WHERE `id_plugin` IS NOT NULL;

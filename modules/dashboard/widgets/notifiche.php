@@ -62,7 +62,7 @@ foreach ($moduli as $module_id => $note) {
         </td>
 
         <td class="text-center">
-            '.Modules::link($module_id, $nota->id_record, '', null, 'class="btn btn-primary btn-sm"', true, 'tab_note').'
+            '.module($module_id)->link($nota->id_record, '', null, 'class="btn btn-primary btn-sm"', true, 'tab_note').'
         </td>
     </tr>';
     }

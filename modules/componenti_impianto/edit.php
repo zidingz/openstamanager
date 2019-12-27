@@ -173,7 +173,7 @@ if (!empty($rs2)) {
 
         if (!empty($rs2[$j]['idintervento'])) {
             echo '
-                            '.Modules::link('Interventi', $rs2[$j]['idintervento'], tr('Intervento num. _NUM_ del _DATE_', [
+                            '.module('Interventi', )->link($rs2[$j]['idintervento'], tr('Intervento num. _NUM_ del _DATE_', [
                                 '_NUM_' => $rs2[$j]['codice'],
                                 '_DATE_' => dateFormat($rs2[$j]['data_intervento']),
                             ])).'<br>';

@@ -55,7 +55,7 @@ if (!empty($ordini)) {
         echo '
                     <tr>
                         <td>
-                            '.Modules::link($modulo['id'], $documento['id'], tr('Ordine num. _NUM_ del _DATE_', [
+                            '.$modulo->link($documento['id'], tr('Ordine num. _NUM_ del _DATE_', [
                 '_NUM_' => $numero,
                 '_DATE_' => dateFormat($documento['data']),
             ])).'
@@ -120,7 +120,7 @@ if (!empty($ordini)) {
         echo '
                     <tr>
                         <td>
-                            '.Modules::link($modulo['id'], $documento['id'], tr('Ordine num. _NUM_ del _DATE_', [
+                            '.$modulo->link($documento['id'], tr('Ordine num. _NUM_ del _DATE_', [
                                 '_NUM_' => $numero,
                                 '_DATE_' => dateFormat($documento['data']),
                             ])).'

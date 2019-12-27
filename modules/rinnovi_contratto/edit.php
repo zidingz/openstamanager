@@ -24,7 +24,7 @@ while (!empty($id_contratto_precedente)) {
     echo '
         <tr>
             <td>
-                '.Modules::link($id_module, $id_contratto_precedente, tr('Contratto num. _NUM_', [
+                '.module($id_module)->link($id_contratto_precedente, tr('Contratto num. _NUM_', [
                     '_NUM_' => $rs[0]['numero'],
                 ]).'<br><small class="text-muted">'.$rs[0]['nome'].'</small>').'
             </td>

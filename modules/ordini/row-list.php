@@ -67,7 +67,7 @@ if (!empty($rs)) {
 
         if (!empty($ref)) {
             echo '
-            <br>'.Modules::link($ref['module'], $ref['id'], $ref['description'], $ref['description']);
+            <br>'.module($ref['module'])->link($ref['id'], $ref['description'], $ref['description']);
         }
 
         echo '

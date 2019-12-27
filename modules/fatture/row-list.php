@@ -106,7 +106,7 @@ foreach ($righe as $row) {
     echo '
     <tr data-id="'.$riga['id'].'" '.$extra.'>
         <td>
-            '.Modules::link($row->isArticolo() ? module('Articoli')['id'] : null, $row->isArticolo() ? $riga['idarticolo'] : null, $riga['descrizione']).'
+            '.($row->isArticolo() ? module('Articoli')->link($riga['idarticolo'], $riga['descrizione']) : $riga['descrizione']).'
             <small class="float-right text-muted">'.$extra_riga.'</small>';
 
     if (!empty($riga['abilita_serial'])) {
@@ -132,13 +132,13 @@ foreach ($righe as $row) {
             ]);
 
         echo '
-            <br>'.Modules::link($id_module, $record['ref_documento'], $text, $text);
+            <br>'.module($id_module)->link($record['ref_documento'], $text, $text);
     }
 
     $ref = doc_references($riga, $dir, ['iddocumento']);
     if (!empty($ref)) {
         echo '
-            <br>'.Modules::link($ref['module'], $ref['id'], $ref['description'], $ref['description']);
+            <br>'.module($ref['module'])->link($ref['id'], $ref['description'], $ref['description']);
     }
 
     echo '

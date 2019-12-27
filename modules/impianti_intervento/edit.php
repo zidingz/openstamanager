@@ -27,7 +27,7 @@ if (!empty($results)) {
         echo '
             <tr>
                 <td>
-                    '.Modules::link('Interventi', $result['id'], tr('Intervento num. _NUM_ del _DATE_', [
+                    '.module('Interventi')->link($result['id'], tr('Intervento num. _NUM_ del _DATE_', [
                         '_NUM_' => $result['codice'],
                         '_DATE_' => dateFormat($result['data']),
                     ])).'

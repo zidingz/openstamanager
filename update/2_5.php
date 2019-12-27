@@ -10,11 +10,6 @@ foreach ($groups as $group) {
     ];
 }
 
-$plugins = Models\Plugin::all();
-foreach ($plugins as $element) {
-    $element->groups()->sync($array);
-}
-
 $widgets = Widgets\Widget::all();
 foreach ($widgets as $element) {
     $element->groups()->sync($array);
@@ -25,7 +20,7 @@ foreach ($segments as $element) {
     $element->groups()->sync($array);
 }
 
-$prints = Models\Template::all();
+$prints = Prints\Template::all();
 foreach ($prints as $element) {
     $element->groups()->sync($array);
 }

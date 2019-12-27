@@ -391,7 +391,7 @@ if (!empty($elementi)) {
         $id = $fattura['id'];
 
         echo '
-            <li>'.Modules::link($modulo, $id, $descrizione).'</li>';
+            <li>'.module($modulo)->link($id, $descrizione).'</li>';
     }
 
     echo '

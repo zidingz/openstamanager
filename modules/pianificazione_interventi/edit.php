@@ -64,7 +64,7 @@ if (!empty($records)) {
         if (!empty($record['idintervento'])) {
             $intervento = $dbo->fetchOne('SELECT id, codice, IFNULL((SELECT MIN(orario_inizio) FROM in_interventi_tecnici WHERE idintervento = in_interventi.id), data_richiesta) AS data FROM in_interventi WHERE id = '.prepare($record['idintervento']));
 
-            $info_intervento = Modules::link('Interventi', $intervento['id'], tr('Intervento num. _NUM_ del _DATE_', [
+            $info_intervento = module('Interventi')->link($intervento['id'], tr('Intervento num. _NUM_ del _DATE_', [
                 '_NUM_' => $intervento['codice'],
                 '_DATE_' => dateFormat($intervento['data']),
             ]));

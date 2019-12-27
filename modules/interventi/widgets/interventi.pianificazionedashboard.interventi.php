@@ -60,7 +60,7 @@ if (!empty($n)) {
 
         echo '
             <tr id="int_'.$r['id'].'">
-				<td><a target="_blank" >'.Modules::link(module('Interventi')['id'], $r['id'], $r['codice']).'</a></td>
+				<td><a target="_blank" >'.module('Interventi')->link($r['id'], $r['codice']).'</a></td>
                 <td>'.$r['ragione_sociale'].'</td>
                 <td>'.dateFormat($r['data_richiesta']).'</td>
                 <td>'.$r['tipointervento'].'</td>

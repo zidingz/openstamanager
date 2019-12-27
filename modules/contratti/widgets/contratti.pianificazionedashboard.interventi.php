@@ -60,8 +60,8 @@ if (!empty($rsp)) {
 
         echo '
             <tr id="int_'.$r['id'].'">
-				<td><a target="_blank" >'.Modules::link(module('Anagrafiche')['id'], $r['idcliente'], $r['ragione_sociale']).'</a></td>
-				<td><a target="_blank" >'.Modules::link(module('Contratti')['id'], $r['idcontratto'], $r['contratto']).'</a></td>
+				<td><a target="_blank" >'.module('Anagrafiche')->link($r['idcliente'], $r['ragione_sociale']).'</a></td>
+				<td><a target="_blank" >'.module('Contratti')->link($r['idcontratto'], $r['contratto']).'</a></td>
                 <td>'.dateFormat($r['data_richiesta']).'</td>
                 <td>'.$r['tipointervento'].'</td>
                 <td>'.nl2br($r['richiesta']).'</td>';

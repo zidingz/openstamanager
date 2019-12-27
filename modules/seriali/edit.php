@@ -186,7 +186,7 @@ for ($i = 0; $i < count($rs2); ++$i) {
             ]).(!empty($extra) ? ' '.$extra : '');
 
             echo '
-            '.Modules::link($module_id, $id, $text).'<br>';
+            '.module($module_id)->link($id, $text).'<br>';
         }
 
         echo '

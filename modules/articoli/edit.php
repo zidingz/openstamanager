@@ -373,7 +373,7 @@ if (!empty($elementi)) {
         $id = $elemento['id'];
 
         echo '
-            <li>'.Modules::link($modulo, $id, $descrizione).'</li>';
+            <li>'.module($modulo)->link($id, $descrizione).'</li>';
     }
 
     echo '

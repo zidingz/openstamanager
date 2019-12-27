@@ -414,7 +414,7 @@ if (!empty($elementi)) {
             $id = $riga['id'];
 
             echo '
-            <li>'.Modules::link($modulo, $id, $descrizione).'</li>';
+            <li>'.module($modulo)->link($id, $descrizione).'</li>';
         } else {
             $descrizione = tr('Intervento num. _NUM_ del _DATE_', [
                 '_NUM_' => $riga['codice'],
@@ -425,7 +425,7 @@ if (!empty($elementi)) {
             $id = $riga['id'];
 
             echo '
-            <li>'.Modules::link($modulo, $id, $descrizione).'</li>';
+            <li>'.module($modulo)->link($id, $descrizione).'</li>';
         }
     }
 

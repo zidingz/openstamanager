@@ -65,7 +65,7 @@ class EmailManager implements ManagerInterface
                 '_HOUR_' => timeFormat($email['sent_at']),
             ]) : tr('in coda di invio');
 
-            $descrizione = Modules::link('Stato email', $email->id, tr('Email "_EMAIL_" da _USER_', [
+            $descrizione = module('Stato email')->link($email->id, tr('Email "_EMAIL_" da _USER_', [
                 '_EMAIL_' => $email->template->name,
                 '_USER_' => $email->user->username,
             ]));

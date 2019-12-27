@@ -6,7 +6,7 @@ use Monolog\Handler\StreamHandler;
 use Psr\Container\ContainerInterface;
 use Slim\Exception\HttpSpecializedException;
 use Slim\Interfaces\ErrorHandlerInterface;
-use Slim\Psr7\Response;
+use Slim\Http\Response;
 
 class Logger extends Monolog\Logger implements ErrorHandlerInterface
 {

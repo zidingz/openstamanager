@@ -59,7 +59,7 @@
         "slim/php-view": "^2.2",
         "slim/psr7": "^0.6.0",
         "slim/slim": "^4.0",
-        "slim/twig-view": "3.0.0-beta",
+        "slim/twig-view": "^3.0.0",
         "spipu/html2pdf": "^5.0",
         "symfony/filesystem": "^4.0",
         "symfony/finder": "^4.0",

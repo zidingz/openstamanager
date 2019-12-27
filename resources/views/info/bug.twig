@@ -8,7 +8,7 @@
     <i class="fa fa-warning"></i>
     <b>{{ 'Attenzione!'|trans }}</b> {{ 'Per utilizzare correttamente il modulo di segnalazione bug devi configurare alcuni parametri riguardanti le impostazione delle email'|trans }}.
 
-    {{ module_link('Account email', mail['id'], 'Correggi account'|trans, null, 'class="btn btn-warning float-right"')|raw }}
+    {{ module('Account email').link(mail['id'], 'Correggi account'|trans, null, 'class="btn btn-warning float-right"')|raw }}
     <div class="clearfix"></div>
 </div>
 {% endif %}

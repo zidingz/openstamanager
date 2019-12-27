@@ -101,33 +101,9 @@ if ($container->get('debug')) {
     });
 }
 
-/*
-// Templating PHP
-$container->set('view', function(ContainerInterface $container){
-    $renderer = new PhpRenderer('./');
-
-    $renderer->setAttributes([
-        'database' => $container->get('database'),
-        'dbo' => $container->get('database'),
-        'config' => $container->get('config'),
-        'router' => $container->get('router'),
-
-        'rootdir' => ROOTDIR,
-        'docroot' => DOCROOT,
-        'baseurl' => BASEURL,
-    ]);
-
-    if (!empty($container->get('debugbar'))) {
-        $renderer->addAttribute('debugbar', $container->get('debugbar'));
-    }
-
-    return $renderer;
-});
-*/
-
 // Templating Twig
 $container->set('twig', function (ContainerInterface $container) {
-    $twig = new Twig(__DIR__.'/../resources/views', [
+    $twig = Twig::create(__DIR__.'/../resources/views', [
         'cache' => false,
         'debug' => $container->get('debug'),
     ]);
@@ -149,9 +125,6 @@ $container->set('twig', function (ContainerInterface $container) {
     $environment->addFunction($function);
 
     $function = new TwigFunction('searchFieldName', 'searchFieldName');
-    $environment->addFunction($function);
-
-    $function = new TwigFunction('module_link', '\Modules::link');
     $environment->addFunction($function);
 
     $function = new TwigFunction('module', 'module');

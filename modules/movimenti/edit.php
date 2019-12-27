@@ -79,8 +79,8 @@ if (!empty($movimenti)) {
         echo '
                 <td>'.$movimento['movimento'].'
 				'.((!empty($movimento['idintervento'])) ? module('Interventi')->link($movimento['idintervento']) : '').'
-				'.((!empty($movimento['idddt'])) ? (Modules::link('DDt di '.$dir, $movimento['idddt'], null, null, (intval($database->fetchOne('SELECT * FROM `dt_ddt` WHERE `id` ='.prepare($movimento['idddt'])))) ? '' : 'class="disabled"')) : '').'
-				'.((!empty($movimento['iddocumento'])) ? (Modules::link('Fatture di '.$dir, $movimento['iddocumento'], null, null, (intval($database->fetchOne('SELECT * FROM `co_documenti` WHERE `id` ='.prepare($movimento['iddocumento'])))) ? '' : 'class="disabled"')) : '').'
+				'.((!empty($movimento['idddt'])) ? (module('DDt di '.$dir)->link($movimento['idddt'], null, null, (intval($database->fetchOne('SELECT * FROM `dt_ddt` WHERE `id` ='.prepare($movimento['idddt'])))) ? '' : 'class="disabled"')) : '').'
+				'.((!empty($movimento['iddocumento'])) ? (module('Fatture di '.$dir)->link($movimento['iddocumento'], null, null, (intval($database->fetchOne('SELECT * FROM `co_documenti` WHERE `id` ='.prepare($movimento['iddocumento'])))) ? '' : 'class="disabled"')) : '').'
 				</td>';
 
         // Data

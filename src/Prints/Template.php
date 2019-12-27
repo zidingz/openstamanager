@@ -5,6 +5,7 @@ namespace Prints;
 use Auth\Group;
 use Common\Model;
 use Components\BootableInterface;
+use Components\BootrableTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Module;
 use Psr\Container\ContainerInterface;
@@ -19,22 +20,6 @@ class Template extends Model implements BootableInterface
 
     protected $table = 'zz_prints';
     protected $main_folder = 'templates';
-
-    /**
-     * Restituisce l'instanza dedicata alla gestione della stampa per il record indicato.
-     *
-     * @param ContainerInterface $container
-     * @param int                $record_id
-     *
-     * @return Manager
-     */
-    public function getManager(ContainerInterface $container, ?int $record_id = null): Manager
-    {
-        $class = $this->class;
-        $manager = new $class($container, $this, $record_id);
-
-        return $manager;
-    }
 
     // Attributi Eloquent
 

@@ -57,7 +57,7 @@ class Manager extends Original
 
         $result = $controller->content($args);
 
-        return $result;
+        return $result ?: '';
     }
 
     public function updates(): array

@@ -155,7 +155,7 @@ class Anagrafica extends Model
     public function setTipologieAttribute(array $tipologie)
     {
         if ($this->isAzienda()) {
-            $tipologie[] = Tipo::where('descrizione', 'Azienda')->first()->id;
+            $tipologie[] = Tipo::where('descrizione', 'Azienda')->get()->first()->id;
         }
 
         $tipologie = array_clean($tipologie);

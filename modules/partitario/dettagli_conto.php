@@ -38,7 +38,7 @@ if (!empty($movimenti)) {
         if (!empty($movimento['iddocumento'])) {
             $modulo_fattura = ($movimento['dir'] == 'entrata') ? module('Fatture di vendita')['id'] : module('Fatture di acquisto')['id'];
 
-            echo Modules::link($prima_nota->id, $movimento['idmastrino'], $movimento['descrizione']);
+            echo $prima_nota->link($movimento['idmastrino'], $movimento['descrizione']);
         } else {
             echo '
             <span>'.$movimento['descrizione'].'</span>';

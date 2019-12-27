@@ -49,6 +49,8 @@
         };
 
         $("#form_{{ module_id }}-{{ plugin_id }}").find("form").submit(function () {
+            console.log("test");
+
             submitAjax(this, data, function(response) {
                 // Selezione automatica nuovo valore per il select
                 select = "#{{ query.select }}";

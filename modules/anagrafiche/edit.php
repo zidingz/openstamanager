@@ -339,7 +339,8 @@ echo '
                                 $piano_dei_conti_cliente = tr('_NAME_', [
                                     '_NAME_' => $conto['numero'].'.'.$conto['numero_conto'].' '.$conto['descrizione'],
                                 ]);
-                                echo module('Piano dei conti')->link(null, null, null, 'class="float-right"');
+
+                                echo module('Piano dei conti')->link(null, null, true, 'class="float-right"');
                             } else {
                                 $piano_dei_conti_cliente = tr('Nessuno');
                             }
@@ -585,7 +586,7 @@ if (!empty($elementi)) {
         $id = $elemento['id'];
 
         echo '
-            <li>'.Modules::link($modulo, $id, $descrizione).'</li>';
+            <li>'.module($modulo)->link($id, $descrizione).'</li>';
     }
 
     echo '
