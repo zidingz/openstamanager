@@ -340,7 +340,7 @@ echo '
                                     '_NAME_' => $conto['numero'].'.'.$conto['numero_conto'].' '.$conto['descrizione'],
                                 ]);
 
-                                echo module('Piano dei conti')->link(null, null, true, 'class="float-right"');
+                                echo module('Piano dei conti')->link(null, null, null, 'class="float-right"');
                             } else {
                                 $piano_dei_conti_cliente = tr('Nessuno');
                             }

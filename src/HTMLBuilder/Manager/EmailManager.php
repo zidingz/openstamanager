@@ -2,7 +2,6 @@
 
 namespace HTMLBuilder\Manager;
 
-use Modules;
 use Modules\Emails\Mail;
 
 /**

@@ -5,8 +5,8 @@ use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
 use Psr\Container\ContainerInterface;
 use Slim\Exception\HttpSpecializedException;
-use Slim\Interfaces\ErrorHandlerInterface;
 use Slim\Http\Response;
+use Slim\Interfaces\ErrorHandlerInterface;
 
 class Logger extends Monolog\Logger implements ErrorHandlerInterface
 {

@@ -41,7 +41,7 @@ class ModuleController extends Parser implements ModuleInterface
             'record_id' => $id_record,
         ];
 
-        if (!isAjaxRequest()){
+        if (!isAjaxRequest()) {
             $path = $args['module']->url('record', $params);
 
             $response = $response->withRedirect($path);

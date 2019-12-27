@@ -8,7 +8,6 @@ use Components\BootableInterface;
 use Components\BootrableTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Module;
-use Psr\Container\ContainerInterface;
 use Traits\PathTrait;
 use Traits\StoreTrait;
 

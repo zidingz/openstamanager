@@ -25,7 +25,7 @@ class ContentMiddleware extends Middleware
         $this->addVariable('user', auth()->getUser());
 
         $this->addVariable('order_manager_id', $this->database->isInstalled() ? module('Stato dei serivizi')['id'] : null);
-        $this->addVariable('is_mobile', isMobile());
+        $this->addVariable('is_mobile', intval(isMobile()));
 
         // Versione
         $this->addVariable('version', \Update::getVersion());

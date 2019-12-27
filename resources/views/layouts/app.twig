@@ -11,14 +11,11 @@
 
     globals = {
         rootdir: '{{ base_path() }}',
-        js: '{{ paths['js'] }}',
-        css: '{{ paths['css'] }}',
-        img: '{{ paths['img'] }}',
 
         id_module: '{{ id_module }}',
         id_record: '{{ id_record }}',
-        is_mobile: '{{ is_mobile }}',
-
+        
+        is_mobile: {{ is_mobile }},
         cifre_decimali: '{{ setting('Cifre decimali per importi') }}',
 
         timestamp_format: "{{ formatter.getTimestampPattern() }}",

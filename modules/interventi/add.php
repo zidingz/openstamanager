@@ -148,7 +148,10 @@ $orario_fine = $data.' '.$orario_fine;
 
 ?>
 
-<form action="" method="post" id="add-form" onsubmit="if($(this).parsley().validate()) { return add_intervento(); }">
+<form action="<?php echo urlFor('module-add-save', [
+    'module_id' => $module_id,
+    'reference_id' => $reference_id,
+]); ?>" method="post" id="add-form" onsubmit="if($(this).parsley().validate()) { return add_intervento(); }">
 	<input type="hidden" name="op" value="add">
 	<input type="hidden" name="ref" value="<?php echo get('ref'); ?>">
 	<input type="hidden" name="backto" value="record-edit">

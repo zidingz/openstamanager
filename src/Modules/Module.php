@@ -98,7 +98,7 @@ class Module extends Model implements BootableInterface
      *
      * @return string
      */
-    public function link(?int $id_record = null, ?string $testo = null, bool $alternativo = true, ?string $extra = null, bool $blank = true, ?string $anchor = null)
+    public function link(?int $id_record = null, ?string $testo = null, ?string $alternativo = null, ?string $extra = null, bool $blank = true, ?string $anchor = null)
     {
         $testo = isset($testo) ? nl2br($testo) : tr('Visualizza scheda');
         $alternativo = is_bool($alternativo) && $alternativo ? $testo : $alternativo;

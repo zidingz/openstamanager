@@ -525,11 +525,9 @@ function alertPush() {
 }
 
 function ajaxError(xhr, error, thrown) {
-    data = xhr.responseJSON.error ? xhr.responseJSON.error : xhr.responseJSON.exception;
-
     swal({
         title: globals.translations.errorTitle,
-        html: globals.translations.errorMessage + ".<br><i>" + data.message + "</i>",
+        html: globals.translations.errorMessage + (xhr.responseJSON ? ".<br><i>" + xhr.responseJSON.exception[0].message + "</i>" : ''),
         type: "error",
     })
 }
