@@ -35,7 +35,7 @@
         "ext-zip": "*",
         "aluguest/ical-easy-reader": "^1.5",
         "danielstjules/stringy": "^3.1",
-        "davidepastore/codice-fiscale": "^0.4.0",
+        "davidepastore/codice-fiscale": "^0.5.1",
         "erusev/parsedown": "^1.7",
         "ezyang/htmlpurifier": "^4.8",
         "filp/whoops": "^2.1",
@@ -55,19 +55,18 @@
         "servo/fluidxml": "^1.21",
         "slim/csrf": "^1.0",
         "slim/flash": "^0.4.0",
-        "slim/http": "^0.8.0",
+        "slim/http": "^1.0",
         "slim/php-view": "^2.2",
-        "slim/psr7": "^0.6.0",
+        "slim/psr7": "^1.0",
         "slim/slim": "^4.0",
         "slim/twig-view": "^3.0.0",
         "spipu/html2pdf": "^5.0",
-        "symfony/filesystem": "^4.0",
-        "symfony/finder": "^4.0",
-        "symfony/translation": "^4.0",
-        "symfony/twig-bridge": "^4.0"
+        "symfony/filesystem": "^5.0",
+        "symfony/finder": "^5.0",
+        "symfony/translation": "^5.0",
+        "symfony/twig-bridge": "^5.0"
     },
     "require-dev": {
-        "codeception/codeception": "^3.0",
         "friendsofphp/php-cs-fixer": "^2.10"
     },
     "autoload": {

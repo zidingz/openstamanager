@@ -46,7 +46,7 @@ abstract class Middleware implements MiddlewareInterface
 
     protected function setArgs(ServerRequestInterface $request, $args): ServerRequestInterface
     {
-        $route = $request->getAttribute('route');
+        $route = $this->getRoute($request);
 
         // update the request with the new arguments to route
         $route->setArguments($args);

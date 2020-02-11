@@ -4,7 +4,7 @@
     "dependencies": {
         "@ckeditor/ckeditor5-build-classic": "^12.0.0",
         "@fortawesome/fontawesome-free": "^5.8.2",
-        "admin-lte": "^3.0.0",
+        "admin-lte": "^3.0.2",
         "autosize": "^3.0.21",
         "bootstrap": "^4.3.1",
         "bootstrap-colorpicker": "2.5.1",
