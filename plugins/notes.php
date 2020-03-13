@@ -30,7 +30,7 @@ if (count($notes) > 0) {
                         <img class="direct-chat-img" src="'.$photo.'">';
         } else {
             echo '
-                
+
                         <i class="fa fa-user-circle-o direct-chat-img fa-3x" alt="'.tr('OpenSTAManager').'"></i>';
         }
 
@@ -43,7 +43,7 @@ if (count($notes) > 0) {
                                 <span class="label label-default tip" title="'.tr('Data di notifica').'" style="margin-right: 5px">
                                     <i class="fa fa-bell"></i> '.dateFormat($nota->notification_date).'
                                 </span>
-                                
+
                                 <button type="button" class="btn btn-info btn-xs ask" data-op="notification_nota" data-id_nota="'.$nota->id.'" data-msg="'.tr('Rimuovere la data di notifica da questa nota?').'" data-backto="record-edit" data-button="'.tr('Rimuovi').'" data-class="btn btn-lg btn-warning">
                                     <i class="fa fa-eye"></i>
                                 </button>';
@@ -78,7 +78,7 @@ if ($structure->permission == 'rw') {
             <input type="hidden" name="backto" value="record-edit">
             <div class="row" >
                 <div class="col-md-12" >
-                    {[ "type": "ckeditor", "label": "'.tr('Nuova nota').'", "name": "contenuto", "required": 1, "class": "unblockable" ]}
+                    {[ "type": "editor", "label": "'.tr('Nuova nota').'", "name": "contenuto", "required": 1, "class": "unblockable" ]}
                 </div>
                 <div class="col-md-4" >
                     {[ "type": "date", "label": "'.tr('Data di notifica').'", "name": "data_notifica", "class": "unblockable", "help": "'.tr('Eventuale data di notifica di un promemoria di questa nota.').'" ]}

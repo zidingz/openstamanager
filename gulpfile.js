@@ -142,7 +142,6 @@ gulp.task('srcCSS', function () {
         .pipe(gulp.dest(config.production + '/' + config.paths.css));
 });
 
-
 // Elaborazione delle immagini
 gulp.task('images', function () {
     gulp.src(mainBowerFiles('**/*.{jpg,png,jpeg,gif}', {
@@ -183,6 +182,14 @@ gulp.task('srcFonts', function () {
         ])
         .pipe(flatten())
         .pipe(gulp.dest(config.production + '/' + config.paths.fonts));
+});
+
+gulp.task('summernote', function () {
+    gulp.src([
+        config.main.bowerDirectory + '/summernote/dist/{font,lang,plugin}/**/*',
+        config.main.bowerDirectory + '/summernote/dist/summernote.{js,css}',
+    ])
+        .pipe(gulp.dest(config.production + '/' + config.paths.js + '/summernote'));
 });
 
 gulp.task('ckeditor', function () {
@@ -260,7 +267,7 @@ gulp.task('i18n', function () {
             config.main.bowerDirectory + '/**/{i18n,lang,locale,locales}/*.{js,json}',
             config.development + '/' + config.paths.js + '/i18n/**/*.{js,json}',
             '!' + config.main.bowerDirectory + '/**/{src,plugins}/**',
-            '!' + config.main.bowerDirectory + '/ckeditor/**',
+            '!' + config.main.bowerDirectory + '/summernote/**',
             '!' + config.main.bowerDirectory + '/jquery-ui/**',
         ])
         .pipe(gulpIf('*.js', minifyJS(), gulpIf('*.json', minifyJSON())))
@@ -390,7 +397,7 @@ gulp.task('bower', ['clean'], function () {
 
 // Operazioni particolari per la generazione degli assets
 gulp.task('other', ['clean'], function () {
-    gulp.start('ckeditor');
+    gulp.start('summernote');
     gulp.start('colorpicker');
     gulp.start('password-strength');
     gulp.start('hotkeys-js');

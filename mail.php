@@ -45,7 +45,7 @@ echo '
 <form action="" method="post" id="email-form">
 	<input type="hidden" name="op" value="send-email">
 	<input type="hidden" name="backto" value="'.(get('back') ? get('back') : 'record-edit').'">
-	
+
 	<input type="hidden" name="id_module" value="'.$id_module.'">
 	<input type="hidden" name="id_record" value="'.$id_record.'">
 
@@ -113,7 +113,7 @@ echo '
 
     <div class="row">
         <div class="col-md-12">
-            {[ "type": "ckeditor", "label": "'.tr('Contenuto').'", "name": "body", "value": '.json_encode($body).' ]}
+            {[ "type": "editor", "label": "'.tr('Contenuto').'", "name": "body", "value": '.json_encode($body).' ]}
         </div>
     </div>';
 

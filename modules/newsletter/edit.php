@@ -31,23 +31,23 @@ echo '
 		<div class="panel-heading">
 			<h3 class="panel-title">'.tr('Dati campagna').'</h3>
 		</div>
-		
+
 		<div class="panel-body">
             <div class="row">
                 <div class="col-md-6">
                     {[ "type": "select", "label": "'.tr('Template email').'", "name": "id_template", "values": "query=SELECT id, name AS descrizione FROM em_templates", "required": 1, "value": "$id_template$", "disabled": 1 ]}
                 </div>
-    
+
                 <div class="col-md-6">
                     {[ "type": "text", "label": "'.tr('Nome').'", "name": "name", "required": 1, "value": "$name$" ]}
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-6">
                     {[ "type": "select", "label": "'.tr('Stato').'", "name": "state", "values": '.json_encode($stati).', "required": 1, "value": "$state$", "class": "unblockable" ]}
                 </div>
-    
+
                 <div class="col-md-6">
                     {[ "type": "timestamp", "label": "'.tr('Data di completamento').'", "name": "completed_at", "value": "$completed_at$", "disabled": 1 ]}
                 </div>
@@ -58,13 +58,13 @@ echo '
                     {[ "type": "text", "label": "'.tr('Oggetto').'", "name": "subject", "value": "$subject$" ]}
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-12">
-                    {[ "type": "ckeditor", "label": "'.tr('Contenuto').'", "name": "content", "value": "$content$" ]}
+                    {[ "type": "editor", "label": "'.tr('Contenuto').'", "name": "content", "value": "$content$" ]}
                 </div>
             </div>
-            
+
         </div>
 	</div>
 </form>
@@ -72,24 +72,24 @@ echo '
 <form action="" method="post" id="receivers-form">
 	<input type="hidden" name="backto" value="record-edit">
 	<input type="hidden" name="op" value="add_receivers">
-	
+
 	<!-- Destinatari -->
     <div class="box box-primary">
         <div class="box-header">
             <h3 class="box-title">'.tr('Aggiunta destinatari').'</h3>
         </div>
-        
+
         <div class="box-body">
             <div class="row">
                 <div class="col-md-6">
                     {[ "type": "select", "label": "'.tr('Destinatari').'", "name": "receivers[]", "ajax-source": "anagrafiche_newsletter", "multiple": 1 ]}
                 </div>
-                
+
                 <div class="col-md-6">
                     {[ "type": "select", "label": "'.tr('Lista').'", "name": "id_list", "ajax-source": "liste_newsletter" ]}
                 </div>
             </div>
-        
+
             <div class="row pull-right">
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-primary">
@@ -109,7 +109,7 @@ $(document).ready(function() {
             $("#id_list").attr("disabled", false).removeClass("disabled")
         }
     })
-    
+
     $("#id_list").on("change", function() {
         if ($(this).selectData()) {
             $("#receivers").attr("disabled", true).addClass("disabled")
@@ -131,7 +131,7 @@ echo '
             <span class="badge">'.$anagrafiche->count().'</span>
         </h3>
     </div>
-    
+
     <div class="panel-body">';
 
 if (!$anagrafiche->isEmpty()) {
@@ -145,7 +145,7 @@ if (!$anagrafiche->isEmpty()) {
                     <th class="text-center" width="60">#</th>
                 </tr>
             </thead>
-        
+
             <tbody>';
 
     foreach ($anagrafiche as $anagrafica) {
