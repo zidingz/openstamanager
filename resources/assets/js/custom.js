@@ -6,6 +6,10 @@ $(window).on("beforeunload", function () {
 // Rimozione dell'ingranaggio al caricamento completo della pagina
 $(window).on("load", function () {
     $("#main_loading").fadeOut();
+    console.log(globals);
+
+    // Messaggi per l'utente
+    renderMessages();
 });
 
 // Fix multi-modal
@@ -15,6 +19,14 @@ $(document).on('hidden.bs.modal', '.modal', function () {
 });
 
 $(document).ready(function () {
+    // Impostazioni di default per gli alert
+    swal.setDefaults({
+        buttonsStyling: false,
+        confirmButtonClass: "btn btn-lg btn-primary",
+        cancelButtonClass: "btn btn-lg",
+        cancelButtonText: globals.translations.cancel,
+    });
+
     // Standard per i popup
     toastr.options = {
         "closeButton": true,
@@ -76,4 +88,7 @@ $(document).ready(function () {
             $('input').trigger('blur');
         });
     }, 1000);
+
+    // Operazioni di inizializzazione
+    init();
 });

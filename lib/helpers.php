@@ -335,3 +335,7 @@ function module($identifier)
 {
     return \Modules\Module::get($identifier);
 }
+
+function asset(string $name){
+    return App::asset($name);
+}

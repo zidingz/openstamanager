@@ -10,7 +10,8 @@ class App
     /** @var \Slim\Container */
     protected static $container = null;
 
-    /** @var bool Stato di debug */
+    protected static $assets = null;
+
     protected static $config = [];
 
     /**
@@ -43,6 +44,17 @@ class App
     public static function getContainer()
     {
         return self::$container;
+    }
+
+    public static function asset(string $name){
+        if (!isset(self::$assets)) {
+            $manifest = __DIR__ . '/../public/assets/mix-manifest.json';
+            $content = file_get_contents($manifest);
+
+            self::$assets = (array) json_decode($content);
+        }
+
+        return '/assets'.self::$assets[$name];
     }
 
     /**

@@ -17,6 +17,11 @@ class HTMLMiddleware extends Middleware
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        // Versione e revisione
+        $this->addVariable('version', \Update::getVersion());
+        $this->addVariable('revision', \Update::getRevision());
+
+        // Gestione HTML personalizzato
         $response = $handler->handle($request);
         $html = $response->getBody();
 

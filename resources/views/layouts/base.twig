@@ -9,32 +9,22 @@
         <meta name="robots" content="noindex,nofollow">
 
         <link href="{{ base_path() }}/assets/img/favicon.png" rel="icon" type="image/x-icon" />
-        <link rel="manifest" href="{{ base_path() }}/manifest.js?v={{ version }}on">
+        <link rel="manifest" href="{{ base_path() }}/manifest.json?v={{ version }}">
 
-        <link rel="stylesheet" type="text/css" media="all" href="{{ base_path() }}/assets/css/app.min.css?v={{ version }}"/>
-        <link rel="stylesheet" type="text/css" media="all" href="{{ base_path() }}/assets/css/style.min.css?v={{ version }}"/>
-        <link rel="stylesheet" type="text/css" media="all" href="{{ base_path() }}/assets/css/themes.min.css?v={{ version }}"/>
+        <link rel="stylesheet" type="text/css" media="all" href="{{ base_path() }}{{ asset('/css/app.css') }}"/>
+        <link rel="stylesheet" type="text/css" media="all" href="{{ base_path() }}{{ asset('/css/style.css') }}"/>
+        <link rel="stylesheet" type="text/css" media="all" href="{{ base_path() }}{{ asset('/css/themes.css') }}"/>
 
-        <link rel="stylesheet" type="text/css" media="print" href="{{ base_path() }}/assets/css/print.min.css?v={{ version }}"/>
+        <link rel="stylesheet" type="text/css" media="print" href="{{ base_path() }}{{ asset('/css/print.css') }}"/>
 
-        <script type="text/javascript" charset="utf-8" src="{{ base_path() }}/assets/js/app.min.js?v={{ version }}"></script>
-        <script type="text/javascript" charset="utf-8" src="{{ base_path() }}/assets/js/functions.min.js?v={{ version }}"></script>
-        <script type="text/javascript" charset="utf-8" src="{{ base_path() }}/assets/js/custom.min.js?v={{ version }}"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ asset('/js/app.js') }}"></script>
 
         {% for script in i18n %}
             <script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ script }}?v={{ version }}"></script>
         {% endfor %}
 
-        <!-- Impostazioni di default per gli alert -->
         <script>
-            swal.setDefaults({
-                buttonsStyling: false,
-                confirmButtonClass: "btn btn-lg btn-primary",
-                cancelButtonClass: "btn btn-lg",
-                cancelButtonText: "{{ "Annulla"|trans }}",
-            });
-
-            globals = {
+            var globals = {
                 rootdir: '{{ base_path() }}',
 
                 timestamp_format: "{{ formatter.getTimestampPattern() }}",
@@ -68,19 +58,6 @@
 
                 messages_url: "{{ url_for('ajax-flash') }}",
             };
-
-            // Aggiunta dell'ingranaggio all'unload della pagina
-            $(window).on("beforeunload", function () {
-                $("#main_loading").show();
-            });
-
-            // Rimozione dell'ingranaggio al caricamento completo della pagina
-            $(window).on("load", function () {
-                $("#main_loading").fadeOut();
-
-                // Messaggi per l'utente
-                renderMessages();
-            });
         </script>
 
         {% block css %}{% endblock %}
@@ -106,6 +83,6 @@
 
         {% block body %}{% endblock %}
 
-        <script>$(document).ready(init)</script>
+        <script type="module"></script>
     </body>
 </html>

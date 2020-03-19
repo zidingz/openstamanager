@@ -121,6 +121,9 @@ $container->set('twig', function (ContainerInterface $container) {
     $filter = new TwigFilter('diffForHumans', 'diffForHumans');
     $environment->addFilter($filter);
 
+    $function = new TwigFunction('asset', 'asset');
+    $environment->addFunction($function);
+
     $function = new TwigFunction('setting', 'setting');
     $environment->addFunction($function);
 

@@ -27,10 +27,6 @@ class ContentMiddleware extends Middleware
         $this->addVariable('order_manager_id', $this->database->isInstalled() ? module('Stato dei serivizi')['id'] : null);
         $this->addVariable('is_mobile', intval(isMobile()));
 
-        // Versione
-        $this->addVariable('version', \Update::getVersion());
-        $this->addVariable('revision', \Update::getRevision());
-
         // Richiesta AJAX
         $this->addVariable('handle_ajax', $request->isXhr() && filter('ajax'));
 
