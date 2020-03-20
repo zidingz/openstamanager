@@ -118,7 +118,7 @@
 {% block js %}
 <!-- Controlli per essere sicuro che l'utente abbia letto la licenza -->
 <script>
-    $(document).ready(function(){
+    $(document).ready(function() {
         $("#install").on("click", function(){
             if($(this).closest("form").parsley().validate()){
                 var restore = buttonLoading("#install");

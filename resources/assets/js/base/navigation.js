@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { getUrlVars, removeHash, scrollToOffset } from './functions/functions';
+import { getUrlVars, removeHash, scrollToOffset } from '../functions/functions';
 
 $(document).ready(function () {
     // AdminLTE 3 Sidebar

@@ -1,6 +1,8 @@
 let mix = require('laravel-mix');
 var webpack = require('webpack');
+const glob = require('glob');
 
+// Esposizione JQuery per HTML
 mix.webpackConfig({
     module: {
         rules: [{
@@ -16,6 +18,7 @@ mix.webpackConfig({
     }
 });
 
+// Caricamento automatico delle liberie più comuni
 mix.autoload({
     jquery: ['$', 'jQuery', 'window.$', 'window.jQuery'],
     moment: ['moment'],
@@ -31,6 +34,7 @@ var config = {
     paths: {
         js: 'js',
         css: 'css',
+        scss: 'scss',
         images: 'img',
         fonts: 'webfonts'
     }
@@ -38,40 +42,40 @@ var config = {
 
 mix.setPublicPath(config.production);
 
-// CSS delle librerie
+// CSS di default
 mix.sass(
-    config.development + '/' + config.paths.css + '/app.scss',
+    config.development + '/scss/app.scss',
     config.production + '/' + config.paths.css
 ).options({
     processCssUrls: false
 });
+
+// Copia dei webfont di Font Awesome
+mix.copyDirectory(
+    'node_modules/@fortawesome/fontawesome-free/webfonts',
+    config.production + '/webfonts'
+);
 
 // CSS personalizzati
 mix.styles([
     config.development + '/' + config.paths.css + '/*.css',
 ], config.production + '/' + config.paths.css + '/style.css');
 
-// CSS di stampa
-mix.styles([
-    config.development + '/' + config.paths.css + '/print/*.css',
-], config.production + '/' + config.paths.css + '/print.css');
-
 // CSS dei temi
 mix.styles([
     config.development + '/' + config.paths.css + '/themes/*.css',
 ], config.production + '/' + config.paths.css + '/themes.css');
+
+// CSS di stampa
+mix.styles([
+    config.development + '/' + config.paths.css + '/print/*.css',
+], config.production + '/' + config.paths.css + '/print.css');
 
 // JS principali
 mix.js([
     config.development + '/' + config.paths.js + '/app.js'
 ],
     config.production +  '/' + config.paths.js + '/app.js'
-);
-
-// Copia dei webfont di Font Awesome
-mix.copyDirectory(
-    'node_modules/@fortawesome/fontawesome-free/webfonts',
-    config.production + '/webfonts'
 );
 
 // Copia di PDFJS
@@ -99,13 +103,13 @@ mix.copy(
 // ChartJS
 mix.copy(
     'node_modules/chart.js/dist/Chart.min.js',
-    config.production + '/' + config.paths.js  + '/chartjs'
+    config.production + '/' + config.paths.js
 );
 
 // Password Strength
 mix.combine(
     'node_modules/pwstrength-bootstrap/dist/*.js',
-    config.production + '/password-strength/password.js'
+    config.production + '/' + config.paths.js + '/password.js'
 );
 
 // Immagini
@@ -113,3 +117,16 @@ mix.copyDirectory(
     config.development + '/' + config.paths.images + '/',
     config.production + '/' + config.paths.images
 );
+
+// Gestione file personalizzati
+/*
+const files = pattern => glob.sync(pattern, { cwd: 'resources/assets' });
+
+const globify = (pattern, out, mixFunctionName) => {
+    files(pattern).forEach((path) => {
+        mix[mixFunctionName](`resources/assets/${path}`, out);
+    })
+};
+
+globify(config.development + '/scss/pages/*.scss', 'assets/pages', 'sass');
+*/

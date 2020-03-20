@@ -4,10 +4,10 @@ import 'moment';
 import 'numeral';
 import 'bootstrap-colorpicker';
 
-import { start_datatables } from './functions/datatables';
-import { start_complete_calendar } from './functions/dates';
-import { renderMessages } from './functions/functions';
-import { init } from './functions/init';
+import { start_datatables } from '../functions/datatables';
+import { start_complete_calendar } from '../functions/dates';
+import { renderMessages } from '../functions/functions';
+import { init } from '../functions/init';
 
 $ = window.$ = window.jQuery = require('jquery');
 
