@@ -1,4 +1,6 @@
-function start_local_datatables() {
+import { getUrlVars } from './functions';
+
+export function start_local_datatables() {
     $('.datatables').each(function () {
         if (!$.fn.DataTable.isDataTable($(this))) {
             $(this).DataTable({
@@ -16,7 +18,7 @@ function start_local_datatables() {
 }
 
 // Datatable
-function start_datatables() {
+export function start_datatables() {
     start_local_datatables();
 
     $('.main-records').each(function () {
@@ -383,18 +385,18 @@ function start_datatables() {
     });
 }
 
-function stopTableSorting(e) {
+export function stopTableSorting(e) {
     if (!e) var e = window.event;
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();
 }
 
-function resetTableSearch(type) {
+export function resetTableSearch(type) {
     if (type == null) $('[id^=th_] input').val('').trigger('keyup');
     else $('[id^=th_' + type + '] input').val('').trigger('keyup');
 }
 
-function reset(type) {
+export function reset(type) {
     return resetTableSearch(type);
 }
 
@@ -405,7 +407,7 @@ function reset(type) {
  *
  * @return string
  */
-function searchFieldName(field) {
+export function searchFieldName(field) {
     return field.replace(' ', '-').replace('.', '');
 }
 
@@ -416,11 +418,11 @@ function searchFieldName(field) {
  * @param string field
  * @param mixed value
  */
-function searchTable(module_id, field, value) {
+export function searchTable(module_id, field, value) {
     session_set('module_' + module_id + ',' + 'search_' + searchFieldName(field), value, 0);
 }
 
-function getTableSearch() {
+export function getTableSearch() {
     // Parametri di ricerca da url o sessione
     var search = getUrlVars();
 

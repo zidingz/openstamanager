@@ -1,3 +1,6 @@
+import $ from 'jquery';
+import { getUrlVars, removeHash, scrollToOffset } from './functions/functions';
+
 $(document).ready(function () {
     // AdminLTE 3 Sidebar
     $(".nav-sidebar .nav-link[href]").on("click", function(e) {
@@ -5,9 +8,6 @@ $(document).ready(function () {
             location.href = $(this).attr("href");
         }
     });
-
-    // Tabs
-    $('.nav-tabs').tabs();
 
     // Entra nel tab indicato al caricamento della pagina
     var hash = location.hash ? location.hash : getUrlVars().hash;

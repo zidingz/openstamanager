@@ -21,6 +21,7 @@ $(document).ready(function () {
         $list.parent().parent().find('i.fa-angle-left').removeClass('fa-angle-left').addClass('fa-angle-down');
     }
 
+    /*
     // Menu ordinabile
     $(".sidebar-menu").sortable({
         cursor: 'move',
@@ -38,6 +39,7 @@ $(document).ready(function () {
     if (globals.is_mobile) {
         $(".sidebar-menu").sortable("disable");
     }
+     */
 
     $(".sidebar-toggle").click(function () {
         setTimeout(function () {

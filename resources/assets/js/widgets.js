@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    /*
     $("#widget-top, #widget-right").sortable({
         items: 'li',
         cursor: 'move',
@@ -30,4 +31,5 @@ $(document).ready(function () {
             });
         }
     });
+     */
 });

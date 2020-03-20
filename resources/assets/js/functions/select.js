@@ -1,8 +1,11 @@
+import $ from 'jquery';
+import 'select2';
+
 // Select
-function start_superselect() {
+export function start_superselect() {
     // Statico
     $('.superselect').each(function () {
-        $this = $(this);
+        var $this = $(this);
         $(this).select2({
             theme: "bootstrap",
             language: "it",
@@ -36,7 +39,7 @@ function start_superselect() {
 
     // Dinamico (AJAX, per tabelle con molti record)
     $('.superselectajax').each(function () {
-        $this = $(this);
+        var $this = $(this);
 
         $(this).select2({
             theme: "bootstrap",

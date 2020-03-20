@@ -1,3 +1,16 @@
+import 'admin-lte';
+import 'bootstrap';
+import 'moment';
+import 'numeral';
+import 'bootstrap-colorpicker';
+
+import { start_datatables } from './functions/datatables';
+import { start_complete_calendar } from './functions/dates';
+import { renderMessages } from './functions/functions';
+import { init } from './functions/init';
+
+$ = window.$ = window.jQuery = require('jquery');
+
 // Aggiunta dell'ingranaggio all'unload della pagina
 $(window).on("beforeunload", function () {
     $("#main_loading").show();

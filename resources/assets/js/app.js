@@ -22,6 +22,5 @@ import './functions/dates';
 import './functions/functions';
 import './functions/init';
 import './functions/input';
-import './functions/moment';
 import './functions/prototypes';
 import './functions/select';

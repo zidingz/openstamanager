@@ -1,10 +1,10 @@
 // Modal
-function launch_modal(title, href, init_modal, id) {
+export function launch_modal(title, href, init_modal, id) {
     openModal(title, href, id ? id : '#bs-popup');
 }
 
 // Modal
-function openModal(title, href, generate_id) {
+export function openModal(title, href, generate_id) {
     // Fix - Select2 does not function properly when I use it inside a Bootstrap modal.
     $.fn.modal.Constructor.prototype.enforceFocus = function () {
     };
@@ -18,7 +18,7 @@ function openModal(title, href, generate_id) {
         id = generate_id;
     }
 
-    if ($(id).length == 0){
+    if ($(id).length == 0) {
         $('#modals').append('<div class="modal fade" id="' + id.replace("#", "") + '" role="dialog" aria-labelledby="myModalLabel" aria-d-none="true" data-backdrop="static" data-keyboard="true"></div>');
     }
 
@@ -61,7 +61,7 @@ function openModal(title, href, generate_id) {
     }
 }
 
-function openLink(event, link) {
+export function openLink(event, link) {
     if (event.ctrlKey) {
         window.open(link);
     } else {
@@ -73,7 +73,7 @@ function openLink(event, link) {
  * Funzione per far scrollare la pagina fino a un offset
  * @param integer offset
  */
-function scrollToOffset(offset) {
+export function scrollToOffset(offset) {
     $('html,body').animate({
         scrollTop: offset
     }, 'slow');
@@ -82,11 +82,11 @@ function scrollToOffset(offset) {
 /**
  * Ritorna un array associativo con i parametri passati via GET
  */
-function getUrlVars() {
+export function getUrlVars() {
     var pairs = window.location.search.slice(1).split('&');
 
     var result = {};
-    pairs.forEach(function(pair) {
+    pairs.forEach(function (pair) {
         pair = pair.split('=');
         result[pair[0]] = decodeURIComponent(pair[1] || '');
     });
@@ -95,7 +95,7 @@ function getUrlVars() {
 }
 
 // Data e ora (orologio)
-function clock() {
+export function clock() {
     $('#datetime').html(moment().formatPHP(globals.timestamp_format));
     setTimeout('clock()', 1000);
 }
@@ -103,7 +103,7 @@ function clock() {
 /**
  * Funzione per impostare un valore ad un array in $_SESSION
  */
-function session_set_array(session_array, value, inversed) {
+export function session_set_array(session_array, value, inversed) {
     if (inversed == undefined) {
         inversed = 1;
     }
@@ -114,7 +114,7 @@ function session_set_array(session_array, value, inversed) {
 /**
  * Funzione per impostare un valore ad una sessione
  */
-function session_set(session_array, value, clear, reload) {
+export function session_set(session_array, value, clear, reload) {
     if (clear == undefined) {
         clear = 1;
     }
@@ -129,7 +129,7 @@ function session_set(session_array, value, clear, reload) {
     });
 }
 
-function session_keep_alive() {
+export function session_keep_alive() {
     $.get(globals.rootdir + '/core.php');
 }
 
@@ -138,12 +138,12 @@ function session_keep_alive() {
  * Viene dato un id del campo da verificare come input, viene letto il testo nella forma [0-9]/[0-9] e viene fatto
  * il replate del primo numero in base a quanti elementi sono stati trovati (valore passato per parametro)
  */
-function update_counter(id, new_value) {
-    new_text = $('#' + id).html();
+export function update_counter(id, new_value) {
+    var new_text = $('#' + id).html();
 
     // Estraggo parte numerica (formato x/total)
-    pattern = /([^0-9]+)([0-9]+)\/([0-9]+)([^0-9]+)/;
-    new_text = new_text.replace(pattern, "$1" + new_value + "/$3$4");
+    var pattern = /([^0-9]+)([0-9]+)\/([0-9]+)([^0-9]+)/;
+    var new_text = new_text.replace(pattern, "$1" + new_value + "/$3$4");
 
     // Estraggo totale (parte numerica dopo lo slash /)
     matches = pattern.exec(new_text);
@@ -160,7 +160,7 @@ function update_counter(id, new_value) {
     }
 }
 
-function setContrast(backgroundcolor) {
+export function setContrast(backgroundcolor) {
     var rgb = [];
     var bg = String(backgroundcolor);
 
@@ -193,7 +193,7 @@ function setContrast(backgroundcolor) {
     }
 }
 
-function message(element) {
+export function message(element) {
     data = $.extend({}, $(element).data());
 
     var title = globals.translations.deleteTitle;
@@ -298,7 +298,7 @@ function message(element) {
     );
 }
 
-function redirect(href, data, method, blank) {
+export function redirect(href, data, method, blank) {
     method = method ? method : "get";
     blank = blank ? blank : false;
 
@@ -332,14 +332,14 @@ function redirect(href, data, method, blank) {
     }
 }
 
-function setCookie(cname, cvalue, exdays) {
+export function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
-function getCookie(cname) {
+export function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
     var ca = decodedCookie.split(';');
@@ -355,7 +355,7 @@ function getCookie(cname) {
     return "";
 }
 
-function buttonLoading(button) {
+export function buttonLoading(button) {
     var $this = $(button);
 
     var result = [
@@ -370,7 +370,7 @@ function buttonLoading(button) {
     return result;
 }
 
-function buttonRestore(button, loadingResult) {
+export function buttonRestore(button, loadingResult) {
     var $this = $(button);
 
     $this.html(loadingResult[0]);
@@ -380,7 +380,7 @@ function buttonRestore(button, loadingResult) {
     $this.prop("disabled", false);
 }
 
-function submitAjax(form, data, callback, errorCallback) {
+export function submitAjax(form, data, callback, errorCallback) {
     var valid = $(form).parsley().validate();
 
     if (!data) data = {};
@@ -429,7 +429,7 @@ function submitAjax(form, data, callback, errorCallback) {
     return valid;
 }
 
-function prepareForm(form) {
+export function prepareForm(form) {
     $(form).find('input:disabled, select:disabled').prop('disabled', false);
 
     var hash = window.location.hash;
@@ -444,25 +444,25 @@ function prepareForm(form) {
     }
 }
 
-function renderMessages() {
+export function renderMessages() {
     // Visualizzazione messaggi
     $.ajax({
         url: globals.messages_url,
         type: 'get',
         success: function (flash) {
-            messages = JSON.parse(flash);
+            let messages = JSON.parse(flash);
 
-            info = messages.info ? messages.info : [];
+            let info = messages.info ? messages.info : [];
             info.forEach(function (element) {
                 if (element) toastr["success"](element);
             });
 
-            warning = messages.warning ? messages.warning : [];
+            let warning = messages.warning ? messages.warning : [];
             warning.forEach(function (element) {
                 if (element) toastr["warning"](element);
             });
 
-            error = messages.error ? messages.error : [];
+            let error = messages.error ? messages.error : [];
             error.forEach(function (element) {
                 if (element) toastr["error"](element);
             });
@@ -471,29 +471,15 @@ function renderMessages() {
     });
 }
 
-function removeHash() {
+export function removeHash() {
     history.replaceState(null, null, ' ');
 }
 
-function replaceAll(str, find, replace) {
+export function replaceAll(str, find, replace) {
     return str.replace(new RegExp(find, "g"), replace);
 }
 
-function cleanup_inputs() {
-    $('.superselect, .superselectajax').select2().select2("destroy");
-}
-
-function restart_inputs() {
-    start_datepickers();
-    start_inputmask();
-
-    start_superselect();
-
-    // Autosize per le textarea
-    autosize($('.autosize'));
-}
-
-function alertPush() {
+export function alertPush() {
     // Messaggio di avviso salvataggio a comparsa sulla destra solo nella versione a desktop intero
     if ($(window).width() > 1023) {
         var i = 0;
@@ -524,7 +510,7 @@ function alertPush() {
     });
 }
 
-function ajaxError(xhr, error, thrown) {
+export function ajaxError(xhr, error, thrown) {
     swal({
         title: globals.translations.errorTitle,
         html: globals.translations.errorMessage + (xhr.responseJSON ? ".<br><i>" + xhr.responseJSON.exception[0].message + "</i>" : ''),

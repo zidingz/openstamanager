@@ -1,5 +1,13 @@
+import InputMask from 'inputmask';
+const autosize = require('autosize');
+
+import { start_datepickers, dateFormatMoment } from './dates';
+import { start_superselect } from './select';
+
 // Inputmask
 function start_inputmask(element) {
+    return;
+    // TODO
     if (element == undefined) {
         element = '';
     } else {
@@ -66,4 +74,18 @@ function start_inputmask(element) {
             });
         }).addClass('bound');
     }
+}
+
+export function cleanup_inputs() {
+    $('.superselect, .superselectajax').select2().select2("destroy");
+}
+
+export function restart_inputs() {
+    start_datepickers();
+    start_inputmask();
+
+    start_superselect();
+
+    // Autosize per le textarea
+    autosize($('.autosize'));
 }

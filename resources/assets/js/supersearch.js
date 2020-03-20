@@ -1,4 +1,9 @@
+import $ from 'jquery';
+import 'select2';
+
 $(document).ready(function () {
+
+    /*
     $('#supersearch').keyup(function () {
         $(document).ajaxStop();
 
@@ -83,4 +88,5 @@ $(document).ready(function () {
             });
         }
     });
+     */
 });

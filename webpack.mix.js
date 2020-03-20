@@ -42,7 +42,9 @@ mix.setPublicPath(config.production);
 mix.sass(
     config.development + '/' + config.paths.css + '/app.scss',
     config.production + '/' + config.paths.css
-);
+).options({
+    processCssUrls: false
+});
 
 // CSS personalizzati
 mix.styles([
@@ -64,6 +66,12 @@ mix.js([
     config.development + '/' + config.paths.js + '/app.js'
 ],
     config.production +  '/' + config.paths.js + '/app.js'
+);
+
+// Copia dei webfont di Font Awesome
+mix.copyDirectory(
+    'node_modules/@fortawesome/fontawesome-free/webfonts',
+    config.production + '/webfonts'
 );
 
 // Copia di PDFJS

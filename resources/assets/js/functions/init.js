@@ -1,4 +1,9 @@
-function init() {
+import 'tooltipster';
+import 'parsleyjs';
+
+import { restart_inputs } from './input';
+
+export function init() {
     // Inizializzazzione dei box AdminLTE
     //$('.box').boxWidget();
 
@@ -10,7 +15,7 @@ function init() {
 
     // Tooltip
     $('.tip').not('.tooltipstered').each(function () {
-        $this = $(this);
+        var $this = $(this);
         $this.tooltipster({
             animation: 'grow',
             contentAsHTML: true,
