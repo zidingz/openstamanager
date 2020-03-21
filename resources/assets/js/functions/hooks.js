@@ -1,12 +1,16 @@
 /**
  *
  */
-function startHooks() {
+export function startHooks() {
+    if (!globals.hooks){
+        return;
+    }
+
     $.ajax({
         url: globals.hooks.list,
         type: "get",
         success: function (data) {
-            hooks = JSON.parse(data);
+            var hooks = JSON.parse(data);
 
             $("#hooks-header").text(globals.translations.hooksExecuting);
             $("#hooks-number").text(hooks.length);
@@ -34,7 +38,7 @@ function startHooks() {
  *
  * @param hook
  */
-function startHook(hook, init) {
+export function startHook(hook, init) {
     $.ajax({
         url: globals.hooks.lock.replace('|id|', hook.id),
         type: "get",
@@ -66,7 +70,7 @@ function startHook(hook, init) {
  * @param hook
  * @param token
  */
-function executeHook(hook, token) {
+export function executeHook(hook, token) {
     $.ajax({
         url: globals.hooks.lock.replace('|id|', hook.id).replace('|token|', token),
         type: "get",
@@ -94,7 +98,7 @@ function executeHook(hook, token) {
  * @param hook
  * @param init
  */
-function updateHook(hook) {
+export function updateHook(hook) {
     $.ajax({
         url: globals.hooks.response.replace('|id|', hook.id),
         type: "get",
@@ -128,7 +132,7 @@ function updateHook(hook) {
 /**
  * Aggiunta dell'hook al numero totale.
  */
-function hookCount(id, value) {
+export function hookCount(id, value) {
     value = value ? value : 1;
 
     var element = $(id);
@@ -147,7 +151,7 @@ function hookCount(id, value) {
  * @param element_id
  * @param result
  */
-function renderHook(hook, result) {
+export function renderHook(hook, result) {
     if (result.length == 0) return;
 
     var element_id = "hook-" + hook.id;

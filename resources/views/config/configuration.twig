@@ -116,112 +116,21 @@
 {% endblock %}
 
 {% block js %}
-<!-- Controlli per essere sicuro che l'utente abbia letto la licenza -->
 <script>
-    $(document).ready(function() {
-        $("#install").on("click", function(){
-            if($(this).closest("form").parsley().validate()){
-                var restore = buttonLoading("#install");
-                $("#config-form").submit();
+    globals.configuration = {
+        test_url: "{{ url_for('configuration-test') }}",
+        translations: {
+            error: "{{ 'Errore della configurazione'|trans }}",
+            errorMessage: "{{ 'La configurazione non è corretta'|trans }}.",
 
-                //buttonRestore("#install", restore);
-            }
-        });
+            permissions: "{{ 'Permessi insufficienti'|trans }}",
+            permissionsMessage: "{{ "L'utente non possiede permessi sufficienti per il testing della connessione. Potresti rilevare problemi in fase di installazione."|trans }}",
 
-        $("#test").on("click", function(){
-            if($(this).closest("form").parsley().validate()){
-                var restore = buttonLoading("#test");
-                $("#install").prop('disabled', true);
-
-                $(this).closest("form").ajaxSubmit({
-                    url: '{{ url_for('configuration-test') }}',
-                    data: {
-                        test: 1,
-                    },
-                    type: "post",
-                    success: function(data){
-                        data = parseFloat(data.trim());
-
-                        buttonRestore("#test", restore);
-                        $("#install").prop('disabled', false);
-
-                        if(data == 0){
-                            swal("{{ 'Errore della configurazione'|trans }}", "{{ 'La configurazione non è corretta'|trans }}.", "error");
-                        } else if(data == 1){
-                            swal("{{ 'Permessi insufficienti'|trans }}", "{{ "L'utente non possiede permessi sufficienti per il testing della connessione. Potresti rilevare problemi in fase di installazione."|trans }}.", "error");
-                        } else {
-                            swal("{{ 'Configurazione corretta'|trans }}", "{{ 'Ti sei connesso con successo al database'|trans }}. {{ "Clicca su 'Installa' per proseguire"|trans }}.", "success");
-                        }
-                    },
-                    error: function(xhr, error, thrown) {
-                        ajaxError(xhr, error, thrown);
-                    }
-                });
-            }
-        });
-    });
-
-    var flag_link = "https://lipis.github.io/flag-icon-css/flags/4x3/|flag|.svg";
-
-    $(document).ready(function() {
-        $.ajax({
-            url: flag_link.replace("|flag|", "it"),
-            success: function(){
-                initLanguage(true);
-            },
-            error: function(){
-                initLanguage(false);
-            },
-            timeout: 500
-        });
-    });
-
-    function languageFlag(item) {
-        if (!item.id) {
-            return item.text;
+            success: "{{ 'Configurazione corretta'|trans }}",
+            successMessage: "{{ 'Ti sei connesso con successo al database'|trans }}. {{ "Clicca su 'Installa' per proseguire"|trans }}.",
         }
-
-        var element = $(item.element);
-        var img = $("<img>", {
-            class: "img-flag",
-            width: 26,
-            src: flag_link.replace("|flag|", element.data("country").toLowerCase()),
-        });
-
-        var span = $("<span>", {
-            text: " " + item.text
-        });
-        span.prepend(img);
-
-        return span;
-    }
-
-    function initLanguage() {
-        $("#language").removeClass("d-none");
-        $("#language-info").addClass("d-none");
-
-        $("#language").select2({
-            theme: "bootstrap",
-            templateResult: languageFlag,
-            templateSelection:languageFlag,
-        });
-
-        // Preselezione lingua
-        if (globals.full_locale) {
-            $("#language").selectSet(globals.full_locale);
-        }
-
-        $("#language").on("change", function(){
-            if ($(this).val()) {
-                var location = window.location;
-                var url = location.protocol + "//" + location.host + "" + location.pathname;
-
-                var parameters = getUrlVars();
-                parameters.lang = $(this).val();
-
-                redirect(url, parameters);
-            }
-        });
-    }
+    };
 </script>
+
+<script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ asset('/js/pages/configuration.js') }}"></script>
 {% endblock %}

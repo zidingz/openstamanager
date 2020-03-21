@@ -101,7 +101,7 @@ class DefaultHandler implements HandlerInterface
             }
         }
 
-        $(document).ready(function(){
+        document.addEventListener("DOMContentLoaded", function() {
             togglePassword_'.$values['id'].'();
         });
     </script>';

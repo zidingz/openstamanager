@@ -20,24 +20,9 @@
         '_BUTTON_': '<b>' ~ button ~ '</b>',
         '_OP_': installing ? 'installazione'|trans : 'aggiornamento'|trans,
         })|raw }}</p>
-    <input type="button" class="btn btn-primary" value="{{ button }}" onclick="continue_update()" id="contine_button">
-
-    <script>
-        function continue_update(){
-            swal({
-                title: "{{ 'Sei sicuro di voler procedere?'|trans }}",
-                text: "",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonClass: "btn btn-lg btn-success",
-                confirmButtonText: "{{ 'Procedi'|trans }}",
-            }).then(function(){
-                $("#update-info").removeClass("d-none");
-                $("#result").load("{{ url_for('update-progress') }}");
-                $("#contine_button").remove();
-            }, function(){});
-        }
-    </script>
+    <button type="button" class="btn btn-primary" id="contine_button">
+        {{ button }}
+    </button>
 
     <div id="update-info" class="d-none">
         <div class="progress">
@@ -72,20 +57,30 @@
     </div>
 
     <script>
-        let count, current, progress, percent, total, versions;
+        globals.update = {
+            count: {{ total_updates }},
+            total: {{ total_count }},
+            url: "{{ url_for('update-progress') }}",
+            translations: {
+                title: "{{ 'Sei sicuro di voler procedere?'|trans }}",
+                continue: "{{ 'Procedi'|trans }}",
+                message: "{{ 'Aggiornamento _DONE_ di _TODO_ (_VERSION_)'|trans }}",
+            }
+        };
 
-        $(document).ready(function(){
+        let count, current, progress, percent, total, versions;
+        $(document).ready(function () {
             $(".login-box").fadeOut();
 
-            count = {{ total_updates }};
+            count = globals.update.count;
             current = 0;
             versions = [];
 
             progress = 0;
-            total = {{ total_count }};
+            total = globals.update.total;
         });
 
-        function addProgress(rate){
+        function addProgress(rate) {
             progress += rate;
             percent = progress / total * 100;
             percent = Math.round(percent);
@@ -94,26 +89,29 @@
             setPercent(percent);
         }
 
-        function setPercent(percent){
+        function setPercent(percent) {
             $("#update-info .progress-bar").width(percent + "%");
             $("#update-info .progress-bar span").text(percent + "%");
 
-            if (percent >= 100){
+            if (percent >= 100) {
                 $("#completed").show();
             }
         }
 
-        function addVersion(version){
-            if(versions.indexOf(version) === -1){
+        function addVersion(version) {
+            if (versions.indexOf(version) === -1) {
                 versions.push(version);
                 current += 1;
 
-                $("#update-info .info").html($("#update-info .info").html() + "<p><strong>{{ 'Aggiornamento _DONE_ di _TODO_ (_VERSION_)'|trans({
-                    '_DONE_': '" + current + "',
-                    '_TODO_': '" + count + "',
-                    '_VERSION_': '" + version.trim() + "',
-                })|raw }}</strong></p>");
+                var message = globals.update.translations.message
+                    .replace("_DONE_", '"' + current + '"')
+                    .replace("_TODO_", '"' + count + '"')
+                    .replace("_VERSION_", '"' + version.trim() + '"');
+
+                $("#update-info .info").html($("#update-info .info").html() + "<p><strong>" + message + "</strong></p>");
             }
         }
     </script>
+
+    <script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ asset('/js/pages/update.js') }}"></script>
 {% endblock %}

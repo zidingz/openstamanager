@@ -17,6 +17,8 @@
 
         <link rel="stylesheet" type="text/css" media="print" href="{{ base_path() }}{{ asset('/css/print.css') }}"/>
 
+        <script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ asset('/js/manifest.js') }}"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ asset('/js/vendor.js') }}"></script>
         <script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ asset('/js/app.js') }}"></script>
 
         {% for script in i18n %}
@@ -82,7 +84,5 @@
         <div id="tiny-loader" style="display:none;"></div>
 
         {% block body %}{% endblock %}
-
-        <script type="module"></script>
     </body>
 </html>

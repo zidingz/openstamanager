@@ -2,6 +2,7 @@ import 'tooltipster';
 import 'parsleyjs';
 
 import { restart_inputs } from './input';
+import { prepareForm } from './functions';
 
 export function init() {
     // Inizializzazzione dei box AdminLTE

@@ -113,7 +113,7 @@ class ConfigurationController extends Controller
     "generated" : "true",
     "icons" : [
         {
-            "src": "assets/dist/img/logo.png",
+            "src": "assets/img/logo.png",
             "type": "image/png",
             "sizes": "512x512"
         }

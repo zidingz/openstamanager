@@ -14,7 +14,7 @@
 
         id_module: '{{ id_module }}',
         id_record: '{{ id_record }}',
-        
+
         is_mobile: {{ is_mobile }},
         cifre_decimali: '{{ setting('Cifre decimali per importi') }}',
 
@@ -276,17 +276,6 @@
     </footer>
 
     <div id="modals"></div>
-
-    <!-- Hooks -->
-    <script>
-        $(document).ready(function() {
-            // Orologio
-            clock();
-
-            // Hooks
-            startHooks();
-        });
-    </script>
 
     {% if debugbar %}
         <!-- Fix per le icone di debug -->

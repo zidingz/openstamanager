@@ -1,15 +1,16 @@
+import $ from 'jquery';
 import 'admin-lte';
 import 'bootstrap';
 import 'moment';
 import 'numeral';
 import 'bootstrap-colorpicker';
+import 'toastr';
 
 import { start_datatables } from '../functions/datatables';
 import { start_complete_calendar } from '../functions/dates';
-import { renderMessages } from '../functions/functions';
+import { renderMessages, clock } from '../functions/functions';
 import { init } from '../functions/init';
-
-$ = window.$ = window.jQuery = require('jquery');
+import { startHooks } from '../functions/hooks';
 
 // Aggiunta dell'ingranaggio all'unload della pagina
 $(window).on("beforeunload", function () {
@@ -19,10 +20,6 @@ $(window).on("beforeunload", function () {
 // Rimozione dell'ingranaggio al caricamento completo della pagina
 $(window).on("load", function () {
     $("#main_loading").fadeOut();
-    console.log(globals);
-
-    // Messaggi per l'utente
-    renderMessages();
 });
 
 // Fix multi-modal
@@ -77,6 +74,15 @@ $(document).ready(function () {
     });
     numeral.locale('current');
     numeral.defaultFormat('0,0.' + ('0').repeat(globals.cifre_decimali));
+
+    // Messaggi per l'utente
+    renderMessages();
+
+    // Orologio
+    clock();
+
+    // Hooks
+    startHooks();
 
     // Richiamo alla generazione di Datatables
     start_datatables();

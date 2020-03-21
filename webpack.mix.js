@@ -1,6 +1,27 @@
 let mix = require('laravel-mix');
-var webpack = require('webpack');
 const glob = require('glob');
+
+// Gestione file personalizzati
+const files = pattern => glob.sync(pattern);
+
+const globify = (pattern, out, mixFunctionName) => {
+    files(pattern).forEach((path) => {
+        mix[mixFunctionName](path, out);
+    })
+};
+
+// Configurazione
+var config = {
+    production: 'public/assets', // Cartella di destinazione
+    development: 'resources/assets', // Cartella dei file di personalizzazione
+    paths: {
+        js: 'js',
+        css: 'css',
+        scss: 'scss',
+        images: 'img',
+        fonts: 'webfonts'
+    }
+};
 
 // Esposizione JQuery per HTML
 mix.webpackConfig({
@@ -10,7 +31,7 @@ mix.webpackConfig({
             use: [{
                 loader: 'expose-loader',
                 options: 'jQuery'
-            },{
+            }, {
                 loader: 'expose-loader',
                 options: '$'
             }]
@@ -26,19 +47,6 @@ mix.autoload({
     toastr: ['toastr'],
     numeral: ['numeral'],
 });
-
-// Configurazione
-var config = {
-    production: 'public/assets', // Cartella di destinazione
-    development: 'resources/assets', // Cartella dei file di personalizzazione
-    paths: {
-        js: 'js',
-        css: 'css',
-        scss: 'scss',
-        images: 'img',
-        fonts: 'webfonts'
-    }
-};
 
 mix.setPublicPath(config.production);
 
@@ -71,11 +79,14 @@ mix.styles([
     config.development + '/' + config.paths.css + '/print/*.css',
 ], config.production + '/' + config.paths.css + '/print.css');
 
+// Gestione file personalizzati
+globify(config.development + '/js/pages/*.js', config.production + '/js/pages', 'js');
+
 // JS principali
 mix.js([
-    config.development + '/' + config.paths.js + '/app.js'
-],
-    config.production +  '/' + config.paths.js + '/app.js'
+        config.development + '/' + config.paths.js + '/app.js'
+    ],
+    config.production + '/' + config.paths.js + '/app.js'
 );
 
 // Copia di PDFJS
@@ -97,7 +108,7 @@ mix.copyDirectory(
 // CSRF
 mix.copy(
     'vendor/owasp/csrf-protector-php/js/csrfprotector.js',
-    config.production + '/' + config.paths.js  + '/csrf'
+    config.production + '/' + config.paths.js + '/csrf'
 );
 
 // ChartJS
@@ -118,15 +129,13 @@ mix.copyDirectory(
     config.production + '/' + config.paths.images
 );
 
-// Gestione file personalizzati
-/*
-const files = pattern => glob.sync(pattern, { cwd: 'resources/assets' });
-
-const globify = (pattern, out, mixFunctionName) => {
-    files(pattern).forEach((path) => {
-        mix[mixFunctionName](`resources/assets/${path}`, out);
-    })
-};
-
-globify(config.development + '/scss/pages/*.scss', 'assets/pages', 'sass');
-*/
+// Estrazione liberire esterne
+mix.extract([
+    'jquery',
+    'moment',
+    'numeral',
+    'parsleyjs',
+    'select2',
+    'toastr',
+    'sweetalert2',
+]);

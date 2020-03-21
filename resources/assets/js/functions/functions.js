@@ -1,3 +1,10 @@
+import $ from 'jquery';
+import 'parsleyjs';
+import 'jquery-form';
+import 'toastr';
+import 'sweetalert2';
+import 'moment';
+
 // Modal
 export function launch_modal(title, href, init_modal, id) {
     openModal(title, href, id ? id : '#bs-popup');
@@ -97,7 +104,7 @@ export function getUrlVars() {
 // Data e ora (orologio)
 export function clock() {
     $('#datetime').html(moment().formatPHP(globals.timestamp_format));
-    setTimeout('clock()', 1000);
+    setTimeout(clock, 1000);
 }
 
 /**
