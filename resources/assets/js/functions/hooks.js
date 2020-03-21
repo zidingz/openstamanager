@@ -79,7 +79,7 @@ export function executeHook(hook, token) {
             updateHook(hook);
 
             var timeout;
-            if (result.execute) {
+            if (result && result.execute) {
                 startHook(hook);
             } else {
                 timeout = 30;

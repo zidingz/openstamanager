@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import 'parsleyjs';
 import 'jquery-form';
-import 'sweetalert2';
+import Swal from 'sweetalert2';
 
 import '../functions/select';
 import { getUrlVars, redirect, buttonLoading, buttonRestore } from "../functions/functions";
@@ -24,7 +24,7 @@ $(document).ready(function() {
             $("#install").prop('disabled', true);
 
             $(this).closest("form").ajaxSubmit({
-                url: globals.globals.configuration.test_url,
+                url: globals.configuration.test_url,
                 data: {
                     test: 1,
                 },
@@ -36,11 +36,11 @@ $(document).ready(function() {
                     $("#install").prop('disabled', false);
 
                     if(data == 0){
-                        swal(globals.configuration.translations.error, globals.configuration.translations.errorMessage, "error");
+                        Swal.fire(globals.configuration.translations.error, globals.configuration.translations.errorMessage, "error");
                     } else if(data == 1){
-                        swal(globals.configuration.translations.permissions, globals.configuration.translations.permissionsMessage, "error");
+                        Swal.fire(globals.configuration.translations.permissions, globals.configuration.translations.permissionsMessage, "error");
                     } else {
-                        swal(globals.configuration.translations.success, globals.configuration.translations.successMessage, "success");
+                        Swal.fire(globals.configuration.translations.success, globals.configuration.translations.successMessage, "success");
                     }
                 },
                 error: function(xhr, error, thrown) {

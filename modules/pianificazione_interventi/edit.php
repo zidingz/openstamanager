@@ -175,7 +175,7 @@ echo '
 <script type="text/javascript">
 
 	function askTipoIntervento () {
-        swal({
+        Swal.fire({
             title: "'.tr('Aggiungere un nuovo promemoria?').'",
             type: "info",
             showCancelButton: true,

@@ -109,7 +109,7 @@ function upload(btn) {
             }
         });
     } else {
-        swal({
+        Swal.fire({
             title: "'.tr('Selezionare un file!').'",
             type: "error",
         })
@@ -122,13 +122,13 @@ function importMessage(data) {
     var ricevuta = "<br>'.tr('Ricevuta').': " + data.file;
 
     if(data.fattura) {
-        swal({
+        Swal.fire({
             title: "'.tr('Importazione completata!').'",
             html: "'.tr('Fattura aggiornata correttamente').':" + data.fattura + ricevuta,
             type: "success",
         });
     } else {
-        swal({
+        Swal.fire({
             title: "'.tr('Importazione fallita!').'",
             html: "<i>'.tr('Fattura relativa alla ricevuta non rilevata. Controlla che esista una fattura di vendita corrispondente caricata a gestionale.').'</i>" + ricevuta,
             type: "error",
@@ -137,7 +137,7 @@ function importMessage(data) {
 }
 
 function importAll(btn) {
-    swal({
+    Swal.fire({
         title: "'.tr('Importare tutte le ricevute?').'",
         html: "'.tr('Importando le ricevute, verranno aggiornati gli stati di invio delle fatture elettroniche. Continuare?').'",
         showCancelButton: true,
@@ -178,7 +178,7 @@ function importAll(btn) {
                     html += "<br><small>'.tr("Se si sono verificati degli errori durante la procedura e il problema continua a verificarsi, contatta l'assistenza ufficiale").'</small>";
                 }
 
-                swal({
+                Swal.fire({
                     title: "'.tr('Operazione completata!').'",
                     html: html,
                     type: "info",

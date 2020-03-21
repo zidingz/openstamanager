@@ -256,7 +256,7 @@ $(document).ready(function() {
 
 function addSerial(form_id, numero) {
     if (numero > 0){
-        swal({
+        Swal.fire({
             title: "'.tr('Nuovi seriali').'",
             html: "'.tr("Confermi l'inserimento di _NUM_ nuovi seriali?", [
                 '_NUM_' => '" + numero + "',
@@ -268,7 +268,7 @@ function addSerial(form_id, numero) {
             $(form_id).submit();
         })
     } else {
-        swal("'.tr('Errore').'", "'.tr('Nessun seriale inserito').'", "error");
+        Swal.fire("'.tr('Errore').'", "'.tr('Nessun seriale inserito').'", "error");
     }
 }
 

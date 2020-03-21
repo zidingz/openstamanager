@@ -207,7 +207,7 @@ if (!$is_completato) {
 
     <div class="col-md-2">
         <label>&nbsp;</label>
-        <button type="button" class="btn btn-primary btn-block" onclick="if($(\'#nuovotecnico\').val()){ add_tecnici($(\'#nuovotecnico\').val()); }else{ swal(\''.tr('Attenzione').'\', \''.tr('Seleziona il tecnico da aggiungere').'.\', \'warning\'); $(\'#nuovotecnico\').focus(); }">
+        <button type="button" class="btn btn-primary btn-block" onclick="if($(\'#nuovotecnico\').val()){ add_tecnici($(\'#nuovotecnico\').val()); }else{ Swal.fire(\''.tr('Attenzione').'\', \''.tr('Seleziona il tecnico da aggiungere').'.\', \'warning\'); $(\'#nuovotecnico\').focus(); }">
             <i class="fa fa-plus"></i> '.tr('Aggiungi').'
         </button>
     </div>

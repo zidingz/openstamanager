@@ -318,7 +318,7 @@ function scorpora_iva() {
 
 		input.val(scorporato);
 	}else{
-		swal("<?php echo tr('Attenzione'); ?>", "<?php echo tr('Seleziona Iva di vendita.'); ?>", "warning");
+		Swal.fire("<?php echo tr('Attenzione'); ?>", "<?php echo tr('Seleziona Iva di vendita.'); ?>", "warning");
 	}
 }
 

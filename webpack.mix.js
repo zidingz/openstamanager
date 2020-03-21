@@ -83,10 +83,12 @@ mix.styles([
 globify(config.development + '/js/pages/*.js', config.production + '/js/pages', 'js');
 
 // JS principali
-mix.js([
-        config.development + '/' + config.paths.js + '/app.js'
-    ],
+mix.js(
+    config.development + '/' + config.paths.js + '/app.js',
     config.production + '/' + config.paths.js + '/app.js'
+).js(
+    config.development + '/' + config.paths.js + '/base.js',
+    config.production + '/' + config.paths.js + '/base.js'
 );
 
 // Copia di PDFJS

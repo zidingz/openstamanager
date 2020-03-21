@@ -105,7 +105,7 @@ if (setting('Attiva aggiornamenti')) {
 <script>
 function update() {
     if ($("#blob").val()) {
-        swal({
+        Swal.fire({
             title: "'.tr('Avviare la procedura?').'",
             type: "warning",
             showCancelButton: true,
@@ -114,7 +114,7 @@ function update() {
             $("#update").submit();
         })
     } else {
-        swal({
+        Swal.fire({
             title: "'.tr('Selezionare un file!').'",
             type: "error",
         })

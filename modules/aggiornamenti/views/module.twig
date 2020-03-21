@@ -62,7 +62,7 @@
 <script>
     function update() {
         if ($("#blob").val()) {
-            swal({
+            Swal.fire({
                 title: "{{ 'Avviare la procedura?'|trans }}",
                 type: "warning",
                 showCancelButton: true,
@@ -71,7 +71,7 @@
                 $("#update").submit();
             })
         } else {
-            swal({
+            Swal.fire({
                 title: "{{ 'Selezionare un file!'|trans }}",
                 type: "error",
             })

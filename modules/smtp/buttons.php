@@ -21,17 +21,17 @@ function testAccount(btn){
             },
             success: function(data) {
                 buttonRestore(btn, restore);
-                
+
                 data = JSON.parse(data);
                 if(data.test){
-                    swal("'.tr('Connessione SMTP riuscita').'", "'.tr("Connessione all'account SMTP completata con successo").'", "success");
+                    Swal.fire("'.tr('Connessione SMTP riuscita').'", "'.tr("Connessione all'account SMTP completata con successo").'", "success");
                 } else {
-                    swal("'.tr('Connessione SMTP fallita').'", "'.tr("Impossibile connettersi all'account SMTP").'", "error");
+                    Swal.fire("'.tr('Connessione SMTP fallita').'", "'.tr("Impossibile connettersi all'account SMTP").'", "error");
                 }
             },
             error: function(data) {
-                swal("'.tr('Errore').'", "'.tr('Errore durante il test').'", "error");
-    
+                Swal.fire("'.tr('Errore').'", "'.tr('Errore durante il test').'", "error");
+
                 buttonRestore(btn, restore);
             }
         });

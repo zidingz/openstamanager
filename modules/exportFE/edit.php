@@ -138,15 +138,15 @@ echo '
                     buttonRestore(btn, restore);
 
                     if (data.code == "200") {
-                        swal("'.tr('Fattura inviata!').'", data.message, "success");
+                        Swal.fire("'.tr('Fattura inviata!').'", data.message, "success");
 
                         $(btn).attr("disabled", true).addClass("disabled");
                     } else {
-                        swal("'.tr('Invio fallito').'", data.code + " - " + data.message, "error");
+                        Swal.fire("'.tr('Invio fallito').'", data.code + " - " + data.message, "error");
                     }
                 },
                 error: function(data) {
-                    swal("'.tr('Errore').'", "'.tr('Errore durante il salvataggio').'", "error");
+                    Swal.fire("'.tr('Errore').'", "'.tr('Errore durante il salvataggio').'", "error");
 
                     buttonRestore(btn, restore);
                 }
@@ -171,7 +171,7 @@ echo '
 
 if ($generated) {
     echo '
-            swal({
+            Swal.fire({
                 title: "'.tr('Sei sicuro di rigenerare la fattura?').'",
                 html: "<p>'.tr('Attenzione: sarà generato un nuovo progressivo invio').'.</p><p class=\"text-danger\">'.tr('Se stai attendendo una ricevuta dal sistema SdI, rigenerando la fattura elettronica non sarà possibile corrispondere la ricevuta una volta emessa').'.</p>",
                 type: "warning",
@@ -191,7 +191,7 @@ if ($generated) {
 }
 echo '
         } else {
-            swal({
+            Swal.fire({
                 type: "error",
                 title: "'.tr('Errore').'",
                 text:  "'.tr('Alcuni campi obbligatori non sono stati compilati correttamente').'.",

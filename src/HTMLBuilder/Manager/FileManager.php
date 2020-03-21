@@ -282,7 +282,7 @@ $(document).ready(function() {
         $form = $("#'.$attachment_id.' #upload-form");
 
         if($form.find("input[name=nome_allegato]").val() == "" || $form.find("input[name=blob]").val() == "") {
-            swal({
+            Swal.fire({
                 type: "error",
                 title: "'.tr('Errore').'",
                 text:  "'.tr('Alcuni campi obbligatori non sono stati compilati correttamente.').'",

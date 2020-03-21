@@ -147,7 +147,7 @@ function importPage(page){
             } else {
                 $("#main_loading").fadeOut();
 
-                swal({
+                Swal.fire({
                     title: "'.tr('Importazione completata: _COUNT_  righe processate', [
                         '_COUNT_' => '" + count + "',
                     ]).'",

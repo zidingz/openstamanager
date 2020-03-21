@@ -203,7 +203,7 @@ function update_permissions(id, value){
             if(data == "ok") {
                 toastr["success"]("'.tr('Permessi aggiornati!').'");
             } else {
-                swal("'.tr('Errore').'", "'.tr("Errore durante l'aggiornamento dei permessi!").'", "error");
+                Swal.fire("'.tr('Errore').'", "'.tr("Errore durante l'aggiornamento dei permessi!").'", "error");
             }
         }
     );

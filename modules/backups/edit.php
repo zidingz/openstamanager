@@ -40,7 +40,7 @@ echo '
 // Ripristino backup
 function restore() {
     if ($("#blob").val()) {
-        swal({
+        Swal.fire({
             title: "'.tr('Avviare la procedura?').'",
             type: "warning",
             showCancelButton: true,
@@ -49,7 +49,7 @@ function restore() {
             $("#restore").submit();
         })
     } else {
-        swal({
+        Swal.fire({
             title: "'.tr('Selezionare un file!').'",
             type: "error",
         })
@@ -58,7 +58,7 @@ function restore() {
 
 // Creazione backup
 function backup(){
-    swal({
+    Swal.fire({
         title: "'.tr('Nuovo backup').'",
         text: "'.tr('Sei sicuro di voler creare un nuovo backup?').'",
         type: "warning",

@@ -2,7 +2,7 @@ import $ from 'jquery';
 import 'parsleyjs';
 import 'jquery-form';
 import 'toastr';
-import 'sweetalert2';
+import Swal from 'sweetalert2';
 import 'moment';
 
 // Modal
@@ -215,7 +215,7 @@ export function message(element) {
     var btn_class = "btn btn-lg btn-danger";
     if (data["class"] != undefined) btn_class = data["class"];
 
-    swal({
+    Swal.fire({
         title: title,
         html: '<div id="swal-form" data-parsley-validate>' + msg + '</div>',
         type: "warning",
@@ -289,7 +289,7 @@ export function message(element) {
                         }
                     },
                     error: function (xhr, ajaxOptions, error) {
-                        swal({
+                        Swal.fire({
                             title: globals.translations.errorTitle,
                             html: globals.translations.errorMessage,
                             type: "error",
@@ -518,7 +518,7 @@ export function alertPush() {
 }
 
 export function ajaxError(xhr, error, thrown) {
-    swal({
+    Swal.fire({
         title: globals.translations.errorTitle,
         html: globals.translations.errorMessage + (xhr.responseJSON ? ".<br><i>" + xhr.responseJSON.exception[0].message + "</i>" : ''),
         type: "error",

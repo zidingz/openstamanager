@@ -74,7 +74,7 @@ class LangMiddleware extends Middleware
                 }
             }
         }
-        $this->addVariable('i18n', $list);
+        //$this->addVariable('i18n', $list);
 
         return $handler->handle($request);
     }

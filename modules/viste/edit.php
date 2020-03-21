@@ -122,12 +122,12 @@ function testQuery(){
         success: function(data) {
             $("#main_loading").fadeOut();
 
-            swal("'.tr('Query funzionante').'", "'.tr('La query attuale funziona correttamente!').'", "success");
+            Swal.fire("'.tr('Query funzionante').'", "'.tr('La query attuale funziona correttamente!').'", "success");
         },
         error: function(data) {
             $("#main_loading").fadeOut();
 
-            swal("'.tr('Errore').'", "'.tr('Errore durante il test della query!').'", "error");
+            Swal.fire("'.tr('Errore').'", "'.tr('Errore durante il test della query!').'", "error");
         }
     })
 }

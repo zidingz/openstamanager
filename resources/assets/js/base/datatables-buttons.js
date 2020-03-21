@@ -83,7 +83,7 @@ $(document).ready(function () {
             $(this).attr("data-id_records", "");
             $(this).data("id_records", "");
         } else {
-            swal(globals.translations.waiting, globals.translations.waiting_msg, "error");
+            Swal.fire(globals.translations.waiting, globals.translations.waiting_msg, "error");
         }
     });
 });

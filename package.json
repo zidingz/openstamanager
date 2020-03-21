@@ -38,7 +38,7 @@
         "select2": "4.0.3",
         "select2-theme-bootstrap4": "^0.2.0-beta.4",
         "signature_pad": "^2.1.1",
-        "sweetalert2": "^6.11.4",
+        "sweetalert2": "^9.1",
         "toastr": "^2.1.4",
         "tooltipster": "^4.2.5",
         "vue-template-compiler": "^2.6.11"

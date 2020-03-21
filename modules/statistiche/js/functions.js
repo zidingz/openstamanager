@@ -6,7 +6,7 @@ function remove_calendar(button) {
     if (manager.remove(name)) {
         $("#group-" + name).remove();
     } else {
-        swal({
+        Swal.fire({
             title: globals.translations.singleCalendar,
             type: "info",
         });

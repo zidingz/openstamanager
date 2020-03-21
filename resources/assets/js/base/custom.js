@@ -30,7 +30,7 @@ $(document).on('hidden.bs.modal', '.modal', function () {
 
 $(document).ready(function () {
     // Impostazioni di default per gli alert
-    swal.setDefaults({
+    swal.mixin({
         buttonsStyling: false,
         confirmButtonClass: "btn btn-lg btn-primary",
         cancelButtonClass: "btn btn-lg",

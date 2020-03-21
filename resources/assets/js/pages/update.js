@@ -1,8 +1,6 @@
 import $ from 'jquery';
-import 'sweetalert2';
-
-$("#contine_button").click(function () {
-    swal({
+import Swal from 'sweetalert2';$("#contine_button").click(function () {
+    Swal.fire({
         title: globals.update.translations.title,
         text: "",
         type: "warning",

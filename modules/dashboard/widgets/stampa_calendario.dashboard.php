@@ -54,11 +54,12 @@ $("#orientation").change(function() {
 });
 
 $(function() {
+    var dateNow = new Date();
     $("#date").datetimepicker({
         format: "MMMM YYYY",
         locale: globals.locale,
         useCurrent: false,
-        defaultDate: moment("'.$date->format('Y-m-d H:i:s').'")
+        defaultDate: dateNow
     });
 
     $("#date").on("dp.change", function(e) {

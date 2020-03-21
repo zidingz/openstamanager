@@ -72,7 +72,7 @@ function import_fe(button, file) {
         },
         success: function(data) {
             importMessage(data);
-            
+
             buttonRestore(button, restore);
             $("#list").load("'.$structure->fileurl('list.php').'?id_module='.$id_module.'&id_plugin='.$id_plugin.'");
         },
@@ -85,7 +85,7 @@ function import_fe(button, file) {
 }
 
 function delete_fe(button, file_id) {
-    swal({
+    Swal.fire({
         title: "'.tr('Rimuovere la ricevuta salvata localmente?').'",
         html: "'.tr('Sarà possibile inserirla nuovamente nel gestionale attraverso il caricamento').'",
         type: "error",
@@ -93,7 +93,7 @@ function delete_fe(button, file_id) {
         confirmButtonText: "'.tr('Sì').'"
     }).then(function (result) {
         var restore = buttonLoading(button);
-    
+
         $.ajax({
             url: globals.rootdir + "/actions.php",
             type: "get",
@@ -113,7 +113,7 @@ function delete_fe(button, file_id) {
 }
 
 function process_fe(button, file) {
-    swal({
+    Swal.fire({
         title: "'.tr('Segnare la ricevuta come processata?').'",
         html: "'.tr("Non sarà possibile individuarla nuovamente in modo automatico: l'unico modo per recuperarla sarà contattare l'assistenza").'",
         type: "info",
@@ -121,7 +121,7 @@ function process_fe(button, file) {
         confirmButtonText: "'.tr('Sì').'"
     }).then(function (result) {
         var restore = buttonLoading(button);
-    
+
         $.ajax({
             url: globals.rootdir + "/actions.php",
             type: "get",

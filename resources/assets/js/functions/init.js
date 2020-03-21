@@ -1,8 +1,9 @@
+import $ from 'jquery';
 import 'tooltipster';
 import 'parsleyjs';
 
 import { restart_inputs } from './input';
-import { prepareForm } from './functions';
+import { prepareForm, launch_modal } from './functions';
 
 export function init() {
     // Inizializzazzione dei box AdminLTE

@@ -702,7 +702,7 @@ echo '
 	});
 
     $("#ricalcola_scadenze").click(function(){
-        swal({
+        Swal.fire({
             title: "'.tr('Desideri ricalcolare le scadenze?').'",
             type: "warning",
             showCancelButton: true,
@@ -769,7 +769,7 @@ $(".btn-sm[data-toggle=\"tooltip\"]").each(function() {
         //form.find("input:disabled, select:disabled").removeAttr("disabled");
 
 	    if(!valid) {
-			swal({
+			Swal.fire({
                 type: "error",
                 title: "'.tr('Errore').'",
                 text:  "'.tr('Alcuni campi obbligatori non sono stati compilati correttamente').'.",

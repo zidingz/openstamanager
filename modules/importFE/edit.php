@@ -12,7 +12,7 @@ echo '
 <script>
     function upload(btn) {
         if ($("#blob").val()) {
-            swal({
+            Swal.fire({
                 title: "'.tr('Avviare la procedura?').'",
                 type: "warning",
                 showCancelButton: true,
@@ -34,7 +34,7 @@ echo '
                         if (!data.already) {
                             redirect(globals.rootdir + "/editor.php?id_module=" + globals.id_module + "&id_plugin=" + '.$id_plugin.' + "&id_record=" + data.id);
                         } else {
-                            swal({
+                            Swal.fire({
                                 title: "'.tr('Fattura già importata').'.",
                                 type: "info",
                             });
@@ -52,7 +52,7 @@ echo '
                 });
             })
         } else {
-            swal({
+            Swal.fire({
                 title: "'.tr('Selezionare un file!').'",
                 type: "error",
             })
@@ -134,7 +134,7 @@ $(document).ready(function() {
 if (Interaction::isEnabled()) {
     echo '
 function importAll(btn) {
-    swal({
+    Swal.fire({
         title: "'.tr('Importare tutte le fatture?').'",
         html: "'.tr('Verranno scaricate tutte le fatture da importare, e non sarà più possibile visualizzare altre informazioni oltre al nome per le fatture che non verranno importate completamente. Continuare?').'",
         showCancelButton: true,

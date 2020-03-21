@@ -156,7 +156,7 @@ echo '
 echo '
 <script>
     function backup(){
-        swal({
+        Swal.fire({
             title: "'.tr('Nuovo backup').'",
             text: "'.tr('Sei sicuro di voler creare un nuovo backup?').'",
             type: "warning",

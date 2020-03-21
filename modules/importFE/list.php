@@ -32,11 +32,11 @@ if (!empty($list)) {
             <td>
                 <p>'.$name.'</p>
             </td>
-            
+
             <td class="text-center">-</td>
             <td class="text-center">-</td>
             <td class="text-center">-</td>
-            
+
             <td class="text-center">
                 <button type="button" class="btn btn-danger" onclick="delete_fe(this, \''.$element['id'].'\')">
                     <i class="fa fa-trash"></i>
@@ -72,12 +72,12 @@ if (!empty($list)) {
             <td>
                 '.$descrizione.' <small>['.$name.']</small>
             </td>
-            
+
             <td>'.$element['sender'].'</td>
             <td>'.dateFormat($element['date_sent']).'</td>
             <td class="text-right">'.moneyFormat($element['amount']).'</td>
 
-            <td class="text-center">                
+            <td class="text-center">
                 <button type="button" class="btn btn-info tip" onclick="process_fe(this, \''.$name.'\')" title="'.tr('Segna la fattura come processata').'">
                     <i class="fa fa-upload"></i>
                 </button>';
@@ -91,7 +91,7 @@ if (!empty($list)) {
         }
 
         echo '
-        
+
                 <button type="button" class="btn btn-warning tip" '.((!extension_loaded('openssl') && substr(strtolower($name), -4) == '.p7m') ? 'disabled' : '').' onclick="import_fe(this, \''.$name.'\', \''.$data.'\')" title="'.tr('Importa la fattura nel gestionale').'">
                     <i class="fa fa-cloud-download"></i> '.tr('Importa').'
                 </button>
@@ -127,14 +127,14 @@ function import_fe(button, file, data_registrazione) {
             if (!data.already) {
                 redirect(globals.rootdir + "/editor.php?id_module=" + globals.id_module + "&id_plugin=" + '.$id_plugin.' + "&id_record=" + data.id + "&data_registrazione=" + data_registrazione);
             } else {
-                swal({
+                Swal.fire({
                     title: "'.tr('Fattura già importata.').'",
                     type: "info",
                 });
-                
+
 				$(button).prop("disabled", true);
             }
-            
+
             buttonRestore(button, restore);
         },
         error: function(xhr) {
@@ -146,7 +146,7 @@ function import_fe(button, file, data_registrazione) {
 }
 
 function process_fe(button, file) {
-    swal({
+    Swal.fire({
         title: "'.tr('Segnare la fattura come processata?').'",
         html: "'.tr("Non sarà possibile individuarla nuovamente in modo automatico: l'unico modo per recuperarla sarà contattare l'assistenza").'",
         type: "info",
@@ -154,7 +154,7 @@ function process_fe(button, file) {
         confirmButtonText: "'.tr('Sì').'"
     }).then(function (result) {
         var restore = buttonLoading(button);
-    
+
         $.ajax({
             url: globals.rootdir + "/actions.php",
             type: "get",
@@ -174,7 +174,7 @@ function process_fe(button, file) {
 }
 
 function delete_fe(button, file_id) {
-    swal({
+    Swal.fire({
         title: "'.tr('Rimuovere la fattura salvata localmente?').'",
         html: "'.tr('Sarà possibile inserirla nuovamente nel gestionale attraverso il caricamento').'",
         type: "error",
@@ -182,7 +182,7 @@ function delete_fe(button, file_id) {
         confirmButtonText: "'.tr('Sì').'"
     }).then(function (result) {
         var restore = buttonLoading(button);
-    
+
         $.ajax({
             url: globals.rootdir + "/actions.php",
             type: "get",
