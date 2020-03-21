@@ -140,4 +140,8 @@ mix.extract([
     'select2',
     'toastr',
     'sweetalert2',
+    'datatables.net',
+    'datatables.net-scroller',
+    'datatables.net-select',
+    'datatables.net-buttons',
 ]);

@@ -7,193 +7,63 @@
         "@fullcalendar/core": "^4.4.0",
         "@fullcalendar/daygrid": "^4.4.0",
         "admin-lte": "^3.0.2",
-        "autosize": "^3.0.21",
+        "autosize": "^4.0.2",
         "bootstrap": "^4.3.1",
-        "bootstrap-colorpicker": "2.5.1",
-        "bootstrap-daterangepicker": "^2.1.25",
-        "chart.js": "^2.7.0",
-        "components-jqueryui": "^1.12.1",
-        "cross-env": "^7.0.2",
-        "css-loader": "^3.4.2",
-        "datatables.net-bs4": "^1.10.15",
-        "datatables.net-buttons-bs": "^1.3.1",
-        "datatables.net-scroller-bs": "^1.4.2",
-        "datatables.net-select-bs": "^1.2.2",
-        "eonasdan-bootstrap-datetimepicker": "^4.17.47",
-        "expose-loader": "^0.7.5",
+        "bootstrap-colorpicker": "^3.2.0",
+        "bootstrap-daterangepicker": "^3.0.5",
+        "chart.js": "^2.9.3",
+        "datatables.net": "^1.10.20",
+        "datatables.net-bs4": "^1.10.20",
+        "datatables.net-buttons": "^1.6.1",
+        "datatables.net-buttons-bs4": "^1.6.1",
+        "datatables.net-scroller": "^2.0.1",
+        "datatables.net-scroller-bs4": "^2.0.1",
+        "datatables.net-select": "^1.3.1",
+        "datatables.net-select-bs4": "^1.3.1",
         "fullcalendar": "^3.4.0",
         "geocomplete": "^1.7.0",
-        "inputmask": "3.3.9",
-        "jquery": "^3.2.1",
-        "jquery-form": "^4.2.1",
-        "jquery-ui-touch-punch": "^0.2.3",
+        "inputmask": "^5.0.3",
+        "jquery": "^3.4.1",
+        "jquery-form": "^4.2.2",
         "jquery.shorten": "^1.0.0",
-        "laravel-mix": "^5.0.4",
-        "moment": "^2.18.1",
+        "moment": "^2.24.0",
+        "moment-timezone": "^0.5.28",
         "numeral": "^2.0.6",
-        "parsleyjs": "^2.7.2",
+        "parsleyjs": "^2.9.2",
         "pdf": "git://github.com/mozilla/pdf.js#gh-pages",
         "popper.js": "^1.16.0",
-        "pwstrength-bootstrap": "^3.0.4",
-        "select2": "4.0.3",
-        "select2-theme-bootstrap4": "^0.2.0-beta.4",
+        "pwstrength-bootstrap": "^3.0.5",
+        "select2": "^4.0.13",
+        "select2-theme-bootstrap4": "^0.2.0-beta.6",
         "signature_pad": "^2.1.1",
+        "sortablejs": "^1.10.2",
         "sweetalert2": "^9.1",
+        "tempusdominus-bootstrap-4": "^5.1.2",
+        "tempusdominus-core": "^5.0.3",
         "toastr": "^2.1.4",
-        "tooltipster": "^4.2.5",
-        "vue-template-compiler": "^2.6.11"
+        "tooltipster": "^4.2.7"
     },
     "devDependencies": {
         "archiver": "^3.0.0",
+        "cross-env": "^7.0.2",
+        "css-loader": "^3.4.2",
         "cwd": "^0.10.0",
         "del": "^4.0.0",
-        "gulp": "^4.0.0",
-        "gulp-autoprefixer": "^6.0.0",
-        "gulp-clean-css": "^4.0.0",
-        "gulp-concat": "^2.6.0",
-        "gulp-debug": "^4.0.0",
-        "gulp-flatten": "^0.4.0",
-        "gulp-if": "^2.0.2",
-        "gulp-json-minify": "^1.0.5",
-        "gulp-less": "^4.0.1",
-        "gulp-rename": "^1.4.0",
-        "gulp-sass": "^4.0.2",
-        "gulp-stylus": "^2.6.0",
-        "gulp-uglify": "^3.0.2",
-        "gulp-util": "^3.0.8",
+        "expose-loader": "^0.7.5",
         "inquirer": "^4.0.1",
+        "laravel-mix": "^5.0.4",
         "main-bower-files": "^2.13.1",
         "resolve-url-loader": "^3.1.1",
+        "sass": "^1.26.3",
         "sass-loader": "^8.0.2",
-        "shelljs": "^0.7.7"
+        "shelljs": "^0.7.7",
+        "vue-template-compiler": "^2.6.11",
+        "webpack": "^4.42.0"
     },
     "scripts": {
-        "gulp": "gulp",
-        "release-OSM": "yarn run develop-OSM && php composer.phar install --no-dev && gulp release",
-        "develop-OSM": "yarn install && yarn run install-OSM && yarn run assets-OSM",
-        "install-OSM": "php composer.phar update",
-        "assets-OSM": "yarn upgrade && yarn run build-OSM",
-        "build-OSM": "gulp",
-        "dump-OSM": "php composer.phar dump-autoload",
-        "windows-fix": "yarn global add windows-build-tools",
-        "mix": "webpack --config=node_modules/laravel-mix/setup/webpack.config.js"
-    },
-    "overrides": {
-        "almond": {
-            "ignore": true
-        },
-        "@ckeditor/ckeditor5-build-classic": {
-            "ignore": true
-        },
-        "chart.js": {
-            "ignore": true
-        },
-        "pwstrength-bootstrap": {
-            "ignore": true
-        },
-        "admin-lte": {
-            "main": [
-                "dist/css/AdminLTE.css",
-                "dist/js/adminlte.js"
-            ],
-            "dependencies": {
-                "jquery": "*",
-                "bootstrap": "*"
-            }
-        },
-        "@fortawesome/fontawesome-free": {
-            "main": [
-                "css/all.min.css",
-                "css/v4-shims.min.css",
-                "webfonts/*"
-            ]
-        },
-        "bootstrap": {
-            "main": [
-                "dist/js/bootstrap.min.js",
-                "dist/fonts/*"
-            ],
-            "dependencies": {
-                "jquery": "*",
-                "popper.js": "*"
-            }
-        },
-        "datatables.net-bs4": {
-            "main": [
-                "js/dataTables.bootstrap.js",
-                "css/dataTables.bootstrap.css"
-            ]
-        },
-        "datatables.net-buttons": {
-            "main": [
-                "js/dataTables.buttons.js",
-                "js/buttons.colVis.js",
-                "js/buttons.flash.js",
-                "js/buttons.html5.js",
-                "js/buttons.print.js"
-            ]
-        },
-        "datatables.net-buttons-bs": {
-            "main": [
-                "js/buttons.bootstrap.js",
-                "css/buttons.bootstrap.css"
-            ]
-        },
-        "datatables.net-scroller-bs": {
-            "main": "css/scroller.bootstrap.css"
-        },
-        "datatables.net-select-bs": {
-            "main": "css/select.bootstrap.css"
-        },
-        "font-awesome": {
-            "main": [
-                "css/font-awesome.min.css",
-                "fonts/*"
-            ]
-        },
-        "fullcalendar": {
-            "main": [
-                "dist/fullcalendar.js",
-                "dist/fullcalendar.css"
-            ]
-        },
-        "inputmask": {
-            "main": "dist/min/jquery.inputmask.bundle.min.js"
-        },
-        "parsleyjs": {
-            "main": [
-                "dist/parsley.js",
-                "src/parsley.css"
-            ]
-        },
-        "select2": {
-            "main": [
-                "dist/js/select2.min.js",
-                "dist/css/select2.min.css"
-            ]
-        },
-        "select2-theme-bootstrap4": {
-            "main": "dist/select2-bootstrap.css"
-        },
-        "sweetalert2": {
-            "main": [
-                "dist/sweetalert2.js",
-                "dist/sweetalert2.css"
-            ]
-        },
-        "jquery.shorten": {
-            "main": [
-                "src/jquery.shorten.js"
-            ]
-        },
-        "toastr": {
-            "main": [
-                "build/toastr.min.js",
-                "build/toastr.min.css"
-            ]
-        }
-    },
-    "browserslist": [
-        "last 2 version"
-    ]
+        "release": "yarn run develop && php composer.phar install --no-dev && node release.js",
+        "develop": "php composer.phar update && yarn run install && yarn run assets",
+        "assets": "yarn upgrade && yarn run build",
+        "build": "webpack --config=node_modules/laravel-mix/setup/webpack.config.js"
+    }
 }

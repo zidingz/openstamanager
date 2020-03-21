@@ -1,4 +1,5 @@
-// AdminLTE e Bootsrap
+// AdminLTE e Bootstrap
+$sidebar-width: 350px !default;
 @import '~admin-lte/build/scss/AdminLTE';
 
 // FullCalendar
@@ -16,6 +17,13 @@
 @import "~@fortawesome/fontawesome-free/scss/brands";
 @import "~@fortawesome/fontawesome-free/scss/regular";
 @import "~@fortawesome/fontawesome-free/scss/v4-shims";
+
+// DataTables
+@import "~datatables.net-bs4/css/dataTables.bootstrap4.css";
+@import "~datatables.net-buttons-bs4/css/buttons.bootstrap4.css";
+@import "~datatables.net-scroller-bs4/css/scroller.bootstrap4.css";
+@import "~datatables.net-scroller-bs4/css/scroller.bootstrap4.css";
+@import "~datatables.net-select-bs4/css/select.bootstrap4.css";
 
 // CSS personalizzati
 @import "../css/style.css";

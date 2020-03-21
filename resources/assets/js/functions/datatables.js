@@ -1,4 +1,13 @@
-import { getUrlVars } from './functions';
+import 'datatables.net';
+import 'datatables.net-scroller';
+import 'datatables.net-select';
+import 'datatables.net-buttons';
+import 'datatables.net-buttons/js/buttons.colVis';
+import 'datatables.net-buttons/js/buttons.flash';
+import 'datatables.net-buttons/js/buttons.html5';
+import 'datatables.net-buttons/js/buttons.print';
+
+import { getUrlVars, openLink } from './functions';
 
 export function start_local_datatables() {
     $('.datatables').each(function () {

@@ -29,9 +29,6 @@ class PrintController extends Controller
 
         $pdf = $manager->render();
 
-        /*
-               $pdf = Prints::render($args['print_id'], $args['record_id']);
-       */
         $response = $response
             ->withHeader('Content-Type', 'application/pdf')
             ->write($pdf);
