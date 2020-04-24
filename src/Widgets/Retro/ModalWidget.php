@@ -2,6 +2,7 @@
 
 namespace Widgets\Retro;
 
+use Middlewares\Authorization\UserMiddleware;
 use Modules\Module;
 use Slim\App as SlimApp;
 use Widgets\ModalWidget as Original;
@@ -57,14 +58,6 @@ class ModalWidget extends Original
         return $content;
     }
 
-    public function modal(ServerRequestInterface $request, ResponseInterface $response, array $args)
-    {
-        $result = $this->getModal();
-        $response = $response->write($result);
-
-        return $response;
-    }
-
     public function getLink(): string
     {
         $id = $this->model->id;
@@ -76,6 +69,6 @@ class ModalWidget extends Original
     {
         $id = $this->model->id;
         $app->get('/widget/modal/'.$id, ModalController::class.':modal')
-            ->setName('widget-modal-'.$id);
+            ->add(UserMiddleware::class);
     }
 }

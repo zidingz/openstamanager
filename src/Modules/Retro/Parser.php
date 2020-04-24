@@ -37,6 +37,9 @@ abstract class Parser extends Controller
                 include $content;
                 $content = ob_get_clean();
             }
+        } elseif (!in_array($args['module']->option, ['custom', 'menu'])) {
+            // TODO: fix per la visualizzazione dei record collegati al record genitore del plugin, visualizzazione titolo con pulsante di aggiunta
+            $content = $this->twig->fetch('content.twig', $args);
         }
 
         $args = array_merge($args, [

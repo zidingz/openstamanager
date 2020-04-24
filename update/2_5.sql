@@ -35,6 +35,8 @@ UPDATE `zz_widgets` SET `class` = 'Widgets\\Retro\\ModalWidget' WHERE `name` = '
 
 ALTER TABLE `zz_widgets` DROP `print_link`, DROP `more_link_type`, DROP `php_include`;
 
+UPDATE `zz_widgets` SET `more_link` = REPLACE(`more_link`, './', '/');
+
 -- Aggiornamento stampe
 UPDATE `zz_prints` SET `class` = 'Prints\\Fatture\\Manager' WHERE `name` = 'Fattura di vendita';
 
