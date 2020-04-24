@@ -26,7 +26,6 @@
         "moment": "^2.18.1",
         "numeral": "^2.0.6",
         "parsleyjs": "^2.7.2",
-        "pdf": "git://github.com/mozilla/pdf.js#gh-pages",
         "popper.js": "^1.16.0",
         "pwstrength-bootstrap": "^3.0.4",
         "select2": "4.0.3",
@@ -81,9 +80,12 @@
         "pwstrength-bootstrap": {
             "ignore": true
         },
+        "summernote": {
+            "ignore": true
+        },
         "admin-lte": {
             "main": [
-                "dist/css/AdminLTE.css",
+                "dist/css/adminlte.css",
                 "dist/js/adminlte.js"
             ],
             "dependencies": {

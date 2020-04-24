@@ -247,6 +247,7 @@ function i18n() {
             config.development + '/' + config.paths.js + '/i18n/**/*.{js,json}',
             '!' + config.main.bowerDirectory + '/**/{src,plugins}/**',
             '!' + config.main.bowerDirectory + '/ckeditor/**',
+            '!' + config.main.bowerDirectory + '/summernote/**',
             '!' + config.main.bowerDirectory + '/jquery-ui/**',
         ])
         .pipe(gulpIf('*.js', minifyJS(), gulpIf('*.json', minifyJSON())))
