@@ -728,3 +728,7 @@ input.small-width {
 .card-tools .btn {
     padding: 0px .75rem;
 }
+
+.info-box .info-box-text, .info-box .progress-description {
+    white-space: normal;
+}
