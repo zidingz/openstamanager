@@ -62,7 +62,7 @@
     },
     "scripts": {
         "release": "yarn run develop && php composer.phar install --no-dev && node release.js",
-        "develop": "php composer.phar update && yarn run install && yarn run assets",
+        "develop": "php composer.phar update && yarn install && yarn run assets",
         "assets": "yarn upgrade && yarn run build",
         "build": "webpack --config=node_modules/laravel-mix/setup/webpack.config.js"
     }
