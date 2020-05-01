@@ -9,7 +9,7 @@ export function start_superselect() {
         $(this).select2({
             theme: "bootstrap",
             language: "it",
-            width: '100%',
+            width: 'resolve',
             maximumSelectionLength: $this.data('maximum') ? $this.data('maximum') : -1,
             minimumResultsForSearch: $this.hasClass('no-search') ? -1 : 0,
             allowClear: $this.hasClass('no-search') ? false : true,
@@ -44,6 +44,7 @@ export function start_superselect() {
         $(this).select2({
             theme: "bootstrap",
             language: "it",
+            width: 'resolve',
             maximumSelectionLength: $this.data('maximum') ? $this.data('maximum') : -1,
             minimumInputLength: $this.data('heavy') ? 3 : 0,
             allowClear: true,
@@ -94,7 +95,6 @@ export function start_superselect() {
                 },
                 cache: false
             },
-            width: '100%'
         });
     });
 }

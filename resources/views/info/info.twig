@@ -8,16 +8,21 @@
 </h3>
 
 <div class="row">
-    <div class="col-md-8">
-        <p>{{ "Il gestionale OpenSTAManager è un software open-source e web based, sviluppato dall'azienda informatica DevCode di Este per gestire ed archiviare il servizio di assistenza tecnica e la relativa fatturazione"|trans }}.</p>
-        <p>{{ "Il nome del progetto deriva dalla parziale traduzione in inglese degli elementi principali che lo compongono: la natura open-source e il suo obiettivo quale Gestore del Servizio Tecnico di Assistenza"|trans }}.</p>
+    <div class="col-md-12">
+        <p>{{ "Il gestionale OpenSTAManager è un software open-source e web based, sviluppato dall'azienda informatica DevCode di Este per gestire ed archiviare il servizio di assistenza tecnica e la relativa fatturazione"|trans }}. {{ "Il nome del progetto deriva dalla parziale traduzione in inglese degli elementi principali che lo compongono: la natura open-source e il suo obiettivo quale Gestore del Servizio Tecnico di Assistenza"|trans }}.</p>
+    </div>
+</div>
+
+<div class="row text-center">
+    <div class="col-md-4">
+        <p><b>{{ 'Sito web'|trans }}:</b> <a href="https://www.openstamanager.com" target="_blank">www.openstamanager.com</a></p>
     </div>
 
     <div class="col-md-4">
-        <p><b>{{ 'Sito web'|trans }}:</b> <a href="https://www.openstamanager.com" target="_blank">www.openstamanager.com</a></p>
-
         <p><b>{{ 'Versione'|trans }}:</b> {{ version }} <small class="text-muted">({{ revision ? revision : 'In sviluppo'|trans }})</small></p>
+    </div>
 
+    <div class="col-md-4">
         <p><b>{{ 'Licenza'|trans }}:</b> <a href="http://www.gnu.org/licenses/gpl-3.0.txt" target="_blank" title="{{ 'Vai al sito per leggere la licenza'|trans }}">GPLv3</a></p>
     </div>
 </div>

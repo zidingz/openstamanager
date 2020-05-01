@@ -206,8 +206,6 @@ class FileManager implements ManagerInterface
         $source = array_clean(array_column($categories, 'category'));
 
         $result .= '
-<script>$(document).ready(init)</script>
-
 <script>
 $(document).ready(function() {
     // Modifica categoria

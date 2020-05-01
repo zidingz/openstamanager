@@ -106,7 +106,7 @@ export function getUrlVars() {
 // Data e ora (orologio)
 export function clock() {
     $('#datetime').html(moment().format(dateFormatMoment(globals.timestamp_format)));
-    setTimeout(clock, 1000);
+    setTimeout(clock, 10 * 1000);
 }
 
 /**

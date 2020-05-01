@@ -239,6 +239,15 @@ span.form-control {
     border-bottom: 3px solid #ddd;
 }
 
+/* Aggiustamenti per i select */
+
+.select2-container--bootstrap .select2-selection {
+    font-size: 0.75rem;
+}
+.select2-selection.select2-selection--single{
+    width: 100%;
+}
+
 /* Aggiustamenti per i widget */
 
 .widget li {

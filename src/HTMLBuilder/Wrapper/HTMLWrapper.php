@@ -28,7 +28,7 @@ class HTMLWrapper implements WrapperInterface
 
             if (!empty($values['icon-before'])) {
                 $result .= '
-        <span class="input-group-prepend input-group-text'.(!empty($values['icon-custom']) ? ' '.$values['icon-custom'] : '').'">'.$values['icon-before'].'</span>';
+        <span class="input-group-prepend"><span class="input-group-text'.(!empty($values['icon-custom']) ? ' '.$values['icon-custom'] : '').'">'.$values['icon-before'].'</span></span>';
             }
         }
 
@@ -45,13 +45,13 @@ class HTMLWrapper implements WrapperInterface
         if (!empty($values['icon-before']) || !empty($values['icon-after']) || !empty($values['validation'])) {
             if (!empty($values['icon-after'])) {
                 $result .= '
-                <span class="input-group-append input-group-text'.(!empty($values['icon-custom']) ? ' '.$values['icon-custom'] : '').'">'.$values['icon-after'].'</span>';
+                <span class="input-group-append"><span class="input-group-text '.(!empty($values['icon-custom']) ? ' '.$values['icon-custom'] : '').'">'.$values['icon-after'].'</span></span>';
             }
 
             if (!empty($values['validation'])) {
                 $result .= '
-                <span class="input-group-append input-group-text" id="'.$pseudo_id.'_validation">
-                    <span class="tip" title="'.tr('Validazione').'"><i class="fa fa-question-circle "></i></span>
+                <span class="input-group-append" id="'.$pseudo_id.'_validation">
+                    <span class="tip input-group-text" title="'.tr('Validazione').'"><i class="fa fa-question-circle "></i></span>
                 </span>';
             }
 
