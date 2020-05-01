@@ -82,8 +82,10 @@ require __DIR__.'/../config/middlewares.php';
 // Inizializzazione percorsi per i moduli
 if (Update::isCoreUpdated()) {
     $modules = Module::getAll();
-    foreach ($modules as $module) {
-        $class = $module->getManager();
+    $widgets = \Widgets\Widget::all();
+    $components = collect([$modules, $widgets])->flatten();
+    foreach ($components as $component) {
+        $class = $component->getManager();
         $class->boot($app);
 
         Update::addComponentUpdates($class->updates());

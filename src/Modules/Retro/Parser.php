@@ -5,16 +5,12 @@ namespace Modules\Retro;
 use App;
 use Controllers\Controller;
 use HTMLBuilder\HTMLBuilder;
+use Modules\Module;
 use Modules\Traits\DefaultTrait;
 
 abstract class Parser extends Controller
 {
     use DefaultTrait;
-
-    public static function filepath($module, $file)
-    {
-        return App::filepath('modules/'.$module->directory.'|custom|', $file);
-    }
 
     protected function controller($args)
     {
@@ -24,19 +20,22 @@ abstract class Parser extends Controller
 
         if ($args['module']->option == 'custom') {
             // Lettura risultato query del modulo
-            $init = $args['module']->filepath('init.php');
+            $init = self::filepath($args['module'], 'init.php');
             if (!empty($init)) {
                 include $init;
             }
 
             $args['record'] = $record;
 
-            $content = $args['module']->filepath('edit.php');
+            $content = self::filepath($args['module'], 'edit.php');
             if (!empty($content)) {
                 ob_start();
                 include $content;
                 $content = ob_get_clean();
             }
+        } elseif (!in_array($args['module']->option, ['custom', 'menu'])) {
+            // TODO: fix per la visualizzazione dei record collegati al record genitore del plugin, visualizzazione titolo con pulsante di aggiunta
+            $content = $this->twig->fetch('content.twig', $args);
         }
 
         $args = array_merge($args, [
@@ -55,7 +54,7 @@ abstract class Parser extends Controller
         $dbo = $database = $this->database;
 
         // Lettura risultato query del modulo
-        $init = $args['module']->filepath('init.php');
+        $init = self::filepath($args['module'], 'init.php');
         if (!empty($init)) {
             include $init;
         }
@@ -65,21 +64,21 @@ abstract class Parser extends Controller
         // Registrazione del record
         HTMLBuilder::setRecord($record);
 
-        $content = $args['module']->filepath('edit.php');
+        $content = self::filepath($args['module'], 'edit.php');
         if (!empty($content)) {
             ob_start();
             include $content;
             $content = ob_get_clean();
         }
 
-        $buttons = $args['module']->filepath('buttons.php');
+        $buttons = self::filepath($args['module'], 'buttons.php');
         if (!empty($buttons)) {
             ob_start();
             include $buttons;
             $buttons = ob_get_clean();
         }
 
-        $module_bulk = $args['module']->filepath('bulk.php');
+        $module_bulk = self::filepath($args['module'], 'bulk.php');
         $module_bulk = empty($module_bulk) ? [] : include $module_bulk;
         $module_bulk = empty($module_bulk) ? [] : $module_bulk;
 
@@ -102,7 +101,7 @@ abstract class Parser extends Controller
         $dbo = $database = $this->database;
 
         // Lettura risultato query del modulo
-        $init = $args['module']->filepath('init.php');
+        $init = self::filepath($args['module'], 'init.php');
         if (!empty($init)) {
             include $init;
         }
@@ -110,7 +109,7 @@ abstract class Parser extends Controller
         $args['record'] = $record;
 
         // Registrazione del record
-        $actions = $args['module']->filepath('actions.php');
+        $actions = self::filepath($args['module'], 'actions.php');
         if (!empty($actions)) {
             include $actions;
         }
@@ -118,19 +117,19 @@ abstract class Parser extends Controller
         return $id_record;
     }
 
-    protected function add($args)
+    protected function create($args)
     {
         extract($args);
 
         $dbo = $database = $this->database;
 
         // Lettura risultato query del modulo
-        $init = $args['module']->filepath('init.php');
+        $init = self::filepath($args['module'], 'init.php');
         if (!empty($init)) {
             include $init;
         }
 
-        $content = $args['module']->getAddFile();
+        $content = $this->getAddFile($args['module']);
         if (!empty($content)) {
             ob_start();
             include $content;
@@ -142,5 +141,56 @@ abstract class Parser extends Controller
         ]);
 
         return $args;
+    }
+
+    /**
+     * Restituisce il percorso per il file di creazione dei record.
+     *
+     * @return string
+     */
+    public function getAddFile(Module $module):?string
+    {
+        $php = self::filepath($module, 'add.php');
+        $html = self::filepath($module, 'add.html');
+
+        return !empty($php) ? $php : $html;
+    }
+
+    /**
+     * Restituisce il percorso per il file di modifica dei record.
+     *
+     * @return string
+     */
+    public function getEditFile(Module $module):?string
+    {
+        $php = self::filepath($module, 'edit.php');
+        $html = self::filepath($module, 'edit.html');
+
+        return !empty($php) ? $php : $html;
+    }
+
+    /**
+     * Restituisce il percorso completo per il file indicato della struttura.
+     *
+     * @return string|null
+     */
+    public static function filepath(Module $module, string $file):?string
+    {
+        return App::filepath('modules/'.$module->directory.'|custom|', $file);
+    }
+
+    /**
+     * Restituisce l'URL completa per il file indicato della struttura.
+     *
+     * @return string|null
+     */
+    public static function fileurl(Module $module, string $file): ?string
+    {
+        $filepath = self::filepath($module, $file);
+
+        $result = str_replace(DOCROOT, ROOTDIR, $filepath);
+        $result = str_replace('\\', '/', $result);
+
+        return $result;
     }
 }

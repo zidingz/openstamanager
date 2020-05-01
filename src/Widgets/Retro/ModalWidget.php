@@ -2,15 +2,18 @@
 
 namespace Widgets\Retro;
 
+use Middlewares\Authorization\UserMiddleware;
 use Modules\Module;
+use Slim\App as SlimApp;
 use Widgets\ModalWidget as Original;
 
 class ModalWidget extends Original
 {
     public function getModal(): string
     {
-        $content = null;
+        $content = '';
 
+        $widget = $this->model;
         if (!empty($widget['more_link'])) {
             $database = $dbo = $this->getContainer()->get('database');
 
@@ -49,16 +52,23 @@ class ModalWidget extends Original
                 $value = $database->fetchArray($query)[0]['dato'];
             }
 
-            return preg_match('/\\d/', $value) ? $value : '-';
-        } elseif (!empty($widget['more_link'])) {
-            $database = $dbo = $this->getContainer()->get('database');
-
-            $is_number_request = true;
-            ob_start();
-            include DOCROOT.'/'.$widget['more_link'];
-            $content = ob_get_clean();
+            $content = preg_match('/\\d/', $value) ? $value : '-';
         }
 
         return $content;
+    }
+
+    public function getLink(): string
+    {
+        $id = $this->model->id;
+
+        return ROOTDIR.'/widget/modal/'.$id;
+    }
+
+    protected function routes(SlimApp $app): void
+    {
+        $id = $this->model->id;
+        $app->get('/widget/modal/'.$id, ModalController::class.':modal')
+            ->add(UserMiddleware::class);
     }
 }

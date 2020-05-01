@@ -8,7 +8,7 @@ class LinkWidget extends Original
 {
     public function getLink(): string
     {
-        return $this->model['more_link'];
+        return ROOTDIR.$this->model['more_link'];
     }
 
     protected function getTitle(): string

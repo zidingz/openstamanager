@@ -17,6 +17,7 @@ foreach ($moduli as $modulo) {
     $notes = $notes->merge($note);
 }
 
+// TODO: Fix $is_number_request e $is_title_request con la struttura a classi
 if (!empty($is_number_request)) {
     echo $notes->count();
 

@@ -8,12 +8,10 @@ use Components\BootableInterface;
 use Components\BootrableTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Module;
-use Traits\PathTrait;
 use Traits\StoreTrait;
 
 class Template extends Model implements BootableInterface
 {
-    use PathTrait;
     use StoreTrait;
     use BootrableTrait;
 

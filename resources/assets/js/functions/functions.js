@@ -18,6 +18,7 @@ export function openModal(title, href, generate_id) {
     };
 
     // Generazione dinamica modal
+    var id;
     if (generate_id == undefined) {
         do {
             id = '#bs-popup-' + Math.floor(Math.random() * 100);

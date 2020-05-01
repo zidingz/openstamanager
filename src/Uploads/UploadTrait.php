@@ -1,6 +1,6 @@
 <?php
 
-namespace Traits\Components;
+namespace Uploads;
 
 use Models\Upload;
 

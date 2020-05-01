@@ -29,7 +29,7 @@ class ModuleController extends Parser implements ModuleInterface
     public function add(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $args = $this->prepare($args);
-        $args = parent::add($args);
+        $args = parent::create($args);
 
         return $this->twig->render($response, 'old/add.twig', $args);
     }
