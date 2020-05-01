@@ -1,4 +1,5 @@
 import 'bootstrap-daterangepicker';
+import moment from 'moment';
 
 export function start_datepickers() {
     var icons = {
@@ -177,9 +178,3 @@ export function dateFormatMoment(format) {
         return typeof formatMap[phpStr] === 'function' ? formatMap[phpStr].call(that) : formatMap[phpStr];
     })
 }
-
-(function (m) {
-    moment.fn.formatPHP = function (format) {
-        return this.format(dateFormatMoment(format));
-    };
-}(moment));

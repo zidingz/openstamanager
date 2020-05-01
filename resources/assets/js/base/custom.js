@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import 'admin-lte';
 import 'bootstrap';
-import 'moment';
 import 'numeral';
 import 'bootstrap-colorpicker';
 import 'toastr';

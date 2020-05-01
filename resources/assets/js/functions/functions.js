@@ -3,7 +3,8 @@ import 'parsleyjs';
 import 'jquery-form';
 import 'toastr';
 import Swal from 'sweetalert2';
-import 'moment';
+import moment from 'moment';
+import { dateFormatMoment } from './dates.js';
 
 // Modal
 export function launch_modal(title, href, init_modal, id) {
@@ -103,7 +104,7 @@ export function getUrlVars() {
 
 // Data e ora (orologio)
 export function clock() {
-    $('#datetime').html(moment().formatPHP(globals.timestamp_format));
+    $('#datetime').html(moment().format(dateFormatMoment(globals.timestamp_format)));
     setTimeout(clock, 1000);
 }
 
