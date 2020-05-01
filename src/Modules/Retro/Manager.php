@@ -68,13 +68,13 @@ class Manager extends Original
     protected function autoload(): void
     {
         // Inclusione modutil.php
-        $file = $this->module->filepath('modutil.php');
+        $file = Parser::filepath($this->module, 'modutil.php');
         if (!empty($file)) {
             include_once $file;
         }
 
         // Inclusione Composer
-        $file = $this->module->filepath('vendor/autoload.php');
+        $file = Parser::filepath($this->module, 'vendor/autoload.php');
         if (!empty($file)) {
             include_once $file;
         }
@@ -82,7 +82,7 @@ class Manager extends Original
 
     protected function views(): void
     {
-        $path = $this->module->filepath('views');
+        $path = Parser::filepath($this->module, 'views');
         $name = $this->module->directory;
 
         $this->addView($path, $name);

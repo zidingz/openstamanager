@@ -8,19 +8,18 @@ use Auth\Group;
 use Common\Model;
 use Components\BootableInterface;
 use Components\BootrableTrait;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Checklists\Traits\ChecklistTrait;
 use Prints\Template;
 use Traits\Components\NoteTrait;
-use Traits\Components\UploadTrait;
-use Traits\ManagerTrait;
 use Traits\PermissionTrait;
 use Traits\StoreTrait;
+use Uploads\UploadTrait;
 use Util\Query;
 
 class Module extends Model implements BootableInterface
 {
-    use ManagerTrait;
     use UploadTrait;
     use StoreTrait;
     use PermissionTrait;
@@ -52,7 +51,7 @@ class Module extends Model implements BootableInterface
     protected $children_list;
     protected static $hierarchy;
 
-    public function replacePlaceholders($id_record, $value)
+    public function replacePlaceholders($id_record, string $value): string
     {
         $replaces = $this->getPlaceholders($id_record);
 
@@ -61,7 +60,7 @@ class Module extends Model implements BootableInterface
         return $value;
     }
 
-    public function getPlaceholders(?int $id_record)
+    public function getPlaceholders(?int $id_record): array
     {
         if (!isset($this->variables[$id_record])) {
             $dbo = $database = database();
@@ -88,17 +87,8 @@ class Module extends Model implements BootableInterface
 
     /**
      * Costruisce un link HTML per il modulo e il record indicati.
-     *
-     * @param int    $id_record
-     * @param string $testo
-     * @param bool   $alternativo
-     * @param string $extra
-     * @param bool   $blank
-     * @param string $anchor
-     *
-     * @return string
      */
-    public function link(?int $id_record = null, ?string $testo = null, ?string $alternativo = null, ?string $extra = null, bool $blank = true, ?string $anchor = null)
+    public function link(?int $id_record = null, ?string $testo = null, ?string $alternativo = null, ?string $extra = null, bool $blank = true, ?string $anchor = null): string
     {
         $testo = isset($testo) ? nl2br($testo) : tr('Visualizza scheda');
         $alternativo = is_bool($alternativo) && $alternativo ? $testo : $alternativo;
@@ -132,6 +122,18 @@ class Module extends Model implements BootableInterface
             ->where('type', $type)
             ->orderBy('order')
             ->get();
+    }
+
+    /**
+     * Restituisce le informazioni relative alla query della struttura.
+     *
+     * @throws Exception
+     *
+     * @return array
+     */
+    public function readQuery()
+    {
+        return \Util\Query::readQuery($this);
     }
 
     // Attributi Eloquent

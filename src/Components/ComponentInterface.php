@@ -19,7 +19,7 @@ interface ComponentInterface
     public function boot(SlimApp $app): void;
 
     /**
-     * Restituisce i contentuti HTML del componente.
+     * Restituisce i contenuti HTML del componente.
      *
      * @param array $args
      *
@@ -28,7 +28,7 @@ interface ComponentInterface
     public function render(array $args = []): string;
 
     /**
-     * Restutuisce un elenco di aggiornamenti presentati dal componente.
+     * Restituisce un elenco di aggiornamenti presentati dal componente.
      *
      * @return array
      */

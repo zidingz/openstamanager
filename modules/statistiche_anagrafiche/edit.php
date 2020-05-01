@@ -29,13 +29,14 @@ echo '
 </div>';
 
 $statistiche = module('Statistiche');
+/*
 echo '
 <script src="'.$statistiche->fileurl('js/functions.js').'"></script>
 <script src="'.$statistiche->fileurl('js/manager.js').'"></script>
 <script src="'.$statistiche->fileurl('js/calendar.js').'"></script>
 <script src="'.$statistiche->fileurl('js/stat.js').'"></script>
 <script src="'.$statistiche->fileurl('js/stats/table.js').'"></script>
-<script src="'.$statistiche->fileurl('js/stats/widget.js').'"></script>
+<script src="'.$statistiche->fileurl('js/stats/widget.js').'"></script>';
 
 <script>
 var local_url = "'.str_replace('edit.php', '', $structure->fileurl('edit.php')).'";
@@ -48,3 +49,4 @@ function init_calendar(calendar) {
 </script>
 
 <script src="'.$statistiche->fileurl('js/init.js').'"></script>';
+*/

@@ -9,7 +9,7 @@ use Common\Model;
 use Modules\Module;
 use Psr\Http\Message\ResponseInterface;
 
-class DefaultUpload extends Model implements UploadAdapter
+class DefaultAdapter extends Model implements AdapterInterface
 {
     protected $table = 'zz_files';
 
@@ -236,7 +236,7 @@ class DefaultUpload extends Model implements UploadAdapter
 
         $model->save();
 
-        return $model;
+        return !empty($model);
     }
 
     /**
@@ -250,7 +250,7 @@ class DefaultUpload extends Model implements UploadAdapter
     /**
      * {@inheritdoc}
      */
-    public static function remove(Module $module, Model $record = null): void
+    public static function remove(Module $module, Model $record = null): bool
     {
         $uploads = self::locate($module, $record);
 

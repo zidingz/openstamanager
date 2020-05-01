@@ -229,9 +229,10 @@ span.form-control {
     margin-top: 0;
 }
 
-#pulsanti.affix {
+.pulsanti-affix {
+    position: fixed;
     top: 0;
-    padding: 10px 0;
+    padding: 10px 10px;
     width: 100%;
     z-index: 800;
     background: #fff;
@@ -325,9 +326,10 @@ span.form-control {
     color: gray;
     width: 30px;
     height: 30px;
+    font-size: 1.5em;
     position: absolute;
     margin-left: -30px;
-    bottom: 17px;
+    bottom: 22px;
     right: 17px;
     float: right;
     display: block;

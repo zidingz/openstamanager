@@ -2,8 +2,8 @@
 
 namespace Traits;
 
-use Models\Plugin;
 use Modules\Module;
+use Uploads\UploadInterface;
 
 trait RecordTrait
 {
@@ -12,22 +12,12 @@ trait RecordTrait
         return !empty($this->module) ? Module::get($this->module) : null;
     }
 
-    public function getPlugin()
-    {
-        return !empty($this->plugin) ? Plugin::get($this->plugin) : null;
-    }
-
     public function uploads()
     {
         $module = $this->getModule();
-        $plugin = $this->getPlugin();
 
-        if (!empty($module)) {
+        if (!empty($module) && $module instanceof UploadInterface) {
             return $module->uploads($this->id);
-        }
-
-        if (!empty($plugin)) {
-            return $plugin->uploads($this->id);
         }
 
         return collect();

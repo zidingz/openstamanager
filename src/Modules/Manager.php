@@ -15,14 +15,14 @@ abstract class Manager extends Component
 
     public function __construct(Module $module)
     {
+        parent::__construct($module);
+
         $this->module = $module;
     }
 
     /**
      * Restituisce il nome relativo ad un'azione specificata dai parametri.
      * Utilizzato per comporre correttamente gli indirizzi nelle parti autonome di indirizzamento del gestione.
-     *
-     * @param array $parameters
      *
      * @return mixed
      */
@@ -32,19 +32,14 @@ abstract class Manager extends Component
      * Restituisce le informazioni disponibili al modulo a riguardo di un determinato record.
      * Utilizzato per il completamento delle informazioni all'interno dei plugin.
      *
-     * @param int|null $id_record
-     *
      * @return mixed
      */
     abstract public function getData(?int $id_record);
 
     /**
      * Registra un nuovo namespace Twig per l'applicazione.
-     *
-     * @param string $path
-     * @param string $name
      */
-    protected function addView(string $path, string $name)
+    protected function addView(string $path, string $name): void
     {
         $loader = self::$container->get('twig')->getLoader();
 

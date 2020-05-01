@@ -71,25 +71,25 @@
 
             // Pulsanti dinamici
             if (!globals.is_mobile) {
-                //$("#pulsanti").affix({
-                //    offset: {
-                //        top: 200
-                //    }
-                //});
+                var target = $('#pulsanti')
+                target.after('<div class="pulsanti-affix" id="#pulsanti-affix"></div>')
 
-                if ($("#pulsanti").hasClass("affix")) {
-                    $("#pulsanti").css("width", $("#tab_0").css("width"));
-                }
+                var affix = $('.pulsanti-affix')
+                affix.append(target.clone(true))
 
-                $("#pulsanti").on("affix.bs.affix", function(){
-                    $("#pulsanti").css("width", $("#tab_0").css("width"));
-                });
-
-                $("#pulsanti").on("affix-top.bs.affix", function(){
-                    $("#pulsanti").css("width", "100%");
-                });
+                // Show affix on scroll
+                window.addEventListener('scroll', function () {
+                    var height = $(window).scrollTop()
+                    if (height > 200) {
+                        target.css('visibility', 'hidden')
+                        affix.css('display', 'block')
+                        affix.css("width", $("#tab_0").css("width"));
+                    } else {
+                        affix.css('display', 'none')
+                        target.css('visibility', 'visible')
+                    }
+                })
             }
-
         });
     </script>
 
@@ -154,7 +154,7 @@
 
     <script>
         // Se l'utente ha i permessi in sola lettura per il modulo, converto tutti i campi di testo in span
-        {% set read_only = structure.permission == 'r' %}
+        {% set read_only = module.permission == 'r' %}
         {% set not_class = read_only ? '' : '.not(".unblockable")' %}
         {% if read_only or (block_edit is defined and block_edit == false) %}
         $(document).ready(function(){

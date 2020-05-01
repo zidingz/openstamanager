@@ -1,7 +1,7 @@
 {% extends "layouts/app.twig" %}
 
 {% block title %}
-    {{ structure.title }}
+    {{ module.title }}
 {% endblock %}
 
 {% block top_content %}
@@ -19,23 +19,7 @@
 
     <div class="content-header">
         <a class="h2 clickable" id="main_tab" style="color: inherit; text-decoration: inherit;">
-            {% if structure.help %}
-            <span class="tip" title="{{ structure.help }}" data-position="bottom">
-                {% endif %}
-
-                    <i class="{{ structure.icon }}"></i> {{ structure.title }}
-
-                {% if structure.help %}
-                    <i class="fa fa-question-circle-o" style="font-size:0.75em"></i>
-                </span>
-            {% endif %}
-
-            {% if structure.hasAddFile() and structure.permission == 'rw' %}
-                <!-- Pulsante "Aggiungi" solo se la struttura lo supporta -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-title="{{ 'Aggiungi'|trans }}..." data-href="{{ module.url('add', {'reference_id': reference_id}) }}">
-                    <i class="fa fa-plus"></i>
-                </button>
-            {% endif %}
+            {% include 'title.twig' %}
         </a>
 
         <div class="nav-tabs-custom float-right">

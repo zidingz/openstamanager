@@ -1,33 +1,17 @@
 {% if include_header %}
     <h4>
-        {% if structure.help %}
-        <span class="tip" title="{{ structure.help }}" data-position="bottom">
-        {% endif %}
-
-            <i class="{{ structure.icon }}"></i> {{ structure.title }}
-
-        {% if structure.help %}
-            <i class="fa fa-question-circle-o" style="font-size:0.75em"></i>
-        </span>
-        {% endif %}
-
-        {% if structure.hasAddFile() and structure.permission == 'rw' %}
-        <!-- Pulsante "Aggiungi" solo se la struttura lo supporta -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-title="{{ 'Aggiungi'|trans }}..." data-href="{{ module.url('add', {'reference_id': reference_id}) }}">
-            <i class="fa fa-plus"></i>
-        </button>
-        {% endif %}
+        {% include 'title.twig' %}
     </h4>
 {% endif %}
 
 {% block content_before %}{% endblock %}
 
 <!-- Datatables con record -->
-{% if structure.option is not empty and structure.option != 'menu' and structure.option != 'custom' %}
-    {% set table = structure.readQuery() %}
+{% if module.option is not empty and module.option != 'menu' and module.option != 'custom' %}
+    {% set table = module.readQuery() %}
     {% set table_id = 'main_' ~ random(99) %}
 
-    {% if structure.segments|length > 1 %}
+    {% if module.segments|length > 1 %}
 <div class="row">
     <div class="col-md-4 float-right">
         {[ "type": "select", "name": "id_segment_", "required": 0, "values": "query=SELECT id, name AS descrizione FROM zz_segments WHERE id_module = {{ module_id }}", "value": "{{ _SESSION['module_' ~ module_id]['id_segment'] }}" ]}
