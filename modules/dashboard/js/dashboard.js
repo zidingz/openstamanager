@@ -1,7 +1,12 @@
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import $ from "jquery";
+import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
+import $ from 'jquery';
+import moment from 'moment';
+import 'tooltipster';
+
+import { session_set_array, openModal } from '../../../resources/assets/js/functions/functions';
 
 function aggiorna_contatore(counter_id) {
     var counter = $(counter_id);
@@ -17,6 +22,7 @@ function aggiorna_contatore(counter_id) {
 
     if (total === 0) {
         object.addClass('btn-primary disabled');
+        return;
     } else {
         object.removeClass('btn-primary disabled');
     }
@@ -43,215 +49,127 @@ function load_interventi_da_pianificare(mese) {
     }
 
     $('#interventi-pianificare').html('<center><br><br><i class=\'fa fa-refresh fa-spin fa-2x fa-fw\'></i></center>');
-    $.get(globals.dashboard.load_url, {op: 'load_intreventi', mese: mese}, function (data) {
+    $.get(globals.dashboard.load_url, {
+        op: 'load_intreventi',
+        mese: mese
     }).done(function (data) {
         $('#interventi-pianificare').html(data);
+
         $('#external-events .fc-event').each(function () {
-            $(this).draggable({
+            new Draggable(this, {
                 zIndex: 999,
                 revert: true,
-                revertDuration: 0
+                revertDuration: 0,
+                eventData: {
+                    title: $.trim($(this).text()),
+                    stick: false
+                }
             });
         });
-
     });
 }
 
 $(document).ready(function () {
-    // Aggiornamento contatore iniziale
+    // Aggiornamento contatori iniziale
     aggiorna_contatore("#dashboard_stati");
+    aggiorna_contatore("#dashboard_tipi");
+    aggiorna_contatore("#dashboard_tecnici");
+    aggiorna_contatore("#dashboard_zone");
 
-    // Selezione di uno stato
+    // Selezione di uno stato intervento
     $('.dashboard_stato').click(function (event) {
         var id = $(this).val();
 
         session_set_array('dashboard,idstatiintervento', id).then(function () {
             aggiorna_contatore("#dashboard_stati");
-            $('#calendar').fullCalendar('refetchEvents');
+            globals.dashboard.calendar.refetchEvents();
         });
     });
 
-    // Selezione di tutti gli stati
-    $('#seleziona_stati').click(function (event) {
-        $(this).parent().parent().find('input:not(:checked)').each(function () {
+    // Selezione di un tipo intervento
+    $('.dashboard_tipo').click(function (event) {
+        var id = $(this).val();
+
+        session_set_array('dashboard,idtipiintervento', id).then(function () {
+            aggiorna_contatore("#dashboard_tipi");
+            globals.dashboard.calendar.refetchEvents();
+        });
+    });
+
+    // Selezione di un tecnico
+    $('.dashboard_tecnico').click(function (event) {
+        var id = $(this).val();
+
+        session_set_array('dashboard,idtecnici', id).then(function () {
+            aggiorna_contatore("#dashboard_tecnici");
+            globals.dashboard.calendar.refetchEvents();
+        });
+    });
+
+    // Selezione di una zona
+    $('.dashboard_zona').click(function (event) {
+        var id = $(this).val();
+
+        session_set_array('dashboard,idzone', id).then(function () {
+            aggiorna_contatore("#dashboard_zone");
+            globals.dashboard.calendar.refetchEvents();
+        });
+    });
+
+    // Selezione di tutti gli elementi
+    $('.seleziona_tutto').click(function () {
+        $(this).closest("ul").find('input:not(:checked)').each(function () {
             $(this).click();
         });
     });
 
-    // Deselezione di tutti gli stati
-    $('#deseleziona_stati').click(function (event) {
-        $(this).parent().parent().find('input:checked').each(function () {
+    // Deselezione di tutti gli elementi
+    $('.deseleziona_tutto').click(function () {
+        $(this).closest("ul").find('input:checked').each(function () {
             $(this).click();
         });
     });
-
-    // Caricamento interventi da pianificare
-    load_interventi_da_pianificare();
 
     $('#select-interventi-pianificare').change(function () {
         var mese = $(this).val();
         load_interventi_da_pianificare(mese);
     });
 
-    $('#selectalltipi').click(function (event) {
-
-        $(this).parent().parent().find('li input[type=checkbox]').each(function (i) { // loop through each checkbox
-            this.checked = true;
-            $.when(session_set_array('dashboard,idtipiintervento', this.value, 0)).promise().then(function () {
-                $('#calendar').fullCalendar('refetchEvents');
-            });
-            i++;
-            update_counter('idtipi_count', i);
-
-        });
-
-    });
-
-    $('#selectalltecnici').click(function (event) {
-
-        $(this).parent().parent().find('li input[type=checkbox]').each(function (i) { // loop through each checkbox
-            this.checked = true;
-            $.when(session_set_array('dashboard,idtecnici', this.value, 0)).promise().then(function () {
-                $('#calendar').fullCalendar('refetchEvents');
-            });
-            i++;
-            update_counter('idtecnici_count', i);
-        });
-
-    });
-
-    $('#selectallzone').click(function (event) {
-
-        $(this).parent().parent().find('li input[type=checkbox]').each(function (i) { // loop through each checkbox
-            this.checked = true;
-            $.when(session_set_array('dashboard,idzone', this.value, 0)).promise().then(function () {
-                $('#calendar').fullCalendar('refetchEvents');
-            });
-
-            i++
-            update_counter('idzone_count', i);
-        });
-
-    });
-
-    // Comandi deseleziona tutti
-    $('#deselectallstati').click(function (event) {
-
-        $(this).parent().parent().find('li input[type=checkbox]').each(function () { // loop through each checkbox
-            this.checked = false;
-            $.when(session_set_array('dashboard,idstatiintervento', this.value, 1)).promise().then(function () {
-                $('#calendar').fullCalendar('refetchEvents');
-            });
-
-            update_counter('idstati_count', 0);
-
-        });
-
-    });
-
-    $('#deselectalltipi').click(function (event) {
-
-        $(this).parent().parent().find('li input[type=checkbox]').each(function () { // loop through each checkbox
-            this.checked = false;
-            $.when(session_set_array('dashboard,idtipiintervento', this.value, 1)).promise().then(function () {
-                $('#calendar').fullCalendar('refetchEvents');
-            });
-
-
-            update_counter('idtipi_count', 0);
-
-        });
-
-    });
-
-    $('#deselectalltecnici').click(function (event) {
-
-        $(this).parent().parent().find('li input[type=checkbox]').each(function () { // loop through each checkbox
-            this.checked = false;
-            $.when(session_set_array('dashboard,idtecnici', this.value, 1)).promise().then(function () {
-                $('#calendar').fullCalendar('refetchEvents');
-            });
-
-            update_counter('idtecnici_count', 0);
-
-        });
-
-    });
-
-    $('#deselectallzone').click(function (event) {
-
-        $(this).parent().parent().find('li input[type=checkbox]').each(function () { // loop through each checkbox
-            this.checked = false;
-            $.when(session_set_array('dashboard,idzone', this.value, 1)).promise().then(function () {
-                $('#calendar').fullCalendar('refetchEvents');
-            });
-
-            update_counter('idzone_count', 0);
-
-        });
-
-    });
+    // Caricamento interventi da pianificare
+    load_interventi_da_pianificare();
 
     // Creazione del calendario
     create_calendar();
-
-    // Data di default
-    $('.fc-prev-button, .fc-next-button, .fc-today-button').click(function () {
-        var date_start = $('#calendar').fullCalendar('getView').start.format('YYYY-MM-DD');
-        date_start = moment(date_start);
-
-        if (globals.dashboard.style === 'month') {
-            if (date_start.date() > 1) {
-                date_start = moment(date_start).add(1, 'M').startOf('month');
-            }
-        }
-
-        date_start = date_start.format('YYYY-MM-DD');
-        setCookie('calendar_date_start', date_start, 365);
-    });
-
-    var calendar_date_start = getCookie('calendar_date_start');
-    if (calendar_date_start !== '')
-        $('#calendar').fullCalendar('gotoDate', calendar_date_start);
-
 });
 
 function create_calendar() {
-    $('#external-events .fc-event').each(function () {
-        // store data so the calendar knows to render an event upon drop
-        $(this).data('event', {
-            title: $.trim($(this).text()), // use the element's text as the event title
-            stick: false // maintain when user navigates (see docs on the renderEvent method)
-        });
-
-        // make the event draggable using jQuery UI
-        $(this).draggable({
-            zIndex: 999,
-            revert: true,     // will cause the event to go back to its
-            revertDuration: 0  //  original position after the drag
-        });
-
-    });
-
     var calendarElement = document.getElementById('calendar');
 
     var calendar = new Calendar(calendarElement, {
-        plugins: [dayGridPlugin, timeGridPlugin],
+        plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
         locale: globals.locale,
         hiddenDays: globals.dashboard.show_sunday ? [] : [0],
         header: {
             left: 'prev,next today',
             center: 'title',
-            right: 'month,agendaWeek,agendaDay'
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
-        timeFormat: 'H:mm',
-        slotLabelFormat: "H:mm",
+        eventTimeFormat: {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        },
+        slotLabelFormat: {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        },
         slotDuration: '00:15:00',
         defaultView: globals.dashboard.style,
         minTime: globals.dashboard.start_time,
         maxTime: globals.dashboard.end_time,
         lazyFetching: true,
-        selectHelper: true,
+        selectMirror: true,
         eventLimit: false, // allow "more" link when too many events
         allDaySlot: false,
         loading: function (isLoading, view) {
@@ -261,17 +179,20 @@ function create_calendar() {
                 $('#tiny-loader').hide();
             }
         },
+
         droppable: globals.dashboard.write_permission,
-        drop: function (date, jsEvent, ui, resourceId) {
+        drop: function (info) {
+            var date = info.date;
+
             var data = moment(date).format("YYYY-MM-DD");
             var ora_dal = moment(date).format("HH:mm");
             var ora_al = moment(date).add(1, 'hours').format("HH:mm");
 
             var ref = $(this).data('ref');
             var name;
-            if (ref == 'ordine') {
+            if (ref === 'ordine') {
                 name = 'idordineservizio';
-            } else if (ref == 'promemoria') {
+            } else if (ref === 'promemoria') {
                 name = 'idcontratto_riga';
             } else {
                 name = 'id_intervento';
@@ -282,23 +203,26 @@ function create_calendar() {
             $(this).remove();
 
             $('#bs-popup').on('hidden.bs.modal', function () {
-                $('#calendar').fullCalendar('refetchEvents');
+                globals.dashboard.calendar.refetchEvents();
             });
         },
 
         selectable: globals.dashboard.write_permission,
-        select: function (start, end, allDay) {
+        select: function(info) {
+            var start = info.start;
+            var end = info.end;
+
             var data = moment(start).format("YYYY-MM-DD");
-            var ora_dal = moment(start).format("HH:mm");
-            var ora_al = moment(end).format("HH:mm");
+            var orario_inizio = moment(start).format("HH:mm");
+            var orario_fine = moment(end).format("HH:mm");
 
-            openModal(globals.dashboard.select.title, globals.dashboard.select.url + '?ref=dashboard&data=' + data + '&orario_inizio=' + ora_dal + '&orario_fine=' + ora_al);
-
-            $('#calendar').fullCalendar('unselect');
+            openModal(globals.dashboard.select.title, globals.dashboard.select.url + '?ref=dashboard&data=' + data + '&orario_inizio=' + orario_inizio + '&orario_fine=' + orario_fine);
         },
 
         editable: globals.dashboard.write_permission,
-        eventDrop: function (event, dayDelta, minuteDelta, revertFunc) {
+        eventDrop: function(info) {
+            var event = info.event;
+
             $.post(globals.dashboard.load_url, {
                 op: 'update_intervento',
                 id: event.id,
@@ -306,19 +230,16 @@ function create_calendar() {
                 timeStart: moment(event.start).format("YYYY-MM-DD HH:mm"),
                 timeEnd: moment(event.end).format("YYYY-MM-DD HH:mm")
             }, function (data, response) {
-                if (response == "success") {
-                    data = $.trim(data);
-                    if (data != "ok") {
-                        alert(data);
-                        $('#calendar').fullCalendar('refetchEvents');
-                        revertFunc();
-                    } else {
-                        return false;
-                    }
+                data = $.trim(data);
+                if (response !== "success" || data !== "ok") {
+                    alert(data);
+                    info.revert();
                 }
             });
         },
-        eventResize: function (event, dayDelta, minuteDelta, revertFunc) {
+        eventResize: function(info) {
+            var event = info.event;
+
             $.post(globals.dashboard.load_url, {
                 op: 'update_intervento',
                 id: event.id,
@@ -326,57 +247,49 @@ function create_calendar() {
                 timeStart: moment(event.start).format("YYYY-MM-DD HH:mm"),
                 timeEnd: moment(event.end).format("YYYY-MM-DD HH:mm")
             }, function (data, response) {
-                if (response == "success") {
-                    data = $.trim(data);
-                    if (data != "ok") {
-                        alert(data);
-                        $('#calendar').fullCalendar('refetchEvents');
-                        revertFunc();
-                    } else {
-                        return false;
-                    }
+                data = $.trim(data);
+                if (response !== "success" || data !== "ok") {
+                    alert(data);
+                    info.revert();
                 }
             });
         },
 
-        eventAfterRender: function (event, element) {
+        eventPositioned: function (info) {
+            var event = info.event;
+            var element = $(info.el);
+
             element.find('.fc-title').html(event.title);
             element.data('idintervento', event.idintervento);
 
             if (globals.dashboard.tooltip) {
                 element.mouseover(function () {
                     if (!element.hasClass('tooltipstered')) {
-                        $(this).data('idintervento', event.idintervento);
-
                         $.post(globals.dashboard.load_url, {
                             op: 'get_more_info',
                             id: $(this).data('idintervento'),
                         }, function (data, response) {
-                            if (response == "success") {
-                                data = $.trim(data);
-                                if (data != "ok") {
-                                    element.tooltipster({
-                                        content: data,
-                                        animation: 'grow',
-                                        contentAsHTML: true,
-                                        hideOnClick: true,
-                                        onlyOne: true,
-                                        speed: 200,
-                                        delay: 100,
-                                        maxWidth: 400,
-                                        theme: 'tooltipster-shadow',
-                                        touchDevices: true,
-                                        trigger: 'hover',
-                                        position: 'left'
-                                    });
+                            data = $.trim(data);
+                            if (response === "success" && data !== "ok") {
+                                element.addClass('tooltipstered');
 
-                                    $('.tooltipstered').tooltipster('hide');
-                                    element.tooltipster('show');
-                                } else {
-                                    return false;
-                                }
+                                element.tooltipster({
+                                    content: data,
+                                    animation: 'grow',
+                                    contentAsHTML: true,
+                                    hideOnClick: true,
+                                    onlyOne: true,
+                                    speed: 200,
+                                    delay: 100,
+                                    maxWidth: 400,
+                                    theme: 'tooltipster-shadow',
+                                    touchDevices: true,
+                                    trigger: 'hover',
+                                    position: 'left'
+                                });
 
-                                $('#calendar').fullCalendar('option', 'contentHeight', 'auto');
+                                $('.tooltipstered').tooltipster('hide');
+                                element.tooltipster('show');
                             }
                         });
                     }
@@ -384,11 +297,8 @@ function create_calendar() {
             }
         },
         events: {
-            url: globals.dashboard.load_url,
+            url: globals.dashboard.load_url + "?op=get_current_month",
             type: 'POST',
-            data: {
-                op: 'get_current_month',
-            },
             error: function () {
                 alert(globals.dashboard.errordas);
             }
@@ -396,4 +306,6 @@ function create_calendar() {
     });
 
     calendar.render();
+
+    globals.dashboard.calendar = calendar;
 }

@@ -82,6 +82,12 @@ mix.styles([
 // Gestione file personalizzati
 globify(config.development + '/js/pages/*.js', config.production + '/js/pages', 'js');
 
+// JS dei moduli
+mix.js(
+    'modules/dashboard/js/dashboard.js',
+    config.production + '/' + config.paths.js + '/modules/dashboard/dashboard.js'
+)
+
 // JS principali
 mix.js(
     config.development + '/' + config.paths.js + '/app.js',

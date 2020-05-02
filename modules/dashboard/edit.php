@@ -46,9 +46,7 @@ if (!isset($_SESSION['dashboard']['idzone'])) {
 
 echo '
 <!-- Filtri -->
-<div class="row">';
-
-echo '
+<div class="row">
 	<!-- STATI INTERVENTO -->
 	<div class="dropdown col-md-3" id="dashboard_stati">
 		<button type="button" class="btn btn-block counter_object" data-toggle="dropdown">
@@ -68,210 +66,143 @@ foreach ($stati_intervento as $stato) {
 
     echo '
             <li>
-                <input type="checkbox" id="id_stato_'.$stato['id'].'" class="dashboard_stato" value="'.$stato['id'].'" '.$attr.'>
-                <label for="id_stato_'.$stato['id'].'">
-                    <span class="badge" style="color:'.color_inverse($stato['colore']).'; background:'.$stato['colore'].';">'.$stato['descrizione'].'</span>
+                <input type="checkbox" id="stato_'.$stato['id'].'" class="dashboard_stato" value="'.$stato['id'].'" '.$attr.'>
+                <label for="stato_'.$stato['id'].'" class="badge" style="color:'.color_inverse($stato['colore']).'; background:'.$stato['colore'].';">
+                    '.$stato['descrizione'].'</span>
                 </label>
             </li>';
 }
 
 echo '
 			<div class="btn-group float-right">
-				<button type="button" id="seleziona_stati" class="btn btn-primary btn-sm">
+				<button type="button" class="btn btn-primary btn-sm seleziona_tutto">
                     '.tr('Tutti').'
                 </button>
-				<button type="button" id="deseleziona_stati" class="btn btn-danger btn-sm">
+				<button type="button" class="btn btn-danger btn-sm deseleziona_tutto">
                     <i class="fa fa-times"></i>
                 </button>
 			</div>
 		</ul>
-	</div>';
+	</div>
+
+	<!-- TIPI INTERVENTO -->
+	<div class="dropdown col-md-3" id="dashboard_tipi">
+		<button type="button" class="btn btn-block counter_object" data-toggle="dropdown">
+            <i class="fa fa-filter"></i> '.tr('Tipi attività').'
+            (<span class="selected_counter"></span>/<span class="total_counter"></span>) <i class="caret"></i>
+        </button>
+
+		<ul class="dropdown-menu" role="menu">';
 
 // Tipi intervento
-$checks = '';
-$count = 0;
-$total = 0;
-
-$rs = $dbo->fetchArray('SELECT id, descrizione FROM in_tipiintervento ORDER BY descrizione ASC');
-$total = count($rs);
-
-$allcheckstipi = '';
-for ($i = 0; $i < count($rs); ++$i) {
+$tipi_intervento = $dbo->fetchArray('SELECT id, descrizione FROM in_tipiintervento ORDER BY descrizione ASC');
+foreach ($tipi_intervento as $tipo) {
     $attr = '';
-
-    foreach ($_SESSION['dashboard']['idtipiintervento'] as $idx => $val) {
-        if ($val == "'".$rs[$i]['id']."'") {
-            $attr = 'checked="checked"';
-            ++$count;
-        }
+    if (in_array("'".$tipo['id']."'", $_SESSION['dashboard']['idtipiintervento'])) {
+        $attr = 'checked="checked"';
     }
 
-    $checks .= "<li><input type='checkbox' id='idtipo_".$rs[$i]['id']."' value=\"".$rs[$i]['id'].'" '.$attr." onclick=\"$.when ( session_set_array( 'dashboard,idtipiintervento', '".$rs[$i]['id']."' ) ).promise().then(function( ){ $('#calendar').fullCalendar('refetchEvents');  }); update_counter( 'idtipi_count', $('#idtipi_ul').find('input:checked').length ); \"> <label for='idtipo_".$rs[$i]['id']."'> ".$rs[$i]['descrizione']."</label></li>\n";
-
-    $allcheckstipi .= "session_set_array( 'dashboard,idtipiintervento', '".$rs[$i]['id']."', 0 ); ";
+    echo '
+            <li>
+                <input type="checkbox" id="tipo_'.$tipo['id'].'" class="dashboard_tipo" value="'.$tipo['id'].'" '.$attr.'>
+                <label for="tipo_'.$tipo['id'].'">
+                    '.$tipo['descrizione'].'
+                </label>
+            </li>';
 }
 
-if ($count == $total) {
-    $class = 'btn-success';
-} elseif ($count == 0) {
-    $class = 'btn-danger';
-} else {
-    $class = 'btn-warning';
-}
-
-if ($total == 0) {
-    $class = 'btn-primary disabled';
-}
-?>
-	<!-- TIPI DI INTERVENTO -->
-	<div class="dropdown col-md-3">
-		<a class="btn <?php echo $class; ?> btn-block" data-toggle="dropdown" href="javascript:;" id="idtipi_count"><i class="fa fa-filter"></i> <?php echo tr('Tipi attività'); ?> (<?php echo $count.'/'.$total; ?>) <i class="caret"></i></a>
-
-		<ul class="dropdown-menu" role="menu" id="idtipi_ul">
-			<?php echo $checks; ?>
+echo '
 			<div class="btn-group float-right">
-				<button  id="selectalltipi" onclick="<?php echo $allcheckstipi; ?>" class="btn btn-primary btn-sm" type="button"><?php echo tr('Tutti'); ?></button>
-				<button id="deselectalltipi" class="btn btn-danger btn-sm" type="button"><i class="fa fa-times"></i></button>
+				<button type="button" class="btn btn-primary btn-sm seleziona_tutto">
+                    '.tr('Tutti').'
+                </button>
+				<button type="button" class="btn btn-danger btn-sm deseleziona_tutto">
+                    <i class="fa fa-times"></i>
+                </button>
 			</div>
-
 		</ul>
-
 	</div>
 
-<?php
-// Tecnici
-$checks = '';
-$count = 0;
-$total = 0;
-$totale_tecnici = 0; // conteggia tecnici eliminati e non
+	<!-- TECNICI -->
+	<div class="dropdown col-md-3" id="dashboard_tecnici">
+		<button type="button" class="btn btn-block counter_object" data-toggle="dropdown">
+            <i class="fa fa-filter"></i> '.tr('Tecnici').'
+            (<span class="selected_counter"></span>/<span class="total_counter"></span>) <i class="caret"></i>
+        </button>
 
-$rs = $dbo->fetchArray("SELECT an_anagrafiche.idanagrafica AS id, ragione_sociale, colore FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.id_tipo_anagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica
+		<ul class="dropdown-menu" role="menu">';
+
+// Tecnici
+$tecnici_disponibili = $dbo->fetchArray("SELECT an_anagrafiche.idanagrafica AS id, ragione_sociale, colore FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.id_tipo_anagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica
 LEFT OUTER JOIN in_interventi_tecnici ON  in_interventi_tecnici.idtecnico = an_anagrafiche.idanagrafica  INNER JOIN in_interventi ON in_interventi_tecnici.idintervento=in_interventi.id
 WHERE an_anagrafiche.deleted_at IS NULL AND an_tipianagrafiche.descrizione='Tecnico' ".module('Interventi')->getAdditionalsQuery().' GROUP BY an_anagrafiche.idanagrafica ORDER BY ragione_sociale ASC');
-$total = count($rs);
-
-$totale_tecnici += $total;
-
-$allchecktecnici = '';
-for ($i = 0; $i < count($rs); ++$i) {
+foreach ($tecnici_disponibili as $tecnico) {
     $attr = '';
-
-    foreach ($_SESSION['dashboard']['idtecnici'] as $idx => $val) {
-        if ($val == "'".$rs[$i]['id']."'") {
-            $attr = 'checked="checked"';
-            ++$count;
-        }
+    if (in_array("'".$tecnico['id']."'", $_SESSION['dashboard']['idtecnici'])) {
+        $attr = 'checked="checked"';
     }
 
-    $checks .= "<li><input type='checkbox' id='tech_".$rs[$i]['id']."' value=\"".$rs[$i]['id'].'" '.$attr." onclick=\"$.when ( session_set_array( 'dashboard,idtecnici', '".$rs[$i]['id']."' ) ).promise().then(function( ){ $('#calendar').fullCalendar('refetchEvents'); }); update_counter( 'idtecnici_count', $('#idtecnici_ul').find('input:checked').length );  \"> <label for='tech_".$rs[$i]['id']."'><span class='badge' style=\"color:#000; background:transparent; border: 1px solid ".$rs[$i]['colore'].';">'.$rs[$i]['ragione_sociale']."</span></label></li>\n";
-
-    $allchecktecnici .= "session_set_array( 'dashboard,idtecnici', '".$rs[$i]['id']."', 0 ); ";
+    echo '
+            <li>
+                <input type="checkbox" id="tecnico_'.$tecnico['id'].'" class="dashboard_tecnico" value="'.$tecnico['id'].'" '.$attr.'>
+                <label for="tecnico_'.$tecnico['id'].'">
+                    '.$tecnico['descrizione'].'
+                </label>
+            </li>';
 }
 
-// TECNICI ELIMINATI CON ALMENO 1 INTERVENTO
-$rs = $dbo->fetchArray("SELECT an_anagrafiche.idanagrafica AS id, ragione_sociale FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.id_tipo_anagrafica=an_tipianagrafiche.id) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica INNER JOIN in_interventi_tecnici ON in_interventi_tecnici.idtecnico = an_anagrafiche.idanagrafica WHERE deleted_at IS NOT NULL AND descrizione='Tecnico' GROUP BY an_anagrafiche.idanagrafica ORDER BY ragione_sociale ASC");
-$total = count($rs);
-
-$totale_tecnici += $total;
-
-if ($total > 0) {
-    $checks .= "<li><hr>Tecnici eliminati:</li>\n";
-    for ($i = 0; $i < count($rs); ++$i) {
-        $attr = '';
-
-        foreach ($_SESSION['dashboard']['idtecnici'] as $idx => $val) {
-            if ($val == "'".$rs[$i]['id']."'") {
-                $attr = 'checked="checked"';
-                ++$count;
-            }
-        }
-
-        $checks .= "<li><input type='checkbox' id='tech_".$rs[$i]['id']."' value=\"".$rs[$i]['id'].'" '.$attr." onclick=\"$.when ( session_set_array( 'dashboard,idtecnici', '".$rs[$i]['id']."' ) ).promise().then(function( ){ $('#calendar').fullCalendar('refetchEvents');  }); update_counter( 'idtecnici_count', $('#idtecnici_ul').find('input:checked').length ); \"> <label for='tech_".$rs[$i]['id']."'> ".$rs[$i]['ragione_sociale']."</label></li>\n";
-
-        $allchecktecnici .= "session_set_array( 'dashboard,idtecnici', '".$rs[$i]['id']."', 0 ); ";
-    } // end for
-} // end if
-
-if ($count == $totale_tecnici) {
-    $class = 'btn-success';
-} elseif ($count == 0) {
-    $class = 'btn-danger';
-} else {
-    $class = 'btn-warning';
-}
-
-if ($totale_tecnici == 0) {
-    $class = 'btn-primary disabled';
-}
-
-?>
-	<!-- TECNICI -->
-	<div class="dropdown col-md-3">
-		<a class="btn <?php echo $class; ?> btn-block" data-toggle="dropdown" href="javascript:;" id="idtecnici_count"><i class="fa fa-filter"></i> <?php echo tr('Tecnici'); ?> (<?php echo $count.'/'.$totale_tecnici; ?>) <i class="caret"></i></a>
-
-		<ul class="dropdown-menu" role="menu" id="idtecnici_ul">
-			<?php echo $checks; ?>
+echo '
 			<div class="btn-group float-right">
-				<button id="selectalltecnici" onclick="<?php echo $allchecktecnici; ?>" class="btn btn-primary btn-sm" type="button"><?php echo tr('Tutti'); ?></button>
-				<button id="deselectalltecnici" class="btn btn-danger btn-sm" type="button"><i class="fa fa-times"></i></button>
+				<button type="button" class="btn btn-primary btn-sm seleziona_tutto">
+                    '.tr('Tutti').'
+                </button>
+				<button type="button" class="btn btn-danger btn-sm deseleziona_tutto">
+                    <i class="fa fa-times"></i>
+                </button>
 			</div>
 		</ul>
 	</div>
 
+	<!-- ZONE -->
+	<div class="dropdown col-md-3" id="dashboard_zone">
+		<button type="button" class="btn btn-block counter_object" data-toggle="dropdown">
+            <i class="fa fa-filter"></i> '.tr('Zone').'
+            (<span class="selected_counter"></span>/<span class="total_counter"></span>) <i class="caret"></i>
+        </button>
 
-<?php
+		<ul class="dropdown-menu" role="menu">';
+
 // Zone
-$allcheckzone = null;
-
-$checks = '';
-$count = 0;
-$total = 0;
-
-$rs = $dbo->fetchArray('(SELECT 0 AS ordine, \'0\' AS id, \'Nessuna zona\' AS descrizione) UNION (SELECT 1 AS ordine, id, descrizione FROM an_zone) ORDER BY ordine, descrizione ASC');
-$total = count($rs);
-
-for ($i = 0; $i < count($rs); ++$i) {
+$zone = $dbo->fetchArray('(SELECT 0 AS ordine, \'0\' AS id, \'Nessuna zona\' AS descrizione) UNION (SELECT 1 AS ordine, id, descrizione FROM an_zone) ORDER BY ordine, descrizione ASC');
+foreach ($zone as $zona) {
     $attr = '';
-
-    foreach ($_SESSION['dashboard']['idzone'] as $idx => $val) {
-        if ($val == "'".$rs[$i]['id']."'") {
-            $attr = 'checked="checked"';
-            ++$count;
-        }
+    if (in_array("'".$zona['id']."'", $_SESSION['dashboard']['idzone'])) {
+        $attr = 'checked="checked"';
     }
 
-    $checks .= "<li><input type='checkbox' id='idzone_".$rs[$i]['id']."' value=\"".$rs[$i]['id'].'" '.$attr." 	onclick=\"$.when ( session_set_array( 'dashboard,idzone', '".$rs[$i]['id']."' ) ).promise().then(function( ){ $('#calendar').fullCalendar('refetchEvents'); update_counter( 'idzone_count', $('#idzone_ul').find('input:checked').length ); }); \"> <label for='idzone_".$rs[$i]['id']."'> ".$rs[$i]['descrizione']."</label></li>\n";
-
-    $allcheckzone = "session_set_array( 'dashboard,idzone', '".$rs[$i]['id']."', 0 ); ";
+    echo '
+            <li>
+                <input type="checkbox" id="zona_'.$zona['id'].'" class="dashboard_zona" value="'.$zona['id'].'" '.$attr.'>
+                <label for="zona_'.$zona['id'].'">
+                   '.$zona['descrizione'].'
+                </label>
+            </li>';
 }
 
-if ($count == $total) {
-    $class = 'btn-success';
-} elseif ($count == 0) {
-    $class = 'btn-danger';
-} else {
-    $class = 'btn-warning';
-}
-
-if ($total == 0) {
-    $class = 'btn-primary disabled';
-}
-?>
-	<!-- ZONE -->
-	<div class="dropdown col-md-3">
-		<a class="btn <?php echo $class; ?> btn-block" data-toggle="dropdown" href="javascript:;" id="idzone_count"><i class="fa fa-filter"></i> <?php echo tr('Zone'); ?> (<?php echo $count.'/'.$total; ?>) <i class="caret"></i></a>
-
-		<ul class="dropdown-menu" role="menu" id="idzone_ul">
-			<?php echo $checks; ?>
+echo '
 			<div class="btn-group float-right">
-				<button id="selectallzone" onclick="<?php echo $allcheckzone; ?>" class="btn btn-primary btn-sm" type="button"><?php echo tr('Tutti'); ?></button>
-				<button id="deselectallzone" class="btn btn-danger btn-sm" type="button"><i class="fa fa-times"></i></button>
+				<button type="button" class="btn btn-primary btn-sm seleziona_tutto">
+                    '.tr('Tutti').'
+                </button>
+				<button type="button" class="btn btn-danger btn-sm deseleziona_tutto">
+                    <i class="fa fa-times"></i>
+                </button>
 			</div>
 		</ul>
 	</div>
 </div>
-<br>
-<?php
+<br>';
+
 $qp = 'SELECT MONTH(data_richiesta) AS mese, YEAR(data_richiesta) AS anno FROM (co_promemoria INNER JOIN co_contratti ON co_promemoria.idcontratto=co_contratti.id) INNER JOIN an_anagrafiche ON co_contratti.idanagrafica=an_anagrafiche.idanagrafica WHERE idcontratto IN( SELECT id FROM co_contratti WHERE id_stato IN(SELECT id FROM co_staticontratti WHERE is_pianificabile = 1) ) AND idintervento IS NULL
 
 UNION SELECT MONTH(data_scadenza) AS mese, YEAR(data_scadenza) AS anno FROM (co_ordiniservizio INNER JOIN co_contratti ON co_ordiniservizio.idcontratto=co_contratti.id) INNER JOIN an_anagrafiche ON co_contratti.idanagrafica=an_anagrafiche.idanagrafica WHERE idcontratto IN( SELECT id FROM co_contratti WHERE id_stato IN(SELECT id FROM co_staticontratti WHERE is_pianificabile = 1) ) AND idintervento IS NULL
@@ -367,6 +298,7 @@ echo '
         end_time: "'.((setting('Fine orario lavorativo') == '00:00') ?: '23:59:59').'",
         write_permission: "'.intval($modulo_interventi->permission == 'rw').'",
         tooltip: "'.setting('Utilizzare i tooltip sul calendario').'",
+        calendar: null,
         select: {
             title: "'.tr('Aggiungi intervento').'",
             url: "'.urlFor('module-add', [
@@ -381,4 +313,6 @@ echo '
         },
         error: "'.tr('Errore durante la creazione degli eventi').'",
     };
-</script>';
+</script>
+
+<script src="'.ROOTDIR.asset('/js/modules/dashboard/dashboard.js').'"></script>';

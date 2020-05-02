@@ -9,15 +9,39 @@ $additional_interventi = module('Interventi')->getAdditionalsQuery();
 switch (filter('op')) {
     // Lettura calendario tecnici
     case 'get_current_month':
-        $start = post('start');
-        $end = post('end');
+        $start = filter('start');
+        $end = filter('end');
 
         $stati = (array) $_SESSION['dashboard']['idstatiintervento'];
         $stati[] = prepare('');
 
         $tipi = (array) $_SESSION['dashboard']['idtipiintervento'];
 
-        $query = 'SELECT in_interventi_tecnici.id, in_interventi_tecnici.idintervento, in_interventi.codice, colore, idtecnico, orario_inizio, orario_fine, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS nome_tecnico, (SELECT id FROM zz_files WHERE id_record=in_interventi.id AND id_module = '.module('Interventi')['id'].' LIMIT 1) AS have_attachments, (SELECT colore FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS colore_tecnico, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=in_interventi.idanagrafica) AS cliente, (SELECT idzona FROM an_sedi INNER JOIN an_anagrafiche ON an_anagrafiche.id_sede_legale = an_sedi.id WHERE an_anagrafiche.idanagrafica=in_interventi.idanagrafica) AS idzona FROM in_interventi_tecnici INNER JOIN (in_interventi LEFT OUTER JOIN in_statiintervento ON in_interventi.id_stato=in_statiintervento.id) ON in_interventi_tecnici.idintervento=in_interventi.id WHERE ( (in_interventi_tecnici.orario_inizio >= '.prepare($start).' AND in_interventi_tecnici.orario_fine <= '.prepare($end).') OR (in_interventi_tecnici.orario_inizio >= '.prepare($start).' AND in_interventi_tecnici.orario_inizio <= '.prepare($end).') OR (in_interventi_tecnici.orario_fine >= '.prepare($start).' AND in_interventi_tecnici.orario_fine <= '.prepare($end).')) AND idtecnico IN('.implode(',', $_SESSION['dashboard']['idtecnici']).') AND in_interventi.id_stato IN('.implode(',', $stati).') AND in_interventi_tecnici.id_tipo_intervento IN('.implode(',', $tipi).') '.$additional_interventi.' HAVING idzona IN ('.implode(',', $_SESSION['dashboard']['idzone']).')';
+        $query = 'SELECT
+            in_interventi_tecnici.id,
+            in_interventi_tecnici.idintervento,
+            in_interventi.codice,
+            colore,
+            idtecnico,
+            orario_inizio,
+            orario_fine,
+            (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS nome_tecnico,
+            (SELECT id FROM zz_files WHERE id_record=in_interventi.id AND id_module = '.module('Interventi')['id'].' LIMIT 1) AS have_attachments,
+            (SELECT colore FROM an_anagrafiche WHERE idanagrafica=idtecnico) AS colore_tecnico, (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=in_interventi.idanagrafica) AS cliente,
+            (SELECT idzona FROM an_sedi INNER JOIN an_anagrafiche ON an_anagrafiche.id_sede_legale = an_sedi.id WHERE an_anagrafiche.idanagrafica=in_interventi.idanagrafica) AS idzona
+        FROM in_interventi_tecnici
+            INNER JOIN in_interventi ON in_interventi_tecnici.idintervento=in_interventi.id
+            LEFT OUTER JOIN in_statiintervento ON in_interventi.id_stato=in_statiintervento.id
+        WHERE
+            (
+                (in_interventi_tecnici.orario_inizio >= '.prepare($start).' AND in_interventi_tecnici.orario_fine <= '.prepare($end).')
+            OR (in_interventi_tecnici.orario_inizio >= '.prepare($start).' AND in_interventi_tecnici.orario_inizio <= '.prepare($end).')
+            OR (in_interventi_tecnici.orario_fine >= '.prepare($start).' AND in_interventi_tecnici.orario_fine <= '.prepare($end).')
+        ) AND idtecnico IN('.implode(',', $_SESSION['dashboard']['idtecnici']).')
+        AND in_interventi.id_stato IN('.implode(',', $stati).')
+        AND in_interventi_tecnici.id_tipo_intervento IN('.implode(',', $tipi).')
+        '.$additional_interventi.'
+    HAVING idzona IN ('.implode(',', $_SESSION['dashboard']['idzone']).')';
         $rs = $dbo->fetchArray($query);
 
         $results = [];
