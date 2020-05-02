@@ -25,6 +25,11 @@ var config = {
 
 // Esposizione JQuery per HTML
 mix.webpackConfig({
+    resolve: {
+        alias: {
+            moment$: 'moment/moment.js'
+        }
+    },
     module: {
         rules: [{
             test: require.resolve('jquery'),
