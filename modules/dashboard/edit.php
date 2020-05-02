@@ -44,60 +44,49 @@ if (!isset($_SESSION['dashboard']['idzone'])) {
     }
 }
 
+echo '
+<!-- Filtri -->
+<div class="row">';
+
+echo '
+	<!-- STATI INTERVENTO -->
+	<div class="dropdown col-md-3" id="dashboard_stati">
+		<button type="button" class="btn btn-block counter_object" data-toggle="dropdown">
+            <i class="fa fa-filter"></i> '.tr('Stati attività').'
+            (<span class="selected_counter"></span>/<span class="total_counter"></span>) <i class="caret"></i>
+        </button>
+
+		<ul class="dropdown-menu" role="menu">';
+
 // Stati intervento
-$checks = '';
-$count = 0;
-$total = 0;
-
-$rs = $dbo->fetchArray('SELECT id, descrizione, colore FROM in_statiintervento WHERE deleted_at IS NULL ORDER BY descrizione ASC');
-$total = count($rs);
-
-$allchecksstati = '';
-for ($i = 0; $i < count($rs); ++$i) {
+$stati_intervento = $dbo->fetchArray('SELECT id, descrizione, colore FROM in_statiintervento WHERE deleted_at IS NULL ORDER BY descrizione ASC');
+foreach ($stati_intervento as $stato) {
     $attr = '';
-
-    foreach ($_SESSION['dashboard']['idstatiintervento'] as $idx => $val) {
-        if ($val == "'".$rs[$i]['id']."'") {
-            $attr = 'checked="checked"';
-            ++$count;
-        }
+    if (in_array("'".$stato['id']."'", $_SESSION['dashboard']['idstatiintervento'])) {
+        $attr = 'checked="checked"';
     }
 
-    $checks .= "<li><input type='checkbox' id='id_stato_".$rs[$i]['id']."' value=\"".$rs[$i]['id'].'" '.$attr." onclick=\"$.when ( session_set_array( 'dashboard,idstatiintervento', '".$rs[$i]['id']."' ) ).promise().then(function( ){ $('#calendar').fullCalendar('refetchEvents'); });  update_counter( 'idstati_count', $('#idstati_ul').find('input:checked').length ); \"> <label for='id_stato_".$rs[$i]['id']."'> <span class='badge' style=\"color:".color_inverse($rs[$i]['colore']).'; background:'.$rs[$i]['colore'].';">'.$rs[$i]['descrizione']."</span></label></li>\n";
-
-    $allchecksstati .= "session_set_array( 'dashboard,idstatiintervento', '".$rs[$i]['id']."', 0 ); ";
+    echo '
+            <li>
+                <input type="checkbox" id="id_stato_'.$stato['id'].'" class="dashboard_stato" value="'.$stato['id'].'" '.$attr.'>
+                <label for="id_stato_'.$stato['id'].'">
+                    <span class="badge" style="color:'.color_inverse($stato['colore']).'; background:'.$stato['colore'].';">'.$stato['descrizione'].'</span>
+                </label>
+            </li>';
 }
 
-if ($count == $total) {
-    $class = 'btn-success';
-} elseif ($count == 0) {
-    $class = 'btn-danger';
-} else {
-    $class = 'btn-warning';
-}
-
-if ($total == 0) {
-    $class = 'btn-primary disabled';
-}
-?>
-
-<!-- Filtri -->
-<div class="row">
-	<!-- STATI INTERVENTO -->
-	<div class="dropdown col-md-3">
-		<a class="btn <?php echo $class; ?> btn-block" data-toggle="dropdown" href="javascript:;" id="idstati_count"><i class="fa fa-filter"></i> <?php echo tr('Stati attività'); ?> (<?php echo $count.'/'.$total; ?>) <i class="caret"></i></a>
-
-		<ul class="dropdown-menu" role="menu" id="idstati_ul">
-			<?php echo $checks; ?>
+echo '
 			<div class="btn-group float-right">
-				<button  id="selectallstati" onclick="<?php echo $allchecksstati; ?>" class="btn btn-primary btn-sm" type="button"><?php echo tr('Tutti'); ?></button>
-				<button id="deselectallstati" class="btn btn-danger btn-sm" type="button"><i class="fa fa-times"></i></button>
+				<button type="button" id="seleziona_stati" class="btn btn-primary btn-sm">
+                    '.tr('Tutti').'
+                </button>
+				<button type="button" id="deseleziona_stati" class="btn btn-danger btn-sm">
+                    <i class="fa fa-times"></i>
+                </button>
 			</div>
-
 		</ul>
-	</div>
+	</div>';
 
-<?php
 // Tipi intervento
 $checks = '';
 $count = 0;
@@ -339,7 +328,7 @@ if (!empty($rsp)) {
         ksort($data);
     }
 
-    echo '<select class="superselect" id="select-intreventi-pianificare">';
+    echo '<select class="superselect" id="select-interventi-pianificare">';
 
     foreach ($mesi_interventi as $key => $mese_intervento) {
         echo '<option value="'.$key.'">'.$mese_intervento.'</option>';
@@ -356,404 +345,40 @@ if (!empty($rsp)) {
 
 $vista = setting('Vista dashboard');
 if ($vista == 'mese') {
-    $def = 'month';
+    $def = 'dayGridMonth';
 } elseif ($vista == 'giorno') {
-    $def = 'agendaDay';
+    $def = 'timeGridDay';
 } else {
-    $def = 'agendaWeek';
+    $def = 'timeGridWeek';
 }
-
-$link = urlFor('module-action', [
-    'module_id' => $id_module,
-    'action' => 'action',
-]);
-
-?>
-
-<script type="text/javascript">
-
-	function load_interventi_da_pianificare(mese){
-
-		if (mese == undefined){
-			// Seleziono il mese corrente per gli interventi da pianificare
-			var date = new Date();
-			var mese;
-			date.setDate(date.getDate());
-
-			//Note: January is 0, February is 1, and so on.
-			mese = ('0' + (date.getMonth()+1)).slice(-2) + date.getFullYear();
-
-			$('#select-intreventi-pianificare option[value='+mese+']').attr('selected','selected').trigger('change');
-		}
-
-		$('#interventi-pianificare').html('<center><br><br><i class=\'fa fa-refresh fa-spin fa-2x fa-fw\'></i></center>');
-		$.get( '<?php echo $link; ?>', { op: 'load_intreventi', mese: mese }, function(data){
-
-        })
-		.done(function( data ) {
-			$('#interventi-pianificare').html(data);
-			$('#external-events .fc-event').each(function() {
-                $(this).draggable({
-                    zIndex: 999,
-                    revert: true,
-                    revertDuration: 0
-                });
-            });
-
-		});
-
-	}
-    $('#select-intreventi-pianificare').change(function(){
-        var mese = $(this).val();
-        load_interventi_da_pianificare(mese);
-
-    });
-
-	$(document).ready(function() {
-		load_interventi_da_pianificare();
-
-        // Comandi seleziona tutti
-        $('#selectallstati').click(function(event) {
-
-            $(this).parent().parent().find('li input[type=checkbox]').each(function(i) { // loop through each checkbox
-             	this.checked = true;
-				$.when (session_set_array( 'dashboard,idstatiintervento', this.value, 0 )).promise().then(function() {
-					$('#calendar').fullCalendar('refetchEvents');
-				});
-
-				i++;
-				update_counter( 'idstati_count',i);
-
-            });
-
-        });
-
-        $('#selectalltipi').click(function(event) {
-
-            $(this).parent().parent().find('li input[type=checkbox]').each(function(i) { // loop through each checkbox
-				this.checked = true;
-				$.when (session_set_array( 'dashboard,idtipiintervento', this.value, 0 )).promise().then(function() {
-					$('#calendar').fullCalendar('refetchEvents');
-				});
-				i++;
-				update_counter( 'idtipi_count', i);
-
-            });
-
-        });
-
-        $('#selectalltecnici').click(function(event) {
-
-            $(this).parent().parent().find('li input[type=checkbox]').each(function(i) { // loop through each checkbox
-				this.checked = true;
-				$.when (session_set_array( 'dashboard,idtecnici', this.value, 0 )).promise().then(function() {
-					$('#calendar').fullCalendar('refetchEvents');
-				});
-				i++;
-				update_counter( 'idtecnici_count', i);
-            });
-
-        });
-
-        $('#selectallzone').click(function(event) {
-
-            $(this).parent().parent().find('li input[type=checkbox]').each(function(i) { // loop through each checkbox
-				this.checked = true;
-				$.when (session_set_array( 'dashboard,idzone', this.value, 0 )).promise().then(function() {
-						$('#calendar').fullCalendar('refetchEvents');
-				});
-
-				i++
-				update_counter( 'idzone_count', i);
-
-            });
-
-        });
-
-        // Comandi deseleziona tutti
-        $('#deselectallstati').click(function(event) {
-
-			$(this).parent().parent().find('li input[type=checkbox]').each(function() { // loop through each checkbox
-				this.checked = false;
-				$.when (session_set_array( 'dashboard,idstatiintervento', this.value, 1 )).promise().then(function() {
-						$('#calendar').fullCalendar('refetchEvents');
-				});
-
-				update_counter( 'idstati_count', 0);
-
-            });
-
-        });
-
-        $('#deselectalltipi').click(function(event) {
-
-			$(this).parent().parent().find('li input[type=checkbox]').each(function() { // loop through each checkbox
-				this.checked = false;
-				$.when (session_set_array( 'dashboard,idtipiintervento', this.value, 1 )).promise().then(function() {
-						$('#calendar').fullCalendar('refetchEvents');
-				});
-
-
-				update_counter( 'idtipi_count', 0);
-
-            });
-
-        });
-
-        $('#deselectalltecnici').click(function(event) {
-
-			$(this).parent().parent().find('li input[type=checkbox]').each(function() { // loop through each checkbox
-				this.checked = false;
-				$.when (session_set_array( 'dashboard,idtecnici', this.value, 1 )).promise().then(function() {
-						$('#calendar').fullCalendar('refetchEvents');
-				});
-
-				update_counter( 'idtecnici_count', 0);
-
-            });
-
-        });
-
-        $('#deselectallzone').click(function(event) {
-
-			$(this).parent().parent().find('li input[type=checkbox]').each(function() { // loop through each checkbox
-				this.checked = false;
-				$.when (session_set_array( 'dashboard,idzone', this.value, 1 )).promise().then(function() {
-						$('#calendar').fullCalendar('refetchEvents');
-				});
-
-				update_counter( 'idzone_count', 0);
-
-            });
-
-        });
-
-        // Creazione del calendario
-		create_calendar();
-
-        // Data di default
-        $('.fc-prev-button, .fc-next-button, .fc-today-button').click(function(){
-            var date_start = $('#calendar').fullCalendar('getView').start.format('YYYY-MM-DD');
-            date_start = moment(date_start);
-
-            if('<?php echo $def; ?>'=='month'){
-                if(date_start.date()>1){
-                    date_start = moment(date_start).add(1, 'M').startOf('month');
-                }
-            }
-
-            date_start = date_start.format('YYYY-MM-DD');
-            setCookie('calendar_date_start', date_start, 365);
-        });
-
-        calendar_date_start = getCookie('calendar_date_start');
-		if (calendar_date_start!='')
-			$('#calendar').fullCalendar( 'gotoDate', calendar_date_start );
-
-	});
-
-	function create_calendar(){
-        $('#external-events .fc-event').each(function() {
-
-			// store data so the calendar knows to render an event upon drop
-			$(this).data('event', {
-				title: $.trim($(this).text()), // use the element's text as the event title
-				stick: false // maintain when user navigates (see docs on the renderEvent method)
-			});
-
-			// make the event draggable using jQuery UI
-			$(this).draggable({
-				zIndex: 999,
-				revert: true,     // will cause the event to go back to its
-				revertDuration: 0  //  original position after the drag
-			});
-
-		});
-
-		var calendar = $('#calendar').fullCalendar({
-            locale: globals.locale,
-<?php
 $domenica = setting('Visualizzare la domenica sul calendario');
-if (empty($domenica)) {
-    echo '
-            hiddenDays: [ 0 ],';
-}
-?>
-			header: {
-				left: 'prev,next today',
-				center: 'title',
-				right: 'month,agendaWeek,agendaDay'
-			},
-			timeFormat: 'H:mm',
-            slotLabelFormat: "H:mm",
-			slotDuration: '00:15:00',
-            defaultView: '<?php echo $def; ?>',
-<?php
 
-echo "
-            minTime: '".setting('Inizio orario lavorativo')."',
-            maxTime: '".((setting('Fine orario lavorativo') == '00:00') ?: '23:59:59')."',
-";
-
-?>
-            lazyFetching: true,
-			selectHelper: true,
-			eventLimit: false, // allow "more" link when too many events
-			allDaySlot: false,
-            loading: function(isLoading, view) {
-                if(isLoading) {
- 					$('#tiny-loader').fadeIn();
-                } else {
-                    $('#tiny-loader').hide();
-                }
-            },
-<?php
-if (module('Interventi')->permission == 'rw') {
-    ?>
-            droppable: true,
-            drop: function(date, jsEvent, ui, resourceId) {
-                data = moment(date).format("YYYY-MM-DD");
-				ora_dal = moment(date).format("HH:mm");
-                ora_al = moment(date).add(1, 'hours').format("HH:mm");
-
-                ref = $(this).data('ref');
-                if (ref == 'ordine') {
-                    name = 'idordineservizio';
-                } else if (ref == 'promemoria') {
-                    name = 'idcontratto_riga';
-                } else {
-                    name = 'id_intervento';
-                }
-
-                launch_modal('<?php echo tr('Pianifica intervento'); ?>', '<?php echo urlFor('module-add', [
-                    'module_id' => module('Interventi')['id'],
-                ]); ?>?&data='+data+'&orario_inizio='+ora_dal+'&orario_fine='+ora_al+'&ref=dashboard&idcontratto=' + $(this).data('idcontratto') + '&' + name + '=' + $(this).data('id'), 1);
-
-                $(this).remove();
-
-                $('#bs-popup').on('hidden.bs.modal', function () {
-                    $('#calendar').fullCalendar('refetchEvents');
-                });
-            },
-
-            selectable: true,
-			select: function(start, end, allDay) {
-				data = moment(start).format("YYYY-MM-DD");
-				ora_dal = moment(start).format("HH:mm");
-				ora_al = moment(end).format("HH:mm");
-
-                launch_modal('<?php echo tr('Aggiungi intervento'); ?>', '<?php echo urlFor('module-add', [
-                    'module_id' => module('Interventi')['id'],
-                ]); ?>?ref=dashboard&data='+data+'&orario_inizio='+ora_dal+'&orario_fine='+ora_al, 1 );
-
-				$('#calendar').fullCalendar('unselect');
-			},
-
-            editable: true,
-            eventDrop: function(event,dayDelta,minuteDelta,revertFunc) {
-				$.post("<?php echo $link; ?>", {
-				    op: 'update_intervento',
-                    id: event.id,
-                    idintervento:event.idintervento,
-                    timeStart: moment(event.start).format("YYYY-MM-DD HH:mm"),
-                    timeEnd: moment(event.end).format("YYYY-MM-DD HH:mm")
-                }, function(data,response){
-					if( response=="success" ){
-						data = $.trim(data);
-						if( data!="ok" ){
-							alert(data);
-							$('#calendar').fullCalendar('refetchEvents');
-							revertFunc();
-						}
-						else{
-							return false;
-						}
-					}
-				});
-			},
-            eventResize: function(event,dayDelta,minuteDelta,revertFunc) {
-				$.post("<?php echo $link; ?>", {
-                    op: 'update_intervento',
-                    id: event.id,
-                    idintervento:event.idintervento,
-                    timeStart: moment(event.start).format("YYYY-MM-DD HH:mm"),
-                    timeEnd: moment(event.end).format("YYYY-MM-DD HH:mm")
-                }, function(data,response){
-					if( response=="success" ){
-						data = $.trim(data);
-						if(data != "ok"){
-							alert(data);
-							$('#calendar').fullCalendar('refetchEvents');
-							revertFunc();
-						}
-						else{
-							return false;
-						}
-					}
-				});
-			},
-<?php
-}
-?>
-			eventAfterRender: function(event, element) {
-				element.find('.fc-title').html(event.title);
-                element.data('idintervento', event.idintervento);
-<?php
-
-if (setting('Utilizzare i tooltip sul calendario') == '1') {
-    ?>
-				element.mouseover( function(){
-				    if( !element.hasClass('tooltipstered') ){
-				        $(this).data('idintervento', event.idintervento );
-
-				        $.post("<?php echo $link; ?>", {
-                            op: 'get_more_info',
-                            id: $(this).data('idintervento'),
-                        }, function(data,response){
-							if( response=="success" ){
-								data = $.trim(data);
-								if( data!="ok" ){
-									element.tooltipster({
-										content: data,
-										animation: 'grow',
-										contentAsHTML: true,
-										hideOnClick: true,
-										onlyOne: true,
-										speed: 200,
-										delay: 100,
-										maxWidth: 400,
-										theme: 'tooltipster-shadow',
-										touchDevices: true,
-										trigger: 'hover',
-										position: 'left'
-									});
-
-                                    $('.tooltipstered').tooltipster('hide');
-                                    element.tooltipster('show');
-								}
-								else{
-									return false;
-								}
-
-				                $('#calendar').fullCalendar('option', 'contentHeight', 'auto');
-				            }
-				        });
-					}
-				});
-<?php
-}
-?>
-			},
-            events: {
-				url: "<?php echo $link; ?>",
-                type: 'POST',
-                data: {
-				    op: 'get_current_month',
-                },
-				error: function() {
-					alert('<?php echo tr('Errore durante la creazione degli eventi'); ?>');
-				}
-			}
-		});
-	}
-</script>
+$modulo_interventi = module('Interventi');
+echo '
+<script type="text/javascript">
+    globals.dashboard = {
+        load_url: "'.urlFor('module-action', [
+            'module_id' => $id_module,
+            'action' => 'action',
+        ]).'",
+        style: "'.$def.'",
+        show_sunday: "'.setting('Visualizzare la domenica sul calendario').'",
+        start_time: "'.setting('Inizio orario lavorativo').'",
+        end_time: "'.((setting('Fine orario lavorativo') == '00:00') ?: '23:59:59').'",
+        write_permission: "'.intval($modulo_interventi->permission == 'rw').'",
+        tooltip: "'.setting('Utilizzare i tooltip sul calendario').'",
+        select: {
+            title: "'.tr('Aggiungi intervento').'",
+            url: "'.urlFor('module-add', [
+                'module_id' => $modulo_interventi->id,
+            ]).'",
+        },
+        drop: {
+            title: "'.tr('Pianifica intervento').'",
+            url: "'.urlFor('module-add', [
+                'module_id' => $modulo_interventi->id,
+            ]).'",
+        },
+        error: "'.tr('Errore durante la creazione degli eventi').'",
+    };
+</script>';

@@ -113,7 +113,7 @@ export function clock() {
  * Funzione per impostare un valore ad un array in $_SESSION
  */
 export function session_set_array(session_array, value, inversed) {
-    if (inversed == undefined) {
+    if (inversed === undefined) {
         inversed = 1;
     }
 
@@ -140,33 +140,6 @@ export function session_set(session_array, value, clear, reload) {
 
 export function session_keep_alive() {
     $.get(globals.rootdir + '/core.php');
-}
-
-/**
- * Funzione per gestire i contatori testuali nel formato x/total.
- * Viene dato un id del campo da verificare come input, viene letto il testo nella forma [0-9]/[0-9] e viene fatto
- * il replate del primo numero in base a quanti elementi sono stati trovati (valore passato per parametro)
- */
-export function update_counter(id, new_value) {
-    var new_text = $('#' + id).html();
-
-    // Estraggo parte numerica (formato x/total)
-    var pattern = /([^0-9]+)([0-9]+)\/([0-9]+)([^0-9]+)/;
-    var new_text = new_text.replace(pattern, "$1" + new_value + "/$3$4");
-
-    // Estraggo totale (parte numerica dopo lo slash /)
-    matches = pattern.exec(new_text);
-    total = matches[3];
-
-    $('#' + id).html(new_text);
-
-    if (new_value == total) {
-        $('#' + id).removeClass('btn-warning').removeClass('btn-danger').addClass('btn-success');
-    } else if (new_value == 0) {
-        $('#' + id).removeClass('btn-warning').removeClass('btn-success').addClass('btn-danger');
-    } else {
-        $('#' + id).removeClass('btn-success').removeClass('btn-danger').addClass('btn-warning');
-    }
 }
 
 export function setContrast(backgroundcolor) {
