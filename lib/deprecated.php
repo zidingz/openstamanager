@@ -188,3 +188,13 @@ function datediff($interval, $datefrom, $dateto, $using_timestamps = false)
 
     return $datediff;
 }
+
+/**
+ * Funzione sostitutiva a fileurl, da rimuovere in favore dei percorsi Slim.
+ * TODO: sistemare tutte le corrispondenze.
+ *
+ * @param $s
+ */
+function fileurl($s){
+    return;
+}

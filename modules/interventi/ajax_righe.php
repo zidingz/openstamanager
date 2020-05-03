@@ -112,8 +112,8 @@ if (!$righe->isEmpty()) {
         // Pulsante per riportare nel magazzino centrale.
         // Visibile solo se l'intervento non è stato nè fatturato nè completato.
         if (!$record['flag_completato']) {
-            $link = $riga->isSconto() ? $structure->fileurl('row-edit.php') : $structure->fileurl('add_righe.php');
-            $link = $riga->isArticolo() ? $structure->fileurl('add_articolo.php') : $link;
+            $link = $riga->isSconto() ? fileurl('row-edit.php') : fileurl('add_righe.php');
+            $link = $riga->isArticolo() ? fileurl('add_articolo.php') : $link;
 
             echo '
             <td class="text-center">';
@@ -159,10 +159,10 @@ if (!$righe->isEmpty()) {
         }, function(data, result){
             if(result == 'success'){
                 // Ricarico le righe
-                $('#righe').load('<?php echo $module->fileurl('ajax_righe.php'); ?>?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');
+                $('#righe').load('<?php echo fileurl('ajax_righe.php'); ?>?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');
 
                 // Ricarico la tabella dei costi
-                $('#costi').load('<?php echo $module->fileurl('ajax_costi.php'); ?>?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');
+                $('#costi').load('<?php echo fileurl('ajax_costi.php'); ?>?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');
 
 
                 // Toast

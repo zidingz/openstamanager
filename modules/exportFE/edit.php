@@ -78,7 +78,7 @@ echo '
 echo '
     <i class="fa fa-arrow-right fa-fw text-muted"></i>
 
-    <a href="'.$structure->fileurl('download.php').'?id_record='.$id_record.'" class="btn btn-primary btn-lg '.($generated ? '' : 'disabled').'" target="_blank" '.($generated ? '' : 'disabled').'>
+    <a href="'.fileurl('download.php').'?id_record='.$id_record.'" class="btn btn-primary btn-lg '.($generated ? '' : 'disabled').'" target="_blank" '.($generated ? '' : 'disabled').'>
         <i class="fa fa-download"></i> '.tr('Scarica').'
     </a>';
 

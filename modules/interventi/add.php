@@ -297,7 +297,7 @@ if (!empty($id_intervento)) {
 	</div>
 </form>
 
-<script>$(document).ready(init)</script>
+<script src="'.ROOTDIR.asset('/js/base.js').'"></script>
 
 <script type="text/javascript">
 	$(document).ready(function(){

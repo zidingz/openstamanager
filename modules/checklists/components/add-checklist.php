@@ -39,7 +39,7 @@ echo '
     </div>
 </form>
 
-<script>$(document).ready(init)</script>
+<script src="'.ROOTDIR.asset('/js/base.js').'"></script>
 
 <script type="module">
 import Checklist from "./modules/checklists/js/checklist.js";

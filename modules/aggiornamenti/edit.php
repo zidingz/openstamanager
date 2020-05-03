@@ -5,7 +5,7 @@ use Modules\Aggiornamenti\Aggiornamento;
 try {
     $update = new Aggiornamento();
 
-    include $module->filepath('view.php');
+    include __DIR__.'/view.php';
 
     return;
 } catch (InvalidArgumentException $e) {

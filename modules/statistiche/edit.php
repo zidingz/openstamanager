@@ -45,11 +45,11 @@ echo '
 </div>';
 
 echo '
-<script src="'.$structure->fileurl('js/functions.js').'"></script>
-<script src="'.$structure->fileurl('js/calendar.js').'"></script>
-<script src="'.$structure->fileurl('js/manager.js').'"></script>
-<script src="'.$structure->fileurl('js/stat.js').'"></script>
-<script src="'.$structure->fileurl('js/stats/line_chart.js').'"></script>';
+<script src="'.fileurl('js/functions.js').'"></script>
+<script src="'.fileurl('js/calendar.js').'"></script>
+<script src="'.fileurl('js/manager.js').'"></script>
+<script src="'.fileurl('js/stat.js').'"></script>
+<script src="'.fileurl('js/stats/line_chart.js').'"></script>';
 
 // Script per il grafico del fatturato
 echo '

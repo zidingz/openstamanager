@@ -627,7 +627,7 @@ if ($dir == 'entrata') {
 			<div class="col-md-12">
 <?php
 
-include $structure->filepath('row-list.php');
+include __DIR__.'/row-list.php';
 
 ?>
 			</div>

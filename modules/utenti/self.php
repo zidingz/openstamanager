@@ -12,9 +12,9 @@ echo '
 	<input type="hidden" name="op" value="self_update">';
 
 if ($resource == 'password') {
-    include $structure->filepath('components/password.php');
+    include __DIR__.'/components/password.php';
 } elseif ($resource == 'photo') {
-    include $structure->filepath('components/photo.php');
+    include __DIR__.'/components/photo.php';
 }
 
 echo '
@@ -26,6 +26,6 @@ echo '
             </button>
 		</div>
 	</div>
-</form>	
+</form>
 
-<script>$(document).ready(init)</script>';
+<script src="'.ROOTDIR.asset('/js/base.js').'"></script>';

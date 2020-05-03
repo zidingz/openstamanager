@@ -112,14 +112,14 @@ echo '
         <div class="card-body">
             <div id="articoli">';
 
-include $module->filepath('ajax_articoli.php');
+include __DIR__.'/ajax_articoli.php';
 
 echo '
             </div>';
 
 if (!empty($is_add)) {
     echo '
-            <button type="button" class="btn btn-primary" data-title="'.tr('Aggiungi articolo').'" data-target="#bs-popup2" data-toggle="modal" data-href="'.$module->fileurl('add_articolo.php').'?id_plugin='.$id_plugin.'&id_record='.$id_record.'&add='.$is_add.'" ><i class="fa fa-plus"></i> '.tr('Aggiungi articolo').'...</button>';
+            <button type="button" class="btn btn-primary" data-title="'.tr('Aggiungi articolo').'" data-target="#bs-popup2" data-toggle="modal" data-href="'.fileurl('add_articolo.php').'?id_plugin='.$id_plugin.'&id_record='.$id_record.'&add='.$is_add.'" ><i class="fa fa-plus"></i> '.tr('Aggiungi articolo').'...</button>';
 }
 
 echo '
@@ -136,14 +136,14 @@ echo '
             <div class="card-body">
                 <div id="righe">';
 
-include $module->filepath('ajax_righe.php');
+include __DIR__.'/ajax_righe.php';
 
 echo '
                 </div>';
 
 if (!empty($is_add)) {
     echo '
-                <button type="button" class="btn btn-primary"  data-title="'.tr('Aggiungi altre spese').'" data-target="#bs-popup2" data-toggle="modal" data-href="'.$module->fileurl('add_righe.php').'?id_plugin='.$id_plugin.'&id_record='.$id_record.'&add='.$is_add.'"><i class="fa fa-plus"></i> '.tr('Aggiungi altre spese').'...</button>';
+                <button type="button" class="btn btn-primary"  data-title="'.tr('Aggiungi altre spese').'" data-target="#bs-popup2" data-toggle="modal" data-href="'.fileurl('add_righe.php').'?id_plugin='.$id_plugin.'&id_record='.$id_record.'&add='.$is_add.'"><i class="fa fa-plus"></i> '.tr('Aggiungi altre spese').'...</button>';
 }
 
 echo '
@@ -229,7 +229,7 @@ echo '
 </form>';
 
 echo '
-<script>$(document).ready(init)</script>';
+<script src="'.ROOTDIR.asset('/js/base.js').'"></script>';
 
 echo '
 <script>
@@ -297,10 +297,10 @@ echo '
     });
 
     function refreshArticoli(id){
-        $("#articoli").load("'.$module->fileurl('ajax_articoli.php').'?id_plugin='.$id_plugin.'&id_record=" + id + "&add='.$is_add.'");
+        $("#articoli").load("'.fileurl('ajax_articoli.php').'?id_plugin='.$id_plugin.'&id_record=" + id + "&add='.$is_add.'");
     }
 
     function refreshRighe(id){
-        $("#righe").load("'.$module->fileurl('ajax_righe.php').'?id_plugin='.$id_plugin.'&id_record=" + id + "&add='.$is_add.'");
+        $("#righe").load("'.fileurl('ajax_righe.php').'?id_plugin='.$id_plugin.'&id_record=" + id + "&add='.$is_add.'");
     }
 </script>';

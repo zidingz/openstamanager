@@ -7,7 +7,7 @@ import 'datatables.net-buttons/js/buttons.flash';
 import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-buttons/js/buttons.print';
 
-import { getUrlVars, openLink } from './functions';
+import { getUrlVars, openLink, ajaxError } from './functions';
 
 export function start_local_datatables() {
     $('.datatables').each(function () {

@@ -255,7 +255,7 @@ echo '
 		</div>
 	</div>';
 
-include $structure->filepath('movimenti.php');
+include __DIR__.'/movimenti.php';
 
     echo '
 	<!-- PULSANTI -->

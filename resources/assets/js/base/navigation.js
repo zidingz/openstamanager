@@ -9,6 +9,11 @@ $(document).ready(function () {
         }
     });
 
+    $('#main_tab').click(function (e) {
+        $('#tabs a[href="#tab_0"]').tab('show').trigger('show.bs.tab');
+        removeHash();
+    });
+
     // Entra nel tab indicato al caricamento della pagina
     var hash = location.hash ? location.hash : getUrlVars().hash;
     if (hash && hash != '#tab_0') {

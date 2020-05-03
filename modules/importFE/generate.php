@@ -122,7 +122,7 @@ echo '
 			<h4>
 			    '.$dati_generali['Numero'].'
 
-				<a href="'.$structure->fileurl('view.php').'?filename='.$record['name'].'" class="btn btn-info btn-sm" target="_blank" >
+				<a href="'.fileurl('view.php').'?filename='.$record['name'].'" class="btn btn-info btn-sm" target="_blank" >
 					<i class="fa fa-eye"></i> '.tr('Visualizza').'
 				</a>
 

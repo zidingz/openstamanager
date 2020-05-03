@@ -1,5 +1,6 @@
 import 'bootstrap-daterangepicker';
 import moment from 'moment';
+import 'tempusdominus-bootstrap-4';
 
 export function start_datepickers() {
     var icons = {

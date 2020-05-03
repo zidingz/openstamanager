@@ -66,7 +66,6 @@ function import_fe(button, file) {
         type: "get",
         data: {
             id_module: globals.id_module,
-            id_plugin: '.$id_plugin.',
             op: "prepare",
             name: file,
         },
@@ -74,7 +73,7 @@ function import_fe(button, file) {
             importMessage(data);
 
             buttonRestore(button, restore);
-            $("#list").load("'.$structure->fileurl('list.php').'?id_module='.$id_module.'&id_plugin='.$id_plugin.'");
+            $("#list").load("'.fileurl('list.php').'?id_module='.$id_module.'&id_plugin='.$id_plugin.'");
         },
         error: function(xhr) {
             alert("'.tr('Errore').': " + xhr.responseJSON.error.message);
@@ -99,12 +98,11 @@ function delete_fe(button, file_id) {
             type: "get",
             data: {
                 id_module: globals.id_module,
-                id_plugin: '.$id_plugin.',
                 op: "delete",
                 file_id: file_id,
             },
             success: function(data) {
-                $("#list").load("'.$structure->fileurl('list.php').'?id_module='.$id_module.'&id_plugin='.$id_plugin.'", function() {
+                $("#list").load("'.fileurl('list.php').'?id_module='.$id_module.'&id_plugin='.$id_plugin.'", function() {
                     buttonRestore(button, restore);
                 });
             }
@@ -127,12 +125,11 @@ function process_fe(button, file) {
             type: "get",
             data: {
                 id_module: globals.id_module,
-                id_plugin: '.$id_plugin.',
                 op: "process",
                 name: file,
             },
             success: function(data) {
-                $("#list").load("'.$structure->fileurl('list.php').'?id_module='.$id_module.'&id_plugin='.$id_plugin.'", function() {
+                $("#list").load("'.fileurl('list.php').'?id_module='.$id_module.'&id_plugin='.$id_plugin.'", function() {
                     buttonRestore(button, restore);
                 });
             }

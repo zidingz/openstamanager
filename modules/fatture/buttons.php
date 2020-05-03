@@ -15,7 +15,7 @@ if ($module->name == 'Fatture di vendita') {
     $attributi_visibili = $record['stato'] != 'Emessa' && $record['stato'] != 'Parzialmente pagato' && $record['stato'] != 'Pagato';
 
     echo '
-<a class="btn btn-info '.($attributi_visibili ? '' : 'disabled').'" data-toggle="modal" data-title="'.tr('Dati Fattura Elettronica').'" data-href="'.$structure->fileurl('fe/document-fe.php').'?id_module='.$id_module.'&id_record='.$id_record.'" '.($attributi_visibili ? '' : 'disabled').'>
+<a class="btn btn-info '.($attributi_visibili ? '' : 'disabled').'" data-toggle="modal" data-title="'.tr('Dati Fattura Elettronica').'" data-href="'.fileurl('fe/document-fe.php').'?id_module='.$id_module.'&id_record='.$id_record.'" '.($attributi_visibili ? '' : 'disabled').'>
     <i class="fa fa-file-code-o"></i> '.tr('Attributi avanzati').'
 </a>';
 }

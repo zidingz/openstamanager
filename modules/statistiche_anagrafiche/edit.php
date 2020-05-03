@@ -48,5 +48,5 @@ function init_calendar(calendar) {
 }
 </script>
 
-<script src="'.$statistiche->fileurl('js/init.js').'"></script>';
+<script src="'.$statistiche->fileurl('js/base.js').'"></script>';
 */

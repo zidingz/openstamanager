@@ -56,11 +56,4 @@
     </div>
 
     {{ block('bottom_content') }}
-
-    <script>
-        $('#main_tab').click(function (e) {
-            $('#tabs a[href="#tab_0"]').tab('show').trigger('show.bs.tab');
-            removeHash();
-        });
-    </script>
 {% endblock %}

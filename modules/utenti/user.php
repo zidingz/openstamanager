@@ -33,8 +33,8 @@ echo '
 
 	<input type="hidden" name="id_utente" value="'.$utente['id'].'">';
 
-include $structure->filepath('components/photo.php');
-include $structure->filepath('components/base.php');
+include __DIR__.'/components/photo.php';
+include __DIR__.'/components/base.php';
 
 if (!empty($user)) {
     echo '
@@ -65,7 +65,7 @@ if (!empty($user)) {
     </script>';
 }
 
-include $structure->filepath('components/password.php');
+include __DIR__.'/components/password.php';
 
 echo '
     <!-- PULSANTI -->
@@ -97,4 +97,4 @@ function submitCheck() {
 }
 </script>
 
-<script>$(document).ready(init)</script>';
+<script src="'.ROOTDIR.asset('/js/base.js').'"></script>';

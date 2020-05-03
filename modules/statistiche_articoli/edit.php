@@ -85,7 +85,7 @@ echo '
 <script src="'.$statistiche->fileurl('js/stat.js').'"></script>
 <script src="'.$statistiche->fileurl('js/stats/table.js').'"></script>
 
-<script src="'.$structure->fileurl('js/prezzo.js').'"></script>
+<script src="'.fileurl('js/prezzo.js').'"></script>
 
 <script>
 var local_url = "'.str_replace('edit.php', '', $structure->fileurl('edit.php')).'";
@@ -99,4 +99,4 @@ function init_calendar(calendar) {
 }
 </script>
 
-<script src="'.$statistiche->fileurl('js/init.js').'"></script>';
+<script src="'.$statistiche->fileurl('js/base.js').'"></script>';

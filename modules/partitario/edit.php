@@ -101,7 +101,7 @@ foreach ($primo_livello as $conto_primo) {
             // Possibilità di modificare il nome del conto livello3
             if (!empty($conto_terzo['can_edit'])) {
                 echo '
-                        <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" title="Modifica questo conto..." onclick="launch_modal(\'Modifica conto\', \''.$structure->fileurl('edit_conto.php').'?id='.$conto_terzo['id'].'\');">
+                        <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" title="Modifica questo conto..." onclick="launch_modal(\'Modifica conto\', \''.fileurl('edit_conto.php').'?id='.$conto_terzo['id'].'\');">
                             <i class="fa fa-edit"></i>
                         </button>';
             }
@@ -282,14 +282,14 @@ $(document).ready(function(){
 });
 
 function add_conto(id) {
-    launch_modal("'.tr('Nuovo conto').'",  "'.$structure->fileurl('add_conto.php').'?id=" + id);
+    launch_modal("'.tr('Nuovo conto').'",  "'.fileurl('add_conto.php').'?id=" + id);
 }
 
 function load_movimenti(selector, id_conto) {
 	$("#main_loading").show();
 
     $.ajax({
-        url: "'.$structure->fileurl('dettagli_conto.php').'",
+        url: "'.fileurl('dettagli_conto.php').'",
         type: "get",
         data: {
             id_module: globals.id_module,

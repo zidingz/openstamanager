@@ -24,13 +24,13 @@ echo '
     </button>
     <ul class="dropdown-menu dropdown-menu-right">
 		<li>
-		    <a class="'.($disabled ? '' : 'disabled').'" data-href="'.$structure->fileurl('crea_documento.php').'?id_module='.$id_module.'&id_record='.$id_record.'&documento=ordine" data-toggle="modal" data-title="'.tr('Crea ordine').'">
+		    <a class="'.($disabled ? '' : 'disabled').'" data-href="'.fileurl('crea_documento.php').'?id_module='.$id_module.'&id_record='.$id_record.'&documento=ordine" data-toggle="modal" data-title="'.tr('Crea ordine').'">
                 <i class="fa fa-file-o"></i>&nbsp;'.tr('Ordine').'
             </a>
 		</li>
 
 		<li>
-            <a class="'.($disabled ? '' : 'disabled').'" data-href="'.$structure->fileurl('crea_documento.php').'?id_module='.$id_module.'&id_record='.$id_record.'&documento=fattura" data-toggle="modal" data-title="'.tr('Crea fattura').'">
+            <a class="'.($disabled ? '' : 'disabled').'" data-href="'.fileurl('crea_documento.php').'?id_module='.$id_module.'&id_record='.$id_record.'&documento=fattura" data-toggle="modal" data-title="'.tr('Crea fattura').'">
                 <i class="fa fa-file"></i>&nbsp;'.tr('Fattura').'
             </a>
         </li>

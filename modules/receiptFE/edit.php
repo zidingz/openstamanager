@@ -68,7 +68,7 @@ if (Interaction::isEnabled()) {
             '_BUTTON_' => '<b>"'.tr('Ricerca ricevute').'"</b>',
         ]).'.</p>';
 } else {
-    include $structure->filepath('list.php');
+    include __DIR__.'/list.php';
 }
 
     echo '
@@ -81,7 +81,7 @@ echo '
 function search(button) {
     var restore = buttonLoading(button);
 
-    $("#list").load("'.$structure->fileurl('list.php').'?id_module='.$id_module.'&id_plugin='.$id_plugin.'", function() {
+    $("#list").load("'.fileurl('list.php').'?id_module='.$id_module.'&id_plugin='.$id_plugin.'", function() {
         buttonRestore(button, restore);
     });
 }
@@ -184,7 +184,7 @@ function importAll(btn) {
                     type: "info",
                 })
 
-                $("#list").load("'.$structure->fileurl('list.php').'?id_module='.$id_module.'&id_plugin='.$id_plugin.'", function() {
+                $("#list").load("'.fileurl('list.php').'?id_module='.$id_module.'&id_plugin='.$id_plugin.'", function() {
                     buttonRestore(button, restore);
                 });
 

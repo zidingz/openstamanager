@@ -31,7 +31,7 @@
 
 <?php
 
-include $module->filepath('content-info.php');
+include __DIR__.'/content-info.php';
 
 ?>
 

@@ -203,7 +203,7 @@ echo '
 </form>';
 
 echo '
-<script>$(document).ready(init)</script>';
+<script src="'.ROOTDIR.asset('/js/base.js').'"></script>';
 
 ?>
 

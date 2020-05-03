@@ -10,7 +10,7 @@ $result = $documento->toArray();
 $result = array_merge($result, $documento->dati_aggiuntivi_fe);
 
 echo '
-    <link rel="stylesheet" type="text/css" media="all" href="'.$structure->fileurl('fe/style.css').'"/>';
+    <link rel="stylesheet" type="text/css" media="all" href="'.fileurl('fe/style.css').'"/>';
 
 echo '
 <form action="" method="post">
@@ -145,30 +145,30 @@ echo '
 <script>
 function add_blocco(btn, nome){
     cleanup_inputs();
-    
+
     var last = $(btn).closest("table").find("tr[id^=last-" + nome + "]").parent().last();
 
     keys[nome]++;
     var text = replaceAll($("#" + nome + "-templace").html(), "-id-", "" + keys[nome]);
-    
+
     ref_keys[nome + keys[nome]] = 1;
-    
+
     last.after(text);
     restart_inputs();
 }
 
 function add_riferimento(btn, nome, key) {
     cleanup_inputs();
-    
+
     var last = $(btn).closest("table").find("tr[title=RiferimentoNumeroLinea-" + nome + "-" + key + "]").last();
 
     ref_keys[nome + key]++;
     var text = replaceAll($("#riferimento_" + nome + "-templace").html(), "-id-", "" + key);
     text = replaceAll(text, "-num-", "" + ref_keys[nome + key]);
-    
+
     last.after(text);
     restart_inputs();
 }
 </script>
 
-<script>$(document).ready(init)</script>';
+<script src="'.ROOTDIR.asset('/js/base.js').'"></script>';

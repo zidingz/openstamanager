@@ -33,7 +33,7 @@ $result = $riga->toArray();
 $result = array_merge($result, $riga->dati_aggiuntivi_fe);
 
 echo '
-    <link rel="stylesheet" type="text/css" media="all" href="'.$structure->fileurl('fe/style.css').'"/>';
+    <link rel="stylesheet" type="text/css" media="all" href="'.fileurl('fe/style.css').'"/>';
 
 echo '
 <form action="" method="post">
@@ -152,4 +152,4 @@ echo '
 </form>';
 
 echo '
-<script>$(document).ready(init)</script>';
+<script src="'.ROOTDIR.asset('/js/base.js').'"></script>';

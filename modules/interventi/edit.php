@@ -213,17 +213,17 @@
 
 if (!$record['flag_completato']) {
     echo '
-                    <a class="btn btn-sm btn-primary" data-href="'.$structure->fileurl('add_articolo.php').'?id_module='.$id_module.'&id_record='.$id_record.'&is_articolo&idriga=0" data-toggle="tooltip" data-title="'.tr('Aggiungi articolo').'">
+                    <a class="btn btn-sm btn-primary" data-href="'.fileurl('add_articolo.php').'?id_module='.$id_module.'&id_record='.$id_record.'&is_articolo&idriga=0" data-toggle="tooltip" data-title="'.tr('Aggiungi articolo').'">
                         <i class="fa fa-plus"></i> '.tr('Articolo').'
                     </a>';
 
     echo '
-                    <a class="btn btn-sm btn-primary" data-href="'.$structure->fileurl('add_righe.php').'?id_module='.$id_module.'&id_record='.$id_record.'&is_riga" data-toggle="tooltip" data-title="'.tr('Aggiungi altre spese').'">
+                    <a class="btn btn-sm btn-primary" data-href="'.fileurl('add_righe.php').'?id_module='.$id_module.'&id_record='.$id_record.'&is_riga" data-toggle="tooltip" data-title="'.tr('Aggiungi altre spese').'">
                         <i class="fa fa-plus"></i> '.tr('Riga').'
                     </a>';
 
     echo '
-                    <a class="btn btn-sm btn-primary" data-href="'.$structure->fileurl('row-add.php').'?id_module='.$id_module.'&id_record='.$id_record.'&is_sconto" data-toggle="tooltip" data-title="'.tr('Aggiungi sconto/maggiorazione').'">
+                    <a class="btn btn-sm btn-primary" data-href="'.fileurl('row-add.php').'?id_module='.$id_module.'&id_record='.$id_record.'&is_sconto" data-toggle="tooltip" data-title="'.tr('Aggiungi sconto/maggiorazione').'">
                         <i class="fa fa-plus"></i> '.tr('Sconto/maggiorazione').'
                     </a>';
 }
@@ -241,7 +241,7 @@ $articoli = $dbo->fetchArray('SELECT mg_articoli_interventi.id FROM mg_articoli_
 
             <div id="righe">
 <?php
-include $structure->filepath('ajax_righe.php');
+include __DIR__.'/ajax_righe.php';
 ?>
             </div>
         </div>

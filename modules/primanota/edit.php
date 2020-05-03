@@ -57,7 +57,7 @@
 
 $righe = $mastrino->movimenti->toArray();
 
-include $structure->filepath('movimenti.php');
+include __DIR__.'/movimenti.php';
 
 ?>
 </form>

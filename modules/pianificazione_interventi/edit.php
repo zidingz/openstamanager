@@ -135,7 +135,7 @@ if (!empty($records)) {
                 <td>'.$info_allegati.'</td>
                 <td align="right">
 
-                <button type="button" class="btn btn-warning btn-sm" title="Pianifica..." data-toggle="tooltip" onclick="launch_modal(\'Pianifica\', \''.$module->fileurl('pianficazione.php').'?id_module='.$module->parent.'&id_plugin='.$module['id'].'&id_parent='.$id_record.'&id_record='.$record['id'].'\');"'.((!empty($pianificabile)) ? '' : ' disabled').'>
+                <button type="button" class="btn btn-warning btn-sm" title="Pianifica..." data-toggle="tooltip" onclick="launch_modal(\'Pianifica\', \''.fileurl('pianficazione.php').'?id_module='.$module->parent.'&id_plugin='.$module['id'].'&id_parent='.$id_record.'&id_record='.$record['id'].'\');"'.((!empty($pianificabile)) ? '' : ' disabled').'>
                     <i class="fa fa-clock-o"></i>
                 </button>
 

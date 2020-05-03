@@ -80,7 +80,7 @@ if (!empty($movimenti)) {
 
 <script>
 function open_movimento(id_mastrino, id_module){
-    launch_modal("'.tr('Dettagli movimento').'", "'.$structure->fileurl('dettagli_movimento.php').'?id_mastrino=" + id_mastrino + "&id_module=" + id_module);
+    launch_modal("'.tr('Dettagli movimento').'", "'.fileurl('dettagli_movimento.php').'?id_mastrino=" + id_mastrino + "&id_module=" + id_module);
 }
 </script>';
 } else {

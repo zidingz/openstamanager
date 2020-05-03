@@ -69,7 +69,7 @@ if (!empty($utenti)) {
 
         // Cambio password e nome utente
         echo '
-                <a href="" data-href="'.$structure->fileurl('user.php').'?id_module='.$id_module.'&id_record='.$id_record.'&id_utente='.$utente['id'].'" class="text-warning tip" data-toggle="modal" title="Aggiorna dati utente"  data-msg="" data-backto="record-edit" data-title="Aggiorna dati utente"><i class="fa fa-2x fa-unlock-alt"></i></a>';
+                <a href="" data-href="'.fileurl('user.php').'?id_module='.$id_module.'&id_record='.$id_record.'&id_utente='.$utente['id'].'" class="text-warning tip" data-toggle="modal" title="Aggiorna dati utente"  data-msg="" data-backto="record-edit" data-title="Aggiorna dati utente"><i class="fa fa-2x fa-unlock-alt"></i></a>';
 
         // Disabilitazione token API, se diverso da id_utente #1 (admin)
         $token = $dbo->fetchOne('SELECT `enabled` FROM `zz_tokens` WHERE `id_utente` = '.prepare($utente['id']));
@@ -119,7 +119,7 @@ if (!empty($utenti)) {
 }
 
 echo '
-			<a data-toggle="modal" data-href="'.$structure->fileurl('user.php').'?id_module='.$id_module.'&id_record='.$id_record.'" data-msg="" data-backto="record-edit" data-title="'.tr('Aggiungi utente').'" class="float-right btn btn-primary">
+			<a data-toggle="modal" data-href="'.fileurl('user.php').'?id_module='.$id_module.'&id_record='.$id_record.'" data-msg="" data-backto="record-edit" data-title="'.tr('Aggiungi utente').'" class="float-right btn btn-primary">
 			    <i class="fa fa-plus"></i> '.tr('Aggiungi utente').'
             </a>
 		</div>

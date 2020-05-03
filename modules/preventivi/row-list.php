@@ -120,7 +120,7 @@ echo '
 echo '
 <script>
 function editRow(id){
-    launch_modal("'.tr('Modifica riga').'", "'.$module->fileurl('row-edit.php').'?id_module=" + globals.id_module + "&id_record=" + globals.id_record + "&idriga=" + id);
+    launch_modal("'.tr('Modifica riga').'", "'.fileurl('row-edit.php').'?id_module=" + globals.id_module + "&id_record=" + globals.id_record + "&idriga=" + id);
 }
 
 function deleteRow(id){

@@ -3,7 +3,7 @@
 use Plugins\ImportFE\Interaction;
 
 if (!empty($record)) {
-    include $structure->filepath('generate.php');
+    include __DIR__.'/generate.php';
 
     return;
 }
@@ -117,7 +117,7 @@ if (Interaction::isEnabled()) {
             '_BUTTON_' => '<b>"'.tr('Ricerca fatture di acquisto').'"</b>',
         ]).'.</p>';
 } else {
-    include $structure->filepath('list.php');
+    include __DIR__.'/list.php';
 }
 
     echo '
@@ -211,7 +211,7 @@ echo '
 function search(btn) {
     var restore = buttonLoading(btn);
 
-    $("#list").load("'.$structure->fileurl('list.php').'?id_module='.$id_module.'&id_plugin='.$id_plugin.'", function() {
+    $("#list").load("'.fileurl('list.php').'?id_module='.$id_module.'&id_plugin='.$id_plugin.'", function() {
         buttonRestore(btn, restore);
     });
 }

@@ -4,7 +4,7 @@ import 'jquery-form';
 import Swal from 'sweetalert2';
 
 import '../functions/select';
-import { getUrlVars, redirect, buttonLoading, buttonRestore } from "../functions/functions";
+import { getUrlVars, redirect, buttonLoading, buttonRestore, ajaxError } from "../functions/functions";
 
 var flag_link = "https://lipis.github.io/flag-icon-css/flags/4x3/|flag|.svg";
 

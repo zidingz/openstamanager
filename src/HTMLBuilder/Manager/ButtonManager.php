@@ -102,7 +102,7 @@ class ButtonManager implements ManagerInterface
 
         if ($count > 1) {
             $result = '
-<div class="dropdown" id="'.$options['html_id'].'">';
+<div class="btn-group" id="'.$options['html_id'].'">';
 
             $predefined = array_search(1, array_column($list, 'predefined'));
             if ($predefined !== false) {
@@ -129,7 +129,7 @@ class ButtonManager implements ManagerInterface
 
             foreach ($list as $element) {
                 $result .= '
-        <li>'.$this->link([
+        <li class="dropdown-item">'.$this->link([
             'type' => $options['type'],
             'id' => $element['id'],
             'id_module' => $options['id_module'],

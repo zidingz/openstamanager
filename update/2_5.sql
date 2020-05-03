@@ -223,6 +223,14 @@ UPDATE `zz_widgets` SET `query` = REPLACE(`query`, 'idstatoordine', 'id_stato');
 UPDATE `zz_widgets` SET `query` = REPLACE(`query`, 'idstatoddt', 'id_stato');
 UPDATE `zz_widgets` SET `query` = REPLACE(`query`, 'idstato', 'id_stato');
 
+UPDATE `zz_modules` SET `options` = REPLACE(`options`, 'idstatodocumento', 'id_stato');
+UPDATE `zz_modules` SET `options` = REPLACE(`options`, 'in_statiintervento.idstatointervento', 'in_statiintervento.id');
+UPDATE `zz_modules` SET `options` = REPLACE(`options`, 'idstatointervento', 'id_stato');
+UPDATE `zz_modules` SET `options` = REPLACE(`options`, 'idstatodocumento', 'id_stato');
+UPDATE `zz_modules` SET `options` = REPLACE(`options`, 'idstatoordine', 'id_stato');
+UPDATE `zz_modules` SET `options` = REPLACE(`options`, 'idstatoddt', 'id_stato');
+UPDATE `zz_modules` SET `options` = REPLACE(`options`, 'idstato', 'id_stato');
+
 UPDATE `zz_views` SET `query` = 'id' WHERE `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Tipi di intervento') AND `name` = 'id';
 UPDATE `zz_views` SET `query` = '(SELECT descrizione FROM in_statiintervento WHERE in_statiintervento.id=in_interventi.id_stato)' WHERE `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Interventi') AND `name` = 'Stato';
 UPDATE `zz_views` SET `query` = '(SELECT colore FROM in_statiintervento WHERE in_statiintervento.id=in_interventi.id_stato)' WHERE `id_module` = (SELECT `id` FROM `zz_modules` WHERE `name` = 'Interventi') AND `name` = '_bg_';

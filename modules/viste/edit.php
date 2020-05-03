@@ -91,7 +91,7 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
         <!-- CAMPI -->
         <div id="fields" class="tab-pane fade in active">';
 
-    include $module->filepath('fields.php');
+    include __DIR__.'/fields.php';
 
     echo '
         </div>
@@ -99,7 +99,7 @@ if (!empty($options) && $options != 'custom' && $options != 'menu') {
         <!-- FILTRI -->
         <div id="filters" class="tab-pane fade">';
 
-    include $module->filepath('filters.php');
+    include __DIR__.'/filters.php';
 
     echo '
         </div>
