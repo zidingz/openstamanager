@@ -76,7 +76,7 @@ input[type=file] {
 }
 
 .no-padding {
-    padding: 0 0px;
+    padding: 0 0;
 }
 
 .card-center {
@@ -124,7 +124,7 @@ input[type=file] {
 }
 
 #main_loading > div > i {
-    font-size: 300px;
+    font-size: 10rem;
     margin-top: -150px;
     color: #e24e1e;
 }
@@ -147,16 +147,6 @@ input[type=file] {
     height: 100px;
     margin-top: -50px;
     margin-left: -50px;
-    background: transparent url(../img/ajax-loader.gif) top left no-repeat;
-}
-
-#tiny-loader {
-    position: fixed;
-    z-index: 9000;
-    width: 100%;
-    height: 100%;
-    top: 50%;
-    left: 50%;
     background: transparent url(../img/ajax-loader.gif) top left no-repeat;
 }
 
@@ -222,7 +212,7 @@ span.form-control {
 }
 
 .input-group-addon {
-    padding: 0px 12px;
+    padding: 0 12px;
 }
 
 .colorpicker {
@@ -267,15 +257,6 @@ span.form-control {
 .login-card-body .input-group > .input-group-append > .input-group-text {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-}
-
-/* Aggiustamenti per i select */
-
-.select2-container--bootstrap .select2-selection {
-    font-size: 0.75rem;
-}
-.select2-selection.select2-selection--single{
-    width: 100%;
 }
 
 /* Aggiustamenti per i widget */
@@ -396,6 +377,7 @@ span.form-control {
     z-index: 9999
 }
 
+/* Firma */
 .signature-pad {
     width: 100%;
     height: 100%;
@@ -440,6 +422,7 @@ span.form-control {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.02) inset;
 }
 
+/* Sidebar */
 .sidebar-form {
     border-radius: 3px;
     margin: 10px 10px;
@@ -462,10 +445,7 @@ span.form-control {
 }
 
 .sidebar-form .btn {
-    border-top-left-radius: 0;
-    border-top-right-radius: 2px;
-    border-bottom-right-radius: 2px;
-    border-bottom-left-radius: 0;
+    border-radius: 0 2px 2px 0;
 }
 
 .swal2-buttonswrapper .btn {
@@ -488,16 +468,35 @@ span.form-control {
 }
 
 .input-group-addon.no-padding {
-    border: 0px;
+    border: 0;
 }
 
 .input-group-addon.no-padding > * {
-    border-radius: 0px;
+    border-radius: 0;
 }
-/*
-.input-group > .select2-container {
-    width: auto !important;
-}*/
+
+.select2-container--bootstrap .select2-selection {
+    font-size: 0.75rem;
+}
+
+.select2-selection.select2-selection--single,
+.select2-selection.select2-selection--multiple {
+    width: 100%;
+}
+
+.after.input-group-addon .select2-selection, .after.input-group-addon {
+    border-radius: 0 4px 4px 0;
+    border-left: none;
+}
+
+.before.input-group-addon .select2-selection, .before.input-group-addon {
+    border-radius: 4px 0 0 4px;
+    border-right: none;
+}
+
+.select2-dropdown {
+    z-index: 2000;
+}
 
 /* Interventi da pianificare in Dashboard */
 
@@ -515,11 +514,6 @@ span.form-control {
 .fc-event-danger {
     background-color: #dd4b46;
     border: 1px solid #dd4b46;
-}
-
-div.DTS tbody td,
-div.DTS tbody th {
-    max-width: 500px;
 }
 
 input.min-width {
@@ -540,7 +534,6 @@ input.small-width {
 
 @media (max-width: 480px) {
     #main_loading > div > i {
-        font-size: 160px;
         margin-top: -80px;
     }
 }
@@ -553,20 +546,12 @@ input.small-width {
     .card-center,
     .card-center-large {
         width: 90%;
-        margin-top: 20px
+        margin-top: 20px;
     }
 
     .main-header .logo {
         display: none;
     }
-
-    /*
-    .content-wrapper,
-    .right-side,
-    .left-side,
-    .main-sidebar {
-        padding-top: 50px;
-    }*/
 }
 
 @media screen and (min-width: 768px) and (max-width: 1024px) {
@@ -587,10 +572,6 @@ input.small-width {
 }
 
 @media screen and (max-width: 1024px) {
-    .push {
-        position: static;
-    }
-
     .signature-pad {
         top: 0;
         left: 0;
@@ -625,16 +606,16 @@ input.small-width {
 .nav-tabs-custom > .nav-tabs.float-right > li:first-of-type.active > a {
     border-right-color: #f4f4f4;
     border-right-width: 1px;
-    border-left-width: 0px;
+    border-left-width: 0;
 }
 
 .nav-tabs-custom > .nav-tabs > li.header {
-    padding: 0px;
+    padding: 0;
 }
 
 .nav-tabs-custom > .nav-tabs > li {
     margin-bottom: -1px;
-    margin-right: 0px;
+    margin-right: 0;
 }
 
 .ui-autocomplete {
@@ -654,27 +635,7 @@ input.small-width {
 }
 
 .img-circle.square {
-    box-shadow: 0px 0px 1px 1px lightgray;
-}
-
-.select2-dropdown {
-    z-index: 2000;
-}
-
-.after.input-group-addon .select2-selection, .after.input-group-addon {
-    border-radius: 0px 4px 4px 0px;
-    border-left: none;
-}
-
-.before.input-group-addon .select2-selection, .before.input-group-addon {
-    border-radius: 4px 0px 0px 4px;
-    border-right: none;
-}
-
-.hide-it-off-screen {
-    position: absolute;
-    left: -10000px;
-    top: -10000px;
+    box-shadow: 0 0 1px 1px lightgray;
 }
 
 .box-info ul > li > :last-child {
@@ -687,18 +648,6 @@ input.small-width {
 
 .skin-default .nav.navbar-nav li a:hover {
     background: #222222;
-}
-
-.row {
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    -ms-word-break: break-all;
-    word-break: break-all;
-    word-break: break-word;
-    -ms-hyphens: auto;
-    -moz-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
 }
 
 .request .morelink {
@@ -761,13 +710,15 @@ input.small-width {
     max-width: 100%;
 }
 
+/* Input di login */
+
 .login-card-body .input-group-preprend .input-group-text,
 .register-card-body .input-group-preprend .input-group-text {
     border: 1px solid #ced4da;
 }
 
 .card-tools .btn {
-    padding: 0px .75rem;
+    padding: 0 .75rem;
 }
 
 .info-box .info-box-text, .info-box .progress-description {

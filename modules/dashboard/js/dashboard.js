@@ -2,6 +2,7 @@ import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
+import allLocales from '@fullcalendar/core/locales-all';
 import $ from 'jquery';
 import moment from 'moment';
 import 'tooltipster';
@@ -147,6 +148,7 @@ function create_calendar() {
 
     var calendar = new Calendar(calendarElement, {
         plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
+        locales: allLocales,
         locale: globals.locale,
         hiddenDays: globals.dashboard.show_sunday ? [] : [0],
         header: {

@@ -1,6 +1,8 @@
 import $ from 'jquery';
 import 'select2';
 
+import {setContrast} from './functions';
+
 // Select
 export function start_superselect() {
     // Statico
@@ -12,7 +14,7 @@ export function start_superselect() {
             width: 'resolve',
             maximumSelectionLength: $this.data('maximum') ? $this.data('maximum') : -1,
             minimumResultsForSearch: $this.hasClass('no-search') ? -1 : 0,
-            allowClear: $this.hasClass('no-search') ? false : true,
+            allowClear: !$this.hasClass('no-search'),
             templateResult: function (data, container) {
                 var bg; // templateSelection
 
@@ -84,14 +86,12 @@ export function start_superselect() {
                     params.page = params.page || 0;
                     params.length = params.length || 100;
 
-                    var response = {
+                    return {
                         results: data.results,
                         pagination: {
                             more: (params.page + 1) * params.length < data.recordsFiltered,
                         }
                     };
-
-                    return response;
                 },
                 cache: false
             },
@@ -115,7 +115,7 @@ jQuery.fn.selectReset = function (placeholder) {
     this.selectClear();
     this.empty();
 
-    if (placeholder != undefined) {
+    if (placeholder !== undefined) {
         this.next().find('.select2-selection__placeholder').text(placeholder);
         this.next().find('input.select2-search__field').attr('placeholder', placeholder);
     }
@@ -155,7 +155,7 @@ jQuery.fn.selectSet = function (value) {
  * Aggiorna un <select> creato con select2 impostando un valore di default
  */
 jQuery.fn.selectAdd = function (values) {
-    $this = this;
+    var $this = this;
 
     values.forEach(function (item) {
         if (item.data) {
@@ -180,6 +180,7 @@ jQuery.fn.selectAdd = function (values) {
 jQuery.fn.selectData = function () {
     var obj = $(this[0]);
 
+    let $select_obj;
     $select_obj = obj.select2('data');
 
     if ($select_obj[0] == undefined) {

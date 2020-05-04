@@ -169,6 +169,11 @@ div.columns div.dataTables_paginate li.last a:after {
 
 /* Fix for Scroller plugin */
 
+div.DTS tbody td,
+div.DTS tbody th {
+    max-width: 500px;
+}
+
 div.DTS {
     display: block !important;
 }
@@ -203,7 +208,7 @@ div.dataTables_wrapper {
 
 .dataTables_filter input {
     display: inline-block;
-    border-radius: 0px !important;
+    border-radius: 0 !important;
     box-shadow: none;
     height: 34px;
     padding: 6px 12px;

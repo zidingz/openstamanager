@@ -44,7 +44,7 @@ echo '
 
 $file = basename(__FILE__);
 echo '
-<script src="'.ROOTDIR.asset('/js/base.js').'"></script>
+<script>$(document).ready(init)</script>
 
 <script>
     var content = $("#righe_documento");

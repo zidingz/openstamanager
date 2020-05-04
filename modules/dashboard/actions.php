@@ -50,7 +50,7 @@ switch (filter('op')) {
                 'id' => $r['id'],
                 'idintervento' => $r['idintervento'],
                 'idtecnico' => $r['idtecnico'],
-                'title' => '<b>Int. '.$r['codice'].'</b> '.$r['cliente'].'<br><b>'.tr('Tecnici').':</b> '.$r['nome_tecnico'].' '.(($r['have_attachments']) ? '<i class="fa fa-paperclip" aria-d-none="true"></i>' : ''),
+                'title' => '<b>Int. '.$r['codice'].'</b> '.$r['cliente'].'<br><b>'.tr('Tecnici').':</b> '.$r['nome_tecnico'].' '.(($r['have_attachments']) ? '<i class="fa fa-paperclip" aria-hidden="true"></i>' : ''),
                 'start' => $r['orario_inizio'],
                 'end' => $r['orario_fine'],
                 'url' => urlFor('module-record', [

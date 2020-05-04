@@ -136,7 +136,7 @@ echo '
     <div class="col-md-6">
         <div class="card card-outline card-warning">
             <div class="card-header">
-                <h3 class="card-title">'.tr('I 20 clienti TOP').'</h3><span class="tip" title="'.tr('Valori iva esclusa').'"> <i class="fa fa-question-circle-o" aria-d-none="true"></i></span>
+                <h3 class="card-title">'.tr('I 20 clienti TOP').'</h3><span class="tip" title="'.tr('Valori iva esclusa').'"> <i class="fa fa-question-circle-o" aria-hidden="true"></i></span>
 
                 <div class="card-tools float-right">
                     <button type="button" class="btn btn-card-tool" data-card-widget="collapse">
@@ -152,7 +152,7 @@ if (!empty($clienti)) {
                         <th class="col-md-6" >'.tr('Ragione sociale').'</th>
                         <th class="text-center">'.tr('Num. fatture').'</th>
                         <th class="text-right">'.tr('Totale').'</th>
-                        <th class="text-right">'.tr('Percentuale').'<span class="tip" title="'.tr('Incidenza sul fatturato').'">&nbsp;<i class="fa fa-question-circle-o" aria-d-none="true"></i></span></th>
+                        <th class="text-right">'.tr('Percentuale').'<span class="tip" title="'.tr('Incidenza sul fatturato').'">&nbsp;<i class="fa fa-question-circle-o" aria-hidden="true"></i></span></th>
                     </tr>';
     foreach ($clienti as $cliente) {
         echo '
@@ -184,7 +184,7 @@ echo '
     <div class="col-md-6">
         <div class="card card-outline card-danger">
             <div class="card-header">
-                <h3 class="card-title">'.tr('I 20 articoli più venduti').'</h3><span class="tip" title="'.tr('Valori iva esclusa').'"> <i class="fa fa-question-circle-o" aria-d-none="true"></i></span>
+                <h3 class="card-title">'.tr('I 20 articoli più venduti').'</h3><span class="tip" title="'.tr('Valori iva esclusa').'"> <i class="fa fa-question-circle-o" aria-hidden="true"></i></span>
 
                 <div class="card-tools float-right">
                     <button type="button" class="btn btn-card-tool" data-card-widget="collapse">
@@ -200,7 +200,7 @@ if (!empty($articoli)) {
                         <th>'.tr('Codice').'</th>
                         <th class="col-md-6" >'.tr('Descrizione').'</th>
                         <th class="text-right">'.tr('Q.tà').'</th>
-                        <th class="text-right">'.tr('Percentuale').'<span class="tip" title="'.tr('Incidenza sul numero di articoli venduti').'"> <i class="fa fa-question-circle-o" aria-d-none="true"></i></span></th>
+                        <th class="text-right">'.tr('Percentuale').'<span class="tip" title="'.tr('Incidenza sul numero di articoli venduti').'"> <i class="fa fa-question-circle-o" aria-hidden="true"></i></span></th>
                         <th class="text-right">'.tr('Totale').'</th>
                     </tr>';
     foreach ($articoli as $articolo) {

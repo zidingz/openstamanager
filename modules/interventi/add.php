@@ -1,11 +1,13 @@
 <?php
 
+use Modules\Interventi\Intervento;
+
 // Rimuovo session usate sui select combinati (sedi, preventivi, contratti, impianti)
 unset($_SESSION['superselect']['idanagrafica']);
 unset($_SESSION['superselect']['idsede']);
 
 // Calcolo del nuovo codice
-$new_codice = \Modules\Interventi\Intervento::getNextCodice($data);
+$new_codice = Intervento::getNextCodice($data);
 
 // Se ho passato l'idanagrafica, carico il tipo di intervento di default
 $idanagrafica = filter('idanagrafica');
@@ -37,9 +39,9 @@ if (!empty($idanagrafica)) {
 }
 
 // Calcolo orario di inizio e fine di default
-if (null !== filter('orario_inizio') && '00:00:00' != filter('orario_inizio')) {
-    $orario_inizio = filter('orario_inizio');
-    $orario_fine = filter('orario_fine');
+if (null !== filter('orario_inizio')) {
+    $orario_inizio = filter('orario_inizio').':00';
+    $orario_fine = filter('orario_fine').':00';
 } else {
     $orario_inizio = date('H').':00:00';
     $orario_fine = date('H', time() + 60 * 60).':00:00';
@@ -297,7 +299,7 @@ if (!empty($id_intervento)) {
 	</div>
 </form>
 
-<script src="'.ROOTDIR.asset('/js/base.js').'"></script>
+<script>$(document).ready(init)</script>
 
 <script type="text/javascript">
 	$(document).ready(function(){

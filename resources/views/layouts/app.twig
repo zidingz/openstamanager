@@ -100,7 +100,7 @@
             },
         },
 
-        locale: '{{ lang }}',
+        locale: '{{ locale }}',
         full_locale: '{{ full_locale }}',
 
         start_date: '{{ calendar.start }}',
@@ -286,7 +286,7 @@
     {% endif %}
 
     <!-- Modal di default -->
-    <div class="modal fade" id="bs-popup" role="dialog" aria-labelledby="myModalLabel" aria-d-none="true" data-backdrop="static" data-keyboard="true"></div>
-    <div class="modal fade" id="bs-popup2" role="dialog" aria-labelledby="myModalLabel" aria-d-none="true" data-backdrop="static" data-keyboard="true"></div>
+    <div class="modal fade" id="bs-popup" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="true"></div>
+    <div class="modal fade" id="bs-popup2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="true"></div>
 </div>
 {% endblock %}

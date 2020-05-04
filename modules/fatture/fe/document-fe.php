@@ -171,4 +171,4 @@ function add_riferimento(btn, nome, key) {
 }
 </script>
 
-<script src="'.ROOTDIR.asset('/js/base.js').'"></script>';
+<script>$(document).ready(init)</script>';

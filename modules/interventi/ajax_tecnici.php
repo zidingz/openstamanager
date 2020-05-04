@@ -215,7 +215,7 @@ if (!$is_completato) {
 }
 
 echo '
-<script src="'.ROOTDIR.asset('/js/base.js').'"></script>
+<script>$(document).ready(init)</script>
 
 <script type="text/javascript">
     $(document).ready(function(){';

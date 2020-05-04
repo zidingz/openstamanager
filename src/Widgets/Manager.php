@@ -25,7 +25,7 @@ abstract class Manager extends Component
 <a class="clickable" '.$this->getAttributes().'>
     <div class="info-box">
         <button type="button" class="close" onclick="if(confirm(\'Disabilitare questo widget?\')) { $.post( \''.ROOTDIR.'/actions.php?id_module='.$widget->module->id.'\', { op: \'disable_widget\', id: \''.$widget['id'].'\' }, function(response){ location.reload(); }); };" >
-            <span aria-d-none="true">&times;</span><span class="sr-only">'.tr('Chiudi').'</span>
+            <span aria-hidden="true">&times;</span><span class="sr-only">'.tr('Chiudi').'</span>
         </button>
 
         <span class="info-box-icon" style="background-color:'.$widget['bgcolor'].'">';
