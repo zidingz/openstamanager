@@ -109,8 +109,6 @@ trait DefaultTrait
     /**
      * Completamento delle informazioni per il rendering del modulo.
      *
-     * @param array $args
-     *
      * @return array
      */
     protected function prepare(array $args)

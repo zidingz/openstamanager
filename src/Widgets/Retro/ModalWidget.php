@@ -25,6 +25,13 @@ class ModalWidget extends Original
         return $content;
     }
 
+    public function getLink(): string
+    {
+        $id = $this->model->id;
+
+        return ROOTDIR.'/widget/modal/'.$id;
+    }
+
     protected function getTitle(): string
     {
         return $this->model['text'] ?: '';
@@ -56,13 +63,6 @@ class ModalWidget extends Original
         }
 
         return $content;
-    }
-
-    public function getLink(): string
-    {
-        $id = $this->model->id;
-
-        return ROOTDIR.'/widget/modal/'.$id;
     }
 
     protected function routes(SlimApp $app): void

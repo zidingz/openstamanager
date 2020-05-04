@@ -4,8 +4,8 @@ namespace Widgets\Retro;
 
 use Controllers\Controller;
 use Psr\Http\Message\ResponseInterface;
-use Widgets\Widget;
 use Psr\Http\Message\ServerRequestInterface;
+use Widgets\Widget;
 
 /**
  * Controller dedicato alla gestione dei modal per i widget in retrocompatibilità.

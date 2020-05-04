@@ -3,7 +3,6 @@
 namespace Controllers;
 
 use Models\Template;
-use Prints;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

@@ -99,10 +99,6 @@ class Logger extends Monolog\Logger implements ErrorHandlerInterface
 
     /**
      * Metodo per la gestione della grafica relativa agli errori.
-     *
-     * @param int $status
-     *
-     * @return Response
      */
     public function render(int $status): Response
     {
@@ -114,8 +110,6 @@ class Logger extends Monolog\Logger implements ErrorHandlerInterface
 
     /**
      * Metodo per il logging delle eccezioni.
-     *
-     * @param Throwable $exception
      */
     public function logException(Throwable $exception)
     {

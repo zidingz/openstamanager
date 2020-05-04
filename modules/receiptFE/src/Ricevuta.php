@@ -3,7 +3,6 @@
 namespace Plugins\ReceiptFE;
 
 use Modules\Fatture\Fattura;
-use Plugins;
 use UnexpectedValueException;
 use Uploads;
 use Util\XML;

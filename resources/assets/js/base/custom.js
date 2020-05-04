@@ -8,6 +8,7 @@ import 'toastr';
 import { start_datatables } from '../functions/datatables';
 import { start_complete_calendar } from '../functions/dates';
 import { renderMessages, clock } from '../functions/functions';
+import { init } from '../functions/init';
 import { startHooks } from '../functions/hooks';
 
 // Aggiunta dell'ingranaggio all'unload della pagina
@@ -105,4 +106,7 @@ $(document).ready(function () {
             $('input').trigger('blur');
         });
     }, 1000);
+
+    // Operazioni di inizializzazione
+    init();
 });

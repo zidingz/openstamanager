@@ -285,8 +285,18 @@
         {{ debugbar.render()|raw }}
     {% endif %}
 
-    <!-- Modal di default -->
-    <div class="modal fade" id="bs-popup" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="true"></div>
-    <div class="modal fade" id="bs-popup2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="true"></div>
+    <script>
+        function closeModal(element) {
+            var modal = $(element).closest(".modal");
+            modal.fadeOut('slow', function() {
+                if ($("#modals").children().length <= 1){
+                    $("body").removeClass("modal-open");
+                    $(".modal-backdrop").remove();
+                }
+
+                modal.remove();
+            });
+        }
+    </script>
 </div>
 {% endblock %}

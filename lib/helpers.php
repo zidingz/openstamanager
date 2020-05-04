@@ -313,8 +313,6 @@ function moneyFormat($number, $decimals = null)
 /**
  * Restituisce il numero indicato formattato come una valuta secondo la configurazione del sistema.
  *
- * @param array $json
- *
  * @return string
  *
  * @since 2.4.11
@@ -336,6 +334,7 @@ function module($identifier)
     return \Modules\Module::get($identifier);
 }
 
-function asset(string $name){
+function asset(string $name)
+{
     return App::asset($name);
 }

@@ -34,8 +34,6 @@ abstract class Manager extends Component
 
     /**
      * Genera la stampa PDF richiesta.
-     *
-     * @return array
      */
     abstract public function generate(?string $directory = null): array;
 
@@ -67,12 +65,6 @@ abstract class Manager extends Component
         return !empty($content) ? $content : '$default_footer$';
     }
 
-    /**
-     * @param int|null $id_cliente
-     * @param int|null $id_sede
-     *
-     * @return array
-     */
     protected function getReplaces(?int $id_cliente = null, ?int $id_sede = null): array
     {
         if (isset($this->replaces)) {

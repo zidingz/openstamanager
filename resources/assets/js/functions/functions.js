@@ -28,7 +28,7 @@ export function openModal(title, href, generate_id) {
     }
 
     if ($(id).length == 0) {
-        $('#modals').append('<div class="modal fade" id="' + id.replace("#", "") + '" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="true"></div>');
+        $('#modals').append('<div class="modal fade" id="' + id.replace("#", "") + '" role="dialog" data-backdrop="static" data-keyboard="true"></div>');
     }
 
     $(id).on('hidden.bs.modal', function () {
@@ -44,7 +44,7 @@ export function openModal(title, href, generate_id) {
             <h4 class="modal-title">\
                 <i class="fa fa-pencil"></i> ' + title + '\
             </h4>\
-            <button type="button" class="close" data-dismiss="modal">\
+            <button type="button" class="close" data-dismiss="modal" onclick="closeModal(this)">\
                 <span aria-hidden="true">&times;</span><span class="sr-only">' + globals.translations.close + '</span>\
             </button>\
         </div>\
@@ -371,7 +371,7 @@ export function submitAjax(form, data, callback, errorCallback) {
         $("#main_loading").show();
         var url = $(form).attr('action') ? $(form).attr('action') : location.href;
 
-        content_was_modified = false;
+        globals.content_was_modified = false;
 
         // Fix per gli id di default
         data.id_module = data.id_module ? data.id_module : globals.id_module;
@@ -389,10 +389,8 @@ export function submitAjax(form, data, callback, errorCallback) {
             success: function (data) {
                 data = data.trim();
 
-                if (data) {
-                    response = JSON.parse(data);
-                    if (callback) callback(response);
-                }
+                var response = data ? JSON.parse(data) : {};
+                if (callback) callback(response);
 
                 $("#main_loading").fadeOut();
 

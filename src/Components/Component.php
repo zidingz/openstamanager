@@ -54,8 +54,6 @@ abstract class Component implements ComponentInterface
 
     /**
      * Gestisce la registrazione dei percorsi navigabili per il componente.
-     *
-     * @param SlimApp $app
      */
     abstract protected function routes(SlimApp $app): void;
 }

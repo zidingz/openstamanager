@@ -60,12 +60,6 @@ trait RetroTrait
         $this->footer = $this->replace($content);
     }
 
-    /**
-     * @param int|null $id_cliente
-     * @param int|null $id_sede
-     *
-     * @return array
-     */
     protected function getReplaces(?int $id_cliente = null, ?int $id_sede = null): array
     {
         $replaces = parent::getReplaces($id_cliente, $id_sede);

@@ -6,7 +6,6 @@ use Auth\Group;
 use Controllers\Config\RequirementsController as Requirements;
 use GuzzleHttp\Client;
 use InvalidArgumentException;
-use Modules;
 use Modules\Module;
 use Parsedown;
 use Symfony\Component\Finder\Finder;

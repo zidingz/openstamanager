@@ -169,31 +169,29 @@
         });
         {% endif %}
 
-        var content_was_modified = false;
-
         // controllo se digito qualche valore o cambio qualche select
         $("input, textarea, select").bind("change paste keyup", function(event) {
             if( event.keyCode >= 32 ){
-                content_was_modified = true;
+                globals.content_was_modified = true;
             }
         });
 
         $(".superselect, .superselectajax").on("change", function (e) {
-            content_was_modified = true;
+            globals.content_was_modified = true;
         });
 
         // tolgo il controllo se sto salvando
         $(".btn-success, button[type=submit]").bind("click", function() {
-            content_was_modified = false;
+            globals.content_was_modified = false;
         });
 
         $( "form" ).bind( "submit", function() {
-            content_was_modified = false;
+            globals.content_was_modified = false;
         });
 
         // questo controllo blocca il modulo vendita al banco, dopo la lettura con barcode, appare il messaggio di conferma
         window.onbeforeunload = function(e){
-            if(content_was_modified) {
+            if(globals.content_was_modified) {
                 var dialogText = "{{ "Uscire senza salvare?"|trans }}";
                 e.returnValue = dialogText;
                 $("#main_loading").fadeOut();

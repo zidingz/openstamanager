@@ -31,12 +31,19 @@ class ModuleController extends Parser implements ModuleInterface
         $args = $this->prepare($args);
         $args = parent::create($args);
 
+        $args['query'] = $request->getQueryParams();
+
         return $this->twig->render($response, 'old/add.twig', $args);
     }
 
     public function create(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
+        ob_start();
         $id_record = $this->actions($args);
+        $content = ob_get_clean();
+
+        $response->write($content);
+
         $params = [
             'record_id' => $id_record,
         ];

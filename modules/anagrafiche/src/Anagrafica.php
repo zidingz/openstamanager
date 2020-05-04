@@ -39,7 +39,6 @@ class Anagrafica extends Model
      * Crea una nuova anagrafica.
      *
      * @param string $ragione_sociale
-     * @param array  $tipologie
      *
      * @return self
      */
@@ -149,8 +148,6 @@ class Anagrafica extends Model
 
     /**
      * Aggiorna la tipologia dell'anagrafica.
-     *
-     * @param array $tipologie
      */
     public function setTipologieAttribute(array $tipologie)
     {

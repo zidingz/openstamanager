@@ -195,6 +195,7 @@ function datediff($interval, $datefrom, $dateto, $using_timestamps = false)
  *
  * @param $s
  */
-function fileurl($s){
+function fileurl($s)
+{
     return;
 }

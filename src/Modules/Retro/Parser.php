@@ -12,6 +12,53 @@ abstract class Parser extends Controller
 {
     use DefaultTrait;
 
+    /**
+     * Restituisce il percorso per il file di creazione dei record.
+     *
+     * @return string
+     */
+    public function getAddFile(Module $module): ?string
+    {
+        $php = self::filepath($module, 'add.php');
+        $html = self::filepath($module, 'add.html');
+
+        return !empty($php) ? $php : $html;
+    }
+
+    /**
+     * Restituisce il percorso per il file di modifica dei record.
+     *
+     * @return string
+     */
+    public function getEditFile(Module $module): ?string
+    {
+        $php = self::filepath($module, 'edit.php');
+        $html = self::filepath($module, 'edit.html');
+
+        return !empty($php) ? $php : $html;
+    }
+
+    /**
+     * Restituisce il percorso completo per il file indicato della struttura.
+     */
+    public static function filepath(Module $module, string $file): ?string
+    {
+        return App::filepath('modules/'.$module->directory.'|custom|', $file);
+    }
+
+    /**
+     * Restituisce l'URL completa per il file indicato della struttura.
+     */
+    public static function fileurl(Module $module, string $file): ?string
+    {
+        $filepath = self::filepath($module, $file);
+
+        $result = str_replace(DOCROOT, ROOTDIR, $filepath);
+        $result = str_replace('\\', '/', $result);
+
+        return $result;
+    }
+
     protected function controller($args)
     {
         extract($args);
@@ -141,56 +188,5 @@ abstract class Parser extends Controller
         ]);
 
         return $args;
-    }
-
-    /**
-     * Restituisce il percorso per il file di creazione dei record.
-     *
-     * @return string
-     */
-    public function getAddFile(Module $module):?string
-    {
-        $php = self::filepath($module, 'add.php');
-        $html = self::filepath($module, 'add.html');
-
-        return !empty($php) ? $php : $html;
-    }
-
-    /**
-     * Restituisce il percorso per il file di modifica dei record.
-     *
-     * @return string
-     */
-    public function getEditFile(Module $module):?string
-    {
-        $php = self::filepath($module, 'edit.php');
-        $html = self::filepath($module, 'edit.html');
-
-        return !empty($php) ? $php : $html;
-    }
-
-    /**
-     * Restituisce il percorso completo per il file indicato della struttura.
-     *
-     * @return string|null
-     */
-    public static function filepath(Module $module, string $file):?string
-    {
-        return App::filepath('modules/'.$module->directory.'|custom|', $file);
-    }
-
-    /**
-     * Restituisce l'URL completa per il file indicato della struttura.
-     *
-     * @return string|null
-     */
-    public static function fileurl(Module $module, string $file): ?string
-    {
-        $filepath = self::filepath($module, $file);
-
-        $result = str_replace(DOCROOT, ROOTDIR, $filepath);
-        $result = str_replace('\\', '/', $result);
-
-        return $result;
     }
 }

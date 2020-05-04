@@ -1,44 +1,46 @@
-<div id="form_{{ module_id }}-{{ plugin_id }}">
+<div id="add_form_{{ module_id }}">
     {% block content %}{% endblock %}
 </div>
 
 <!-- Campi personalizzati -->
 <div class="d-none" id="custom_fields_top-add">
     <input type="hidden" name="id_module" value="{{ module_id }}">
-    <input type="hidden" name="id_plugin" value="{{ plugin_id }}">
 
-    {( "name": "custom_fields", "id_module": "{{ module_id }}", "id_plugin": "{{ plugin_id }}", "position": "top", "place": "add" )}
+    {( "name": "custom_fields", "id_module": "{{ module_id }}", "position": "top", "place": "add" )}
 </div>
 
 <div class="d-none" id="custom_fields_bottom-add">
-    {( "name": "custom_fields", "id_module": "{{ module_id }}", "id_plugin": "{{ plugin_id }}", "position": "bottom", "place": "add" )}
+    {( "name": "custom_fields", "id_module": "{{ module_id }}", "position": "bottom", "place": "add" )}
 </div>
 
-{% if handle_ajax %}
+<script src="{{ base_path() }}{{ asset('/js/pages/add.js') }}"></script>
 <script>
-    $(document).ready(function(){
-        data = {
-        {% for key, value in query_params %}
-            "{{ key }}": "{{ value }}",
-        {% endfor %}
-        };
+    var data = {
+    {% for key, value in query %}
+        "{{ key }}": "{{ value }}",
+    {% endfor %}
+    };
 
-        $("#form_{{ module_id }}-{{ plugin_id }}").find("form").submit(function () {
-            submitAjax(this, data, function(response) {
-                // Selezione automatica nuovo valore per il select
-                select = "#{{ query.select }}";
-                if ($(select).val() !== undefined) {
-                    $(select).selectSetNew(response.id, response.text, response.data);
-                }
+    var form_id = "#add_form_{{ module_id }}";
 
-                $("#bs-popup2").modal("d-none");
-            });
+    function after_submit_{{ module_id }}(response) {
+        // Selezione automatica nuovo valore per il select
+        var select = "#{{ query.select }}";
+        if ($(select).val() !== undefined) {
+            $(select).selectSetNew(response.id, response.text, response.data);
+        }
+    }
 
-            return false;
-        });
+    globals.add = {
+        handle_ajax: {{ handle_ajax ? 1 : 0 }},
+        form_id: form_id,
+        data: data,
+        after_submit: after_submit_{{ module_id }},
+    };
+
+    $(document).ready(function (){
+        init();
+
+        initAdd(globals.add);
     });
 </script>
-{% endif %}
-
-<script src="{{ base_path() }}{{ asset('/js/pages/add.js') }}"></script>
-<script>$(document).ready(init)</script>

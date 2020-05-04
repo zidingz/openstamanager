@@ -3,7 +3,6 @@
 namespace Modules\Aggiornamenti;
 
 use Hooks\CachedManager;
-use Modules;
 
 class UpdateHook extends CachedManager
 {

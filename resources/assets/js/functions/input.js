@@ -77,7 +77,13 @@ function start_inputmask(element) {
 }
 
 export function cleanup_inputs() {
-    $('.superselect, .superselectajax').select2().select2("destroy");
+    $('.superselect, .superselectajax').each(function () {
+        var $this = $(this);
+
+        if ($this.data('select2')) {
+            $this.select2().select2("destroy")
+        }
+    });
 }
 
 export function restart_inputs() {

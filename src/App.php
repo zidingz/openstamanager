@@ -46,9 +46,10 @@ class App
         return self::$container;
     }
 
-    public static function asset(string $name){
+    public static function asset(string $name)
+    {
         if (!isset(self::$assets)) {
-            $manifest = __DIR__ . '/../public/assets/mix-manifest.json';
+            $manifest = __DIR__.'/../public/assets/mix-manifest.json';
             $content = file_get_contents($manifest);
 
             self::$assets = (array) json_decode($content);
