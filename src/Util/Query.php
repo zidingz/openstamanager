@@ -4,7 +4,6 @@ namespace Util;
 
 use Auth;
 use Modules;
-use Translator;
 
 /**
  * Classe per la gestione delle interazione di base per le query dinamiche.
@@ -14,6 +13,7 @@ use Translator;
 class Query
 {
     protected static $segments = true;
+    protected static $reference_id;
 
     /**
      * Imposta l'utilizzo o meno dei segmenti per le query.
@@ -45,6 +45,11 @@ class Query
         return $result;
     }
 
+    public static function setModuleRecord($value)
+    {
+        self::$reference_id = $value;
+    }
+
     /**
      * Sostituisce i valori previsti all'interno delle query di moduli/plugin.
      *
@@ -54,9 +59,9 @@ class Query
      */
     public static function replacePlaceholder($query)
     {
-        $id_parent = filter('id_parent');
+        $reference_id = self::$reference_id;
 
-        $id_module = Modules::getCurrent()['id'];
+        $id_module = \Modules\Module::getCurrent()['id'];
         $segment = !empty(self::$segments) ? $_SESSION['module_'.$id_module]['id_segment'] : null;
 
         $user = Auth::user();
@@ -91,7 +96,7 @@ class Query
             // Identificatori
             '|id_anagrafica|' => prepare($user['idanagrafica']),
             '|id_utente|' => prepare($user['id']),
-            '|id_parent|' => prepare($id_parent),
+            '|id_parent|' => prepare($reference_id),
 
             // Filtro temporale
             '|'.$date_filter.'|' => $date_query,
@@ -142,9 +147,9 @@ class Query
 
         // Filtri di ricerca
         $search_filters = [];
-        foreach ($search as $field => $original_value) {
+        foreach ($search as $field => $value) {
             $pos = array_search($field, $total['fields']);
-            $value = trim($original_value);
+            $value = trim($value);
 
             if (isset($value) && $pos !== false) {
                 $search_query = $total['search_inside'][$pos];
@@ -174,25 +179,17 @@ class Query
                     $real_value = trim(str_replace(['&lt;', '&gt;'], ['<', '>'], $value));
                     $more = starts_with($real_value, '>=') || starts_with($real_value, '> =') || starts_with($real_value, '>');
                     $minus = starts_with($real_value, '<=') || starts_with($real_value, '< =') || starts_with($real_value, '<');
-                    $equal = starts_with($real_value, '=');
 
-                    if ($minus || $more || $equal) {
+                    if ($minus || $more) {
                         $sign = str_contains($real_value, '=') ? '=' : '';
                         if ($more) {
                             $sign = '>'.$sign;
-                        } elseif ($minus) {
-                            $sign = '<'.$sign;
                         } else {
-                            $sign = '=';
+                            $sign = '<'.$sign;
                         }
 
                         $value = trim(str_replace(['&lt;', '=', '&gt;'], '', $value));
-
-                        if ($more || $minus) {
-                            $search_filters[] = 'CAST('.$search_query.' AS UNSIGNED) '.$sign.' '.prepare($value);
-                        } else {
-                            $search_filters[] = $search_query.' = '.prepare($value);
-                        }
+                        $search_filters[] = 'CAST('.$search_query.' AS UNSIGNED) '.$sign.' '.prepare($value);
                     } else {
                         $search_filters[] = $search_query.' LIKE '.prepare('%'.$value.'%');
                     }
@@ -201,14 +198,7 @@ class Query
 
             // Campo id: ricerca tramite comparazione
             elseif ($field == 'id') {
-                // Filtro per una serie di ID
-                if (is_array($original_value)) {
-                    if (!empty($original_value)) {
-                        $search_filters[] = $field.' IN ('.implode(', ', $original_value).')';
-                    }
-                } else {
-                    $search_filters[] = $field.' = '.prepare($value);
-                }
+                $search_filters[] = $field.' = '.prepare($value);
             }
 
             // Ricerca
@@ -219,8 +209,7 @@ class Query
 
         // Ordinamento dei risultati
         if (isset($order['dir']) && isset($order['column'])) {
-            //$pos = array_search($order['column'], $total['fields']);
-            $pos = $order['column'];
+            $pos = array_search($order['column'], $total['fields']);
 
             if ($pos !== false) {
                 $pieces = explode('ORDER', $query);
@@ -271,7 +260,7 @@ class Query
      */
     public static function getSums($structure, $search = [])
     {
-        $total = self::readQuery($structure);
+        $total = self::readQuery($structure, $search);
 
         // Calcolo di eventuali somme
         if (empty($total['summable'])) {
@@ -282,7 +271,7 @@ class Query
 
         // Filtri derivanti dai permessi (eventuali)
         if (empty($structure->originalModule)) {
-            $result_query = Modules::replaceAdditionals($structure->id, $result_query);
+            $result_query = $structure->replaceAdditionals($result_query);
         }
 
         $query = self::str_replace_once('SELECT', 'SELECT '.implode(', ', $total['summable']).' FROM(SELECT ', $result_query).') AS `z`';
@@ -292,7 +281,7 @@ class Query
         if (!empty($sums)) {
             foreach ($sums as $key => $sum) {
                 if (str_contains($key, 'sum_')) {
-                    $results[str_replace('sum_', '', $key)] = Translator::numberToLocale($sum);
+                    $results[str_replace('sum_', '', $key)] = numberFormat($sum);
                 }
             }
         }
@@ -344,7 +333,11 @@ class Query
         $query = $element['option'];
 
         // Aggiunta eventuali filtri dai segmenti per eseguire la query filtrata
-        $query = str_replace('1=1', '1=1 '.Modules::getAdditionalsQuery($element['attributes']['name'], null, self::$segments), $query);
+        $module_name = $element['attributes']['name'];
+        $module = Modules\Module::get($module_name);
+        if (!empty($module)) {
+            $query = str_replace('1=1', '1=1 '.$module->getAdditionalsQuery(null, self::$segments), $query);
+        }
         $views = self::getViews($element);
 
         $select = [];

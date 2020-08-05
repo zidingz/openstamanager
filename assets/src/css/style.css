@@ -955,3 +955,13 @@ div.tip {
 .form-group input[type="checkbox"]:checked + .btn-group > label span:last-child {
     display: none;
 }
+
+.bg-light {
+    background-color: #e8e9ea !important;
+}
+
+a.bg-light:hover, a.bg-light:focus,
+button.bg-light:hover,
+button.bg-light:focus {
+    background-color: #dae0e5 !important;
+}

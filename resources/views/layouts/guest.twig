@@ -1,18 +1,18 @@
 {% extends "layouts/base.twig" %}
 
-{% block body_class %}hold-transition login-page{% endblock %}
+{% block body_class %}bg-light{% endblock %}
 
 {% block body %}
     {% include 'layouts/messages/box.twig' %}
 
     {% block before_content %}{% endblock %}
 
-<div class="card card-outline card-center-large {% block box_class %}{% endblock %}">
-    <div class="card-header text-center">
+<div class="box box-outline box-center-large {% block box_class %}{% endblock %}">
+    <div class="box-header text-center">
         {% block box_header %}{% endblock %}
     </div>
 
-    <div class="card-body">
+    <div class="box-body">
         {% block content %}{% endblock %}
     </div>
 </div>

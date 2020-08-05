@@ -376,6 +376,13 @@ function clean($string, $permitted = '')
     return preg_replace('/[^A-Za-z0-9'.$permitted.']/', '', $string); // Removes special chars.
 }
 
+/**
+ * @param $query
+ *
+ * @since 2.4
+ *
+ * @return bool
+ */
 function check_query($query)
 {
     $query = mb_strtoupper($query);
@@ -388,4 +395,30 @@ function check_query($query)
     }
 
     return true;
+}
+/**
+ * Argomenti di ricerca dalla sessione.
+ *
+ * @param $module_id
+ *
+ * @since 2.5
+ *
+ * @return array
+ */
+function getSessionSearch($module_id)
+{
+    $search = [];
+
+    $array = $_SESSION['module_'.$module_id];
+    if (!empty($array)) {
+        foreach ($array as $field => $value) {
+            if (!empty($value) && starts_with($field, 'search_')) {
+                $field_name = str_replace('search_', '', $field);
+
+                $search[$field_name] = $value;
+            }
+        }
+    }
+
+    return $search;
 }

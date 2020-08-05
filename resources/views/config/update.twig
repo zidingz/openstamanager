@@ -2,9 +2,9 @@
 
 {% block title %}{{ installing ? 'Installazione'|trans : 'Aggiornamento'|trans }}{% endblock %}
 
-{% block box_class %}card-warning text-center{% endblock %}
+{% block box_class %}box-warning text-center{% endblock %}
 {% block box_header %}
-<h3 class="card-title">{{ installing ? 'Installazione di OpenSTAManager'|trans : 'Aggiornamento di OpenSTAManager'|trans }}</h3>
+<h3 class="box-title">{{ installing ? 'Installazione di OpenSTAManager'|trans : 'Aggiornamento di OpenSTAManager'|trans }}</h3>
 {% endblock %}
 
 {% block content %}
@@ -31,14 +31,14 @@
             </div>
         </div>
         <hr>
-        <div class="card card-outline card-info text-center collapsed-card">
-            <div class="card-header">
-                <h3 class="card-title"><a class="clickable" data-card-widget="collapse">{{ 'Log'|trans }}</a></h3>
-                <div class="card-tools float-right">
-                    <button type="button" class="btn btn-card-tool" data-card-widget="collapse"><i class="fa fa-plus"></i></button>
+        <div class="box box-outline box-info text-center collapsed-box">
+            <div class="box-header with-border">
+                <h3 class="box-title"><a class="clickable" data-toggle="collapse">{{ 'Log'|trans }}</a></h3>
+                <div class="box-tools float-right">
+                    <button type="button" class="btn btn-box-tool" data-toggle="collapse"><i class="fa fa-plus"></i></button>
                 </div>
             </div>
-            <div class="card-body info text-left"></div>
+            <div class="box-body info text-left"></div>
         </div>
     </div>
     <div id="result"></div>
@@ -104,14 +104,30 @@
                 current += 1;
 
                 var message = globals.update.translations.message
-                    .replace("_DONE_", '"' + current + '"')
-                    .replace("_TODO_", '"' + count + '"')
-                    .replace("_VERSION_", '"' + version.trim() + '"');
+                    .replace("_DONE_", current)
+                    .replace("_TODO_", count)
+                    .replace("_VERSION_", version.trim());
 
                 $("#update-info .info").html($("#update-info .info").html() + "<p><strong>" + message + "</strong></p>");
             }
         }
     </script>
 
-    <script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ asset('/js/pages/update.js') }}"></script>
+    <script type="text/javascript" charset="utf-8">
+        $("#contine_button").click(function () {
+            swal({
+                title: globals.update.translations.title,
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn btn-lg btn-success",
+                confirmButtonText: globals.update.translations.continue,
+            }).then(function () {
+                $("#update-info").removeClass("hidden");
+                $("#result").load(globals.update.url);
+                $("#contine_button").remove();
+            }, function () {
+            });
+        });
+    </script>
 {% endblock %}

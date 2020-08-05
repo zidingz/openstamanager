@@ -6,12 +6,12 @@
 <!-- Aggiunta del messaggio riguardante la conclusione dell'aggiornamento del database -->
 {% if show_sql %}
 <script>
-    $("#progress .info").html($("#progress .info").html() + '<p>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-check"></i> {{ 'Aggiornamento del database (_FILENAME_)'|trans({'_FILENAME_': '<i>' ~ update_filename ~ '.sql</i>'})|raw }}</p>');
+    $("#update-info .info").html($("#update-info .info").html() + '<p>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-check"></i> {{ 'Aggiornamento del database (_FILENAME_)'|trans({'_FILENAME_': '<i>' ~ update_filename ~ '.sql</i>'})|raw }}</p>');
 </script>
 {% elseif show_script %}
 <!-- Aggiunta del messaggio riguardante la conclusione dello script -->
 <script>
-    $("#progress .info").html($("#progress .info").html() + '<p>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-check"></i> {{ 'Esecuzione dello script di aggiornamento (_FILENAME_)'|trans({'_FILENAME_': '<i>' ~ update_filename ~ '.php</i>'})|raw }}</p>');
+    $("#update-info .info").html($("#update-info .info").html() + '<p>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-check"></i> {{ 'Esecuzione dello script di aggiornamento (_FILENAME_)'|trans({'_FILENAME_': '<i>' ~ update_filename ~ '.php</i>'})|raw }}</p>');
 </script>
 {% endif %}
 

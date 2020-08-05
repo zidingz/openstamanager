@@ -4,20 +4,20 @@
         {% set general_status = general_status and element.status %}
     {% endfor %}
 
-    <div class="card card-outline card-{{ general_status ? 'success collapsed-card' : 'danger' }}">
-        <div class="card-header">
-            <h3 class="card-title">{{ group }}</h3>
+    <div class="box box-outline box-{{ general_status ? 'success collapsed-box' : 'danger' }}">
+        <div class="box-header with-border">
+            <h3 class="box-title">{{ group }}</h3>
 
             {% if general_status %}
-                <div class="card-tools float-right">
-                    <button type="button" class="btn btn-card-tool" data-card-widget="collapse">
+                <div class="box-tools float-right">
+                    <button type="button" class="btn btn-box-tool" data-toggle="collapse">
                         <i class="fa fa-plus"></i>
                     </button>
                 </div>
             {% endif %}
 
         </div>
-        <div class="card-body no-padding">
+        <div class="box-body no-padding">
             <table class="table">
 
                 {% for name, element in elements %}

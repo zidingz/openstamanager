@@ -18,7 +18,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-4 order-md-2 mb-4">
+            <div class="col-md-4 col-md-push-8 mb-4">
                 <h4 class="d-flex justify-content-between align-items-center mb-3 text-muted">{{ 'Lingua'|trans }}</h4>
                 <select class="form-control hidden" id="language" required="1">
                     {% for code, language in languages %}
@@ -41,7 +41,7 @@
                 <a class="float-left" href="https://www.gnu.org/licenses/translations.en.html#GPL" target="_blank">[ {{ 'Versioni tradotte'|trans }} ]</a><br><br>
             </div>
 
-            <div class="col-md-8 order-md-1">
+            <div class="col-md-8 col-md-pull-4">
                 <h4 class="mb-3">{{ 'Formato date'|trans }}</h4>
                 <div class="row">
                     <div class="col-md-4">
@@ -124,7 +124,7 @@
             errorMessage: "{{ 'La configurazione non è corretta'|trans }}.",
 
             permissions: "{{ 'Permessi insufficienti'|trans }}",
-            permissionsMessage: "{{ "L'utente non possiede permessi sufficienti per il testing della connessione. Potresti rilevare problemi in fase di installazione."|trans }}",
+            permissionsMessage: "{{ "L'utente non possiede permessi sufficienti per il testing della connessione. Potresti rilevare problemi in fae di installazione."|trans }}",
 
             success: "{{ 'Configurazione corretta'|trans }}",
             successMessage: "{{ 'Ti sei connesso con successo al database'|trans }}. {{ "Clicca su 'Installa' per proseguire"|trans }}.",
@@ -132,5 +132,111 @@
     };
 </script>
 
-<script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ asset('/js/pages/configuration.js') }}"></script>
+<script type="text/javascript">
+    var flag_link = "https://lipis.github.io/flag-icon-css/flags/4x3/|flag|.svg";
+
+    $(document).ready(function() {
+        init();
+
+        $("#install").on("click", function(){
+            if($(this).closest("form").parsley().validate()){
+                var restore = buttonLoading("#install");
+                $("#config-form").submit();
+
+                //buttonRestore("#install", restore);
+            }
+        });
+
+        $("#test").on("click", function(){
+            if($(this).closest("form").parsley().validate()){
+                var restore = buttonLoading("#test");
+                $("#install").prop('disabled', true);
+
+                $(this).closest("form").ajaxSubmit({
+                    url: globals.configuration.test_url,
+                    data: {
+                        test: 1,
+                    },
+                    type: "post",
+                    success: function(data){
+                        data = parseFloat(data.trim());
+
+                        buttonRestore("#test", restore);
+                        $("#install").prop('disabled', false);
+
+                        if(data === 0){
+                            Swal.fire(globals.configuration.translations.error, globals.configuration.translations.errorMessage, "error");
+                        } else if(data === 1){
+                            Swal.fire(globals.configuration.translations.permissions, globals.configuration.translations.permissionsMessage, "error");
+                        } else {
+                            Swal.fire(globals.configuration.translations.success, globals.configuration.translations.successMessage, "success");
+                        }
+                    },
+                    error: function(xhr, error, thrown) {
+                        ajaxError(xhr, error, thrown);
+                    }
+                });
+            }
+        });
+
+        $.ajax({
+            url: flag_link.replace("|flag|", "it"),
+            success: function(){
+                initLanguage(true);
+            },
+            error: function(){
+                initLanguage(false);
+            },
+            timeout: 500
+        });
+    });
+
+    function languageFlag(item) {
+        if (!item.id) {
+            return item.text;
+        }
+
+        var element = $(item.element);
+        var img = $("<img>", {
+            class: "img-flag",
+            width: 26,
+            src: flag_link.replace("|flag|", element.data("country").toLowerCase()),
+        });
+
+        var span = $("<span>", {
+            text: " " + item.text
+        });
+        span.prepend(img);
+
+        return span;
+    }
+
+    function initLanguage() {
+        $("#language").removeClass("hidden");
+        $("#language-info").addClass("hidden");
+
+        $("#language").select2({
+            theme: "bootstrap",
+            templateResult: languageFlag,
+            templateSelection:languageFlag,
+        });
+
+        // Preselezione lingua
+        if (globals.full_locale) {
+            $("#language").selectSet(globals.full_locale);
+        }
+
+        $("#language").on("change", function(){
+            if ($(this).val()) {
+                var location = window.location;
+                var url = location.protocol + "//" + location.host + "" + location.pathname;
+
+                var parameters = getUrlVars();
+                parameters.lang = $(this).val();
+
+                redirect(url, parameters);
+            }
+        });
+    }
+</script>
 {% endblock %}

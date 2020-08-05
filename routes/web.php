@@ -143,7 +143,3 @@ $app->group('/upload', function (RouteCollectorProxy $group) {
 $app->get('/mail/{mail_id:[0-9]+}/', 'MailController:index')
     ->setName('mail')
     ->add(UserMiddleware::class);
-
-
-// Retro-compatibilità
-$app->map(['GET', 'POST'], '/{percorso}', 'RetroController:index');

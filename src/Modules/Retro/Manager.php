@@ -6,6 +6,8 @@ use Middlewares\Authorization\PermissionMiddleware;
 use Middlewares\Authorization\UserMiddleware;
 use Middlewares\RetroModuleMiddleware;
 use Modules\Manager as Original;
+use Modules\Retro\Controllers\ModuleController;
+use Modules\Retro\Controllers\RecordController;
 use Slim\App as SlimApp;
 use Slim\Routing\RouteCollectorProxy;
 

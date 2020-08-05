@@ -98,44 +98,43 @@ class Auth
 
         $database = database();
 
+        // Generazione del log di base
         $log = [];
         $log['username'] = $username;
         $log['ip'] = get_client_ip();
 
         $status = 'failed';
 
-        $users = $database->fetchArray('SELECT id, password, enabled FROM zz_users WHERE username = :username LIMIT 1', [
+        // Individuazione utente
+        $user = $database->fetchOne('SELECT id, password, enabled FROM zz_users WHERE username = :username LIMIT 1', [
             ':username' => $username,
         ]);
-        if (!empty($users)) {
-            $user = $users[0];
+        if (!empty($user['enabled'])) {
+            // Identificazione utente e primo modulo disponibile
+            $this->identifyUser($user['id']);
+            $module = $this->getFirstModule();
 
-            if (!empty($user['enabled'])) {
-                $this->identifyUser($user['id']);
-                $module = $this->getFirstModule();
+            if (
+                $this->isAuthenticated() &&
+                $this->password_check($password, $user['password'], $user['id']) &&
+                !empty($module)
+            ) {
+                // Accesso completato
+                $log['id_utente'] = $this->user->id;
+                $status = 'success';
 
-                if (
-                    $this->isAuthenticated() &&
-                    $this->password_check($password, $user['password'], $user['id']) &&
-                    !empty($module)
-                ) {
-                    // Accesso completato
-                    $log['id_utente'] = $this->user->id;
-                    $status = 'success';
-
-                    // Salvataggio nella sessione
-                    $this->saveToSession();
-                } else {
-                    if (empty($module)) {
-                        $status = 'unauthorized';
-                    }
-
-                    // Logout automatico
-                    $this->destory();
-                }
+                // Salvataggio nella sessione
+                $this->saveToSession();
             } else {
-                $status = 'disabled';
+                if (empty($module)) {
+                    $status = 'unauthorized';
+                }
+
+                // Logout automatico
+                $this->destory();
             }
+        } else {
+            $status = 'disabled';
         }
 
         // Salvataggio dello stato corrente
@@ -249,14 +248,23 @@ class Auth
         if (empty($this->first_module)) {
             $parameters = [];
 
-            $modules = $this->user->group->modules()->whereNotIn('options', ['', 'menu'])->whereNotNull('options')->get();
-            $list = array_column($modules->toArray(), 'id');
+            $query = 'SELECT id FROM zz_modules WHERE enabled = 1';
+            if (!$this->isAdmin()) {
+                $query .= " AND id IN (SELECT idmodule FROM zz_permissions WHERE idgruppo = (SELECT id FROM zz_groups WHERE nome = :group) AND permessi IN ('r', 'rw'))";
+
+                $parameters[':group'] = $this->getUser()['gruppo'];
+            }
+
+            $database = database();
+            $results = $database->fetchArray($query." AND options != '' AND options != 'menu' AND options IS NOT NULL ORDER BY `order` ASC", $parameters);
+
+            $modules = array_column($results, 'id');
             if (!empty($modules)) {
                 $module = null;
 
                 $first = setting('Prima pagina');
-                if (!in_array($first, $list)) {
-                    $module = $modules->first()->id;
+                if (!in_array($first, $modules)) {
+                    $module = array_shift($modules);
                 } else {
                     $module = $first;
                 }

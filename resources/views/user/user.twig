@@ -1,0 +1,101 @@
+{% extends "layouts/app.twig" %}
+
+{% block title %}{{ "Utenza corrente"|trans }}{% endblock %}
+
+{% block content %}
+<div class="card bg-light">
+    <div class="card-header text-muted border-bottom-0">{{ user['username'] }}</div>
+
+    <div class="card-body pt-0">
+        <div class="row">
+            <div class="col-7">
+                <h2 class="lead">
+                    {{ user.anagrafica is not empty ? user.anagrafica['ragione_sociale'] : user['username'] }}
+                </h2>
+
+                <p class="text-muted text-sm">
+                    <b>{{ 'Gruppo'|trans }}</b>: {{ user['gruppo'] }}
+                </p>
+            </div>
+
+            <div class="col-5 text-center">
+
+                {% if user.photo %}
+                    <img src="{{ user.photo }}" class="img-circle" alt="{{ user['username'] }}" />
+                {% else %}
+                <i class="fa fa-user-circle-o fa-4x pull-left" alt="{{ 'OpenSTAManager'|trans }}"></i>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-6 border-right">
+                <div class="description-block">
+                    <a class="btn btn-info btn-block tip" data-href="" data-toggle="modal" data-title="{{ 'Cambia foto utente'|trans }}">
+                        <i class="fa fa-picture-o"></i> {{ 'Cambia foto utente'|trans }}
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-6 border-right">
+                <div class="description-block">
+                    <a class="btn btn-warning btn-block tip" data-href="{{ url_for('user-password') }}" data-toggle="modal" data-title="{{ 'Cambia password'|trans }}">
+                        <i class="fa fa-unlock-alt"></i> {{ 'Cambia password'|trans }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+
+        <div class="card card-outline card-success">
+            <div class="card-header">
+                <h3 class="card-title">{{ 'API'|trans }}</h3>
+            </div>
+
+            <div class="card-body">
+                <p>{{ "Puoi utilizzare il token per accedere all'API del gestionale e per visualizzare il calendario su applicazioni esterne"|trans }}.</p>
+
+                <p>{{ 'Token personale'|trans }}: <b>{{ token }}</b></p>
+                <p>{{ "URL dell'API"|trans }}: <a href="{{ api }}" target="_blank">{{ api }}</a></p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card card-outline card-info">
+            <div class="card-header">
+                <h3 class="card-title">{{ 'Calendario interventi'|trans }}</h3>
+            </div>
+
+            <div class="card-body">
+                <p>{{ "Per accedere al calendario eventi attraverso l'API, accedi al seguente link"|trans }}:</p>
+                <a href="{{ sync_link }}" target="_blank">{{ sync_link }}</a>
+
+                <hr>
+                <h5>{{ 'Configurazione'|trans }}</h5>
+                <p>{{ "Per _ANDROID_, scarica un'applicazione dedicata dal _LINK_"|trans({
+                    '_ANDROID_': '<b>' ~ 'Android'|trans ~ '</b>',
+                    '_LINK_': '<a href="https://play.google.com/store/search?q=iCalSync&c=apps" target="_blank">' ~  'Play Store'|trans ~ '</a>',
+                })|raw }}.</p>
+
+                <p>{{ "Per _APPLE_, puoi configurare un nuovo calendario dall'app standard del calendario"|trans({
+                    '_APPLE_': '<b>' ~ 'Apple'|trans ~ '</b>',
+                })|raw }}.</p>
+
+                <p>{{ 'Per _PC_ e altri client di posta, considerare le relative funzionalità o eventuali plugin'|trans({
+                    '_PC_': '<b>' ~ 'PC'|trans ~ '</b>',
+                })|raw }}.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

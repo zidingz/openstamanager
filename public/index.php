@@ -52,9 +52,7 @@ $container->set('router', $app->getRouteCollector()->getRouteParser());
 $app->setBasePath((function () {
     $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
     $uri = (string) parse_url('http://a'.$_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
-    if (stripos($uri, $_SERVER['SCRIPT_NAME']) === 0) {
-        return $_SERVER['SCRIPT_NAME'];
-    }
+
     if ($scriptDir !== '/' && stripos($uri, $scriptDir) === 0) {
         return $scriptDir;
     }
@@ -63,7 +61,7 @@ $app->setBasePath((function () {
 })());
 
 // Individuazione dei percorsi di base
-define('DOCROOT', __DIR__.'/..');
+define('DOCROOT', realpath(__DIR__.'/..'));
 define('ROOTDIR', $app->getBasePath());
 define('BASEURL', (isHTTPS(true) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].ROOTDIR);
 
@@ -96,6 +94,9 @@ if (Update::isCoreUpdated()) {
         Update::addComponentUpdates($class->updates());
     }
 }
+
+// Retro-compatibilità per i percorsi
+$app->map(['GET', 'POST'], '[/{path:.*}]', 'Controllers\RetroController:index');
 
 // Configurazione templating personalizzato
 $config = $container->get('config');

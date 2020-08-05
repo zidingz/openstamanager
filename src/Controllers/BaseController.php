@@ -72,11 +72,14 @@ class BaseController extends Controller
         $password = post('password');
         $keep_alive = (filter('keep_alive') != null);
 
+        // Tentativo di accesso completato con successo
         if ($this->database->isConnected() && $this->database->isInstalled() && $this->auth->attempt($username, $password)) {
             $_SESSION['keep_alive'] = true;
 
             $response = $this->redirectFirstModule($request, $response);
-        } else {
+        }
+        // Tentativo fallito
+        else {
             $status = $this->auth->getCurrentStatus();
 
             $this->flash->error(Auth::getStatus()[$status]['message']);

@@ -2,9 +2,9 @@
 
 {% block title %}{{ "Requisiti"|trans }}{% endblock %}
 
-{% block box_class %}card-info{% endblock %}
+{% block box_class %}box-info{% endblock %}
 {% block box_header %}
-<h3 class="card-title">{{ 'Requisiti del software OpenSTAManager'|trans }}</h3>
+<h3 class="box-title">{{ 'Requisiti del software OpenSTAManager'|trans }}</h3>
 {% endblock %}
 
 {% block content %}
@@ -15,7 +15,7 @@
 <p>{{ 'Le estensioni e impostazioni PHP possono essere personalizzate nel file di configurazione _FILE_'|trans({'_FILE_': '<b>php.ini</b>'})|raw }}.</p>
 <hr>
 
-    {% include 'config/list.twig' with {requirements: requirements} only %}
+    {% include 'config/requirements-list.twig' with {requirements: requirements} only %}
 
 <button type="button" class="btn btn-info center-block" onclick="window.location.reload()"><i class="fa fa-refresh"></i> {{ "Ricarica"|trans }}</button>
 

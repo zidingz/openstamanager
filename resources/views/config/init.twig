@@ -5,7 +5,7 @@
 {% block body_class %}bg-light{% endblock %}
 
 {% block body %}
-<div class="container bg-light pb-5">
+<div class="container pb-5">
     <div class="py-5 text-center">
         <img class="d-block mx-auto mb-4" src="{{ base_path() }}/assets/img/full_logo.png" alt="{{ 'Logo OpenSTAManager'|trans }}">
         <h2>{{ 'Inizializzazione di _NAME_!'|trans({'_NAME_': '<strong>' ~ 'OpenSTAManager'|trans ~ '</strong>'})|raw }}</h2>
@@ -17,12 +17,12 @@
         <input type="hidden" name="action" value="init">
 
         {% if not has_user %}
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">{{ 'Amministrazione'|trans }}</h3>
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ 'Amministrazione'|trans }}</h3>
             </div>
 
-            <div class="card-body">
+            <div class="box-body">
                 <div class="row">
                     <div class="col-md-6">
                         {[ "type": "text", "label": "{{ 'Username'|trans }}", "name": "admin_username", "placeholder": "{{ "Digita l'username dell'amministratore"|trans }}", "required": 1 ]}
@@ -59,25 +59,25 @@
         {% endif %}
 
         {% if not has_azienda %}
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">{{ 'Azienda predefinita'|trans }}</h3>
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ 'Azienda predefinita'|trans }}</h3>
             </div>
 
-            <div class="card-body">
+            <div class="box-body">
 
                 {{ azienda_form|raw }}
 
-                <div class="card card-outline card-success collapsed-card">
-                    <div class="card-header">
-                        <h3 class="card-title">{{ 'Logo stampe'|trans }}</h3>
-                        <div class="card-tools float-right">
-                            <button type="button" class="btn btn-card-tool" data-card-widget="collapse">
+                <div class="box box-outline box-success collapsed-box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'Logo stampe'|trans }}</h3>
+                        <div class="box-tools float-right">
+                            <button type="button" class="btn btn-box-tool" data-toggle="collapse">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="box-body">
 
                         <div class="col-md-12">
                             {[ "type": "file", "placeholder": "{{ 'File'|trans }}", "name": "blob" ]}
@@ -94,12 +94,12 @@
 
         {% if not has_settings %}
 
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">{{ 'Impostazioni di base'|trans }}</h3>
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ 'Impostazioni di base'|trans }}</h3>
             </div>
 
-            <div class="card-body row">
+            <div class="box-body row">
 
             {% for setting in settings %}
                 <div class="col-md-6">
@@ -127,6 +127,8 @@
 
     <script>
         $(document).ready(function(){
+            init();
+
             $("button[type=submit]").not("#config").remove();
         });
     </script>

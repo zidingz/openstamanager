@@ -556,3 +556,11 @@ function salvaForm(button, form, data = {}) {
         });
     });
 }
+
+function ajaxError(xhr, error, thrown) {
+    swal({
+        title: globals.translations.errorTitle,
+        html: globals.translations.errorMessage + (xhr.responseJSON ? ".<br><i>" + xhr.responseJSON.exception[0].message + "</i>" : ''),
+        type: "error",
+    });
+}

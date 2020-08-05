@@ -132,7 +132,7 @@ $container->set('twig', function (ContainerInterface $container) {
 
     $function = new TwigFunction('module', 'module');
     $environment->addFunction($function);
-
+    
     $environment->addExtension(new \Twig\Extension\DebugExtension());
 
     return $twig;

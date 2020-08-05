@@ -123,6 +123,26 @@ class Module extends Model implements BootableInterface
     }
 
     /**
+     * Restituisce i permessi relativi all'account in utilizzo.
+     *
+     * @return string
+     */
+    public function getPermissionAttribute()
+    {
+        if (Auth::user()->is_admin) {
+            return 'rw';
+        }
+
+        $group = Auth::user()->group->id;
+
+        $pivot = $this->pivot ?: $this->groups->first(function ($item) use ($group) {
+            return $item->id == $group;
+        })->pivot;
+
+        return $pivot->permessi ?: '-';
+    }
+
+    /**
      * Restituisce le informazioni relative alla query della struttura.
      *
      * @throws Exception
