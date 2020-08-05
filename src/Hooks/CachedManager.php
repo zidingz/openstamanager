@@ -3,7 +3,6 @@
 namespace Hooks;
 
 use Models\Cache;
-use Models\Hook;
 
 abstract class CachedManager extends Manager
 {

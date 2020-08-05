@@ -1,6 +1,6 @@
 <?php
 
-use Models\Module;
+use Modules\Module;
 
 include_once __DIR__.'/../../core.php';
 

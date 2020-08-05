@@ -1,0 +1,13 @@
+{% set messages = flash.getMessages() %}
+
+{% if messages.info is not empty or messages.warning is not empty or messages.error is not empty %}
+<div class="card card-outline card-warning card-center">
+    <div class="card-header text-center">
+        <h3 class="card-title">{{ 'Informazioni'|trans }}</h3>
+    </div>
+
+    <div class="card-body">
+        {% include 'layouts/messages/messages.twig' with {fixed: true} %}
+    </div>
+</div>
+{% endif %}

@@ -1,0 +1,117 @@
+{% extends "layouts/guest.twig" %}
+
+{% block title %}{{ installing ? 'Installazione'|trans : 'Aggiornamento'|trans }}{% endblock %}
+
+{% block box_class %}card-warning text-center{% endblock %}
+{% block box_header %}
+<h3 class="card-title">{{ installing ? 'Installazione di OpenSTAManager'|trans : 'Aggiornamento di OpenSTAManager'|trans }}</h3>
+{% endblock %}
+
+{% block content %}
+    {% if installing %}
+    <p><strong>{{ "E' la prima volta che avvii OpenSTAManager e non hai ancora installato il database"|trans }}.</strong></p>
+    {% else %}
+    <p>{{ "E' necessario aggiornare il database a una nuova versione"|trans }}.</p>
+    {% endif %}
+
+    {% set button = installing ? 'Installa!'|trans : 'Aggiorna!'|trans %}
+
+    <p>{{ "Premi il tasto _BUTTON_ per procedere con l'_OP_!"|trans({
+        '_BUTTON_': '<b>' ~ button ~ '</b>',
+        '_OP_': installing ? 'installazione'|trans : 'aggiornamento'|trans,
+        })|raw }}</p>
+    <button type="button" class="btn btn-primary" id="contine_button">
+        {{ button }}
+    </button>
+
+    <div id="update-info" class="hidden">
+        <div class="progress">
+            <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                <span>0%</span>
+            </div>
+        </div>
+        <hr>
+        <div class="card card-outline card-info text-center collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title"><a class="clickable" data-card-widget="collapse">{{ 'Log'|trans }}</a></h3>
+                <div class="card-tools float-right">
+                    <button type="button" class="btn btn-card-tool" data-card-widget="collapse"><i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+            <div class="card-body info text-left"></div>
+        </div>
+    </div>
+    <div id="result"></div>
+
+    <div style="display: none;" id="completed">
+        <p><strong>{{ 'Aggiornamento completato'|trans }}</strong> <i class="fa fa-smile-o"></i></p>
+
+        {% if installing %}
+            <!-- Istruzioni per la prima installazione -->
+            <p class="text-danger">{{ "E' fortemente consigliato rimuovere i permessi di scrittura dal file _FILE_"|trans({'_FILE_': '<b>config.inc.php</b>'})|raw }}.</p>
+        {% endif %}
+
+        <a class="btn btn-success btn-block" href="{{ url_for('login') }}">
+            <i class="fa fa-check"></i> {{ 'Continua'|trans }}
+        </a>
+    </div>
+
+    <script>
+        globals.update = {
+            count: {{ total_updates }},
+            total: {{ total_count }},
+            url: "{{ url_for('update-progress') }}",
+            translations: {
+                title: "{{ 'Sei sicuro di voler procedere?'|trans }}",
+                continue: "{{ 'Procedi'|trans }}",
+                message: "{{ 'Aggiornamento _DONE_ di _TODO_ (_VERSION_)'|trans }}",
+            }
+        };
+
+        let count, current, progress, percent, total, versions;
+        $(document).ready(function () {
+            $(".login-box").fadeOut();
+
+            count = globals.update.count;
+            current = 0;
+            versions = [];
+
+            progress = 0;
+            total = globals.update.total;
+        });
+
+        function addProgress(rate) {
+            progress += rate;
+            percent = progress / total * 100;
+            percent = Math.round(percent);
+            percent = percent > 100 ? 100 : percent;
+
+            setPercent(percent);
+        }
+
+        function setPercent(percent) {
+            $("#update-info .progress-bar").width(percent + "%");
+            $("#update-info .progress-bar span").text(percent + "%");
+
+            if (percent >= 100) {
+                $("#completed").show();
+            }
+        }
+
+        function addVersion(version) {
+            if (versions.indexOf(version) === -1) {
+                versions.push(version);
+                current += 1;
+
+                var message = globals.update.translations.message
+                    .replace("_DONE_", '"' + current + '"')
+                    .replace("_TODO_", '"' + count + '"')
+                    .replace("_VERSION_", '"' + version.trim() + '"');
+
+                $("#update-info .info").html($("#update-info .info").html() + "<p><strong>" + message + "</strong></p>");
+            }
+        }
+    </script>
+
+    <script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ asset('/js/pages/update.js') }}"></script>
+{% endblock %}

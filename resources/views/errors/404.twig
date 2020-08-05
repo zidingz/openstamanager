@@ -1,0 +1,22 @@
+{% extends "layouts/base.twig" %}
+
+{% block title %}{{ "Pagina non trovata!"|trans }}{% endblock %}
+{% block body_class %}hold-transition login-page{% endblock %}
+
+{% block body %}
+    <section style="position: absolute;left: 35%;top: 40%;">
+        <div class="error-page">
+            <h2 class="headline text-warning"> 404</h2>
+
+            <div class="error-content">
+                <h3><i class="fas fa-exclamation-triangle text-warning"></i> {{ 'Oops! Pagina non trovata'|trans }}.</h3>
+
+                <p>
+                    {{ 'Non siamo riusciti a trovare la pagina che stavi cercando'|trans }}.
+                    {{ 'Nel frattempo, puoi tornare alla _PAGE_'|trans({'_PAGE_': '<a href="' ~ url_for('login') ~ '">' ~ 'pagina principale'|trans ~ '</a>' })|raw }}.
+                </p>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

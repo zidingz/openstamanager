@@ -1,0 +1,18 @@
+{% set messages = flash.getMessages() %}
+{% for message in messages.info %}
+    <div class="alert alert-success {{ fixed ? '' : 'push' }}">
+        <i class="fa fa-check"></i> {{ message|raw }}
+    </div>
+{% endfor %}
+
+{% for message in messages.warning %}
+    <div class="alert alert-warning {{ fixed ? '' : 'push' }}">
+        <i class="fa fa-check"></i> {{ message|raw }}
+    </div>
+{% endfor %}
+
+{% for message in messages.error %}
+    <div class="alert alert-danger {{ fixed ? '' : 'push' }}">
+        <i class="fa fa-check"></i> {{ message|raw }}
+    </div>
+{% endfor %}

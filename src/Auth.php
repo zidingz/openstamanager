@@ -1,14 +1,14 @@
 <?php
 
 use API\Response as API;
-use Models\User;
+use Auth\User;
 
 /**
  * Classe per la gestione delle utenze.
  *
  * @since 2.3
  */
-class Auth extends \Util\Singleton
+class Auth
 {
     /** @var array Stati previsti dal sistema di autenticazione */
     protected static $status = [
@@ -51,7 +51,7 @@ class Auth extends \Util\Singleton
     /** @var string|null Nome del primo modulo su cui l'utente ha permessi di navigazione */
     protected $first_module;
 
-    protected function __construct()
+    public function __construct()
     {
         $database = database();
 
@@ -200,8 +200,22 @@ class Auth extends \Util\Singleton
         if ($this->isAuthenticated()) {
             $user = self::user();
 
-            $tokens = $user->getApiTokens();
-            $token = $tokens[0]['token'];
+            $database = database();
+            $tokens = $database->fetchArray('SELECT `token` FROM `zz_tokens` WHERE `enabled` = 1 AND `id_utente` = :user_id', [
+                ':user_id' => $user->id,
+            ]);
+
+            // Generazione del token per l'utente
+            if (empty($tokens)) {
+                $token = secure_random_string();
+
+                $database->insert('zz_tokens', [
+                    'id_utente' => $user->id,
+                    'token' => $token,
+                ]);
+            } else {
+                $token = $tokens[0]['token'];
+            }
         }
 
         return $token;
@@ -235,22 +249,14 @@ class Auth extends \Util\Singleton
         if (empty($this->first_module)) {
             $parameters = [];
 
-            $query = 'SELECT id FROM zz_modules WHERE enabled = 1';
-            if (!$this->isAdmin()) {
-                $query .= " AND id IN (SELECT idmodule FROM zz_permissions WHERE idgruppo = (SELECT id FROM zz_groups WHERE nome = :group) AND permessi IN ('r', 'rw'))";
-
-                $parameters[':group'] = $this->getUser()['gruppo'];
-            }
-
-            $database = database();
-            $results = $database->fetchArray($query." AND options != '' AND options != 'menu' AND options IS NOT NULL ORDER BY `order` ASC", $parameters);
-
-            if (!empty($results)) {
+            $modules = $this->user->group->modules()->whereNotIn('options', ['', 'menu'])->whereNotNull('options')->get();
+            $list = array_column($modules->toArray(), 'id');
+            if (!empty($modules)) {
                 $module = null;
 
                 $first = setting('Prima pagina');
-                if (!in_array($first, array_column($results, 'id'))) {
-                    $module = $results[0]['id'];
+                if (!in_array($first, $list)) {
+                    $module = $modules->first()->id;
                 } else {
                     $module = $first;
                 }
@@ -291,7 +297,7 @@ class Auth extends \Util\Singleton
      */
     public static function check()
     {
-        return self::getInstance()->isAuthenticated();
+        return auth()->isAuthenticated();
     }
 
     /**
@@ -301,7 +307,7 @@ class Auth extends \Util\Singleton
      */
     public static function admin()
     {
-        return self::getInstance()->isAdmin();
+        return auth()->isAdmin();
     }
 
     /**
@@ -311,7 +317,7 @@ class Auth extends \Util\Singleton
      */
     public static function user()
     {
-        return self::getInstance()->getUser();
+        return auth()->getUser();
     }
 
     /**
@@ -319,7 +325,7 @@ class Auth extends \Util\Singleton
      */
     public static function logout()
     {
-        return self::getInstance()->destory();
+        return auth()->destory();
     }
 
     /**
@@ -329,7 +335,7 @@ class Auth extends \Util\Singleton
      */
     public static function firstModule()
     {
-        return self::getInstance()->getFirstModule();
+        return auth()->getFirstModule();
     }
 
     /**

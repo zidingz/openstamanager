@@ -35,7 +35,7 @@ var inquirer = require('inquirer');
 
 // Configurazione
 var config = {
-    production: 'assets/dist', // Cartella di destinazione
+    production: 'public/assets', // Cartella di destinazione
     development: 'assets/src', // Cartella dei file di personalizzazione
     debug: false,
     main: {

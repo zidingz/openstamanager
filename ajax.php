@@ -2,7 +2,7 @@
 
 include_once __DIR__.'/core.php';
 
-use Models\Hook;
+use Hooks\Hook;
 
 switch (filter('op')) {
     // Imposta un valore ad un array di $_SESSION

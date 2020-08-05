@@ -3,7 +3,7 @@
 include_once __DIR__.'/../../../core.php';
 
 use Carbon\Carbon;
-use Models\Module;
+use Modules\Module;
 
 if (!empty($is_title_request)) {
     echo tr('Notifiche interne');
@@ -50,19 +50,19 @@ foreach ($moduli as $module_id => $note) {
         echo '
     <tr>
         <td>'.$nota->id_record.'</td>
-        
+
         <td>
             <span class="pull-right"></span>
-            
+
             '.$nota->content.'
-           
+
             <small>'.$nota->user->nome_completo.'</small>
         </td>
-        
+
         <td class="text-center">
             '.dateFormat($nota->notification_date).' ('.Carbon::parse($nota->notification_date)->diffForHumans().')
         </td>
-        
+
         <td class="text-center">
             '.Modules::link($module_id, $nota->id_record, '', null, 'class="btn btn-primary btn-xs"', true, 'tab_note').'
         </td>

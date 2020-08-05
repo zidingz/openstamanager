@@ -2,12 +2,12 @@
 
 namespace Modules\Checklists;
 
+use Auth\Group;
+use Auth\User;
 use Common\Model;
-use Models\Group;
-use Models\Module;
 use Models\Plugin;
-use Models\User;
 use Modules\Checklists\Traits\ChecklistTrait;
+use Modules\Module;
 use Traits\HierarchyTrait;
 
 class Check extends Model

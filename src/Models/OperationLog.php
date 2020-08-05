@@ -47,11 +47,6 @@ class OperationLog extends Model
         return $this->belongsTo(User::class, 'id_utente');
     }
 
-    public function plugin()
-    {
-        return $this->belongsTo(Plugin::class, 'id_plugin');
-    }
-
     public function module()
     {
         return $this->belongsTo(Module::class, 'id_module');

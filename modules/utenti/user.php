@@ -2,8 +2,8 @@
 
 include_once __DIR__.'/../../core.php';
 
-use Models\Group;
-use Models\User;
+use Auth\Group;
+use Auth\User;
 
 Permissions::check('rw');
 
@@ -32,7 +32,7 @@ echo '
 <form action="'.ROOTDIR.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'"  method="post" enctype="multipart/form-data" id="user_update">
 	<input type="hidden" name="op" value="update_user">
 	<input type="hidden" name="backto" value="record-edit">
-	
+
 	<input type="hidden" name="id_utente" value="'.$utente['id'].'">';
 
 include $structure->filepath('components/photo.php');
@@ -45,13 +45,13 @@ if (!empty($user)) {
 		    {[ "type": "checkbox", "label": "'.tr('Cambia password').'", "name": "change_password", "value": "0" ]}
 		</div>
     </div>
-    
+
     <script>
         function no_check_pwd(){
             $("#password").attr("disabled", true);
             $("#submit-button").attr("disabled", false).removeClass("disabled");
         }
-        
+
         $("#modals > div").on("shown.bs.modal", function () {
             no_check_pwd();
         });
@@ -87,12 +87,12 @@ echo '
             </button>
 		</div>
 	</div>
-</form>	
+</form>
 
 <script>
 function submitCheck() {
     var username = parseInt($("#username").attr("valid"));
-        
+
     if(username) {
         $("#user_update").submit();
     }

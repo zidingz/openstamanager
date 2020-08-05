@@ -175,7 +175,7 @@ class AJAX
         if (!empty($permissions)) {
             $modules = Modules::getAvailableModules();
         } else {
-            $modules = Models\Module::withoutGlobalScope('enabled')->get();
+            $modules = Modules\Module::withoutGlobalScope('enabled')->get();
         }
 
         $modules = $modules->toArray();

@@ -7,7 +7,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
  *
  * @since 2.3
  */
-class Database extends Util\Singleton
+class Database
 {
     /** @var \Illuminate\Database\Capsule\Manager Gestore di connessione Laravel */
     protected $capsule;
@@ -37,7 +37,7 @@ class Database extends Util\Singleton
      *
      * @return Database
      */
-    protected function __construct($server, $username, $password, $database_name, $charset = null)
+    public function __construct($server, $username, $password, $database_name, $charset = null)
     {
         if (is_array($server)) {
             $host = $server['host'];
@@ -85,41 +85,9 @@ class Database extends Util\Singleton
                 $this->capsule->setAsGlobal();
                 $this->capsule->bootEloquent();
             } catch (PDOException $e) {
-                if ($e->getCode() == 1049 || $e->getCode() == 1044) {
-                    $e = new PDOException(($e->getCode() == 1049) ? tr('Database non esistente!') : tr('Credenziali di accesso invalide!'));
-                }
-
-                throw $e;
+                $this->is_connected = false;
             }
         }
-    }
-
-    /**
-     * Restituisce la connessione attiva al database, creandola nel caso non esista.
-     *
-     * @since 2.3
-     *
-     * @return Database
-     */
-    public static function getConnection($new = false, $data = [])
-    {
-        $class = get_called_class();
-
-        if (empty(parent::$instance[$class]) || !parent::$instance[$class]->isConnected() || $new) {
-            $config = App::getConfig();
-
-            // Sostituzione degli eventuali valori aggiuntivi
-            $config = array_merge($config, $data);
-
-            parent::$instance[$class] = new self($config['db_host'], $config['db_username'], $config['db_password'], $config['db_name']);
-        }
-
-        return parent::$instance[$class];
-    }
-
-    public static function getInstance()
-    {
-        return self::getConnection();
     }
 
     /**
@@ -544,7 +512,7 @@ class Database extends Util\Singleton
             !is_string($table) ||
             !is_array($conditions) ||
             !is_array($list)
-            ) {
+        ) {
             throw new UnexpectedValueException();
         }
 
@@ -576,7 +544,7 @@ class Database extends Util\Singleton
             !is_string($table) ||
             !is_array($conditions) ||
             !is_array($list)
-            ) {
+        ) {
             throw new UnexpectedValueException();
         }
 
@@ -611,7 +579,7 @@ class Database extends Util\Singleton
             !is_string($table) ||
             !is_array($conditions) ||
             !is_array($list)
-            ) {
+        ) {
             throw new UnexpectedValueException();
         }
 

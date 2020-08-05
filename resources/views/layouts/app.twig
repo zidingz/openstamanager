@@ -1,0 +1,312 @@
+{% extends "layouts/base.twig" %}
+
+{% block js %}
+<script>
+    search = [];
+
+    {% for key, value in search %}
+    search.push("search_{{ key }}");
+    search["search_{{ key }}"] = "{{ value }}";
+    {% endfor %}
+
+    globals = {
+        rootdir: '{{ base_path() }}',
+
+        id_module: '{{ id_module }}',
+        id_record: '{{ id_record }}',
+
+        is_mobile: {{ is_mobile }},
+        cifre_decimali: '{{ setting('Cifre decimali per importi') }}',
+
+        timestamp_format: "{{ formatter.getTimestampPattern() }}",
+        date_format: "{{ formatter.getDatePattern() }}",
+        time_format: "{{ formatter.getTimePattern() }}",
+        decimals: "{{ formatter.getNumberSeparators()['decimals'] }}",
+        thousands: "{{ formatter.getNumberSeparators()['thousands'] }}",
+        currency: "{{ currency() }}",
+
+        search: search,
+        translations: {
+            "day": "{{ 'Giorno'|trans }}",
+            "week": "{{ 'Settimana'|trans }}",
+            "month": "{{ 'Mese'|trans }}",
+            "today": "{{ 'Oggi'|trans }}",
+            "firstThreemester": "{{ 'I trimestre'|trans }}",
+            "secondThreemester": "{{ 'II trimestre'|trans }}",
+            "thirdThreemester": "{{ 'III trimestre'|trans }}",
+            "fourthThreemester": "{{ 'IV trimestre'|trans }}",
+            "firstSemester": "{{ 'I semestre'|trans }}",
+            "secondSemester": "{{ 'II semestre'|trans }}",
+            "thisMonth": "{{ 'Questo mese'|trans }}",
+            "lastMonth": "{{ 'Mese scorso'|trans }}",
+            "thisYear": "{{ "Quest'anno"|trans }}",
+            "lastYear": "{{ 'Anno scorso'|trans }}",
+            "apply": "{{ 'Applica'|trans }}",
+            "cancel": "{{ 'Annulla'|trans }}",
+            "from": "{{ 'Da'|trans }}",
+            "to": "{{ 'A'|trans }}",
+            "custom": "{{ 'Personalizzato'|trans }}",
+            "delete": "{{ 'Elimina'|trans }}",
+            "deleteTitle": "{{ 'Sei sicuro?'|trans }}",
+            "deleteMessage": "{{ 'Eliminare questo elemento?'|trans }}",
+            "errorTitle": "{{ 'Errore'|trans }}",
+            "errorMessage": "{{ "Si è verificato un errore nell'esecuzione dell'operazione richiesta"|trans }}",
+            "close": "{{ 'Chiudi'|trans }}",
+            "filter": "{{ 'Filtra'|trans }}",
+            "long": "{{ 'La ricerca potrebbe richiedere del tempo'|trans }}",
+            "details": "{{ 'Dettagli'|trans }}",
+            "waiting": "{{ 'Impossibile procedere'|trans }}",
+            "waiting_msg": "{{ 'Prima di proseguire devi selezionare alcuni elementi!'|trans }}",
+            'hooksExecuting': "{{ 'Hooks in esecuzione'|trans }}",
+            'hookExecuting': '{{ 'Hook "_NAME_" in esecuzione'|trans }}',
+            'hookMultiple': "{{ 'Hai _NUM_ notifiche'|trans }}",
+            'hookSingle': "{{ 'Hai 1 notifica'|trans }}",
+            'hookNone': "{{ 'Nessuna notifica'|trans }}",
+            'singleCalendar': "{{ "E' presente un solo periodo!"|trans }}",
+            ajax: {
+                "missing": {
+                    "title": "{{ 'Errore'|trans }}",
+                    "text": "{{ 'Alcuni campi obbligatori non sono stati compilati correttamente'|trans }}"
+                },
+                "error": {
+                    "title": "{{ 'Errore'|trans }}"
+                    "text": "{{ 'Errore durante il salvataggio del record'|trans }}"
+                }
+            },
+            password: {
+                "wordMinLength": "{{ 'La password è troppo corta' }}",
+                "wordMaxLength": "{{ 'La password è troppo lunga' }}",
+                "wordInvalidChar": "{{ 'La password contiene un carattere non valido' }}",
+                "wordNotEmail": "{{ 'Non usare la tua e-mail come password' }}",
+                "wordSimilarToUsername": "{{ 'La password non può contenere il tuo nome' }}",
+                "wordTwoCharacterClasses": "{{ 'Usa classi di caratteri diversi' }}",
+                "wordRepetitions": "{{ 'La password contiene ripetizioni' }}",
+                "wordSequences": "{{ 'La password contiene sequenze' }}",
+                "errorList": "{{ 'Attenzione' }}:",
+                "veryWeak": "{{ 'Molto debole' }}",
+                "weak": "{{ 'Debole' }}",
+                "normal": "{{ 'Normale' }}",
+                "medium": "{{ 'Media' }}",
+                "strong": "{{ 'Forte' }}",
+                "veryStrong": "{{ 'Molto forte' }}",
+            },
+            datatables: {
+                "emptyTable": "{{ 'Nessun dato presente nella tabella' }}",
+                "info": "{{ 'Vista da _START_ a _END_ di _TOTAL_ elementi' }}",
+                "infoEmpty": "{{ 'Vista da 0 a 0 di 0 elementi' }}",
+                "infoFiltered": "({{ 'filtrati da _MAX_ elementi totali' }})",
+                "infoPostFix": "",
+                "lengthMenu": "{{ 'Visualizza _MENU_ elementi' }}",
+                "loadingRecords": " ",
+                "processing": "{{ 'Elaborazione' }}...",
+                "search": "{{ 'Cerca' }}:",
+                "zeroRecords": "{{ 'La ricerca non ha portato alcun risultato' }}.",
+                "paginate": {
+                    "first": "{{ 'Inizio' }}",
+                    "previous": "{{ 'Precedente' }}",
+                    "next": "{{ 'Successivo' }}",
+                    "last": "{{ 'Fine' }}"
+                },
+            },
+        },
+
+        locale: '{{ locale }}',
+        full_locale: '{{ full_locale }}',
+
+        start_date: '{{ calendar.start }}',
+        start_date_formatted: '{{ calendar.start|date }}',
+        end_date: '{{ calendar.end }}',
+        end_date_formatted: '{{ calendar.end|date }}',
+
+        ckeditorToolbar: [
+            "heading", "|", "bold", "italic", "link", "bulletedList", "numberedList", "imageUpload", "blockQuote", "insertTable", "mediaEmbed", "|", "undo", "redo"
+        ],
+
+        order_manager_id: '{{ order_manager_id }}',
+        tempo_attesa_ricerche: {{ setting('Tempo di attesa ricerche in secondi') }},
+        restrict_summables_to_selected: {{ setting('Totali delle tabelle ristretti alla selezione') }},
+        select_url: "{{ url_for('ajax-select') }}",
+        dataload_url: "{{ url_for('ajax-dataload', {'module_id': '|module_id|'}) }}",
+        dataload_url_plugin: "{{ url_for('ajax-dataload', {'module_id': '|module_id|', 'reference_id': '|reference_id|'}) }}",
+        ajax_set_url: "{{ url_for('ajax-session') }}",
+        ajax_array_set_url: "{{ url_for('ajax-session-array') }}",
+        messages_url: "{{ url_for('ajax-flash') }}",
+        hooks: {
+            list: "{{ url_for('hooks') }}",
+            lock: "{{ url_for('hook-lock', {'hook_id': '|id|'}) }}",
+            execute: "{{ url_for('hook-execute', {'hook_id': '|id|', 'token': '|token|'}) }}",
+            response: "{{ url_for('hook-response', {'hook_id': '|id|'}) }}",
+        }
+    };
+</script>
+
+    {% if debugbar %}
+    {{ debugbar.renderHead()|raw }}
+    {% endif %}
+
+    {% if setting('Abilita esportazione Excel e PDF') %}
+    <script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>';
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="wrapper">
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="main-header navbar navbar-expand bg-white navbar-light" role="navigation">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
+            </li>
+
+            <li class="nav-item hidden d-sm-inline-block">
+                <a href="#" id="daterange" class="nav-link {{ calendar.is_current ?  'calendar-wrong' : '' }}">
+                    <i class="fa fa-calendar"></i> <i class="fa fa-caret-down"></i>
+                </a>
+            </li>
+
+            <li class="nav-item hidden d-sm-inline-block">
+                <a href="#" class="nav-link {{  calendar.is_current ?  'calendar-wrong' : '' }}">
+                    {{ calendar.start|date }} - {{ calendar.end|date }}
+                </a>
+            </li>
+        </ul>
+
+        <!-- Navbar Right Menu -->
+        <div class="navbar-nav ml-auto" id="right-menu">
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="#" data-toggle="dropdown">
+                    <i class="fa fa-bell-o"></i>
+                    <span class="badge badge-warning navbar-badge">
+                        <span id="hooks-loading"><i class="fa fa-spinner fa-spin fa-xs"></i></span>
+                        <span id="hooks-notified"></span>
+                        <span id="hooks-counter" class="hidden">0</span>
+                        <span id="hooks-number" class="hidden">0</span>
+                    </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" id="hooks">
+                    <span class="dropdown-item dropdown-header" id="hooks-header"></span>
+                    <div class="dropdown-divider"></div>
+
+                    <div class="menu" id="hooks">
+
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item"><a href="#" onclick="window.print()" class="nav-link btn-info text-white tip" title="{{ 'Stampa'|trans }}">
+                <i class="fa fa-print"></i>
+            </a></li>
+
+            <li class="nav-item"><a href="{{ url_for('bug') }}" class="nav-link tip" title="{{ 'Segnalazione bug'|trans }}">
+                <i class="fa fa-bug"></i>
+            </a></li>
+
+            <li class="nav-item"><a href="{{ url_for('logs') }}" class="nav-link tip" title="{{ 'Log accessi'|trans }}">
+                <i class="fa fa-book"></i>
+            </a></li>
+
+            <li class="nav-item"><a href="{{ url_for('info') }}" class="nav-link tip" title="{{ 'Informazioni'|trans }}">
+                <i class="fa fa-info-circle"></i>
+            </a></li>
+
+            <li><a href="{{ url_for('logout') }}" class="nav-link btn-danger text-white tip" onclick="sessionStorage.clear()" title="{{ 'Esci'|trans }}">
+                <i class="fa fa-power-off"></i>
+            </a></li>
+        </div>
+    </nav>
+
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <a href="https://www.openstamanager.com" class="brand-link" title="{{ "Il gestionale open source per l'assistenza tecnica e la fatturazione"|trans }}" target="_blank">
+            <img src="{{ base_path() }}/assets/img/logo.png" alt="OSM Logo" class="brand-image img-circle elevation-3">
+
+            <span class="brand-text">{{ 'OpenSTAManager'|trans }}</span>
+        </a>
+
+        <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <a href="{{ url_for('user') }}" class="" style="height: 60px">
+                <div class="text-center mt-2">
+                    {% if user.photo %}
+                        <img src="{{ base_path() }}{{ user.photo }}" class="profile-user-img img-fluid img-circle" alt="{{ user.username }}" />
+                    {% else %}
+                        <i class="fa fa-user-circle-o fa-5x" alt="{{ user.username }}" ></i>
+                    {% endif %}
+                </div>
+
+                <h3 class="profile-username text-center" style="width: 100%; padding-top: 10px;">
+                    {{ user.username }}
+                </h3>
+            </a>
+
+            <p class="text-center" id="datetime"></p>
+
+            <!-- search form -->
+            <div class="sidebar-form">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" id="supersearch" placeholder="{{ 'Cerca'|trans }}..."/>
+                    <span class="input-group-append">
+                        <button class="input-group-text" id="search-btn" name="search" type="submit" ><i class="fa fa-search"></i>
+                        </button>
+                    </span>
+
+                </div>
+            </div>
+            <!-- /.search form -->
+
+            <ul class="nav nav-pills nav-sidebar nav-sidebar nav-child-indent flex-column" data-widget="treeview" role="menu" data-accordion="true">
+                {{ main_menu|raw }}
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- Right side column. Contains the navbar and content of the page -->
+    <div class="content-wrapper">
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+
+            {# % include 'layouts/messages/messages.twig' %#}
+
+            {% block content %}{% endblock %}
+
+            </div>
+        </section>
+    </div>
+
+    <footer class="main-footer">
+        <a class="hidden-xs" href="https://www.openstamanager.com" title="{{ "Il gestionale open source per l'assistenza tecnica e la fatturazione"|trans }}" target="_blank"><strong>{{ 'OpenSTAManager'|trans }}</strong></a>
+        <span class="float-right hidden-xs">
+            <strong>{{ 'Versione'|trans }}:</strong> {{ version }}
+            <small class="text-muted">({{ revision ? revision : 'In sviluppo'|trans }})</small>
+        </span>
+    </footer>
+
+    <div id="modals"></div>
+
+    {% if debugbar %}
+        <!-- Fix per le icone di debug -->
+        <style>div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-copy-clipboard:before, div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-database:before, div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-duration:before, div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-memory:before, div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-row-count:before, div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-stmt-id:before {
+            font-family: FontAwesome;
+        }</style>
+        {{ debugbar.render()|raw }}
+    {% endif %}
+
+    <script>
+        function closeModal(element) {
+            var modal = $(element).closest(".modal");
+            modal.fadeOut('slow', function() {
+                if ($("#modals").children().length <= 1){
+                    $("body").removeClass("modal-open");
+                    $(".modal-backdrop").remove();
+                }
+
+                modal.remove();
+            });
+        }
+    </script>
+</div>
+{% endblock %}

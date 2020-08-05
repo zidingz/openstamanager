@@ -1,6 +1,6 @@
 <?php
 
-use Models\Module;
+use Modules\Module;
 
 /**
  * Classe per la gestione delle informazioni relative ai moduli installati.

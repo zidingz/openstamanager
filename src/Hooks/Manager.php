@@ -2,8 +2,6 @@
 
 namespace Hooks;
 
-use Models\Hook;
-
 abstract class Manager
 {
     protected $hook = null;

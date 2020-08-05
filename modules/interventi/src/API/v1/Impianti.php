@@ -4,9 +4,9 @@ namespace Modules\Interventi\API\v1;
 
 use API\Interfaces\CreateInterface;
 use API\Interfaces\RetrieveInterface;
-use API\Resource;
+use API\Request;
 
-class Impianti extends Resource implements RetrieveInterface, CreateInterface
+class Impianti extends Request implements RetrieveInterface, CreateInterface
 {
     public function retrieve($request)
     {

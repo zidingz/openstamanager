@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}{% endblock %} - {{ 'OpenSTAManager'|trans }}</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+        <meta name="robots" content="noindex,nofollow">
+
+        <link href="{{ base_path() }}/assets/img/favicon.png" rel="icon" type="image/x-icon" />
+        <link rel="manifest" href="{{ base_path() }}/manifest.json?v={{ version }}">
+
+        <!--link rel="stylesheet" type="text/css" media="all" href="{{ base_path() }}{{ asset('/css/app.css') }}"/>
+        <link rel="stylesheet" type="text/css" media="all" href="{{ base_path() }}{{ asset('/css/style.css') }}"/>
+        <link rel="stylesheet" type="text/css" media="all" href="{{ base_path() }}{{ asset('/css/themes.css') }}"/>
+
+        <link rel="stylesheet" type="text/css" media="print" href="{{ base_path() }}{{ asset('/css/print.css') }}"/>
+
+        <script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ asset('/js/manifest.js') }}"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ asset('/js/vendor.js') }}"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ asset('/js/app.js') }}"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ asset('/js/base.js') }}"></script>
+
+        {% for script in i18n %}
+            <script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ script }}?v={{ version }}"></script>
+        {% endfor %}-->
+
+        {{ dump(retro_assets) }}
+        {% for css in retro_assets.css %}
+            <link rel="stylesheet" type="text/css" media="all" href="{{ base_path() }}{{ css }}"/>
+        {% endfor %}
+
+        {% for p in retro_assets.print %}
+            <link rel="stylesheet" type="text/css" media="print" href="{{ base_path() }}{{ p }}"/>
+        {% endfor %}
+
+        {% for script in retro_assets.js %}
+            <script type="text/javascript" charset="utf-8" src="{{ base_path() }}{{ script }}?v={{ version }}"></script>
+        {% endfor %}
+
+        <script>
+            var globals = {
+                content_was_modified: false,
+                rootdir: '{{ base_path() }}',
+
+                timestamp_format: "{{ formatter.getTimestampPattern() }}",
+                date_format: "{{ formatter.getDatePattern() }}",
+                time_format: "{{ formatter.getTimePattern() }}",
+                decimals: "{{ formatter.getNumberSeparators()['decimals'] }}",
+                thousands: "{{ formatter.getNumberSeparators()['thousands'] }}",
+
+                locale: '{{ lang }}',
+                full_locale: '{{ full_locale }}',
+
+                translations: {
+                    password: {
+                        "wordMinLength": "{{ 'La password è troppo corta' }}",
+                        "wordMaxLength": "{{ 'La password è troppo lunga' }}",
+                        "wordInvalidChar": "{{ 'La password contiene un carattere non valido' }}",
+                        "wordNotEmail": "{{ 'Non usare la tua e-mail come password' }}",
+                        "wordSimilarToUsername": "{{ 'La password non può contenere il tuo nome' }}",
+                        "wordTwoCharacterClasses": "{{ 'Usa classi di caratteri diversi' }}",
+                        "wordRepetitions": "{{ 'La password contiene ripetizioni' }}",
+                        "wordSequences": "{{ 'La password contiene sequenze' }}",
+                        "errorList": "{{ 'Attenzione' }}:",
+                        "veryWeak": "{{ 'Molto debole' }}",
+                        "weak": "{{ 'Debole' }}",
+                        "normal": "{{ 'Normale' }}",
+                        "medium": "{{ 'Media' }}",
+                        "strong": "{{ 'Forte' }}",
+                        "veryStrong": "{{ 'Molto forte' }}",
+                    },
+                },
+
+                messages_url: "{{ url_for('ajax-flash') }}",
+            };
+        </script>
+
+        {% block css %}{% endblock %}
+        {% block js %}{% endblock %}
+
+    </head>
+
+    <body class="skin-{{ config.theme }} {% block body_class %}{% endblock %}">
+        <!-- Loader principale -->
+        <div id="main_loading">
+            <div>
+                <i class="fa fa-cog fa-spin text-danger"></i>
+            </div>
+        </div>
+
+        <!-- Loader secondario -->
+        <div id="mini-loader" style="display:none;">
+            <div></div>
+        </div>
+
+        <!-- Loader senza overlay -->
+        <div id="tiny-loader" style="display:none;"></div>
+
+        {% block body %}{% endblock %}
+    </body>
+</html>

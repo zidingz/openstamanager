@@ -2,10 +2,10 @@
 
 namespace Modules\Checklists;
 
+use Auth\User;
 use Common\Model;
-use Models\Module;
 use Models\Plugin;
-use Models\User;
+use Modules\Module;
 
 class Checklist extends Model
 {

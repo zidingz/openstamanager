@@ -6,7 +6,7 @@ use API\Interfaces\CreateInterface;
 use API\Interfaces\DeleteInterface;
 use API\Interfaces\RetrieveInterface;
 use API\Interfaces\UpdateInterface;
-use API\Resource;
+use API\Request;
 use Carbon\Carbon;
 use Exception;
 
@@ -14,7 +14,7 @@ use Exception;
  * Risorsa di base per la gestione delle operazioni standard di comunicazione con l'applicazione.
  * Implementa le operazioni di *retrieve* in tre fasi, e rende disponibile l'espansione per operazioni di *create*, *update* e *delete*.
  */
-abstract class AppResource extends Resource implements RetrieveInterface, CreateInterface, UpdateInterface, DeleteInterface
+abstract class AppResource extends Request implements RetrieveInterface, CreateInterface, UpdateInterface, DeleteInterface
 {
     /**
      * Gestisce le operazioni di *retrieve* in tre fasi:

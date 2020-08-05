@@ -2,7 +2,7 @@
 
 include_once __DIR__.'/../../core.php';
 
-use Models\User;
+use Auth\User;
 
 $id_utente = filter('id_utente');
 
@@ -56,7 +56,7 @@ switch (filter('op')) {
                     $utente->password = $password;
                 }
             } else {
-                $gruppo = \Models\Group::find($id_record);
+                $gruppo = \Auth\Group::find($id_record);
                 $utente = User::build($gruppo, $username, $email, $password);
             }
 

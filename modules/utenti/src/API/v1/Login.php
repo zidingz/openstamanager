@@ -3,12 +3,12 @@
 namespace Modules\Utenti\API\v1;
 
 use API\Interfaces\CreateInterface;
-use API\Resource;
+use API\Request;
 use API\Response;
 use Auth;
 use Update;
 
-class Login extends Resource implements CreateInterface
+class Login extends Request implements CreateInterface
 {
     public function create($request)
     {

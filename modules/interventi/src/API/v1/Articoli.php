@@ -4,12 +4,12 @@ namespace Modules\Interventi\API\v1;
 
 use API\Interfaces\CreateInterface;
 use API\Interfaces\RetrieveInterface;
-use API\Resource;
+use API\Request;
 use Modules\Articoli\Articolo as ArticoloOriginale;
 use Modules\Interventi\Components\Articolo;
 use Modules\Interventi\Intervento;
 
-class Articoli extends Resource implements RetrieveInterface, CreateInterface
+class Articoli extends Request implements RetrieveInterface, CreateInterface
 {
     public function retrieve($request)
     {

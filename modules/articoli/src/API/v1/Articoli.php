@@ -3,9 +3,9 @@
 namespace Modules\Articoli\API\v1;
 
 use API\Interfaces\RetrieveInterface;
-use API\Resource;
+use API\Request;
 
-class Articoli extends Resource implements RetrieveInterface
+class Articoli extends Request implements RetrieveInterface
 {
     public function retrieve($request)
     {

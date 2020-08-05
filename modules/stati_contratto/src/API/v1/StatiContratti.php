@@ -3,9 +3,9 @@
 namespace Modules\StatiContratto\API\v1;
 
 use API\Interfaces\RetrieveInterface;
-use API\Resource;
+use API\Request;
 
-class StatiContratti extends Resource implements RetrieveInterface
+class StatiContratti extends Request implements RetrieveInterface
 {
     public function retrieve($request)
     {

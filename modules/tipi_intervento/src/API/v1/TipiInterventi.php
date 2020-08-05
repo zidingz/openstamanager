@@ -3,9 +3,9 @@
 namespace Modules\TipiIntervento\API\v1;
 
 use API\Interfaces\RetrieveInterface;
-use API\Resource;
+use API\Request;
 
-class TipiInterventi extends Resource implements RetrieveInterface
+class TipiInterventi extends Request implements RetrieveInterface
 {
     public function retrieve($request)
     {

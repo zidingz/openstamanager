@@ -2,7 +2,7 @@
 
 include_once __DIR__.'/../../core.php';
 
-use Models\Module;
+use Modules\Module;
 
 switch (filter('op')) {
     case 'update':

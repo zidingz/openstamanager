@@ -2,7 +2,7 @@
 
 include_once __DIR__.'/../../core.php';
 
-use Models\User;
+use Auth\User;
 
 $name = filter('name');
 $value = filter('value');

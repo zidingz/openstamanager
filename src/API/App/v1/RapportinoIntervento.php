@@ -4,12 +4,12 @@ namespace API\App\v1;
 
 use API\Interfaces\CreateInterface;
 use API\Interfaces\RetrieveInterface;
-use API\Resource;
+use API\Request;
 use Modules\Emails\Mail;
 use Modules\Emails\Template;
 use Notifications\EmailNotification;
 
-class RapportinoIntervento extends Resource implements RetrieveInterface, CreateInterface
+class RapportinoIntervento extends Request implements RetrieveInterface, CreateInterface
 {
     public function retrieve($request)
     {

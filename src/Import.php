@@ -18,7 +18,7 @@ class Import
     public static function getImports()
     {
         if (empty(self::$imports)) {
-            $modules = Modules::getModules();
+            $modules = \Modules\Module::getAll();
 
             $database = database();
 
@@ -31,7 +31,7 @@ class Import
 
                 if (file_exists($custom_file) || file_exists($original_file)) {
                     $files = Uploads::get([
-                        'id_module' => Modules::get('Import')['id'],
+                        'id_module' => module('Import')['id'],
                         'id_record' => $module['id'],
                     ]);
 
@@ -57,7 +57,7 @@ class Import
      */
     public static function get($module)
     {
-        $module = Modules::get($module)['id'];
+        $module = module($module)['id'];
 
         return self::getImports()[$module];
     }
@@ -105,7 +105,7 @@ class Import
      * @param string|int $module
      * @param int        $file_id
      *
-     * @return array
+     * @return \League\Csv\Reader
      */
     public static function getCSV($module, $file_id)
     {
@@ -115,10 +115,10 @@ class Import
         $find = array_search($file_id, $ids);
 
         if ($find == -1) {
-            return [];
+            return null;
         }
 
-        $file = Modules::get('Import')->upload_directory.'/'.$import['files'][$find]['filename'];
+        $file = module('Import')->upload_directory.'/'.$import['files'][$find]['filename'];
 
         // Impostazione automatica per i caratteri di fine riga
         if (!ini_get('auto_detect_line_endings')) {
@@ -130,5 +130,24 @@ class Import
         $csv->setDelimiter(';');
 
         return $csv;
+    }
+
+    public static function createExample($module, array $content)
+    {
+        $module = module($module);
+        $upload_dir = Uploads::getDirectory($module->id, null);
+
+        $filename = $upload_dir.'/example-'.strtolower($module->title).'.csv';
+
+        $file = fopen(DOCROOT.'/'.$filename, 'w');
+        fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+        foreach ($content as $row) {
+            fputcsv($file, $row, ';');
+        }
+
+        fclose($file);
+
+        return $filename;
     }
 }

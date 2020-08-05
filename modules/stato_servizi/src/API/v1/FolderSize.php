@@ -3,11 +3,11 @@
 namespace Modules\StatoServizi\API\v1;
 
 use API\Interfaces\RetrieveInterface;
-use API\Resource;
+use API\Request;
 use App;
 use Util\FileSystem;
 
-class FolderSize extends Resource implements RetrieveInterface
+class FolderSize extends Request implements RetrieveInterface
 {
     public function retrieve($request)
     {

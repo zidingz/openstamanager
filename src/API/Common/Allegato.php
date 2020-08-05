@@ -4,11 +4,11 @@ namespace API\Common;
 
 use API\Interfaces\CreateInterface;
 use API\Interfaces\RetrieveInterface;
-use API\Resource;
+use API\Request;
 use Models\Upload;
 use Modules;
 
-class Allegato extends Resource implements RetrieveInterface, CreateInterface
+class Allegato extends Request implements RetrieveInterface, CreateInterface
 {
     public function create($request)
     {

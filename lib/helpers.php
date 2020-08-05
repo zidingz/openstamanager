@@ -14,7 +14,7 @@ use HTMLBuilder\HTMLBuilder;
  */
 function database()
 {
-    return \Database::getConnection();
+    return \App::getContainer()->get('database');
 }
 
 /**
@@ -43,9 +43,9 @@ function prepare($parameter)
  *
  * @return string
  */
-function filter($param, $method = null, $raw = false)
+function filter($param, $method = null, $parse = true)
 {
-    return \Filter::getValue($param, $method, $raw);
+    return container()->get('filter')->getValue($param, $method, $parse);
 }
 
 /**
@@ -58,9 +58,9 @@ function filter($param, $method = null, $raw = false)
  *
  * @return string
  */
-function post($param, $raw = false)
+function post($param, $parse = true)
 {
-    return \Filter::getValue($param, 'post', $raw);
+    return container()->get('filter')->getValue($param, 'post', $parse);
 }
 
 /**
@@ -73,9 +73,9 @@ function post($param, $raw = false)
  *
  * @return string
  */
-function get($param, $raw = false)
+function get($param, $parse = true)
 {
-    return \Filter::getValue($param, 'get', $raw);
+    return container()->get('filter')->getValue($param, 'get', $parse);
 }
 
 /**
@@ -90,7 +90,7 @@ function get($param, $raw = false)
  */
 function setting($name, $again = false)
 {
-    return \Settings::getValue($name);
+    return \Models\Setting::get($name)->valore;
 }
 
 /**
@@ -102,7 +102,7 @@ function setting($name, $again = false)
  */
 function flash()
 {
-    return App::flash();
+    return \App::getContainer()->get('flash');
 }
 
 /**
@@ -114,7 +114,7 @@ function flash()
  */
 function auth()
 {
-    return \Auth::getInstance();
+    return \App::getContainer()->get('auth');
 }
 
 /**
@@ -273,4 +273,68 @@ function moneyFormat($number, $decimals = null)
 function input(array $json)
 {
     return HTMLBuilder::parse($json);
+}
+
+/*
+ * Restituisce il modulo relativo all'identificativo.
+ *
+ * @since 2.5
+ *
+ * @return \Modules\Module
+ */
+function module($identifier)
+{
+    return \Modules\Module::get($identifier);
+}
+
+function asset(string $name)
+{
+    return App::asset($name);
+}
+
+/**
+ * Restituisce la distanza in tempo formattata per l'utente.
+ *
+ * @param string $timestamp
+ *
+ * @return string
+ *
+ * @since 2.5
+ */
+function diffForHumans($timestamp)
+{
+    return \Carbon\Carbon::parse($timestamp)->diffForHumans();
+}
+
+/**
+ * Restituisce il percorso per la risorsa $name.
+ *
+ * @param string $name
+ * @param array  $parameters
+ *
+ * @return string
+ *
+ * @since 2.5
+ */
+function urlFor($name, $parameters = [])
+{
+    $router = container()->get('router');
+
+    if (strpos($name, 'module') == 0) {
+        $name = str_replace('module', $parameters['module_id'].'-module', $name);
+    }
+
+    return $router->urlFor($name, $parameters);
+}
+
+/**
+ * Restituisce il contenitore Slim per DI.
+ *
+ * @return \DI\Container
+ *
+ * @since 2.5
+ */
+function container()
+{
+    return App::getContainer();
 }

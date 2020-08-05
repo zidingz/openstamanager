@@ -12,11 +12,6 @@ trait StoreTrait
     /** @var int Identificatore dell'oggetto in utilizzo */
     protected static $current;
 
-    /** @var string Nome della colonna "id" (Primary Key) */
-    protected static $id = 'id';
-    /** @var string Nome della colonna "name" */
-    protected static $name = 'name';
-
     /**
      * Restituisce tutti gli oggetti.
      *
@@ -34,6 +29,26 @@ trait StoreTrait
     }
 
     /**
+     * Nome della colonna "id" (Primary Key).
+     *
+     * @return string
+     */
+    public static function getStoreIdentifier()
+    {
+        return 'id';
+    }
+
+    /**
+     * Nome della colonna "name".
+     *
+     * @return string
+     */
+    public static function getStoreNameIdentifier()
+    {
+        return 'name';
+    }
+
+    /**
      * Restituisce l'oggetto relativo all'identificativo specificato.
      *
      * @param string|int $identifier
@@ -42,14 +57,21 @@ trait StoreTrait
      */
     public static function get($identifier)
     {
+        if (empty($identifier)) {
+            return null;
+        }
+
+        $name_field = self::getStoreNameIdentifier();
+        $id_field = self::getStoreIdentifier();
+
         // Inizializzazione
         if (!isset(self::$collection)) {
             self::$collection = collect();
         }
 
         // Ricerca
-        $result = self::$collection->first(function ($item) use ($identifier) {
-            return $item->{self::$name} == $identifier || $item->{self::$id} == $identifier;
+        $result = self::$collection->first(function ($item) use ($identifier, $id_field, $name_field) {
+            return $item->{$id_field} == $identifier || $item->{$name_field} == $identifier;
         });
 
         if (!empty($result)) {
@@ -57,8 +79,8 @@ trait StoreTrait
         }
 
         // Consultazione Database
-        $result = self::where(self::$id, $identifier)
-            ->orWhere(self::$name, $identifier)
+        $result = self::where($id_field, $identifier)
+            ->orWhere($name_field, $identifier)
             ->first();
 
         if (!empty($result)) {

@@ -3,9 +3,9 @@
 namespace Modules\StatiPreventivo\API\v1;
 
 use API\Interfaces\RetrieveInterface;
-use API\Resource;
+use API\Request;
 
-class StatiPreventivi extends Resource implements RetrieveInterface
+class StatiPreventivi extends Request implements RetrieveInterface
 {
     public function retrieve($request)
     {

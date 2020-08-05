@@ -2,9 +2,9 @@
 
 include_once __DIR__.'/../../core.php';
 
-use Models\PrintTemplate;
+use Prints\Template;
 
 if (isset($id_record)) {
-    $print = PrintTemplate::find($id_record);
+    $print = Template::find($id_record);
     $record = $print->toArray();
 }

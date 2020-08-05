@@ -1,0 +1,40 @@
+{% extends "layouts/guest.twig" %}
+
+{% block title %}{{ "Errore di configurazione"|trans }}{% endblock %}
+
+{% block box_class %}card-danger{% endblock %}
+{% block box_header %}
+    <h3 class="card-title">{{ 'Permessi di scrittura mancanti'|trans }}</h3>
+{% endblock %}
+
+{% block content %}
+<p>{{  'Sembra che non ci siano i permessi di scrittura sul file _FILE_'|trans({'_FILE_': '<b>config.inc.php</b>'})|raw }}</p>
+
+<form action="{{ url_for('configuration') }}" method="post">
+    <div class="hidden">
+        <input type="hidden" name="database_name" value="{{ database_name }}">
+        <input type="hidden" name="username" value="{{ username }}">
+        <input type="hidden" name="password" value="{{ password }}">
+        <input type="hidden" name="host" value="{{ host }}">
+    </div>
+
+    <a class="btn btn-warning" href="{{ url_for('login') }}"><i class="fa fa-arrow-left"></i> {{ 'Torna indietro'|trans }}</a>
+
+    <button class="btn btn-info"><i class="fa fa-repeat"></i> {{ 'Riprova'|trans }}</button>
+</form>
+
+<hr>
+
+<div class="card card-outline card-default collapsed-card">
+    <div class="card-header">
+        <h4 class="card-title"><a class="clickable" data-card-widget="collapse">{{ 'Creazione manuale'|trans }}</a></h4>
+        <div class="card-tools float-right">
+            <button type="button" class="btn btn-card-tool" data-card-widget="collapse"><i class="fa fa-plus"></i></button>
+        </div>
+    </div>
+    <div class="card-body">
+        <p>{{ 'Inserire il seguente testo nel file _FILE_'|trans({'_FILE_': '<b>config.inc.php</b>'})|raw }}</p>
+        <pre class="text-left">{{ config }}</pre>
+    </div>
+</div>
+{% endblock %}
