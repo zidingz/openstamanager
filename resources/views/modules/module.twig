@@ -1,0 +1,66 @@
+{% extends "@resources/layouts/app.twig" %}
+
+{% block title %}
+    {{ module.title }}
+{% endblock %}
+
+{% block top_content %}
+    <!-- Widget in alto -->
+    {( "name": "widgets", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}", "position": "top", "place": "controller" )}
+{% endblock %}
+
+{% block bottom_content %}
+    <!-- Widget in alto -->
+    {( "name": "widgets", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}", "position": "right", "place": "controller" )}
+{% endblock %}
+
+{% block content %}
+    {{ block('top_content') }}
+
+    <div class="content-header">
+        <a class="h2 clickable" id="main_tab" style="color: inherit; text-decoration: inherit;">
+            {% include '@resources/modules/title.twig' %}
+        </a>
+
+        <div class="nav-tabs-custom float-right">
+            <ul class="nav nav-tabs" id="tabs" role="tablist">
+                <li class="nav-item">
+                    <a data-toggle="tab" href="#tab_0"></a>
+                </li>
+
+                {% block plugins_list %}{% endblock %}
+
+                {% if include_operations and user.isAdmin() %}
+                    <li class="nav-item float-right bg-warning">
+                        <a class="nav-link" data-toggle="tab" href="#tab_info" id="link-tab_info">{{ 'Info'|trans }}</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="tab-content">
+        <div id="tab_0" class="tab-pane active">
+
+            {% block module_content %}{% endblock %}
+
+        </div>
+
+        {% if include_operations and user.isAdmin() %}
+            <div id="tab_info" class="tab-pane">
+                {% include 'operations.twig' with {operations: operations} %}
+            </div>
+        {% endif %}
+
+        {% block plugins_content %}{% endblock %}
+    </div>
+
+    {{ block('bottom_content') }}
+
+    <script>
+        $('#main_tab').click(function (e) {
+            $('#tabs a[href="#tab_0"]').tab('show').trigger('show.bs.tab');
+            removeHash();
+        });
+    </script>
+{% endblock %}

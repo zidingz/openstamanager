@@ -15,7 +15,7 @@ class RecordController extends Parser
 
         $template = filter('modal') !== null ? 'add' : 'editor';
 
-        return $this->twig->render($response, 'old/'.$template.'.twig', $args);
+        return $this->twig->render($response, 'retro/'.$template.'.twig', $args);
     }
 
     public function content(array $args)

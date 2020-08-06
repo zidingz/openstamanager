@@ -1,4 +1,4 @@
-{% extends "layouts/base.twig" %}
+{% extends "@resources/layouts/base.twig" %}
 
 {% block js %}
 <script>
@@ -66,11 +66,11 @@
             ajax: {
                 "missing": {
                     "title": "{{ 'Errore'|trans }}",
-                    "text": "{{ 'Alcuni campi obbligatori non sono stati compilati correttamente'|trans }}"
+                    "text": "{{ 'Alcuni campi obbligatori non sono stati compilati correttamente'|trans }}",
                 },
                 "error": {
-                    "title": "{{ 'Errore'|trans }}"
-                    "text": "{{ 'Errore durante il salvataggio del record'|trans }}"
+                    "title": "{{ 'Errore'|trans }}",
+                    "text": "{{ 'Errore durante il salvataggio del record'|trans }}",
                 }
             },
             password: {

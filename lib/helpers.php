@@ -36,12 +36,12 @@ function prepare($parameter)
  * Restituisce il contenuto sanitarizzato dell'input dell'utente.
  *
  * @param string $param  Nome del parametro
- * @param string $method Posizione del parametro (post o get)
- * @param bool   $raw    Restituire il valore non formattato
- *
- * @since 2.3
+ * @param null   $method Posizione del parametro (post o get)
+ * @param bool   $parse
  *
  * @return string
+ *
+ * @since 2.3
  */
 function filter($param, $method = null, $parse = true)
 {
@@ -52,11 +52,11 @@ function filter($param, $method = null, $parse = true)
  * Restituisce il contenuto sanitarizzato dell'input dell'utente.
  *
  * @param string $param Nome del parametro
- * @param bool   $raw   Restituire il valore non formattato
- *
- * @since 2.3
+ * @param bool   $parse
  *
  * @return string
+ *
+ * @since 2.3
  */
 function post($param, $parse = true)
 {

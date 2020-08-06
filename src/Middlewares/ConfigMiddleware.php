@@ -29,6 +29,7 @@ class ConfigMiddleware extends Middleware
             exit();
         }
 
+        $this->addVariable('skin_theme', $config['theme']);
         $route = $this->getRoute($request);
         if (empty($route)) {
             return $handler->handle($request);

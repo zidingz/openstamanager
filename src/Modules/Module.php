@@ -11,6 +11,7 @@ use Components\BootrableTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Checklists\Traits\ChecklistTrait;
+use Modules\Traits\RetroTrait;
 use Prints\Template;
 use Traits\Components\NoteTrait;
 use Traits\Components\UploadTrait;
@@ -24,6 +25,7 @@ class Module extends Model implements BootableInterface
     use NoteTrait;
     use ChecklistTrait;
     use BootrableTrait;
+    use RetroTrait;
 
     protected $table = 'zz_modules';
     protected $main_folder = 'modules';

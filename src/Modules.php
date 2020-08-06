@@ -6,6 +6,7 @@ use Modules\Module;
  * Classe per la gestione delle informazioni relative ai moduli installati.
  *
  * @since 2.3
+ * @deprecated
  */
 class Modules
 {
@@ -230,9 +231,9 @@ class Modules
      */
     public static function getMainMenu($depth = 3)
     {
-        $menus = self::getHierarchy();
+        $menus = Module::getHierarchy()->sortBy('order');
 
-        $module = Modules::getCurrent();
+        $module = Module::getCurrent();
         $module_name = isset($module) ? $module->name : '';
 
         $result = '';
@@ -316,7 +317,7 @@ class Modules
         $active = ($actual == $element['name']);
         $show = (self::getPermission($element['id']) != '-' && !empty($element['enabled'])) ? true : false;
 
-        $submenus = $element['all_children'];
+        $submenus = $element->getChildren();
         if (!empty($submenus)) {
             $temp = '';
             foreach ($submenus as $submenu) {

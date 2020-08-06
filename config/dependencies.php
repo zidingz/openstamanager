@@ -103,11 +103,13 @@ if ($container->get('debug')) {
 
 // Templating Twig
 $container->set('twig', function (ContainerInterface $container) {
-    $twig = Twig::create(__DIR__.'/../resources/views', [
+    $path = __DIR__.'/../resources/views';
+    $twig = Twig::create($path, [
         'cache' => false,
         'debug' => $container->get('debug'),
     ]);
 
+    // Aggiunta delle variabili globalmente disponibili nei template
     $twig->offsetSet('auth', $container->get('auth'));
     $twig->offsetSet('user', $container->get('auth')->user());
     $twig->offsetSet('flash', $container->get('flash'));
@@ -116,6 +118,11 @@ $container->set('twig', function (ContainerInterface $container) {
         $twig->offsetSet('debugbar', $container->get('debugbar'));
     }
 
+    // Aggiunta del namespace di default per i template
+    $loader = $twig->getLoader();
+    $loader->addPath($path, 'resources');
+
+    // Introduzione delle funzioni comuni
     $environment = $twig->getEnvironment();
 
     $filter = new TwigFilter('diffForHumans', 'diffForHumans');
@@ -132,7 +139,8 @@ $container->set('twig', function (ContainerInterface $container) {
 
     $function = new TwigFunction('module', 'module');
     $environment->addFunction($function);
-    
+
+    // Estensione per abilitare la funzione *dump* di debug
     $environment->addExtension(new \Twig\Extension\DebugExtension());
 
     return $twig;

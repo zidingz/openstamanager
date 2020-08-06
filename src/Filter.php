@@ -4,6 +4,7 @@
  * Classe per gestire la sanitarizzazione degli input, basata sul framework open-source HTMLPurifier.
  *
  * @since 2.3
+ * @deprecated
  */
 class Filter
 {

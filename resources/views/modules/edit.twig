@@ -1,0 +1,231 @@
+{% extends "@resources/modules/module.twig" %}
+
+{% block top_content %}
+    <!-- Widget in alto -->
+    {( "name": "widgets", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}", "position": "top", "editor": "controller" )}
+
+    {% if setting('Attiva notifica di presenza utenti sul record') %}
+        <div class="card card-outline card-warning card-solid text-center info-active d-none">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa fa-warning"></i> {{ 'Attenzione!'|trans }}</h3>
+            </div>
+            <div class="card-body">
+                <p>{{ 'I seguenti utenti stanno visualizzando questa pagina'|trans }}:</p>
+                <ul class="list">
+                </ul>
+                <p>{{ 'Prestare attenzione prima di effettuare modifiche, poichè queste potrebbero essere perse a causa di multipli salvataggi contemporanei'|trans }}.</p>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block module_content %}
+    {% if record.deleted_at is not empty %}
+    <div class="alert alert-warning text-center">
+        <h3>{{ 'Ripristinare il record?'|trans }}</h3>
+
+        <a class="btn btn-warning" id="restore">
+            <i class="fa fa-undo"></i> {{ 'Ripristina'|trans }}
+        </a>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $("#restore").click(function(){
+                $("input[name=op]").attr("value", "restore");
+                $("#submit").trigger("click");
+            })
+        });
+    </script>
+    {% endif %}
+
+    <!--  Pulsanti di default -->
+    <div id="pulsanti">
+        <a class="btn btn-warning" href="{{ module.url('module', {'reference_id': reference_id}) }}">
+            <i class="fa fa-chevron-left"></i> {{ "Torna all'elenco"|trans }}
+        </a>
+
+        <div class="float-right">
+            {( "name": "button", "type": "print", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}" )}
+
+            {( "name": "button", "type": "email", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}" )}
+
+            <button type="button" class="btn btn-success" id="save">
+                <i class="fa fa-check"></i> {{ 'Salva'|trans }}
+            </button>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            var form = $("#module-edit").find("form").first();
+
+            // Aggiunta del submit
+            form.prepend('<button type="submit" id="submit" class="d-none"></button>');
+
+            $("#save").click(function(){
+                //submitAjax(form);
+
+                $("#submit").trigger("click");
+            });
+
+            // Pulsanti dinamici
+            if (!globals.is_mobile) {
+                var target = $('#pulsanti')
+                target.after('<div class="pulsanti-affix" id="#pulsanti-affix"></div>')
+
+                var affix = $('.pulsanti-affix')
+                affix.append(target.clone(true))
+
+                // Show affix on scroll
+                window.addEventListener('scroll', function () {
+                    var height = $(window).scrollTop()
+                    if (height > 200) {
+                        target.css('visibility', 'hidden')
+                        affix.css('display', 'block')
+                        affix.css("width", $("#tab_0").css("width"));
+                    } else {
+                        affix.css('display', 'none')
+                        target.css('visibility', 'visible')
+                    }
+                })
+            }
+        });
+    </script>
+
+    <div class="clearfix"></div>
+    <br>
+
+    <div class="float-right" id="pulsanti-modulo">
+        {% block buttons %}{% endblock %}
+    </div>
+
+    <div class="clearfix"></div>
+    <br>
+
+    <div id="module-edit">
+        {% block editor_content %}{% endblock %}
+    </div>
+
+    <!-- Campi personalizzati -->
+    <div class="d-none" id="custom_fields_top-edit">
+        {( "name": "custom_fields", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}", "position": "top" )}
+    </div>
+
+    <div class="d-none" id="custom_fields_bottom-edit">
+        {( "name": "custom_fields", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}" )}
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            cleanup_inputs();
+
+            var form = $("#custom_fields_top-edit").parent().find("form").first();
+
+            // Campi a inizio form
+            form.prepend($("#custom_fields_top-edit").html());
+
+            // Campi a fine form
+            var last = form.find(".panel").last();
+
+            if (!last.length) {
+                last = form.find(".box").last();
+            }
+
+            if (!last.length) {
+                last = form.find(".row").eq(-2);
+            }
+
+            last.after($("#custom_fields_bottom-edit").html());
+            restart_inputs();
+        });
+    </script>
+{% endblock %}
+
+{% block bottom_content %}
+    <!-- Widget in alto -->
+    {( "name": "widgets", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}", "position": "right", "place": "editor" )}
+
+    <hr>
+    <a class="btn btn-secondary" href="{{ module.url('module', {'reference_id': reference_id}) }}">
+        <i class="fa fa-chevron-left"></i> {{ 'Indietro'|trans }}
+    </a>
+
+
+    <script>
+        // Se l'utente ha i permessi in sola lettura per il modulo, converto tutti i campi di testo in span
+        {% set read_only = module.permission == 'r' %}
+        {% set not_class = read_only ? '' : '.not(".unblockable")' %}
+        {% if read_only or (block_edit is defined and block_edit == false) %}
+        $(document).ready(function(){
+            $("input, textarea, select", "section.content"){{ not_class|raw }}.attr("readonly", "true");
+            $("select, input[type=checkbox]", "section.content"){{ not_class|raw }}.prop("disabled", true);
+
+            {% if read_only %}
+            $("a.btn, button, input[type=button], input[type=submit]", "section.content").hide();
+            $("a.btn-info, button.btn-info, input[type=button].btn-info", "section.content").show();
+            {% endif %}
+
+        });
+        {% endif %}
+
+        var content_was_modified = false;
+
+        // controllo se digito qualche valore o cambio qualche select
+        $("input, textarea, select").bind("change paste keyup", function(event) {
+            if( event.keyCode >= 32 ){
+                content_was_modified = true;
+            }
+        });
+
+        $(".superselect, .superselectajax").on("change", function (e) {
+            content_was_modified = true;
+        });
+
+        // tolgo il controllo se sto salvando
+        $(".btn-success, button[type=submit]").bind("click", function() {
+            content_was_modified = false;
+        });
+
+        $( "form" ).bind( "submit", function() {
+            content_was_modified = false;
+        });
+
+        // questo controllo blocca il modulo vendita al banco, dopo la lettura con barcode, appare il messaggio di conferma
+        window.onbeforeunload = function(e){
+            if(content_was_modified) {
+                var dialogText = "{{ "Uscire senza salvare?"|trans }}";
+                e.returnValue = dialogText;
+                $("#main_loading").fadeOut();
+                return dialogText;
+            }
+        };
+
+        window.addEventListener("unload", function(e) {
+            $("#main_loading").show();
+        });
+
+        function getActiveUsers(){
+            $.getJSON('<?php echo ROOTDIR; ?>/ajax.php?op=active_users', {
+                    id_module: {{ module_id }},
+                    id_record: {{ record_id }},
+                },
+                function(data) {
+                    if (data.length != 0) {
+                        $(".info-active").removeClass("d-none");
+                        $(".info-active .list").html("");
+                        $.each( data, function( key, val ) {
+                            $(".info-active .list").append("<li>"+val.username+"</li>");
+                        });
+                    }
+                    else $(".info-active").addClass("d-none");
+                });
+        }
+
+        {% if setting('Attiva notifica di presenza utenti sul record') %}
+        getActiveUsers();
+
+        setInterval(getActiveUsers, {{ setting('Timeout notifica di presenza (minuti)') }} * 60 * 1000);
+        {% endif %}
+    </script>
+{% endblock %}

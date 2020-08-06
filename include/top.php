@@ -29,13 +29,13 @@ if (file_exists(DOCROOT.'/manifest.json')) {
 // CSS
 foreach (App::getAssets()['css'] as $style) {
     echo '
-        <link rel="stylesheet" type="text/css" media="all" href="'.$style.'"/>';
+        <link rel="stylesheet" type="text/css" media="all" href="'.ROOTDIR.$style.'"/>';
 }
 
 // Print CSS
 foreach (App::getAssets()['print'] as $style) {
     echo '
-        <link rel="stylesheet" type="text/css" media="print" href="'.$style.'"/>';
+        <link rel="stylesheet" type="text/css" media="print" href="'.ROOTDIR.$style.'"/>';
 }
 
 if (Auth::check()) {
@@ -148,7 +148,7 @@ if (Auth::check()) {
                 },
             };
 			globals = {
-                rootdir: "'.$rootdir.'",
+                rootdir: "'.ROOTDIR.'",
                 js: "'.$paths['js'].'",
                 css: "'.$paths['css'].'",
                 img: "'.$paths['img'].'",
@@ -191,7 +191,7 @@ if (Auth::check()) {
     echo '
         <script>
             globals = {
-                rootdir: "'.$rootdir.'",
+                rootdir: "'.ROOTDIR.'",
 
                 search: {},
                 translations: {
@@ -227,7 +227,7 @@ if (Auth::check()) {
 // JS
 foreach (App::getAssets()['js'] as $js) {
     echo '
-        <script type="text/javascript" charset="utf-8" src="'.$js.'"></script>';
+        <script type="text/javascript" charset="utf-8" src="'.ROOTDIR.$js.'"></script>';
 }
 
 // Impostazioni di default per gli alert
@@ -244,9 +244,7 @@ echo '
 if (Auth::check()) {
     // Barra di debug
     if (App::debug()) {
-        $debugbarRenderer = $debugbar->getJavascriptRenderer();
-        $debugbarRenderer->setIncludeVendors(false);
-        $debugbarRenderer->setBaseUrl($paths['assets'].'/php-debugbar');
+        $debugbarRenderer = container()->get('debugbar');
 
         echo $debugbarRenderer->renderHead();
     }

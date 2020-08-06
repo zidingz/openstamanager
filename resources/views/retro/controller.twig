@@ -1,0 +1,23 @@
+{% extends "@resources/modules/module.twig" %}
+
+{% block module_content %}
+    {% include '@resources/modules/content.twig' %}
+{% endblock %}
+
+{% set plugins = module.getPlugins('module_plugin') %}
+
+{% block plugins_list %}
+    {% for plugin in plugins %}
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#tab_{{ plugin.id }}" id="link-tab_{{ plugin.id }}">{{ plugin.title }}</a>
+        </li>
+    {% endfor %}
+{% endblock %}
+
+{% block plugins_content %}
+    {% for plugin in plugins %}
+        <div id="tab_{{ plugin.id }}" class="tab-pane">
+            {{ plugin.render()|raw }}
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -3,7 +3,6 @@
 namespace Modules\Retro\Controllers;
 
 use Modules\Retro\Parser;
-use Modules\Interfaces\ModuleInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -16,7 +15,7 @@ class ModuleController extends Parser
 
         $template = filter('modal') !== null ? 'add' : 'controller';
 
-        return $this->twig->render($response, 'old/'.$template.'.twig', $args);
+        return $this->twig->render($response, 'retro/'.$template.'.twig', $args);
     }
 
     public function content(array $args)
@@ -31,6 +30,7 @@ class ModuleController extends Parser
     {
         $args = $this->prepare($args);
         $args = parent::create($args);
+        dd($request, $args);
 
         $args['query'] = $request->getQueryParams();
 

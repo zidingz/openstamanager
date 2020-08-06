@@ -1,0 +1,60 @@
+<!-- Informazioni sulle operazioni -->
+{% if operations is not empty %}
+<div class="timeline">
+{% for date, date_operations in operations.groupBy('date') %}
+    <div class="time-label">
+        <span class="bg-green">{{ date|date }} ({{ date|diffForHumans }})</span>
+    </div>
+
+    {% for operation in date_operations %}
+        {% set icon = 'pencil-square-o' %}
+        {% set description = operation.op %}
+        {% set color = null %}
+        {% set tags = null %}
+
+        {% if description == 'add' %}
+            {% set description = 'Creazione'|trans %}
+            {% set icon = 'plus' %}
+            {% set color = 'success' %}
+        {% elseif description == 'update' %}
+            {% set description = 'Modifica'|trans %}
+            {% set icon = 'pencil' %}
+            {% set color = 'info' %}
+        {% elseif description == 'delete' %}
+            {% set description = 'Eliminazione'|trans %}
+            {% set icon = 'times' %}
+            {% set color = 'danger' %}
+        {% endif %}
+
+    <div>
+        <i class="fa fa-{{ operation.icon }} bg-{{ operation.color }}"></i>
+
+        <div class="timeline-item">
+            <span class="time tip" title="{{ operation.created_at|diffForHumans }}"><i class="fas fa-clock"></i> {{ operation.created_at|time }}</span>
+
+            <p><small class="label label-default"></small></p></span>
+
+            <h3 class="timeline-header">{{ '_ACTION_ da parte di _USER_'|trans({'_ACTION_': '<a href="#">' ~ operation.description ~ '</a>', '_USER_': '<i class="fa fa-user"></i> ' ~ operation.username})|raw }}</h3>
+            <div class="timeline-body">
+
+            </div>
+
+            <div class="timeline-footer">
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endfor %}
+
+    <div>
+        <i class="fas fa-clock bg-gray"></i>
+    </div>
+</div>
+
+{% else %}
+<div class="alert alert-info">
+    <i class="fa fa-info-circle"></i>
+    {{ 'Nessun log disponibile per questa scheda'|trans }}.
+</div>
+{% endif %}
