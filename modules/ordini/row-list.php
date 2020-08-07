@@ -9,6 +9,7 @@ echo '
             <tr>
                 <th width="35" class="text-center" >'.tr('#').'</th>
                 <th>'.tr('Descrizione').'</th>
+                <th width="120">'.tr('Prev. evasione').'</th>
                 <th class="text-center tip" width="150" title="'.tr('da evadere').' / '.tr('totale').'">'.tr('Q.tà').' <i class="fa fa-question-circle-o"></i></th>
                 <th class="text-center" width="150">'.tr('Prezzo unitario').'</th>
                 <th class="text-center" width="150">'.tr('Iva unitaria').'</th>
@@ -20,6 +21,8 @@ echo '
         <tbody class="sortable">';
 
 // Righe documento
+$today = new Carbon\Carbon();
+$today = $today->startOfDay();
 $righe = $ordine->getRighe();
 foreach ($righe as $riga) {
     $extra = '';
@@ -40,7 +43,7 @@ foreach ($righe as $riga) {
     echo '
         <tr data-id="'.$riga->id.'" data-type="'.get_class($riga).'" '.$extra.'>
             <td class="text-center">
-                '.(($riga->order) + 1).'
+                '.($riga->order + 1).'
             </td>
 
             <td>';
@@ -50,6 +53,37 @@ foreach ($righe as $riga) {
     } else {
         echo nl2br($riga->descrizione);
     }
+
+    // Data prevista evasione
+    $info_evasione = '';
+    if (!empty($riga->data_evasione)) {
+        $evasione = new Carbon\Carbon($riga->data_evasione);
+        if ($today->diffInDays($evasione, false) < 0) {
+            $evasione_icon = 'fa fa-warning text-danger';
+            $evasione_help = tr('Da consegnare _NUM_ giorni fa',
+                [
+                    '_NUM_' => $today->diffInDays($evasione),
+                ]
+            );
+        } elseif ($today->diffInDays($evasione, false) == 0) {
+            $evasione_icon = 'fa fa-clock-o text-warning';
+            $evasione_help = tr('Da consegnare oggi');
+        } else {
+            $evasione_icon = 'fa fa-check text-success';
+            $evasione_help = tr('Da consegnare fra _NUM_ giorni',
+                [
+                    '_NUM_' => $today->diffInDays($evasione),
+                ]
+            );
+        }
+
+        $info_evasione = '<span class="tip" title="'.$evasione_help.'"><i class="'.$evasione_icon.'"></i> '.Translator::dateToLocale($riga->data_evasione).'</span>';
+    }
+
+    echo '
+        <td class="text-center">
+            '.$info_evasione.'
+        </td>';
 
     if ($riga->isArticolo() && !empty($riga->abilita_serial)) {
         if (!empty($mancanti)) {
@@ -170,7 +204,7 @@ $totale = abs($ordine->totale);
 // IMPONIBILE
 echo '
         <tr>
-            <td colspan="5" class="text-right">
+            <td colspan="6" class="text-right">
                 <b>'.tr('Imponibile', [], ['upper' => true]).':</b>
             </td>
             <td class="text-right">
@@ -183,7 +217,7 @@ echo '
 if (!empty($sconto)) {
     echo '
         <tr>
-            <td colspan="5" class="text-right">
+            <td colspan="6" class="text-right">
                 <b><span class="tip" title="'.tr('Un importo positivo indica uno sconto, mentre uno negativo indica una maggiorazione').'"> <i class="fa fa-question-circle-o"></i> '.tr('Sconto/maggiorazione', [], ['upper' => true]).':</span></b>
             </td>
             <td class="text-right">
@@ -195,7 +229,7 @@ if (!empty($sconto)) {
     // TOTALE IMPONIBILE
     echo '
         <tr>
-            <td colspan="5" class="text-right">
+            <td colspan="6" class="text-right">
                 <b>'.tr('Totale imponibile', [], ['upper' => true]).':</b>
             </td>
             <td class="text-right">
@@ -208,7 +242,7 @@ if (!empty($sconto)) {
 // IVA
 echo '
         <tr>
-            <td colspan="5" class="text-right">
+            <td colspan="6" class="text-right">
                 <b>'.tr('Iva', [], ['upper' => true]).':</b>
             </td>
             <td class="text-right">
@@ -220,7 +254,7 @@ echo '
 // TOTALE
 echo '
         <tr>
-            <td colspan="5" class="text-right">
+            <td colspan="6" class="text-right">
                 <b>'.tr('Totale', [], ['upper' => true]).':</b>
             </td>
             <td class="text-right">
@@ -303,18 +337,14 @@ $(document).ready(function() {
 			dropOnEmpty: true,
 			scroll: true,
 			update: function(event, ui) {
-                var order = "";
-                $(".table tr[data-id]").each( function() {
-                    order += ","+$(this).data("id");
-                });
-                order = order.replace(/^,/, "");
+                let order = $(".table tr[data-id]").toArray().map(a => $(a).data("id"))
 
-				$.post("'.$rootdir.'/actions.php", {
+				$.post(globals.rootdir + "/actions.php", {
 					id: ui.item.data("id"),
 					id_module: '.$id_module.',
 					id_record: '.$id_record.',
 					op: "update_position",
-                    order: order,
+                    order: order.join(","),
 				});
 			}
 		});

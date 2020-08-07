@@ -147,7 +147,7 @@ INSERT INTO `zz_api_resources` (`id`, `version`, `type`, `resource`, `class`, `e
 INSERT INTO `zz_settings` (`id`, `nome`, `valore`, `tipo`, `editable`, `sezione`, `order`, `help`) VALUES
 (NULL, 'Google Maps API key', '', 'string', '1', 'Applicazione', 1, ''),
 (NULL, 'Mostra prezzi', '1', 'boolean', '1', 'Applicazione', 2, ''),
-(NULL, 'Sincronizza Clienti per cui il Tecnico ha lavorato in passato', '1', 'boolean', '1', 'Applicazione', 3, ''),
+(NULL, 'Sincronizza solo i Clienti per cui il Tecnico ha lavorato in passato', '1', 'boolean', '1', 'Applicazione', 3, ''),
 (NULL, 'Mesi per lo storico delle Attività', '6', 'integer', '1', 'Applicazione', 3, '');
 
 -- Impostazioni relative gli stati delle Attività
@@ -193,6 +193,7 @@ ALTER TABLE `an_anagrafiche` CHANGE `data_nascita` `data_nascita` date;
 ALTER TABLE `in_interventi` CHANGE `data_richiesta` `data_richiesta` DATETIME;
 ALTER TABLE `in_interventi` CHANGE `firma_data` `firma_data` DATETIME;
 
+-- SET sql_mode = ''; 
 UPDATE `mg_movimenti` SET `data` = NULL WHERE `data` = '0000-00-00' OR `data` = '0000-00-00 00:00:00';
 UPDATE `my_impianti` SET `data` = NULL WHERE `data` = '0000-00-00' OR `data` = '0000-00-00 00:00:00';
 UPDATE `an_anagrafiche` SET `data_nascita` = NULL WHERE `data_nascita` = '0000-00-00' OR `data_nascita` = '0000-00-00 00:00:00';
@@ -227,3 +228,15 @@ UPDATE `my_impianto_componenti` SET `data_sostituzione` = NULL WHERE `data_sosti
 INSERT INTO `zz_settings` (`id`, `nome`, `valore`, `tipo`, `editable`, `sezione`, `order`) VALUES
 (NULL, 'Mostra promemoria attività ai soli Tecnici assegnati', '1', 'boolean', '1', 'Attività', 14),
 (NULL, 'Espandi automaticamente la sezione "Dettagli aggiuntivi"', '0', 'boolean', '1', 'Attività', 15);
+
+-- Modifica per introdurre il totale reddito per i Movimenti, sulla base del Conto relativo
+ALTER TABLE `co_movimenti` ADD `totale_reddito` decimal(12, 6) NOT NULL DEFAULT 0;
+ALTER TABLE `co_pianodeiconti3` ADD `percentuale_deducibile` decimal(5,2) NOT NULL DEFAULT 0;
+UPDATE `co_movimenti` SET `totale_reddito` = `totale`;
+UPDATE `co_pianodeiconti3` SET `percentuale_deducibile` = 100;
+
+-- Evita di caricare impostazioni doppie
+ALTER TABLE `zz_settings` ADD UNIQUE(`nome`); 
+
+-- Evita di caricare username doppi
+ALTER TABLE `zz_users` ADD UNIQUE(`username`); 
