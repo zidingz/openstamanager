@@ -228,10 +228,11 @@ class Module extends Model implements BootableInterface
         return $this->hasMany(Clause::class, 'idmodule');
     }
 
+    /*
     public function segments()
     {
         return $this->hasMany(Segment::class, 'idmodule');
-    }
+    }*/
 
     /**
      * Restituisce i filtri aggiuntivi dell'utente in relazione al modulo specificato.

@@ -159,7 +159,7 @@ function start_datatables() {
                     displayBuffer: globals.dataload_page_buffer,
                 },
                 ajax: {
-                    url: "ajax_dataload.php?id_module=" + id_module + "&id_plugin=" + id_plugin + "&id_parent=" + id_parent,
+                    url: globals.rootdir + "/ajax_dataload.php?id_module=" + id_module + "&id_plugin=" + id_plugin + "&id_parent=" + id_parent,
                     type: 'GET',
                     dataSrc: "data",
                 },

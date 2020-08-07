@@ -115,7 +115,7 @@ if (empty($record) || !$has_access) {
 				</li>';
     }
 
-    $plugins = $dbo->fetchArray('SELECT id, title FROM zz_plugins WHERE idmodule_to='.prepare($id_module)." AND position='tab' AND enabled = 1 ORDER BY zz_plugins.order DESC");
+    $plugins = $module->plugins;
 
     // Tab dei plugin
     foreach ($plugins as $plugin) {
