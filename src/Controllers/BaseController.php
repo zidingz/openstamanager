@@ -55,7 +55,7 @@ class BaseController extends Controller
 
             $args['username'] = $this->flash->getFirstMessage('username');
 
-            $response = $this->twig->render($response, 'user\login.twig', $args);
+            $response = $this->twig->render($response, '@resources/user/login.twig', $args);
         }
 
         // Redirect automatico al primo modulo disponibile

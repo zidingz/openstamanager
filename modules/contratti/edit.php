@@ -149,7 +149,7 @@ $_SESSION['superselect']['permetti_movimento_a_zero'] = true;
                     <?php echo tr('Dati appalto'); ?>
 
                     <div class="box-tools pull-right">
-                        <a data-toggle="collapse" href="#dati_appalto"><i class="fa fa-plus" style='color:white;margin-top:2px;'></i></a>
+                        <a data-widget="collapse" href="#dati_appalto"><i class="fa fa-plus" style='color:white;margin-top:2px;'></i></a>
                     </div>
                 </h4>
             </div>

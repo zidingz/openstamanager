@@ -97,32 +97,27 @@ class ContentMiddleware extends Middleware
 
         $result = '';
         if ($show) {
-            $result .= '<li class="nav-item ';
-
-            if (!empty($temp)) {
-                $result .= ' has-treeview';
-            }
+            $result .= '<li class="treeview ';
 
             if ($active) {
-                $result .= ' menu-open active actual';
+                $result .= ' active actual';
             }
 
             $result .= '" id="'.$element['id'].'">
-                <a href="'.$link.'" target="'.$target.'" class="nav-link">
-                    <i class="'.$element['icon'].' nav-icon"></i>
-                    <p>
-                        '.$title;
+                <a href="'.$link.'" target="'.$target.'" >
+                    <i class="'.$element['icon'].'"></i>
+                    <span>'.$title.'</span>';
             if (!empty($submenus) && !empty($temp)) {
                 $result .= '
-                        <i class="right fa fa-angle-left"></i>
-                    </p>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
-                <ul class="nav nav-treeview">
+                <ul class="treeview-menu">
                     '.$temp.'
                 </ul>';
             } else {
                 $result .= '
-                    </p>
                 </a>';
             }
             $result .= '

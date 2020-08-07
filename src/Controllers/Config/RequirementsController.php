@@ -14,7 +14,7 @@ class RequirementsController extends Controller
     public function requirements(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $args['requirements'] = self::getRequirementsList();
-        $response = $this->twig->render($response, 'config\requirements.twig', $args);
+        $response = $this->twig->render($response, '@resources/config/requirements.twig', $args);
 
         return $response;
     }

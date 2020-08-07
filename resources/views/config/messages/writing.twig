@@ -18,18 +18,22 @@
         <input type="hidden" name="host" value="{{ host }}">
     </div>
 
-    <a class="btn btn-warning" href="{{ url_for('login') }}"><i class="fa fa-arrow-left"></i> {{ 'Torna indietro'|trans }}</a>
+    <a class="btn btn-warning" href="{{ url_for('login') }}">
+        <i class="fa fa-arrow-left"></i> {{ 'Torna indietro'|trans }}
+    </a>
 
-    <button class="btn btn-info"><i class="fa fa-repeat"></i> {{ 'Riprova'|trans }}</button>
+    <button class="btn btn-info pull-right">
+        <i class="fa fa-repeat"></i> {{ 'Riprova'|trans }}
+    </button>
 </form>
 
 <hr>
 
-<div class="box box-outline box-default collapsed-box">
+<div class="box box-outline box-default collapsable collapsed-box">
     <div class="box-header with-border">
-        <h4 class="box-title"><a class="clickable" data-toggle="collapse">{{ 'Creazione manuale'|trans }}</a></h4>
-        <div class="box-tools float-right">
-            <button type="button" class="btn btn-box-tool" data-toggle="collapse"><i class="fa fa-plus"></i></button>
+        <h4 class="box-title"><a class="clickable" data-widget="collapse">{{ 'Creazione manuale'|trans }}</a></h4>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
         </div>
     </div>
     <div class="box-body">

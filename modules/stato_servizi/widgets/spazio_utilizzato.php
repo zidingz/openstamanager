@@ -5,7 +5,7 @@ include_once __DIR__.'/../../../core.php';
 $module = Modules::get('Stato dei servizi');
 
 echo '
-<script src="'.ROOTDIR.'/assets/dist/js/chartjs/Chart.min.js"></script>';
+<script src="'.ROOTDIR.'/assets/js/chartjs/Chart.min.js"></script>';
 
 // Operazioni JavaScript
 echo '
@@ -23,7 +23,7 @@ $(document).ready(function() {
         },
         success: function(data) {
             data = JSON.parse(data);
-            
+
             crea_grafico(data);
         }
     });
@@ -36,7 +36,7 @@ function crea_grafico(values){
 	$labels = [];
 	values.forEach(function(element) {
         $data.push(element.size);
-        
+
         //Segnalazione se sul server sembrano mancare file rispetto a quanto previsto a DB
         if (element.dbSize!==""){
            if (element.size<element.dbSize){
@@ -54,7 +54,7 @@ function crea_grafico(values){
                 var diff = (element.dbCount-element.count);
 
                 $("#message").append("<div class=\"label label-warning\" ><i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i> "+diff+" file non trovati sul disco.</div><br>");
-               
+
             }
         }
 
@@ -64,7 +64,7 @@ function crea_grafico(values){
             $("#message").append("<br><p><b>Top 10 allegati:</b></p>");
 
             element.dbExtensions.forEach(function(extension) {
-               
+
                 $("#message").append("<div class=\"label label-info\" ><i class=\"fa fa-file\" aria-hidden=\"true\"></i> <b>"+extension["NUM"]+"</b> file con estensione <b>"+extension["EXTENSION"]+"</b>.</div><br>");
 
             });
@@ -75,9 +75,9 @@ function crea_grafico(values){
 
         $labels.push(element.description + " (" + element.formattedSize + ")" + " [" + element.count + "]" )
 
-      
+
     });
-	
+
 	options = {
 		legend: {
 			display: true,
@@ -112,7 +112,7 @@ function crea_grafico(values){
             displayColors: true
           }
 	};
-	
+
 	data = {
 		datasets: [{
 			data: $data,
@@ -133,7 +133,7 @@ function crea_grafico(values){
                 \'rgba(255, 159, 64, 1)\'
             ],
 		}],
-		
+
 		labels: $labels,
 	};
 

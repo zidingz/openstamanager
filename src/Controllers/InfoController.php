@@ -18,7 +18,7 @@ class InfoController extends Controller
 
     public function info(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $response = $this->twig->render($response, 'info\info.twig', $args);
+        $response = $this->twig->render($response, '@resources/info/info.twig', $args);
 
         return $response;
     }
@@ -52,7 +52,7 @@ class InfoController extends Controller
         $args['status'] = $data;
         $args['results'] = $results;
 
-        $response = $this->twig->render($response, 'info\logs.twig', $args);
+        $response = $this->twig->render($response, '@resources/info/logs.twig', $args);
 
         return $response;
     }
@@ -64,9 +64,10 @@ class InfoController extends Controller
         $api = BASEURL.'/api/?token='.$token;
 
         $args['api'] = $api;
+        $args['token'] = $token;
         $args['sync_link'] = $api.'&resource=sync';
 
-        $response = $this->twig->render($response, 'user\user.twig', $args);
+        $response = $this->twig->render($response, '@resources/user/user.twig', $args);
 
         return $response;
     }
@@ -75,7 +76,7 @@ class InfoController extends Controller
     {
         $args['min_length_password'] = self::$min_length_password;
 
-        $response = $this->twig->render($response, 'user\password.twig', $args);
+        $response = $this->twig->render($response, '@resources/user/password.twig', $args);
 
         return $response;
     }
@@ -100,7 +101,7 @@ class InfoController extends Controller
         $args['mail'] = Account::where('predefined', true)->first();
         $args['bug_email'] = self::$bugEmail;
 
-        $response = $this->twig->render($response, 'info\bug.twig', $args);
+        $response = $this->twig->render($response, '@resources/info/bug.twig', $args);
 
         return $response;
     }

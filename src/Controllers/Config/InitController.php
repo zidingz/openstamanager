@@ -96,7 +96,7 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
             'azienda_form' => $form,
         ]);
 
-        $response = $this->twig->render($response, 'config\init.twig', $args);
+        $response = $this->twig->render($response, '@resources/config/init.twig', $args);
 
         return $response;
     }

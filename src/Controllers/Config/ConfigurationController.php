@@ -41,7 +41,7 @@ class ConfigurationController extends Controller
             ],
         ];
 
-        $response = $this->twig->render($response, 'config\configuration.twig', $args);
+        $response = $this->twig->render($response, '@resources/config/configuration.twig', $args);
 
         return $response;
     }
@@ -58,7 +58,7 @@ class ConfigurationController extends Controller
 
         $database = new Database($host, $username, $password, $database_name);
         if (!$database->isConnected()) {
-            return $this->twig->render($response, 'config\messages\error.twig', $args);
+            return $this->twig->render($response, '@resources/config/messages/error.twig', $args);
         }
 
         // Impostazioni di configurazione strettamente necessarie al funzionamento del progetto
@@ -95,7 +95,7 @@ class ConfigurationController extends Controller
 
             $args['config'] = $new_config;
 
-            $response = $this->twig->render($response, 'config\messages\writing.twig', $args);
+            $response = $this->twig->render($response, '@resources/config/messages/writing.twig', $args);
         } else {
             // Creazione manifest.json
             $manifest = '{

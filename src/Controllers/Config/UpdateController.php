@@ -41,7 +41,7 @@ class UpdateController extends Controller
 
         // Inizializzazione
         if (Update::isUpdateLocked() && filter('force') === null) {
-            $response = $this->twig->render($response, 'config\messages\blocked.twig', $args);
+            $response = $this->twig->render($response, '@resources/config/messages/blocked.twig', $args);
         } else {
             $args = array_merge($args, [
                 'installing' => intval(!$this->database->isInstalled()),
@@ -49,7 +49,7 @@ class UpdateController extends Controller
                 'total_count' => $total,
             ]);
 
-            $response = $this->twig->render($response, 'config\update.twig', $args);
+            $response = $this->twig->render($response, '@resources/config/update.twig', $args);
         }
 
         return $response;
@@ -92,7 +92,7 @@ class UpdateController extends Controller
             $args['is_completed'] = count(Update::getTodoUpdates()) == 1;
         }
 
-        $response = $this->twig->render($response, 'config\messages\piece.twig', $args);
+        $response = $this->twig->render($response, '@resources/config/messages/piece.twig', $args);
 
         return $response;
     }

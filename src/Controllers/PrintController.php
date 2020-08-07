@@ -16,7 +16,7 @@ class PrintController extends Controller
         ]);
         $args['link'] = $request->getUri()->getBasePath().'/assets/pdfjs/web/viewer.html?file='.$link;
 
-        $response = $this->twig->render($response, 'uploads\frame.twig', $args);
+        $response = $this->twig->render($response, '@resources/uploads/frame.twig', $args);
 
         return $response;
     }

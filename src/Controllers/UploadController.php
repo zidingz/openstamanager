@@ -53,13 +53,13 @@ class UploadController extends Controller
 
             $args['content'] = $xslt->transformToXML($xml);
 
-            $response = $this->twig->render($response, 'uploads\xml.twig', $args);
+            $response = $this->twig->render($response, '@resources/uploads/xml.twig', $args);
         } elseif ($file->isImage()) {
-            $response = $this->twig->render($response, 'uploads\img.twig', $args);
+            $response = $this->twig->render($response, '@resources/uploads/img.twig', $args);
         } elseif ($file->isPDF()) {
             $args['link'] = $request->getUri()->getBasePath().'/assets/pdfjs/web/viewer.html?file='.$link;
 
-            $response = $this->twig->render($response, 'uploads\frame.twig', $args);
+            $response = $this->twig->render($response, '@resources/uploads/frame.twig', $args);
         } else {
             $response = $this->download($request, $response, $args);
         }
@@ -89,14 +89,14 @@ class UploadController extends Controller
 
     public function upload(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $response = $this->twig->render($response, 'uploads\editor.twig', $args);
+        $response = $this->twig->render($response, '@resources/uploads/editor.twig', $args);
 
         return $response;
     }
 
     public function remove(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $response = $this->twig->render($response, 'uploads\actions.twig', $args);
+        $response = $this->twig->render($response, '@resources/uploads/actions.twig', $args);
 
         return $response;
     }
@@ -116,7 +116,7 @@ class UploadController extends Controller
 
     public function list(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $response = $this->twig->render($response, 'uploads\actions.twig', $args);
+        $response = $this->twig->render($response, '@resources/uploads/actions.twig', $args);
 
         return $response;
     }

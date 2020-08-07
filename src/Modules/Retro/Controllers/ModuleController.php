@@ -15,7 +15,7 @@ class ModuleController extends Parser
 
         $template = filter('modal') !== null ? 'add' : 'controller';
 
-        return $this->twig->render($response, 'retro/'.$template.'.twig', $args);
+        return $this->twig->render($response, '@resources/retro/'.$template.'.twig', $args);
     }
 
     public function content(array $args)
@@ -34,7 +34,7 @@ class ModuleController extends Parser
 
         $args['query'] = $request->getQueryParams();
 
-        return $this->twig->render($response, 'old/add.twig', $args);
+        return $this->twig->render($response, '@resources/retro/add.twig', $args);
     }
 
     public function create(ServerRequestInterface $request, ResponseInterface $response, array $args)

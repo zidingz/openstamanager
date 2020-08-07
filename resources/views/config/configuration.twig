@@ -165,11 +165,11 @@
                         $("#install").prop('disabled', false);
 
                         if(data === 0){
-                            Swal.fire(globals.configuration.translations.error, globals.configuration.translations.errorMessage, "error");
+                            swal(globals.configuration.translations.error, globals.configuration.translations.errorMessage, "error");
                         } else if(data === 1){
-                            Swal.fire(globals.configuration.translations.permissions, globals.configuration.translations.permissionsMessage, "error");
+                            swal(globals.configuration.translations.permissions, globals.configuration.translations.permissionsMessage, "error");
                         } else {
-                            Swal.fire(globals.configuration.translations.success, globals.configuration.translations.successMessage, "success");
+                            swal(globals.configuration.translations.success, globals.configuration.translations.successMessage, "success");
                         }
                     },
                     error: function(xhr, error, thrown) {

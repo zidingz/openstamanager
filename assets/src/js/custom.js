@@ -34,6 +34,13 @@ $(document).ready(function () {
         "hideMethod": "fadeOut"
     };
 
+    swal.setDefaults({
+        buttonsStyling: false,
+        confirmButtonClass: "btn btn-lg btn-primary",
+        cancelButtonClass: "btn btn-lg",
+        cancelButtonText: globals.translations.cancel,
+    });
+
     // Imposta lo standard per la conversione dei numeri
     if (numeral.locales['current_locale'] === undefined) {
         numeral.register('locale', 'current_locale', {
@@ -78,4 +85,7 @@ $(document).ready(function () {
             $('input').trigger('blur');
         });
     }, 1000);
+
+    // Tempo visibile
+    clock();
 });

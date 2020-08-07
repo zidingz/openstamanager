@@ -305,7 +305,6 @@ if (Auth::check()) {
 				</a>
 				<!-- Header Navbar: style can be found in header.less -->
                 <nav class="navbar navbar-static-top" role="navigation">
-
 					<!-- Sidebar toggle button-->
 					<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
 						<span class="sr-only">'.tr('Mostra/nascondi menu').'</span>
@@ -400,7 +399,7 @@ if (Auth::check()) {
                         </a>
                     </div>
 
-                    <!-- search form -->
+                    <!-- Form di ricerca generale -->
                     <div class="sidebar-form">
                         <div class="input-group">
                             <input type="text" name="q" class="form-control" id="supersearch" placeholder="'.tr('Cerca').'..."/>
@@ -411,7 +410,6 @@ if (Auth::check()) {
 
                         </div>
                     </div>
-                    <!-- /.search form -->
 
                     <ul class="sidebar-menu">';
     echo Modules::getMainMenu();

@@ -249,7 +249,7 @@ class Prints
      */
     public static function getPDFLink($path)
     {
-        return ROOTDIR.'/assets/dist/pdfjs/web/viewer.html?file='.BASEURL.'/'.ltrim(str_replace(DOCROOT, '', $path), '/');
+        return ROOTDIR.'/assets/pdfjs/web/viewer.html?file='.BASEURL.'/'.ltrim(str_replace(DOCROOT, '', $path), '/');
     }
 
     /**
