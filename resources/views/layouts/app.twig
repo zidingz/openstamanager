@@ -130,7 +130,7 @@
         dataload_url_plugin: "{{ url_for('ajax-dataload', {'module_id': '|module_id|', 'reference_id': '|reference_id|'}) }}",
         ajax_set_url: "{{ url_for('ajax-session') }}",
         ajax_array_set_url: "{{ url_for('ajax-session-array') }}",
-        messages_url: "{{ url_for('ajax-flash') }}",
+        messages_url: "{{ url_for('messages') }}",
         hooks: {
             list: "{{ url_for('hooks') }}",
             lock: "{{ url_for('hook-lock', {'hook_id': '|id|'}) }}",
@@ -284,7 +284,7 @@
 
     <footer class="main-footer">
         <a class="hidden-xs" href="https://www.openstamanager.com" title="{{ "Il gestionale open source per l'assistenza tecnica e la fatturazione"|trans }}" target="_blank"><strong>{{ 'OpenSTAManager'|trans }}</strong></a>
-        <span class="float-right hidden-xs">
+        <span class="pull-right hidden-xs">
             <strong>{{ 'Versione'|trans }}:</strong> {{ version }}
             <small class="text-muted">({{ revision ? revision : 'In sviluppo'|trans }})</small>
         </span>

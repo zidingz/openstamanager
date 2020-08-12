@@ -15,7 +15,7 @@ trait StoreTrait
     /**
      * Restituisce tutti gli oggetti.
      *
-     * @return array
+     * @return Illuminate\Support\Collection
      */
     public static function getAll()
     {

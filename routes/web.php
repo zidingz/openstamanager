@@ -95,7 +95,7 @@ $app->group('/ajax', function (RouteCollectorProxy $group) {
 
 // Messaggi flash
 $app->get('/messages/', 'Controllers\AjaxController:flash')
-    ->setName('ajax-flash');
+    ->setName('messages');
 
 // Hooks
 $app->group('/hook', function (RouteCollectorProxy $group) {

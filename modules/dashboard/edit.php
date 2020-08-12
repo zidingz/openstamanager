@@ -31,7 +31,7 @@ foreach ($stati_intervento as $stato) {
 }
 
 echo '
-			<div class="btn-group float-right">
+			<div class="btn-group pull-right">
 				<button type="button" class="btn btn-primary btn-sm seleziona_tutto">
                     '.tr('Tutti').'
                 </button>
@@ -68,7 +68,7 @@ foreach ($tipi_intervento as $tipo) {
 }
 
 echo '
-			<div class="btn-group float-right">
+			<div class="btn-group pull-right">
 				<button type="button" class="btn btn-primary btn-sm seleziona_tutto">
                     '.tr('Tutti').'
                 </button>
@@ -106,7 +106,7 @@ foreach ($tecnici_disponibili as $tecnico) {
 }
 
 echo '
-			<div class="btn-group float-right">
+			<div class="btn-group pull-right">
 				<button type="button" class="btn btn-primary btn-sm seleziona_tutto">
                     '.tr('Tutti').'
                 </button>
@@ -143,7 +143,7 @@ foreach ($zone as $zona) {
 }
 
 echo '
-			<div class="btn-group float-right">
+			<div class="btn-group pull-right">
 				<button type="button" class="btn btn-primary btn-sm seleziona_tutto">
                     '.tr('Tutti').'
                 </button>

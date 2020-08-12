@@ -76,7 +76,12 @@ class BaseController extends Controller
         if ($this->database->isConnected() && $this->database->isInstalled() && $this->auth->attempt($username, $password)) {
             $_SESSION['keep_alive'] = true;
 
-            $response = $this->redirectFirstModule($request, $response);
+            $previous_url = $this->flash->getFirstMessage('referer');
+            if (!empty($previous_url)) {
+                $response = $response->withRedirect($previous_url);
+            } else {
+                $response = $this->redirectFirstModule($request, $response);
+            }
         }
         // Tentativo fallito
         else {

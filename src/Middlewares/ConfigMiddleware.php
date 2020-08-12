@@ -58,7 +58,7 @@ class ConfigMiddleware extends Middleware
         }
 
         if (!empty($destination)) {
-            $destination[] = 'ajax-flash';
+            $destination[] = 'messages';
         }
 
         if (!empty($destination) && !in_array($route->getName(), $destination)) {

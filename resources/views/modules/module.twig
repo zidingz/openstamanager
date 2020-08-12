@@ -16,27 +16,22 @@
 
 {% block content %}
     {{ block('top_content') }}
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs pull-right" id="tabs" role="tablist">
+            <li class="pull-left nav-item header">
+                <a data-toggle="tab" href="#tab_0">
+                    {% include '@resources/modules/title.twig' %}
+                </a>
+            </li>
 
-    <div class="content-header">
-        <a class="h2 clickable" id="main_tab" style="color: inherit; text-decoration: inherit;">
-            {% include '@resources/modules/title.twig' %}
-        </a>
+            {% block plugins_list %}{% endblock %}
 
-        <div class="nav-tabs-custom float-right">
-            <ul class="nav nav-tabs" id="tabs" role="tablist">
-                <li class="nav-item">
-                    <a data-toggle="tab" href="#tab_0"></a>
+            {% if include_operations and user.isAdmin() %}
+                <li class="nav-item pull-right bg-warning">
+                    <a class="nav-link" data-toggle="tab" href="#tab_info" id="link-tab_info">{{ 'Info'|trans }}</a>
                 </li>
-
-                {% block plugins_list %}{% endblock %}
-
-                {% if include_operations and user.isAdmin() %}
-                    <li class="nav-item float-right bg-warning">
-                        <a class="nav-link" data-toggle="tab" href="#tab_info" id="link-tab_info">{{ 'Info'|trans }}</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
+            {% endif %}
+        </ul>
     </div>
 
     <div class="tab-content">
@@ -48,7 +43,7 @@
 
         {% if include_operations and user.isAdmin() %}
             <div id="tab_info" class="tab-pane">
-                {% include 'operations.twig' with {operations: operations} %}
+                {% include '@resources/modules/operations.twig' with {operations: operations} %}
             </div>
         {% endif %}
 

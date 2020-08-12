@@ -1,8 +1,11 @@
 <?php
 
 use DI\Container;
+use Middlewares\Authorization\UserMiddleware;
 use Modules\Module;
+use Prints\Template;
 use Slim\Factory\AppFactory;
+use Widgets\Widget;
 
 // Rimozione header X-Powered-By
 header_remove('X-Powered-By');
@@ -31,6 +34,7 @@ if (version_compare(phpversion(), $minimum) < 0) {
 // Caricamento delle dipendenze e delle librerie del progetto
 $loader = require_once __DIR__.'/../vendor/autoload.php';
 
+// Caricamento dei namespace predefiniti (retro-compatibilità)
 $namespaces = require_once __DIR__.'/../config/namespaces.php';
 foreach ($namespaces as $path => $namespace) {
     $loader->addPsr4($namespace.'\\', __DIR__.'/../'.$path.'/custom/src');
@@ -41,14 +45,14 @@ foreach ($namespaces as $path => $namespace) {
 $container = new Container();
 App::setContainer($container);
 
-// Istanziamento dell'applicazione Slim
+// Creazione dell'applicazione Slim
 AppFactory::setContainer($container);
 $app = AppFactory::create();
 
 $container->set('response_factory', $app->getResponseFactory());
 $container->set('router', $app->getRouteCollector()->getRouteParser());
 
-// Impostazione percorso di base
+// Impostazione dell'URL di base del software
 $app->setBasePath((function () {
     $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
     $uri = (string) parse_url('http://a'.$_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
@@ -60,12 +64,12 @@ $app->setBasePath((function () {
     return '';
 })());
 
-// Individuazione dei percorsi di base
+// Registrazione globale dei percorsi di base (retro-compatibilità)
 define('DOCROOT', realpath(__DIR__.'/..'));
 define('ROOTDIR', $app->getBasePath());
 define('BASEURL', (isHTTPS(true) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].ROOTDIR);
 
-// Istanziamento della sessione
+// Creazione della sessione
 ini_set('session.use_trans_sid', '0');
 ini_set('session.use_only_cookies', '1');
 
@@ -73,7 +77,7 @@ session_set_cookie_params(0, $app->getBasePath());
 session_cache_limiter(false);
 session_start();
 
-// Istanziamento delle dipendenze
+// Generazione delle dipendenze
 require __DIR__.'/../config/dependencies.php';
 
 // Aggiunta dei percorsi
@@ -82,23 +86,29 @@ require __DIR__.'/../routes/web.php';
 // Aggiunta dei middleware
 require __DIR__.'/../config/middlewares.php';
 
-// Inizializzazione percorsi per i moduli
+// Inizializzazione dei componenti del software
 if (Update::isCoreUpdated()) {
     $modules = Module::getAll();
-    $widgets = \Widgets\Widget::all();
+    $widgets = Widget::all();
+    $prints = Template::all();
+
+    // Iterazione per i singoli componenti
     $components = collect([$modules, $widgets])->flatten();
     foreach ($components as $component) {
+        // Inizializzazione del componente
         $class = $component->getManager();
         $class->boot($app);
 
+        // Registrazione degli aggiornamenti del componente
         Update::addComponentUpdates($class->updates());
     }
 }
 
 // Retro-compatibilità per i percorsi
-$app->map(['GET', 'POST'], '[/{path:.*}]', 'Controllers\RetroController:index');
+$app->map(['GET', 'POST'], '[/{path:.*}]', 'Controllers\RetroController:index')
+    ->add(UserMiddleware::class);
 
-// Configurazione templating personalizzato
+// Configurazione del templating personalizzato
 $config = $container->get('config');
 if (!empty($config['HTMLWrapper'])) {
     HTMLBuilder\HTMLBuilder::setWrapper($config['HTMLWrapper']);

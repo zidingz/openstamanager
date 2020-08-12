@@ -960,6 +960,16 @@ div.tip {
     color: red;
 }
 
+.pulsanti-affix {
+    position: fixed;
+    top: 0;
+    padding: 10px 10px;
+    width: 100%;
+    z-index: 800;
+    background: #fff;
+    border-bottom: 3px solid #ddd;
+}
+
 /* Porting da AdminLTE 3 */
 .bg-light {
     background-color: #e8e9ea !important;

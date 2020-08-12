@@ -5,7 +5,7 @@
     {( "name": "widgets", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}", "position": "top", "editor": "controller" )}
 
     {% if setting('Attiva notifica di presenza utenti sul record') %}
-        <div class="box box-outline box-warning box-solid text-center info-active d-none">
+        <div class="box box-outline box-warning box-solid text-center info-active hidden">
             <div class="box-header">
                 <h3 class="box-title"><i class="fa fa-warning"></i> {{ 'Attenzione!'|trans }}</h3>
             </div>
@@ -45,7 +45,7 @@
             <i class="fa fa-chevron-left"></i> {{ "Torna all'elenco"|trans }}
         </a>
 
-        <div class="float-right">
+        <div class="pull-right">
             {( "name": "button", "type": "print", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}" )}
 
             {( "name": "button", "type": "email", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}" )}
@@ -61,7 +61,7 @@
             var form = $("#module-edit").find("form").first();
 
             // Aggiunta del submit
-            form.prepend('<button type="submit" id="submit" class="d-none"></button>');
+            form.prepend('<button type="submit" id="submit" class="hidden"></button>');
 
             $("#save").click(function(){
                 //submitAjax(form);
@@ -71,22 +71,22 @@
 
             // Pulsanti dinamici
             if (!globals.is_mobile) {
-                var target = $('#pulsanti')
-                target.after('<div class="pulsanti-affix" id="#pulsanti-affix"></div>')
+                var target = $("#pulsanti")
+                target.after('<div class="pulsanti-affix" id="#pulsanti-affix" style="display: none"></div>')
 
-                var affix = $('.pulsanti-affix')
+                var affix = $(".pulsanti-affix")
                 affix.append(target.clone(true))
 
                 // Show affix on scroll
                 window.addEventListener('scroll', function () {
-                    var height = $(window).scrollTop()
+                    let height = $(window).scrollTop();
                     if (height > 200) {
-                        target.css('visibility', 'hidden')
-                        affix.css('display', 'block')
+                        target.css('visibility', 'hidden');
+                        affix.css('display', 'block');
                         affix.css("width", $("#tab_0").css("width"));
                     } else {
-                        affix.css('display', 'none')
-                        target.css('visibility', 'visible')
+                        affix.css('display', 'none');
+                        target.css('visibility', 'visible');
                     }
                 })
             }
@@ -96,7 +96,7 @@
     <div class="clearfix"></div>
     <br>
 
-    <div class="float-right" id="pulsanti-modulo">
+    <div class="pull-right" id="pulsanti-modulo">
         {% block buttons %}{% endblock %}
     </div>
 
@@ -108,11 +108,11 @@
     </div>
 
     <!-- Campi personalizzati -->
-    <div class="d-none" id="custom_fields_top-edit">
+    <div class="hidden" id="custom_fields_top-edit">
         {( "name": "custom_fields", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}", "position": "top" )}
     </div>
 
-    <div class="d-none" id="custom_fields_bottom-edit">
+    <div class="hidden" id="custom_fields_bottom-edit">
         {( "name": "custom_fields", "id_module": "{{ module_id }}", "id_record": "{{ record_id }}" )}
     </div>
 
@@ -212,13 +212,13 @@
                 },
                 function(data) {
                     if (data.length != 0) {
-                        $(".info-active").removeClass("d-none");
+                        $(".info-active").removeClass("hidden");
                         $(".info-active .list").html("");
                         $.each( data, function( key, val ) {
                             $(".info-active .list").append("<li>"+val.username+"</li>");
                         });
                     }
-                    else $(".info-active").addClass("d-none");
+                    else $(".info-active").addClass("hidden");
                 });
         }
 
