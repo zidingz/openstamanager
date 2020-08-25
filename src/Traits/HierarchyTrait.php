@@ -6,28 +6,26 @@ trait HierarchyTrait
 {
     public function children()
     {
-        return $this->hasMany(self::class, self::$parent_identifier);
+        return $this->hasMany(static::class, static::$parent_identifier);
     }
 
     public function parent()
     {
-        return $this->belongsTo(self::class, self::$parent_identifier);
+        return $this->belongsTo(static::class, static::$parent_identifier);
     }
 
-    public function allParents()
+    public function ascendants()
     {
-        return $this->parent()->with('allParents');
+        return $this->parent()->with('ascendants');
     }
 
-    public function allChildren()
+    public function descendants()
     {
-        return $this->children()->with('allChildren');
+        return $this->children()->with('descendants');
     }
 
-    public static function getHierarchy()
+    public static function firstGeneration()
     {
-        return self::with('allChildren')
-            ->whereNull(self::$parent_identifier)
-            ->get();
+        return static::whereNull(self::$parent_identifier);
     }
 }

@@ -8,6 +8,11 @@ use HTMLBuilder\HTMLBuilder;
 use Modules\Module;
 use Modules\Traits\DefaultTrait;
 
+/**
+ * Parser ausiliario per la struttura dei moduli per versioni <= 2.4.
+ *
+ * @since 2.5
+ */
 abstract class Parser extends Controller
 {
     use DefaultTrait;
@@ -59,6 +64,13 @@ abstract class Parser extends Controller
         return $result;
     }
 
+    /**
+     * Simulazione del comportamento previsto dal file controller.php per versioni del gestionale <= 2.4.
+     *
+     * @param $args
+     *
+     * @return array
+     */
     protected function controller($args)
     {
         extract($args);
@@ -94,6 +106,13 @@ abstract class Parser extends Controller
         return $args;
     }
 
+    /**
+     * Simulazione del comportamento previsto dal file editor.php per versioni del gestionale <= 2.4.
+     *
+     * @param $args
+     *
+     * @return array
+     */
     protected function editor($args)
     {
         extract($args);
@@ -141,6 +160,13 @@ abstract class Parser extends Controller
         return $args;
     }
 
+    /**
+     * Simulazione del comportamento previsto dal file actions.php per versioni del gestionale <= 2.4.
+     *
+     * @param $args
+     *
+     * @return mixed
+     */
     protected function actions($args)
     {
         extract($args);
@@ -164,7 +190,14 @@ abstract class Parser extends Controller
         return $id_record;
     }
 
-    protected function create($args)
+    /**
+     * Simulazione del comportamento previsto dal file add.php per versioni del gestionale <= 2.4.
+     *
+     * @param $args
+     *
+     * @return array
+     */
+    protected function add($args)
     {
         extract($args);
 
@@ -186,6 +219,52 @@ abstract class Parser extends Controller
         $args = array_merge($args, [
             'content' => $content,
         ]);
+
+        return $args;
+    }
+
+    protected function getReferenceID(array $args)
+    {
+        return $args['reference_id'];
+    }
+
+    protected function getReferenceData(array $args)
+    {
+        $module = $args['module'];
+        if ($module->type == 'module') {
+            return [];
+        }
+
+        $id_record = $this->getReferenceID($args);
+        $data = Module::find($module->parent)->getManager()->getData($id_record);
+
+        return $data;
+    }
+
+    /**
+     * Completamento delle informazioni per il rendering del modulo.
+     *
+     * @return array
+     */
+    protected function prepare(array $args)
+    {
+        $data = $this->getReferenceData($args);
+        $args['reference_record'] = $data['record'];
+
+        $ignore = [
+            'module',
+            'structure',
+            'id_module',
+            'module_id',
+            'record',
+            'id_record',
+        ];
+
+        foreach ($ignore as $key) {
+            unset($data[$key]);
+        }
+
+        $args = array_merge($data, $args);
 
         return $args;
     }

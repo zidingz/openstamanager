@@ -6,6 +6,11 @@ use Modules\Retro\Parser;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Classe dedicata alla gestione delle informazioni relative al record di un modulo specifico.
+ *
+ * @since 2.5
+ */
 class RecordController extends Parser
 {
     public function page(ServerRequestInterface $request, ResponseInterface $response, array $args)

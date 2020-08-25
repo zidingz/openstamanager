@@ -1,6 +1,8 @@
 <?php
 
 // Elenco moduli installati
+use Modules\Module;
+
 echo '
 <div class="row">
     <div class="col-md-12 col-lg-6">
@@ -14,10 +16,9 @@ echo '
                 <th>'.tr('Opzioni').'</th>
             </tr>';
 
-$modules = Modules::getHierarchy();
-
-$osm_version = Update::getVersion();
-
+$modules = Module::firstGeneration()
+    ->withoutGlobalScope('enabled')
+    ->get();
 echo submodules($modules);
 
 echo '

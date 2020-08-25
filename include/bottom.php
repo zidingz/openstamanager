@@ -57,9 +57,6 @@ if (Auth::check()) {
             // Toast
             alertPush();
 
-            // Orologio
-            clock();
-
             // Hooks
             startHooks();
 

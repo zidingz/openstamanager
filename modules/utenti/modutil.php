@@ -9,7 +9,7 @@ function menuSelection($element, $group_id, $depth, $perms_values, $perms_names)
     ++$depth;
     $name = $element['title'];
 
-    $submenus = $element['all_children'];
+    $submenus = $element->children()->get();
 
     if (!empty($submenus)) {
         $temp = '';

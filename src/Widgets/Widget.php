@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Module;
 
+/**
+ * Modello Eloquent per i widget del gestionale.
+ *
+ * @since 2.5
+ */
 class Widget extends Model implements BootableInterface
 {
     use BootrableTrait;

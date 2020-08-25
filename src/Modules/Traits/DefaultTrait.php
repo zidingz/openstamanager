@@ -11,33 +11,6 @@ use Modules\Module;
  */
 trait DefaultTrait
 {
-    public function getReferenceID(array $args)
-    {
-        return $args['reference_id'];
-    }
-
-    public function getReferenceData(array $args)
-    {
-        $module = $args['module'];
-        if ($module->type == 'module') {
-            return [];
-        }
-
-        $id_record = $this->getReferenceID($args);
-        $data = Module::find($module->parent)->getManager()->getData($id_record);
-
-        return $data;
-    }
-
-    public function getPlugins(string $type = 'module_plugin')
-    {
-        return $this->module
-            ->children()
-            ->where('type', $type)
-            ->orderBy('order')
-            ->get();
-    }
-
     public function registerVisit()
     {
         $user = $this->auth->getUser();
@@ -104,33 +77,5 @@ trait DefaultTrait
         }
 
         return collect($operations);
-    }
-
-    /**
-     * Completamento delle informazioni per il rendering del modulo.
-     *
-     * @return array
-     */
-    protected function prepare(array $args)
-    {
-        $data = $this->getReferenceData($args);
-        $args['reference_record'] = $data['record'];
-
-        $ignore = [
-            'module',
-            'structure',
-            'id_module',
-            'module_id',
-            'record',
-            'id_record',
-        ];
-
-        foreach ($ignore as $key) {
-            unset($data[$key]);
-        }
-
-        $args = array_merge($data, $args);
-
-        return $args;
     }
 }

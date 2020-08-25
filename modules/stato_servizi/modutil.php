@@ -1,10 +1,11 @@
 <?php
 
+use Modules\Module;
+
 function submodules($list, $depth = 0)
 {
     $osm_version = Update::getVersion();
-
-    $id_module = Modules::getCurrent()['id'];
+    $id_module = Module::getCurrent()['id'];
 
     $result = '';
 
@@ -74,7 +75,10 @@ function submodules($list, $depth = 0)
             </td>
         </tr>';
 
-        $result .= submodules($sub['all_children'], $depth + 1);
+        $children = $sub->children()
+            ->withoutGlobalScope('enabled')
+            ->get();
+        $result .= submodules($children, $depth + 1);
     }
 
     return $result;

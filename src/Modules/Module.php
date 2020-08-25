@@ -15,6 +15,7 @@ use Modules\Traits\RetroTrait;
 use Prints\Template;
 use Traits\Components\NoteTrait;
 use Traits\Components\UploadTrait;
+use Traits\HierarchyTrait;
 use Traits\StoreTrait;
 use Util\Query;
 
@@ -26,10 +27,13 @@ class Module extends Model implements BootableInterface
     use ChecklistTrait;
     use BootrableTrait;
     use RetroTrait;
+    use HierarchyTrait;
 
     protected $table = 'zz_modules';
     protected $main_folder = 'modules';
     protected $component_identifier = 'id_module';
+
+    protected static $parent_identifier = 'parent';
 
     protected $variables = [];
     protected $manager_object;
@@ -153,7 +157,7 @@ class Module extends Model implements BootableInterface
      */
     public function readQuery()
     {
-        return \Util\Query::readQuery($this);
+        return Query::readQuery($this);
     }
 
     // Attributi Eloquent
@@ -254,7 +258,7 @@ class Module extends Model implements BootableInterface
             $results = $database->fetchArray('SELECT * FROM `zz_group_module` WHERE `idgruppo` = (SELECT `idgruppo` FROM `zz_users` WHERE `id` = '.prepare($user['id']).') AND `enabled` = 1 AND `idmodule` = '.prepare($this->id));
             foreach ($results as $result) {
                 if (!empty($result['clause'])) {
-                    $result['clause'] = Util\Query::replacePlaceholder($result['clause']);
+                    $result['clause'] = Query::replacePlaceholder($result['clause']);
 
                     $additionals[$result['position']][] = $result['clause'];
                 }
@@ -271,7 +275,7 @@ class Module extends Model implements BootableInterface
             $id_segment = $_SESSION['module_'.$this->id]['id_segment'];
             foreach ($segments as $segment) {
                 if (!empty($segment['clause']) && $segment['id'] == $id_segment) {
-                    $clause = Util\Query::replacePlaceholder($segment['clause']);
+                    $clause = Query::replacePlaceholder($segment['clause']);
 
                     $results[$result['position']][] = $clause;
                 }
@@ -348,50 +352,6 @@ class Module extends Model implements BootableInterface
         $modules = self::getAll();
 
         return $modules->where('permission', '!=', '-');
-    }
-
-    /* Gerarchia */
-
-    public function children()
-    {
-        return $this->hasMany(self::class, 'parent')->withoutGlobalScope('enabled')
-            ->orderBy('order');
-    }
-
-    public function parent()
-    {
-        return $this->belongsTo(self::class, 'parent')->withoutGlobalScope('enabled');
-    }
-
-    public function setChildren($list)
-    {
-        $this->children_list = $list;
-    }
-
-    public function getChildren()
-    {
-        return $this->children_list;
-    }
-
-    public static function getHierarchy()
-    {
-        if (!isset(self::$hierarchy)) {
-            $all = self::getAll();
-            $list = $all->where('type', 'module');
-
-            $groups = $list->groupBy('parent');
-            foreach ($groups as $group => $sub_list) {
-                $module = self::get($group);
-
-                if (!empty($module)) {
-                    $module->setChildren($sub_list);
-                }
-            }
-
-            self::$hierarchy = $list->where('parent', '');
-        }
-
-        return self::$hierarchy;
     }
 
     protected static function boot()

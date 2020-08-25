@@ -88,4 +88,7 @@ $(document).ready(function () {
 
     // Tempo visibile
     clock();
+
+    // Inizializzazione di base
+    init()
 });

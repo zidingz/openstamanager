@@ -1,5 +1,7 @@
 <?php
 
+use Models\Cache;
+
 /**
  * Classe dedicata alla gestione delle procedure di aggiornamento del database del progetto.
  *
@@ -228,7 +230,7 @@ class Update
             self::normalizeDatabase($database->getDatabaseName());
 
             if (class_exists('\Models\Cache')) {
-                \Models\Cache::get('Ultima versione di OpenSTAManager disponibile')->set(null);
+                Cache::get('Ultima versione di OpenSTAManager disponibile')->set(null);
             }
 
             return true;

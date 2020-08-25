@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Middlewares\ContentMiddleware;
 use Modules\Module;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -30,6 +31,9 @@ class RetroController extends Controller
     protected function execute($require_path, $args)
     {
         extract($args);
+
+        // Impostazione dinamica del menu
+        $args['main_menu'] = ContentMiddleware::getMainMenu();
 
         // Configurazione
         $config = $this->config;

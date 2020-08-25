@@ -412,7 +412,7 @@ if (Auth::check()) {
                     </div>
 
                     <ul class="sidebar-menu">';
-    echo Modules::getMainMenu();
+    echo $args['main_menu'];
     echo '
                     </ul>
                 </section>

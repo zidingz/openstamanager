@@ -5,6 +5,12 @@ namespace Widgets;
 use Components\Component;
 use Slim\App as SlimApp;
 
+/**
+ * Classe dedicata alla gestione di base dei widget del gestionale.
+ * Introduce un rendering di base e definisce i comporamenti standard da estendere per un utilizzo più completo.
+ *
+ * @since 2.5
+ */
 abstract class Manager extends Component
 {
     protected $record_id;

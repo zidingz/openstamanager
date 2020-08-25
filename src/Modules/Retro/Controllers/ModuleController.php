@@ -6,6 +6,11 @@ use Modules\Retro\Parser;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Classe dedicata alla gestione delle informazioni relative alla schermata princiaple di un modulo specifico.
+ *
+ * @since 2.5
+ */
 class ModuleController extends Parser
 {
     public function page(ServerRequestInterface $request, ResponseInterface $response, array $args)
@@ -29,7 +34,7 @@ class ModuleController extends Parser
     public function add(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $args = $this->prepare($args);
-        $args = parent::create($args);
+        $args = parent::add($args);
 
         $args['query'] = $request->getQueryParams();
 

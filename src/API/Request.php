@@ -4,7 +4,6 @@ namespace API;
 
 class Request
 {
-
     /**
      * @param $request
      *

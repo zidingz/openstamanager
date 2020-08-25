@@ -3,7 +3,14 @@
 namespace Widgets;
 
 use Modules\Module;
+use Util\Query;
 
+/**
+ * Tipologia di widget indirizzato alla visualizzazione di una statistica informativa per l'utente finale.
+ * Presenta un titolo e una valore personalizzato; al click non prevede particolari operazioni.
+ *
+ * @since 2.5
+ */
 abstract class StatsWidget extends Manager
 {
     abstract public function getQuery(): string;
@@ -21,7 +28,7 @@ abstract class StatsWidget extends Manager
             $query = str_replace('1=1', '1=1 '.$additionals, $query);
         }
 
-        $query = \Util\Query::replacePlaceholder($query);
+        $query = Query::replacePlaceholder($query);
 
         // Individuazione del risultato della query
         $database = database();

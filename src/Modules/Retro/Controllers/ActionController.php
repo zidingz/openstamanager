@@ -4,6 +4,11 @@ namespace Modules\Retro\Controllers;
 
 use Modules\Retro\Parser;
 
+/**
+ * Classe dedicata alla sostituzione delle chiamate AJAX implicite per i contenuti di un modulo specifico.
+ *
+ * @since 2.5
+ */
 class ActionController extends Parser
 {
     public function __call($name, $arguments)

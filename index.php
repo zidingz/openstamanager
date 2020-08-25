@@ -2,7 +2,6 @@
 /**
  * Questo file gestisce un redirect automatico alla cartella public/ per la gestione di tutte le richieste al software.
  */
-
 $docroot = __DIR__;
 
 // Individuazione del prefisso dell'URL

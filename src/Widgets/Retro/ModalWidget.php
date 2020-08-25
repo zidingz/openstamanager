@@ -5,6 +5,7 @@ namespace Widgets\Retro;
 use Middlewares\Authorization\UserMiddleware;
 use Modules\Module;
 use Slim\App as SlimApp;
+use Util\Query;
 use Widgets\ModalWidget as Original;
 
 class ModalWidget extends Original
@@ -50,7 +51,7 @@ class ModalWidget extends Original
                 $query = str_replace('1=1', '1=1 '.$additionals, $query);
             }
 
-            $query = \Util\Query::replacePlaceholder($query);
+            $query = Query::replacePlaceholder($query);
 
             // Individuazione del risultato della query
             $database = $this->getContainer()->get('database');

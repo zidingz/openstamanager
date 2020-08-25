@@ -22,14 +22,14 @@ abstract class Manager extends Component
 
     /**
      * Restituisce il nome relativo ad un'azione specificata dai parametri.
-     * Utilizzato per comporre correttamente gli indirizzi nelle parti autonome di indirizzamento del gestione.
+     * Utilizzato per comporre correttamente gli indirizzi nelle parti autonome di indirizzamento del gestionale.
      *
      * @return mixed
      */
     abstract public function getUrl(string $name, array $parameters = []);
 
     /**
-     * Restituisce le informazioni disponibili al modulo a riguardo di un determinato record.
+     * Restituisce le informazioni disponibili per il modulo in relazione a un determinato record.
      * Utilizzato per il completamento delle informazioni all'interno dei plugin.
      *
      * @return mixed

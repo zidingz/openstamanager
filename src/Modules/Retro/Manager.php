@@ -5,13 +5,19 @@ namespace Modules\Retro;
 use Middlewares\Authorization\PermissionMiddleware;
 use Middlewares\Authorization\UserMiddleware;
 use Middlewares\RetroModuleMiddleware;
-use Modules\Manager as Original;
+use Modules\Manager as OriginalManager;
 use Modules\Retro\Controllers\ModuleController;
 use Modules\Retro\Controllers\RecordController;
 use Slim\App as SlimApp;
 use Slim\Routing\RouteCollectorProxy;
+use Update;
 
-class Manager extends Original
+/**
+ * Sistema di gestione ausiliario per la struttura dei moduli per versioni <= 2.4.
+ *
+ * @since 2.5
+ */
+class Manager extends OriginalManager
 {
     public function getUrl(string $name, array $parameters = [])
     {
@@ -64,7 +70,7 @@ class Manager extends Original
 
     public function updates(): array
     {
-        return \Update::getUpdates(__DIR__.'/../update');
+        return Update::getUpdates(__DIR__.'/../update');
     }
 
     protected function autoload(): void
@@ -99,7 +105,7 @@ class Manager extends Original
             $reference_suffix = '[reference/{reference_id:[0-9]+}/]';
         }
 
-        // Percorsi raggiungibili
+        // Percorsi raggiungibili per il modulo
         $app->group('/module-'.$this->module->id, function (RouteCollectorProxy $group) use ($prefix, $reference_suffix) {
             $group->get('/'.$reference_suffix, ModuleController::class.':page')
                 ->setName($prefix);

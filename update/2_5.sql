@@ -33,9 +33,13 @@ UPDATE `zz_widgets` SET `class` = 'Widgets\\Retro\\StatsWidget' WHERE `class` = 
 UPDATE `zz_widgets` SET `more_link` = `php_include` WHERE `more_link` = '';
 UPDATE `zz_widgets` SET `class` = 'Widgets\\Retro\\ModalWidget' WHERE `name` = 'Stampa calendario';
 
+UPDATE `zz_widgets` SET `more_link` = REPLACE(`more_link`, 'plugins/', 'modules/');
+
 ALTER TABLE `zz_widgets` DROP `print_link`, DROP `more_link_type`, DROP `php_include`;
 
 UPDATE `zz_widgets` SET `more_link` = REPLACE(`more_link`, './', '/');
+
+UPDATE `zz_widgets` SET `class` = 'Modules\\Dashboard\\NotificheWidget', `more_link` = '' WHERE `zz_widgets`.`name` = 'Note interne';
 
 -- Aggiornamento stampe
 UPDATE `zz_prints` SET `class` = 'Prints\\Retro\\Manager';

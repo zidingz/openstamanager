@@ -31,7 +31,7 @@ class ContentMiddleware extends Middleware
         $this->addVariable('handle_ajax', $request->isXhr() && filter('ajax'));
 
         // Menu principale
-        $this->addVariable('main_menu', $this->getMainMenu());
+        $this->addVariable('main_menu', self::getMainMenu());
 
         return $handler->handle($request);
     }
@@ -43,9 +43,11 @@ class ContentMiddleware extends Middleware
      *
      * @return string
      */
-    public function getMainMenu($depth = 3)
+    public static function getMainMenu($depth = 3)
     {
-        $menus = Module::getHierarchy()->sortBy('order');
+        $menus = Module::firstGeneration()
+            ->orderBy('order')
+            ->get();
 
         $module = Module::getCurrent();
         $module_name = isset($module) ? $module->name : '';
@@ -68,7 +70,7 @@ class ContentMiddleware extends Middleware
      *
      * @return string
      */
-    protected function sidebarMenu($element, $actual = null, $max_depth = 3, $actual_depth = 0)
+    protected static function sidebarMenu($element, $actual = null, $max_depth = 3, $actual_depth = 0)
     {
         if ($actual_depth >= $max_depth || $element['type'] != 'module') {
             return '';
@@ -81,7 +83,9 @@ class ContentMiddleware extends Middleware
         $active = ($actual == $element['name']);
         $show = ($element->permission != '-' && !empty($element['enabled'])) ? true : false;
 
-        $submenus = $element->getChildren();
+        $submenus = $element->children()
+            ->orderBy('order')
+            ->get();
         if (!empty($submenus)) {
             $temp = '';
             foreach ($submenus as $submenu) {
