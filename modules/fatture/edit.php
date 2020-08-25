@@ -10,17 +10,6 @@ $rs = $dbo->fetchArray('SELECT co_tipidocumento.descrizione, dir FROM co_tipidoc
 $dir = $rs[0]['dir'];
 $tipodoc = $rs[0]['descrizione'];
 
-unset($_SESSION['superselect']['idanagrafica']);
-unset($_SESSION['superselect']['idsede_partenza']);
-unset($_SESSION['superselect']['idsede_destinazione']);
-unset($_SESSION['superselect']['codice_modalita_pagamento_fe']);
-$_SESSION['superselect']['idsede_partenza'] = $record['idsede_partenza'];
-$_SESSION['superselect']['idsede_destinazione'] = $record['idsede_destinazione'];
-$_SESSION['superselect']['idanagrafica'] = $record['idanagrafica'];
-$_SESSION['superselect']['ddt'] = $dir;
-$_SESSION['superselect']['split_payment'] = $record['split_payment'];
-$_SESSION['superselect']['permetti_movimento_a_zero'] = ($dir == 'uscita' ? true : false);
-
 if ($dir == 'entrata') {
     $conto = 'vendite';
 } else {
@@ -239,7 +228,7 @@ elseif ($record['stato'] == 'Bozza') {
                     } else {
                         echo '
                 <div class="col-md-3">
-                    {[ "type": "select", "label": "'.tr('Partenza merce').'", "name": "idsede_partenza", "ajax-source": "sedi", "select-options": {"idanagrafica": '.$record['idanagrafica'].'},  "value": "$idsede_partenza$", "help": "'.tr('Sedi del mittente').'", "icon-after": "add|'.$id_modulo_anagrafiche.'|id_plugin='.$id_plugin_sedi.'&id_parent='.$record['idanagrafica'].'||'.(intval($block_edit) ? 'disabled' : '').'" ]}
+                    {[ "type": "select", "label": "'.tr('Partenza merce').'", "name": "idsede_partenza", "ajax-source": "sedi", "select-options": {"idanagrafica": '.$record['idanagrafica'].'}, "value": "$idsede_partenza$", "help": "'.tr('Sedi del mittente').'", "icon-after": "add|'.$id_modulo_anagrafiche.'|id_plugin='.$id_plugin_sedi.'&id_parent='.$record['idanagrafica'].'||'.(intval($block_edit) ? 'disabled' : '').'" ]}
                 </div>
 
                 <div class="col-md-3">
@@ -285,10 +274,7 @@ elseif ($record['stato'] == 'Bozza') {
                     </button>';
                     }
                     echo '
-                        </div>
-                    ';
-
-                    echo '
+                    </div>
                     <div class="clearfix"></div>';
 
                     foreach ($scadenze as $scadenza) {
@@ -430,7 +416,7 @@ if ($tipodoc == 'Fattura accompagnatoria di vendita') {
                 </div>
 
                 <div class="col-md-3">
-                    {[ "type": "select", "label": "'.tr('Vettore').'", "name": "idvettore",  "ajax-source": "vettori",  "value": "$idvettore$", "icon-after": "add|'.Modules::get('Anagrafiche')['id'].'|tipoanagrafica=Vettore|'.((($record['idspedizione'] != 3) and ($record['stato'] == 'Bozza')) ? '' : 'disabled').'", "disabled": '.intval($record['idspedizione'] == 3).', "required": '.intval($record['idspedizione'] != 3).' ]}
+                    {[ "type": "select", "label": "'.tr('Vettore').'", "name": "idvettore", "ajax-source": "vettori", "value": "$idvettore$", "icon-after": "add|'.Modules::get('Anagrafiche')['id'].'|tipoanagrafica=Vettore|'.((($record['idspedizione'] != 3) and ($record['stato'] == 'Bozza')) ? '' : 'disabled').'", "disabled": '.intval($record['idspedizione'] == 3).', "required": '.intval($record['idspedizione'] != 3).' ]}
                 </div>
 
                 <script>

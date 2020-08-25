@@ -18,6 +18,7 @@ class RapportinoIntervento extends Request implements RetrieveInterface, CreateI
 
         $template = Template::where('name', 'Rapportino intervento')->first();
         $module = $template->module;
+        $account = $template->account;
 
         $body = $module->replacePlaceholders($id_record, $template['body']);
         $subject = $module->replacePlaceholders($id_record, $template['subject']);
@@ -26,6 +27,7 @@ class RapportinoIntervento extends Request implements RetrieveInterface, CreateI
         $prints = $database->fetchArray('SELECT id, title, EXISTS(SELECT id_print FROM em_print_template WHERE id_template = '.prepare($template['id']).' AND em_print_template.id_print = zz_prints.id) AS selected FROM zz_prints WHERE id_module = '.prepare($module->id).' AND enabled = 1');
 
         return [
+            'sender' => $account['from_name'].'<'.$account['from_address'].'>',
             'email' => $email,
             'subject' => $subject,
             'body' => $body,
@@ -64,11 +66,13 @@ class RapportinoIntervento extends Request implements RetrieveInterface, CreateI
 
         $mail->save();
 
+        // Tentativo di invio diretto
         $email = EmailNotification::build($mail);
-        try {
-            $email_success = $email->send();
-        } catch (\PHPMailer\PHPMailer\Exception $e) {
-            $email_success = false;
+        $email_success = $email->send();
+
+        // Rimozione email in casi di errore
+        if (!$email_success) {
+            $mail->delete();
         }
 
         return [

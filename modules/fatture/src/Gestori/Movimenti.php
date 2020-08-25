@@ -38,8 +38,6 @@ class Movimenti
         $data = $this->fattura->data_competenza;
 
         $mastrino = Mastrino::build($descrizione, $data, false, false);
-        $mastrino->iddocumento = $this->fattura->id;
-
         $this->mastrino = $mastrino;
 
         return $this->mastrino;
@@ -184,17 +182,16 @@ class Movimenti
 
         // Inversione contabile per i documenti di acquisto
         if ($is_acquisto) {
-            foreach ($movimenti as $movimento) {
-                $temp = $movimento['avere'];
-                $movimento['avere'] = $movimento['dare'];
-                $movimento['dare'] = $temp;
+            foreach ($movimenti as $key => $movimento) {
+                $movimenti[$key]['avere'] = $movimento['dare'];
+                $movimenti[$key]['dare'] = $movimento['avere'];
             }
         }
 
         // Registrazione dei singoli Movimenti nel relativo Mastrino
         $mastrino = $this->generateMastrino();
         foreach ($movimenti as $element) {
-            $movimento = Movimento::build($mastrino, $element['id_conto']);
+            $movimento = Movimento::build($mastrino, $element['id_conto'], $this->fattura);
             $movimento->setTotale($element['avere'] ?: 0, $element['dare'] ?: 0);
             $movimento->save();
         }

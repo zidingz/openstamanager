@@ -1013,3 +1013,11 @@ button.bg-light:focus {
     border-bottom: 1px solid #4b545c;
     color: rgba(255, 255, 255, .8)
 }
+
+.control-sidebar-bg {
+    top: 50px;
+}
+
+.control-sidebar{
+    padding-top: 0;
+}
