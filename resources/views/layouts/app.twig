@@ -302,8 +302,8 @@
 
     <script>
         function closeModal(element) {
-            var modal = $(element).closest(".modal");
-            modal.fadeOut('slow', function() {
+            let modal = $(element).closest(".modal");
+            modal.fadeOut("slow", function() {
                 if ($("#modals").children().length <= 1){
                     $("body").removeClass("modal-open");
                     $(".modal-backdrop").remove();
@@ -312,6 +312,20 @@
                 modal.remove();
             });
         }
+
+        $(document).ready(function() {
+            // Toast
+            alertPush();
+
+            // Orologio
+            clock();
+
+            // Hooks
+            startHooks();
+
+            // Abilitazione del cron autonoma
+            $.get(globals.rootdir + "/cron.php");
+        });
     </script>
 </div>
 {% endblock %}

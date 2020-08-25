@@ -30,7 +30,6 @@ class ModuleController extends Parser
     {
         $args = $this->prepare($args);
         $args = parent::create($args);
-        dd($request, $args);
 
         $args['query'] = $request->getQueryParams();
 
