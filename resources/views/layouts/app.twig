@@ -210,6 +210,10 @@
                         <i class="fa fa-print"></i>
                     </a></li>
 
+                    <li><a href="{{ base_path() }}/{{ record_id ? 'editor.php?id_record=' ~ record_id ~ '&' : 'controller.php?' }}id_module={{ module_id }}" class="tip btn-warning" title="{{ 'Base'|trans }}">
+                        <i class="fa fa-fast-backward"></i>
+                    </a></li>
+
                     <li><a href="{{ url_for('bug') }}" class="tip" title="{{ 'Segnalazione bug'|trans }}">
                         <i class="fa fa-bug"></i>
                     </a></li>

@@ -347,6 +347,10 @@ if (Auth::check()) {
                                 </ul>
                             </li>
 
+                            <li><a href="'.$rootdir.'/module-'.$id_module.'/'.(!empty($id_record) ? 'edit/'.$id_record.'/' : '').'" class="tip btn-warning" title="'.tr('Sperimentale').'">
+                                <i class="fa fa-fast-forward"></i>
+                            </a></li>
+
                             <li><a href="#" onclick="window.print()" class="tip" title="'.tr('Stampa').'">
                                 <i class="fa fa-print"></i>
                             </a></li>

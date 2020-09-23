@@ -113,7 +113,8 @@ class BaseController extends Controller
         $module = Module::get($module_id);
 
         if (!empty($module)) {
-            $response = $response->withRedirect($module->url('module'));
+            //$module->url('module')
+            $response = $response->withRedirect(ROOTDIR.'/controller.php?id_module='.$module_id);
         } else {
             $response = $response->withRedirect($this->router->urlFor('logout'));
         }
