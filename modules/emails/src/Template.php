@@ -25,7 +25,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Prints\Template as PrintTemplate;
 use Modules\Module;
 use Traits\LocalPoolTrait;
-use Models\PrintTemplate;
 
 class Template extends Model
 {

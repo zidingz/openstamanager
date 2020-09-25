@@ -66,7 +66,7 @@ class Logger extends Monolog\Logger implements ErrorHandlerInterface
             $status = 500;
         }
 
-        if ($this->container->get('debug')) {
+        if ($this->container->get('debug') && !in_array($status, [404, 403])) {
             return $this->debug_handler->__invoke($request, $exception, true, $logErrors, $logErrorDetails);
         } else {
             // Pulizia dell'errore

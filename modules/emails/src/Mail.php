@@ -21,7 +21,6 @@ namespace Modules\Emails;
 
 use Common\SimpleModelTrait;
 use Illuminate\Database\Eloquent\Model;
-use Models\PrintTemplate;
 use Auth\User;
 use Models\Upload;
 use Modules\Newsletter\Newsletter;
