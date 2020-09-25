@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -57,7 +74,7 @@ switch (filter('op')) {
                 'title' => '<b>Int. '.$sessione['codice'].'</b> '.$sessione['cliente'].'<br><b>'.tr('Tecnici').':</b> '.$sessione['nome_tecnico'].' '.(($sessione['have_attachments']) ? '<i class="fa fa-paperclip" aria-hidden="true"></i>' : ''),
                 'start' => $sessione['orario_inizio'],
                 'end' => $sessione['orario_fine'],
-                'url' => ROOTDIR.'/editor.php?id_module='.$modulo_interventi->id.'&id_record='.$sessione['idintervento'],
+                'url' => base_path().'/editor.php?id_module='.$modulo_interventi->id.'&id_record='.$sessione['idintervento'],
                 'backgroundColor' => $sessione['colore'],
                 'textColor' => color_inverse($sessione['colore']),
                 'borderColor' => ($sessione['colore_tecnico'] == '#FFFFFF') ? color_darken($sessione['colore_tecnico'], 100) : $sessione['colore_tecnico'],
@@ -173,34 +190,52 @@ switch (filter('op')) {
         }
 
         // Righe inserite
-        $qp = "SELECT
+        $query_promemoria_contratti = "SELECT
             co_promemoria.id,
             idcontratto,
-            richiesta,co_contratti.nome AS nomecontratto,
+            richiesta,
+            co_contratti.nome AS nome_contratto,
             DATE_FORMAT( data_richiesta, '%m%Y') AS mese,
             data_richiesta,
             an_anagrafiche.ragione_sociale,
             'promemoria' AS ref,
-            (SELECT descrizione FROM in_tipiintervento WHERE idtipointervento = co_promemoria.idtipointervento) AS tipointervento
+            (SELECT descrizione FROM in_tipiintervento WHERE idtipointervento = co_promemoria.idtipointervento) AS tipo_intervento
         FROM co_promemoria
             INNER JOIN co_contratti ON co_promemoria.idcontratto = co_contratti.id
             INNER JOIN an_anagrafiche ON co_contratti.idanagrafica = an_anagrafiche.idanagrafica
         WHERE idintervento IS NULL AND
               idcontratto IN (SELECT id FROM co_contratti WHERE idstato IN(SELECT id FROM co_staticontratti WHERE is_pianificabile = 1))
         ORDER BY data_richiesta ASC";
-        $promemoria_contratti = $dbo->fetchArray($qp);
+        $promemoria_contratti = $dbo->fetchArray($query_promemoria_contratti);
 
-        $query_interventi = "SELECT id, richiesta, id_contratto AS idcontratto, DATE_FORMAT(IF(data_scadenza IS NULL, data_richiesta, data_scadenza),'%m%Y') AS mese, IF(data_scadenza IS NULL, data_richiesta, data_scadenza)AS data_richiesta, data_scadenza, an_anagrafiche.ragione_sociale, 'intervento' AS ref, (SELECT descrizione FROM in_tipiintervento WHERE in_tipiintervento.idtipointervento=in_interventi.idtipointervento) AS tipointervento
+        $query_interventi = "SELECT in_interventi.id,
+            in_interventi.richiesta,
+            in_interventi.id_contratto AS idcontratto,
+            in_interventi_tecnici_assegnati.id_tecnico AS id_tecnico,
+            tecnico.ragione_sociale AS ragione_sociale_tecnico,
+            DATE_FORMAT(IF(in_interventi.data_scadenza IS NULL, in_interventi.data_richiesta, in_interventi.data_scadenza), '%m%Y') AS mese,
+            IF(in_interventi.data_scadenza IS NULL, in_interventi.data_richiesta, in_interventi.data_scadenza) AS data_richiesta,
+            in_interventi.data_scadenza,
+            an_anagrafiche.ragione_sociale,
+            'intervento' AS ref,
+            (SELECT descrizione FROM in_tipiintervento WHERE in_tipiintervento.idtipointervento=in_interventi.idtipointervento) AS tipo_intervento
     FROM in_interventi
         INNER JOIN an_anagrafiche ON in_interventi.idanagrafica=an_anagrafiche.idanagrafica";
 
     if (!empty($id_tecnico) && !empty($solo_promemoria_assegnati)) {
         $query_interventi .= '
         INNER JOIN in_interventi_tecnici_assegnati ON in_interventi.id = in_interventi_tecnici_assegnati.id_intervento AND id_tecnico = '.prepare($id_tecnico);
+    } elseif ($user->is_admin) {
+        $query_interventi .= '
+        INNER JOIN in_interventi_tecnici_assegnati ON in_interventi.id = in_interventi_tecnici_assegnati.id_intervento';
     }
 
     $query_interventi .= '
-        WHERE (SELECT COUNT(*) FROM in_interventi_tecnici WHERE in_interventi_tecnici.idintervento = in_interventi.id) = 0 ORDER BY data_richiesta ASC';
+        LEFT JOIN in_interventi_tecnici ON in_interventi_tecnici.idintervento = in_interventi.id AND in_interventi_tecnici_assegnati.id_tecnico = in_interventi_tecnici.idtecnico
+        LEFT JOIN an_anagrafiche AS tecnico ON in_interventi_tecnici_assegnati.id_tecnico = tecnico.idanagrafica
+    GROUP BY in_interventi.id, in_interventi_tecnici_assegnati.id_tecnico
+    HAVING COUNT(in_interventi_tecnici.id) = 0
+    ORDER BY data_richiesta ASC';
         $promemoria_interventi = $dbo->fetchArray($query_interventi);
 
         $promemoria = array_merge($promemoria_contratti, $promemoria_interventi);
@@ -216,12 +251,24 @@ switch (filter('op')) {
                         $class = 'primary';
                     }
 
+                    $link = null;
+                    if ($sessione['ref'] == 'intervento') {
+                        $modulo_riferimento = 'Interventi';
+                        $id_riferimento = $sessione['id'];
+                    } else {
+                        $modulo_riferimento = 'Contratti';
+                        $id_riferimento = $sessione['idcontratto'];
+                    }
+
                     echo '
-                    <div class="fc-event fc-event-'.$class.'" data-id="'.$sessione['id'].'" data-idcontratto="'.$sessione['idcontratto'].'" data-ref="'.$sessione['ref'].'">'.(($sessione['ref'] == 'intervento') ? '<i class=\'fa fa-wrench pull-right\'></i>' : '<i class=\'fa fa-file-text-o pull-right\'></i>').'
-                        <b>'.$sessione['ragione_sociale'].'</b><br>'.Translator::dateToLocale($sessione['data_richiesta']).' ('.$sessione['tipointervento'].')<div class="request" >'.(!empty($sessione['richiesta']) ? ' - '.$sessione['richiesta'] : '').'</div>'.(!empty($sessione['nomecontratto']) ? '<br><b>Contratto:</b> '.$sessione['nomecontratto'] : '').
-                        (!empty($sessione['data_scadenza'] and $sessione['data_scadenza'] != '0000-00-00 00:00:00') ? '<br><small>'.tr('entro il: ').Translator::dateToLocale($sessione['data_scadenza']).'</small>' : '').
-                        (($sessione['ref'] == 'intervento') ? (Modules::link('Interventi', $sessione['id'], '<i class="fa fa-eye"></i>', null, 'title="'.tr('Visualizza scheda').'" class="btn btn-'.$class.' btn-xs pull-right"')).'<br>' : (Modules::link('Contratti', $sessione['idcontratto'], '<i class="fa fa-eye"></i>', null, 'title="'.tr('Visualizza scheda').'" class="btn btn-'.$class.' btn-xs pull-right"')).'<br>').
-                    '</div>';
+                    <div class="fc-event fc-event-'.$class.'" data-id="'.$sessione['id'].'" data-idcontratto="'.$sessione['idcontratto'].'" data-ref="'.$sessione['ref'].'" data-id_tecnico="'.$sessione['id_tecnico'].'">'.($sessione['ref'] == 'intervento' ? '<i class="fa fa-wrench pull-right"></i>' : '<i class="fa fa-file-text-o pull-right"></i>').'
+                        <b>'.$sessione['ragione_sociale'].''.(!empty($sessione['id_tecnico']) ? ' - '.tr('Tecnico').': '.$sessione['ragione_sociale_tecnico'] : '').'</b>
+                        <br>'.dateFormat($sessione['data_richiesta']).' ('.$sessione['tipo_intervento'].')
+                        <div class="request">'.(!empty($sessione['richiesta']) ? ' - '.$sessione['richiesta'] : '').'</div>
+                        '.(!empty($sessione['nome_contratto']) ? '<br><b>Contratto:</b> '.$sessione['nome_contratto'] : '').'
+                        '.(!empty($sessione['data_scadenza'] && $sessione['data_scadenza'] != '0000-00-00 00:00:00') ? '<br><small>'.tr('entro il: ').dateFormat($sessione['data_scadenza']).'</small>' : '').'
+                        '.Modules::link($modulo_riferimento, $id_riferimento, '<i class="fa fa-eye"></i>', null, 'title="'.tr('Visualizza scheda').'" class="btn btn-'.$class.' btn-xs pull-right"').'<br>
+                    </div>';
                 }
             }
 

@@ -1,10 +1,28 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 /**
  * Funzioni globali utilizzate per il funzionamento dei componenti indipendenti del progetto (moduli, plugin, stampe, ...).
  *
  * @since 2.4.2
  */
+use Common\Components\Accounting;
 
 /**
  * Esegue una somma precisa tra due interi/array.
@@ -96,18 +114,18 @@ function orderValue($table, $field, $id)
  *
  * @return string|null
  */
-function discountInfo(\Common\Components\Row $riga, $mostra_maggiorazione = true)
+function discountInfo(Accounting $riga, $mostra_maggiorazione = true)
 {
     if (empty($riga->sconto_unitario) || (!$mostra_maggiorazione && $riga->sconto_unitario < 0)) {
         return null;
     }
 
     $text = $riga->sconto_unitario > 0 ? tr('sconto _TOT_ _TYPE_') : tr('maggiorazione _TOT__TYPE_');
-    $total = !empty($riga->sconto_percentuale) ? $riga->sconto_percentuale : $riga->sconto_unitario;
+    $totale = !empty($riga->sconto_percentuale) ? $riga->sconto_percentuale : $riga->sconto_unitario_corrente;
 
     return replace($text, [
-        '_TOT_' => Translator::numberToLocale(abs($total)),
-        '_TYPE_' => (!empty($riga->sconto_percentuale) ? '%' : currency()),
+        '_TOT_' => Translator::numberToLocale(abs($totale)),
+        '_TYPE_' => !empty($riga->sconto_percentuale) ? '%' : currency(),
     ]);
 }
 
@@ -139,7 +157,7 @@ function reference($document, $text = null)
         $content = $document->getReference();
     }
 
-    $description = tr('Rif. _DOCUMENT_', [
+    $description = $text ?: tr('Rif. _DOCUMENT_', [
         '_DOCUMENT_' => strtolower($content),
     ]);
 

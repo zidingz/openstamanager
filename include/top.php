@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../core.php';
 
@@ -21,9 +38,9 @@ echo '<!DOCTYPE html>
 
 		<link href="'.$paths['img'].'/favicon.png" rel="icon" type="image/x-icon" />';
 
-if (file_exists(DOCROOT.'/manifest.json')) {
+if (file_exists(base_dir().'/manifest.json')) {
     echo '
-        <link rel="manifest" href="'.ROOTDIR.'/manifest.json">';
+        <link rel="manifest" href="'.base_path().'/manifest.json">';
 }
 
 // CSS
@@ -87,6 +104,7 @@ if (Auth::check()) {
         'filter' => tr('Filtra'),
         'long' => tr('La ricerca potrebbe richiedere del tempo'),
         'details' => tr('Dettagli'),
+        'loading' => tr('Caricamento'),
         'waiting' => tr('Impossibile procedere'),
         'waiting_msg' => tr('Prima di proseguire devi selezionare alcuni elementi!'),
         'hooksExecuting' => tr('Hooks in esecuzione'),
@@ -148,7 +166,7 @@ if (Auth::check()) {
                 },
             };
 			globals = {
-                rootdir: "'.ROOTDIR.'",
+                rootdir: "'.base_path().'",
                 js: "'.$paths['js'].'",
                 css: "'.$paths['css'].'",
                 img: "'.$paths['img'].'",
@@ -191,7 +209,7 @@ if (Auth::check()) {
     echo '
         <script>
             globals = {
-                rootdir: "'.ROOTDIR.'",
+                rootdir: "'.base_path().'",
 
                 search: {},
                 translations: {
@@ -269,7 +287,8 @@ if (Auth::check()) {
     }
 }
 
-$hide_sidebar = Auth::check() && (setting('Nascondere la barra sinistra di default') or $_SESSION['settings']['sidebar-collapse']);
+$settings_collapse = session_get('settings.sidebar-collapse') ? 1 : 0;
+$hide_sidebar = Auth::check() && (setting('Nascondere la barra sinistra di default') || $settings_collapse);
 echo '
 
     </head>
@@ -278,7 +297,7 @@ echo '
 		<div class="'.(!Auth::check() ? '' : 'wrapper').'">';
 
 if (Auth::check()) {
-    $calendar = ($_SESSION['period_start'] != date('Y').'-01-01' || $_SESSION['period_end'] != date('Y').'-12-31') ? 'red' : 'white';
+    $calendar_color_label = ($_SESSION['period_start'] != date('Y').'-01-01' || $_SESSION['period_end'] != date('Y').'-12-31') ? 'danger' : 'default';
 
     echo '
             <!-- Loader principale -->
@@ -316,11 +335,11 @@ if (Auth::check()) {
                     <!-- Navbar Left Menu -->
                      <div class="navbar-left hidden-xs">
                         <ul class="nav navbar-nav hidden-xs">
-                            <li><a  href="#" id="daterange" style="color:'.$calendar.';" role="button" >
+                            <li><a href="#" id="daterange" role="button" >
                                 <i class="fa fa-calendar" style="color:inherit"></i> <i class="fa fa-caret-down" style="color:inherit"></i>
                             </a></li>
 
-                            <li><a style="color:'.$calendar.';background:inherit;cursor:default;">
+                            <li><a style="cursor:default;padding:0px;padding-right:5px;padding-left:5px;margin-top:15px;" class="label label-'.$calendar_color_label.'">
                                 '.Translator::dateToLocale($_SESSION['period_start']).' - '.Translator::dateToLocale($_SESSION['period_end']).'
                             </a></li>
                         </ul>
@@ -329,7 +348,7 @@ if (Auth::check()) {
                      <!-- Navbar Right Menu -->
                      <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
-                            <li class="dropdown notifications-menu" >
+                            <li class="dropdown notifications-menu nav-button">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <i class="fa fa-bell-o"></i>
                                     <span id="hooks-label" class="label label-warning">
@@ -355,19 +374,19 @@ if (Auth::check()) {
                                 <i class="fa fa-print"></i>
                             </a></li>
 
-                            <li><a href="'.$rootdir.'/bug.php" class="tip" title="'.tr('Segnalazione bug').'">
+                            <li><a href="'.base_path().'/bug.php" class="tip nav-button" title="'.tr('Segnalazione bug').'">
                                 <i class="fa fa-bug"></i>
                             </a></li>
 
-                            <li><a href="'.$rootdir.'/log.php" class="tip" title="'.tr('Log accessi').'">
+                            <li><a href="'.base_path().'/log.php" class="tip nav-button" title="'.tr('Log accessi').'">
                                 <i class="fa fa-book"></i>
                             </a></li>
 
-                            <li><a href="'.$rootdir.'/info.php" class="tip" title="'.tr('Informazioni').'">
+                            <li><a href="'.base_path().'/info.php" class="tip nav-button" title="'.tr('Informazioni').'">
                                 <i class="fa fa-info"></i>
                             </a></li>
 
-                            <li><a href="'.$rootdir.'/index.php?op=logout" onclick="sessionStorage.clear()" class="bg-red tip" title="'.tr('Esci').'">
+                            <li><a href="'.base_path().'/index.php?op=logout" onclick="sessionStorage.clear()" class="bg-red tip" title="'.tr('Esci').'">
                                 <i class="fa fa-power-off"></i>
                             </a></li>
                         </ul>
@@ -382,13 +401,13 @@ if (Auth::check()) {
                     <!-- Sidebar user panel -->
                     <div class="user-panel text-center info" style="height: 60px">
                         <div class="info">
-                            <p><a href="'.$rootdir.'/modules/utenti/info.php">
+                            <p><a href="'.base_path().'/modules/utenti/info.php">
                                 '.$user['username'].'
                             </a></p>
                             <p id="datetime"></p>
                         </div>
 
-                        <a class="image" href="'.$rootdir.'/modules/utenti/info.php">';
+                        <a class="image" href="'.base_path().'/modules/utenti/info.php">';
 
     $user_photo = $user->photo;
     if ($user_photo) {
@@ -421,10 +440,72 @@ if (Auth::check()) {
                     </ul>
                 </section>
                 <!-- /.sidebar -->
-            </aside>
+            </aside>';
 
+    if (str_contains($_SERVER['SCRIPT_FILENAME'], 'editor.php')) {
+        // Menu laterale per la visualizzazione dei plugin
+        echo '
+        <aside class="control-sidebar control-sidebar-light control-sidebar-shown">
+            <h4 class="text-center">'.tr('Plugin disponibili').'</h4>
+            <ul class="nav nav-tabs nav-pills nav-stacked">
+                <li data-toggle="control-sidebar" class="active">
+                    <a data-toggle="tab" href="#tab_0">
+                        <i class="'.$structure['icon'].'"></i> '.$structure['title'].'
+                    </a>
+                </li>';
+
+        // Tab dei plugin
+        $plugins = $dbo->fetchArray('SELECT id, title FROM zz_plugins WHERE idmodule_to='.prepare($id_module)." AND position='tab' AND enabled = 1 ORDER BY zz_plugins.order DESC");
+        foreach ($plugins as $plugin) {
+            echo '
+                <li data-toggle="control-sidebar">
+                    <a data-toggle="tab" href="#tab_'.$plugin['id'].'" id="link-tab_'.$plugin['id'].'">
+                        '.$plugin['title'].'
+                    </a>
+                </li>';
+        }
+
+        // Tab per le note interne
+        if ($structure->permission != '-' && $structure->use_notes) {
+            $notes = $structure->recordNotes($id_record);
+
+            echo '
+                <li data-toggle="control-sidebar" class="bg-info">
+                    <a data-toggle="tab" href="#tab_note" id="link-tab_note">
+                        '.tr('Note interne').'
+                        <span class="badge">'.($notes->count() ?: '').'</span>
+                    </a>
+                </li>';
+        }
+
+        // Tab per le checklist
+        if ($structure->permission != '-' && $structure->use_checklists) {
+            echo '
+                <li data-toggle="control-sidebar" class="bg-success">
+                    <a data-toggle="tab" href="#tab_checks" id="link-tab_checks">'.tr('Checklist').'</a>
+                </li>';
+        }
+
+        // Tab per le informazioni sulle operazioni
+        if (Auth::admin()) {
+            echo '
+                <li data-toggle="control-sidebar" class="bg-warning">
+                    <a data-toggle="tab" href="#tab_info" id="link-tab_info">
+                        '.tr('Info').'
+                    </a>
+                </li>';
+        }
+
+        echo '
+            </ul>
+        </aside>
+
+        <div class="control-sidebar-bg"></div>';
+    }
+
+    echo '
             <!-- Right side column. Contains the navbar and content of the page -->
-            <aside class="content-wrapper">
+            <aside class="content-wrapper '.(str_contains($_SERVER['SCRIPT_FILENAME'], 'editor.php') ? 'with-control-sidebar' : '').'">
 
                 <!-- Main content -->
                 <section class="content">
@@ -440,10 +521,16 @@ if (Auth::check()) {
                         <div class="col-md-12">';
 
     // Eventuale messaggio personalizzato per l'installazione corrente
-    include_once App::filepath('include/custom/extra', 'extra.php');
+    $extra_file = App::filepath('include/custom/extra', 'extra.php');
+    if ($extra_file) {
+        include_once $extra_file;
+    }
 } else {
     // Eventuale messaggio personalizzato per l'installazione corrente
-    include_once App::filepath('include/custom/extra', 'login.php');
+    $extra_file = App::filepath('include/custom/extra', 'login.php');
+    if ($extra_file) {
+        include_once $extra_file;
+    }
 
     if (!empty($messages['info']) || !empty($messages['warning']) || !empty($messages['error'])) {
         echo '

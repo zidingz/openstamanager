@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -117,7 +134,11 @@ function update() {
 }
 
 function checksum(button) {
-    openModal("'.tr('Controllo di integrità').'", "'.$module->fileurl('checksum.php').'?id_module='.$id_module.'");
+    openModal("'.tr('Controllo dei file').'", "'.$module->fileurl('checksum.php').'?id_module='.$id_module.'");
+}
+
+function database(button) {
+    openModal("'.tr('Controllo del database').'", "'.$module->fileurl('database.php').'?id_module='.$id_module.'");
 }
 
 function search(button) {
@@ -153,7 +174,7 @@ function search(button) {
                 </h3>
             </div>
             <div class="box-body">
-                <form action="'.ROOTDIR.'/controller.php?id_module='.$id_module.'" method="post" enctype="multipart/form-data" id="update">
+                <form action="'.base_path().'/controller.php?id_module='.$id_module.'" method="post" enctype="multipart/form-data" id="update">
                     <input type="hidden" name="op" value="upload">
 
 			        {[ "type": "file", "name": "blob", "required": 1, "accept": ".zip" ]}
@@ -170,12 +191,16 @@ function search(button) {
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    '.tr("Verifica l'integrità dell'intallazione").' <span class="tip" title="'.tr("Verifica l'integrità della tua installazione attraverso un controllo sui checksum dei file").'."><i class="fa fa-question-circle-o"></i></span>
+                    '.tr("Verifica l'integrità dell'intallazione").' <span class="tip" title="'.tr("Verifica l'integrità della tua installazione attraverso un controllo sui checksum dei file e sulla struttura del database").'."><i class="fa fa-question-circle-o"></i></span>
                 </h3>
             </div>
             <div class="box-body">
                 <button type="button" class="btn btn-primary btn-block" onclick="checksum(this)">
-                    <i class="fa fa-list-alt"></i> '.tr('Controlla').'
+                    <i class="fa fa-list-alt"></i> '.tr('Controlla file').'
+                </button>
+
+                <button type="button" class="btn btn-info btn-block" onclick="database(this)">
+                    <i class="fa fa-database"></i> '.tr('Controlla database').'
                 </button>
             </div>
         </div>
@@ -211,7 +236,7 @@ echo '
 <div>
     <h3>'.tr('Requisiti').'</h3>';
 
-include DOCROOT.'/include/init/requirements.php';
+include base_dir().'/include/init/requirements.php';
 
 echo '
 

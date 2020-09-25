@@ -1,6 +1,23 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-include_once __DIR__.'/../../core.php';
+include_once __DIR__.'/init.php';
 
 echo '
 <div class="table-responsive">
@@ -21,7 +38,10 @@ echo '
 
 // Righe documento
 $righe = $ddt->getRighe();
+$num = 0;
 foreach ($righe as $riga) {
+    ++$num;
+
     $extra = '';
     $mancanti = 0;
 
@@ -40,25 +60,34 @@ foreach ($righe as $riga) {
     echo '
         <tr data-id="'.$riga->id.'" data-type="'.get_class($riga).'" '.$extra.'>
             <td class="text-center">
-                '.($riga->order + 1).'
+                '.$num.'
             </td>
 
-            <td>';
-
-    if ($riga->isArticolo()) {
-        echo Modules::link('Articoli', $riga->idarticolo, $riga->codice.' - '.$riga->descrizione);
-    } else {
-        echo nl2br($riga->descrizione);
-    }
+            <td>
+                 <small class="pull-right text-right text-muted">';
 
     $numero_riferimenti_riga = $riga->referenceTargets()->count();
     $numero_riferimenti_collegati = $riga->referenceSources()->count();
     $riferimenti_presenti = $numero_riferimenti_riga;
     $testo_aggiuntivo = $riferimenti_presenti ? $numero_riferimenti_riga : '';
     echo '
-                <button type="button" class="btn btn-xs btn-'.($riferimenti_presenti ? 'primary' : 'info').' pull-right" onclick="apriRiferimenti(this)">
-                    <i class="fa fa-chevron-right"></i> '.tr('Riferimenti').' '.$testo_aggiuntivo.'
-                </button>';
+                    <button type="button" class="btn btn-xs btn-'.($riferimenti_presenti ? 'primary' : 'info').'" onclick="apriRiferimenti(this)">
+                        <i class="fa fa-chevron-right"></i> '.tr('Riferimenti').' '.$testo_aggiuntivo.'
+                    </button>';
+
+    // Aggiunta dei riferimenti ai documenti
+    if ($riga->hasOriginalComponent()) {
+        echo '
+                    <br>'.reference($riga->getOriginalComponent()->getDocument(), tr('Origine'));
+    }
+    echo '
+                </small>';
+
+    if ($riga->isArticolo()) {
+        echo Modules::link('Articoli', $riga->idarticolo, $riga->codice.' - '.$riga->descrizione);
+    } else {
+        echo nl2br($riga->descrizione);
+    }
 
     if ($riga->isArticolo() && !empty($riga->abilita_serial)) {
         if (!empty($mancanti)) {
@@ -71,12 +100,6 @@ foreach ($righe as $riga) {
             echo '
                 <br>'.tr('SN').': '.implode(', ', $serials);
         }
-    }
-
-    // Aggiunta dei riferimenti ai documenti
-    if ($riga->hasOriginal()) {
-        echo '
-                <br>'.reference($riga->getOriginal()->parent);
     }
 
     echo '
@@ -255,9 +278,9 @@ echo '
 echo '
 <script>
 async function modificaRiga(button) {
-    var riga = $(button).closest("tr");
-    var id = riga.data("id");
-    var type = riga.data("type");
+    let riga = $(button).closest("tr");
+    let id = riga.data("id");
+    let type = riga.data("type");
 
     // Salvataggio via AJAX
     let valid = await salvaForm(button, $("#edit-form"));
@@ -280,9 +303,9 @@ function rimuoviRiga(button) {
         showCancelButton: true,
         confirmButtonText: "'.tr('Sì').'"
     }).then(function () {
-        var riga = $(button).closest("tr");
-        var id = riga.data("id");
-        var type = riga.data("type");
+        let riga = $(button).closest("tr");
+        let id = riga.data("id");
+        let type = riga.data("type");
 
         $.ajax({
             url: globals.rootdir + "/actions.php",
@@ -306,17 +329,17 @@ function rimuoviRiga(button) {
 }
 
 function modificaSeriali(button) {
-    var riga = $(button).closest("tr");
-    var id = riga.data("id");
-    var type = riga.data("type");
+    let riga = $(button).closest("tr");
+    let id = riga.data("id");
+    let type = riga.data("type");
 
     openModal("'.tr('Aggiorna SN').'", globals.rootdir + "/modules/fatture/add_serial.php?id_module=" + globals.id_module + "&id_record=" + globals.id_record + "&riga_id=" + id + "&riga_type=" + type);
 }
 
 function apriRiferimenti(button) {
-    var riga = $(button).closest("tr");
-    var id = riga.data("id");
-    var type = riga.data("type");
+    let riga = $(button).closest("tr");
+    let id = riga.data("id");
+    let type = riga.data("type");
 
     openModal("'.tr('Riferimenti riga').'", globals.rootdir + "/actions.php?id_module=" + globals.id_module + "&id_record=" + globals.id_record + "&op=visualizza_riferimenti&riga_id=" + id + "&riga_type=" + type)
 }

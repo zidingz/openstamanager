@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -21,13 +38,13 @@ $extraction_dir = Zip::extract($_FILES['blob']['tmp_name']);
 // Aggiornamento del progetto
 if (file_exists($extraction_dir.'/VERSION')) {
     // Salva il file di configurazione
-    $config = file_get_contents($docroot.'/config.inc.php');
+    $config = file_get_contents(base_dir().'/config.inc.php');
 
     // Copia i file dalla cartella temporanea alla root
-    copyr($extraction_dir, $docroot);
+    copyr($extraction_dir, base_dir());
 
     // Ripristina il file di configurazione dell'installazione
-    file_put_contents($docroot.'/config.inc.php', $config);
+    file_put_contents(base_dir().'/config.inc.php', $config);
 } else {
     $finder = Symfony\Component\Finder\Finder::create()
         ->files()
@@ -66,7 +83,7 @@ if (file_exists($extraction_dir.'/VERSION')) {
         }
 
         // Copia dei file nella cartella relativa
-        copyr(dirname($file->getRealPath()), $docroot.'/'.$directory.'/'.$info['directory']);
+        copyr(dirname($file->getRealPath()), base_dir().'/'.$directory.'/'.$info['directory']);
 
         // Eventuale registrazione nel database
         if (empty($installed)) {
@@ -93,4 +110,4 @@ if (file_exists($extraction_dir.'/VERSION')) {
 delete($extraction_dir);
 
 // Redirect
-redirect(ROOTDIR.'/editor.php?id_module='.$id_module);
+redirect(base_path().'/editor.php?id_module='.$id_module);

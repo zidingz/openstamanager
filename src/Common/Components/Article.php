@@ -1,17 +1,36 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace Common\Components;
 
 use Common\Document;
+use Common\SimpleModelTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Articoli\Articolo as Original;
 use Modules\Articoli\Movimento;
-use Plugins\FornitoriArticolo\Dettaglio;
+use Plugins\DettagliArticolo\DettaglioFornitore;
 use UnexpectedValueException;
 
-abstract class Article extends Row
+abstract class Article extends Accounting
 {
-    public $movimenta_magazzino = true;
+    use SimpleModelTrait;
+
     protected $abilita_movimentazione = true;
 
     protected $serialRowID = null;
@@ -21,7 +40,8 @@ abstract class Article extends Row
 
     public static function build(Document $document, Original $articolo)
     {
-        $model = parent::build($document, true);
+        $model = new static();
+        $model->setDocument($document);
 
         $model->articolo()->associate($articolo);
 
@@ -32,18 +52,43 @@ abstract class Article extends Row
         return $model;
     }
 
+    public function isDescrizione()
+    {
+        return false;
+    }
+
+    public function isSconto()
+    {
+        return false;
+    }
+
+    public function isRiga()
+    {
+        return false;
+    }
+
+    public function isArticolo()
+    {
+        return true;
+    }
+
+    /**
+     * Metodo dedicato a gestire in automatico la movimentazione del magazzino in relazione all'articolo di riferimento sulla base delle caratteristiche del movimento (magazzino abilitato o meno).
+     *
+     * @param $qta
+     */
     public function movimenta($qta)
     {
-        if (!$this->movimenta_magazzino) {
+        if (!$this->parent->movimenta_magazzino) {
             return;
         }
 
         $movimenta = true;
 
         // Movimenta il magazzino solo se l'articolo non è già stato movimentato da un documento precedente
-        if ($this->hasOriginal()) {
-            $original = $this->getOriginal();
-            $movimenta = !$original->movimenta_magazzino;
+        if ($this->hasOriginalComponent()) {
+            $original = $this->getOriginalComponent();
+            $movimenta = !$original->getDocument()->movimenta_magazzino;
         }
 
         if ($movimenta) {
@@ -53,7 +98,7 @@ abstract class Article extends Row
 
     public function getDirection()
     {
-        return $this->parent->direzione;
+        return $this->getDocument()->direzione;
     }
 
     /**
@@ -172,7 +217,7 @@ abstract class Article extends Row
 
     public function dettaglioFornitore()
     {
-        return $this->belongsTo(Dettaglio::class, 'id_dettaglio_fornitore')->withTrashed();
+        return $this->belongsTo(DettaglioFornitore::class, 'id_dettaglio_fornitore')->withTrashed();
     }
 
     public function movimentazione($value = true)
@@ -225,7 +270,7 @@ abstract class Article extends Row
 
     protected function movimentaMagazzino($qta)
     {
-        $documento = $this->parent;
+        $documento = $this->getDocument();
         $data = $documento->getReferenceDate();
 
         $qta_movimento = $documento->direzione == 'uscita' ? $qta : -$qta;
@@ -248,15 +293,14 @@ abstract class Article extends Row
 
     protected static function boot()
     {
-        // Precaricamento Articolo
+        parent::boot();
+
+        // Pre-caricamento Articolo
         static::addGlobalScope('articolo', function (Builder $builder) {
             $builder->with('articolo', 'dettaglioFornitore');
         });
 
-        parent::boot(true);
-
-        $table = parent::getTableName();
-
+        $table = static::getTableName();
         static::addGlobalScope('articles', function (Builder $builder) use ($table) {
             $builder->whereNotNull($table.'.idarticolo')->where($table.'.idarticolo', '<>', 0);
         });
@@ -323,19 +367,5 @@ abstract class Article extends Row
     protected function customInitCopiaIn($original)
     {
         $this->articolo()->associate($original->articolo);
-    }
-
-    protected function customBeforeDataCopiaIn($original)
-    {
-        //$this->movimentazione(false);
-
-        parent::customBeforeDataCopiaIn($original);
-    }
-
-    protected function customAfterDataCopiaIn($original)
-    {
-        //        $this->movimentazione(true);
-
-        parent::customAfterDataCopiaIn($original);
     }
 }

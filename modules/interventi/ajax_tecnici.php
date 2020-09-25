@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -211,12 +228,12 @@ if (!$is_completato) {
 <!-- AGGIUNTA TECNICO -->
 <div class="row">
     <div class="col-md-offset-6 col-md-4">
-        {[ "type": "select", "label": "'.tr('Tecnico').'", "name": "nuovotecnico", "placeholder": "'.tr('Seleziona un tecnico').'", "ajax-source": "tecnici", "icon-after": "add|'.Modules::get('Anagrafiche')['id'].'|tipoanagrafica=Tecnico" ]}
+        {[ "type": "select", "label": "'.tr('Tecnico').'", "name": "nuovo_tecnico", "placeholder": "'.tr('Seleziona un tecnico').'", "ajax-source": "tecnici", "icon-after": "add|'.Modules::get('Anagrafiche')['id'].'|tipoanagrafica=Tecnico" ]}
     </div>
 
     <div class="col-md-2">
         <label>&nbsp;</label>
-        <button type="button" class="btn btn-primary btn-block" onclick="if($(\'#nuovotecnico\').val()){ add_tecnici($(\'#nuovotecnico\').val()); }else{ swal(\''.tr('Attenzione').'\', \''.tr('Seleziona il tecnico da aggiungere').'.\', \'warning\'); $(\'#nuovotecnico\').focus(); }">
+        <button type="button" class="btn btn-primary btn-block" onclick="if($(\'#nuovo_tecnico\').val()){ add_tecnici($(\'#nuovo_tecnico\').val()); }else{ swal(\''.tr('Attenzione').'\', \''.tr('Seleziona il tecnico da aggiungere').'.\', \'warning\'); $(\'#nuovo_tecnico\').focus(); }">
             <i class="fa fa-plus"></i> '.tr('Aggiungi').'
         </button>
     </div>
@@ -224,7 +241,7 @@ if (!$is_completato) {
 }
 
 echo '
-<script src="'.$rootdir.'/assets/src/js/functions/functions.js"></script>
+<script src="'.base_path().'/assets/src/js/functions/functions.js"></script>
 <script>$(document).ready(init)</script>
 
 <script type="text/javascript">
@@ -245,12 +262,8 @@ async function modificaSessione(button) {
     }
 }
 
-function caricaTecnici() {
-    return $("#tecnici").load("'.$module->fileurl('ajax_tecnici.php').'?id_module=" + globals.id_module + "&id_record=" + globals.id_record);
-}
-
 function calcolaConflittiTecnici() {
-    let tecnici = [input("nuovotecnico").get()];
+    let tecnici = [input("nuovo_tecnico").get()];
     let inizio = moment().startOf("hour");
 
     return $("#info-conflitti").load("'.$module->fileurl('occupazione_tecnici.php').'", {
@@ -262,11 +275,7 @@ function calcolaConflittiTecnici() {
     });
 }
 
-function calcolaCosti() {
-    return $("#costi").load("'.$module->fileurl('ajax_costi.php').'?id_module=" + globals.id_module + "&id_record=" + globals.id_record);
-}
-
-input("nuovotecnico").change(function() {
+input("nuovo_tecnico").change(function() {
     calcolaConflittiTecnici();
 });
 
@@ -306,7 +315,7 @@ function add_tecnici(id_tecnico) {
         type: "post",
         success: function() {
             caricaTecnici();
-            calcolaCosti();
+            caricaCosti();
 
             calcolaConflittiTecnici();
         }
@@ -329,7 +338,7 @@ function elimina_sessione(id_sessione) {
             type: "post",
             success: function() {
                 caricaTecnici();
-                calcolaCosti();
+                caricaCosti();
 
                 calcolaConflittiTecnici();
             }

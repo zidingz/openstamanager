@@ -1,18 +1,37 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace Modules\Articoli;
 
-use Common\Model;
+use Common\SimpleModelTrait;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules;
 use Modules\Interventi\Components\Articolo as ArticoloIntervento;
 use Modules\Iva\Aliquota;
-use Plugins\FornitoriArticolo\Dettaglio;
+use Plugins\DettagliArticolo\DettaglioFornitore;
 use Traits\RecordTrait;
 use Uploads;
 
 class Articolo extends Model
 {
+    use SimpleModelTrait;
     use SoftDeletes;
     use RecordTrait;
 
@@ -24,7 +43,7 @@ class Articolo extends Model
 
     public static function build($codice, $nome, Categoria $categoria = null, Categoria $sottocategoria = null)
     {
-        $model = parent::build();
+        $model = new static();
 
         $model->codice = $codice;
         $model->descrizione = $nome;
@@ -143,7 +162,7 @@ class Articolo extends Model
         $image = $directory.$this->immagine;
         $image_thumbnail = $directory.$fileinfo['filename'].'_thumb600.'.$fileinfo['extension'];
 
-        $url = file_exists(DOCROOT.$image_thumbnail) ? ROOTDIR.$image_thumbnail : ROOTDIR.$image;
+        $url = file_exists(base_dir().$image_thumbnail) ? base_path().$image_thumbnail : base_path().$image;
 
         return $url;
     }
@@ -183,7 +202,7 @@ class Articolo extends Model
     public function movimentiComposti()
     {
         return $this->movimenti()
-            ->selectRaw('*, sum(qta) as qta_documento, IFNULL(reference_type, UUID()) as tipo_gruppo')
+            ->selectRaw('*, sum(qta) as qta_documento, IFNULL(reference_type, id) as tipo_gruppo')
             ->groupBy('tipo_gruppo', 'reference_id');
     }
 
@@ -199,7 +218,7 @@ class Articolo extends Model
 
     public function dettaglioFornitori()
     {
-        return $this->hasMany(Dettaglio::class, 'id_articolo');
+        return $this->hasMany(DettaglioFornitore::class, 'id_articolo');
     }
 
     public function dettaglioFornitore($id_fornitore)

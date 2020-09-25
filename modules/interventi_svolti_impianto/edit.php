@@ -1,4 +1,23 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+use Modules\Interventi\Intervento;
 
 include_once __DIR__.'/../../../core.php';
 
@@ -23,30 +42,27 @@ if (!empty($results)) {
             </tr>';
 
     foreach ($results as $result) {
-        $intervento = \Modules\Interventi\Intervento::find($result['id']);
+        $intervento = Intervento::find($result['id']);
         $totale_interventi += $intervento->totale;
 
         echo '
             <tr>
                 <td>
-                    '.Modules::link('Interventi', $result['id'], tr('Intervento num. _NUM_ del _DATE_', [
-                        '_NUM_' => $result['codice'],
-                        '_DATE_' => Translator::dateToLocale($result['data']),
-                    ])).'
+                    '.Modules::link('Interventi', $result['id'], $intervento->getReference()).'
                 </td>
                 <td>'.nl2br($result['descrizione']).'</td>
                 <td class="text-right">'.moneyFormat($intervento->totale).'</td>
             </tr>';
     }
 
-    echo '  <tr>';
-    echo '      <td colspan="2" class="text-right">';
-    echo '          <b>Totale:</b>';
-    echo '      </td>';
-    echo '      <td class="text-right">';
-    echo            '<b>'.moneyFormat($totale_interventi).'</b>';
-    echo '      </td>';
-    echo '  </tr>';
+    echo '  <tr>
+                <td colspan="2" class="text-right">
+                    <b>'.tr('Totale').':</b>
+                </td>
+                <td class="text-right">
+                    <b>'.moneyFormat($totale_interventi).'</b>
+                </td>
+            </tr>';
 
     echo '
         </table>';

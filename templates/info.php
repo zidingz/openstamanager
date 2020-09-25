@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 $replaces = [];
 
@@ -11,12 +28,21 @@ if (empty($id_sede) || $id_sede == '-1') {
 } else {
     $queryc = 'SELECT an_anagrafiche.*, an_sedi.*, if(an_sedi.codice_fiscale != "", an_sedi.codice_fiscale, an_anagrafiche.codice_fiscale) AS codice_fiscale, if(an_sedi.piva != "", an_sedi.piva, an_anagrafiche.piva) AS piva FROM an_sedi JOIN an_anagrafiche ON an_anagrafiche.idanagrafica=an_sedi.idanagrafica WHERE an_sedi.idanagrafica='.prepare($id_cliente).' AND an_sedi.id='.prepare($id_sede);
 }
+/**
+ * @deprecated
+ */
 $cliente = $dbo->fetchOne($queryc);
 
 // Lettura dati aziendali
-$azienda = $dbo->fetchOne('SELECT *, (SELECT iban FROM co_banche WHERE id IN (SELECT idbanca FROM co_documenti WHERE id = '.prepare($id_record).' ) ) AS codiceiban, (SELECT nome FROM co_banche WHERE id IN (SELECT idbanca FROM co_documenti WHERE id = '.prepare($id_record).' ) ) AS appoggiobancario, (SELECT bic FROM co_banche WHERE id IN (SELECT idbanca FROM co_documenti WHERE id = '.prepare($id_record)." ) ) AS bic FROM an_anagrafiche WHERE idanagrafica = (SELECT valore FROM zz_settings WHERE nome='Azienda predefinita')");
+/**
+ * @deprecated
+ */
+$azienda = $dbo->fetchOne('SELECT *, (SELECT iban FROM co_banche WHERE id IN (SELECT id_banca_azienda FROM co_documenti WHERE id = '.prepare($id_record).')) AS codiceiban, (SELECT nome FROM co_banche WHERE id IN (SELECT id_banca_azienda FROM co_documenti WHERE id = '.prepare($id_record).')) AS appoggiobancario, (SELECT bic FROM co_banche WHERE id IN (SELECT id_banca_azienda FROM co_documenti WHERE id = '.prepare($id_record).")) AS bic FROM an_anagrafiche WHERE idanagrafica = (SELECT valore FROM zz_settings WHERE nome='Azienda predefinita')");
 
 // Prefissi e contenuti del replace
+/**
+ * @deprecated
+ */
 $replace = [
     'c_' => isset($cliente) ? $cliente : [],
     'f_' => isset($azienda) ? $azienda : [],
@@ -115,8 +141,8 @@ $replaces = array_merge($replaces, [
     'default_footer' => $default_footer,
     'default_logo' => $default_logo,
     'logo' => $logo,
-    'docroot' => DOCROOT,
-    'rootdir' => ROOTDIR,
+    'base_dir()' => base_dir(),
+    'base_link()' => base_path(),
     'directory' => Prints::get($id_print)['full_directory'],
     'footer' => !empty($footer) ? $footer : '',
     'dicitura_fissa_fattura' => setting('Dicitura fissa fattura').((!empty(setting('OSMCloud Services API Token'))) ? tr('Documento privo di valenza fiscale (art 21 dpr 633/72).') : ''),

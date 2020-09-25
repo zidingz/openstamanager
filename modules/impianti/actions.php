@@ -1,10 +1,27 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
 $op = post('op');
 
-$upload_dir = $docroot.'/files/'.Modules::get('Impianti')['directory'];
+$upload_dir = base_dir().'/files/'.Modules::get('Impianti')['directory'];
 
 switch ($op) {
     // Aggiorno informazioni di base impianto
@@ -107,11 +124,11 @@ switch ($op) {
         }
 
         // ...altrimenti carico dal file .ini
-        elseif (file_exists($docroot.'/files/my_impianti/'.$filename)) {
-            $contenuto = file_get_contents($docroot.'/files/my_impianti/'.$filename);
+        elseif (file_exists(base_dir().'/files/impianti/'.$filename)) {
+            $contenuto = file_get_contents(base_dir().'/files/impianti/'.$filename);
         }
 
-        genera_form_componente($contenuto);
+        crea_form_componente($contenuto);
 
         break;
 

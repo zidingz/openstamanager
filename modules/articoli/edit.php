@@ -1,4 +1,23 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+use Util\Ini;
 
 include_once __DIR__.'/../../core.php';
 
@@ -165,7 +184,9 @@ include_once __DIR__.'/../../core.php';
 $prezzi_ivati = setting('Utilizza prezzi di vendita comprensivi di IVA');
 if (empty($prezzi_ivati)) {
     echo '
-                            <button type="button" class="btn btn-info btn-xs pull-right tip pull-right" title="'.tr('Scorpora iva dal prezzo di vendita.').'" id="scorpora_iva"><i class="fa fa-calculator" aria-hidden="true"></i></button>';
+                            <button type="button" class="btn btn-info btn-xs pull-right tip pull-right" title="'.tr('Scorpora iva dal prezzo di vendita.').'" id="scorporaIva">
+                                <i class="fa fa-calculator"></i>
+                            </button>';
 }
 
 echo '
@@ -224,11 +245,11 @@ echo '
                     <div class="form-group">
                         <label for="componente_filename">'.tr('Seleziona un componente').':</label>';
     echo "
-                        <select class=\"form-control superselect\" id=\"componente_filename\" name=\"componente_filename\" onchange=\"$.post('".$rootdir."/modules/my_impianti/actions.php', {op: 'load_componente', idarticolo: '".$id_record."', filename: $(this).find('option:selected').val() }, function(response){ $('#info_componente').html( response ); start_superselect();    $('.datepicker').datetimepicker({  locale: globals.locale, format: 'L' } ); } );\">\n";
+                        <select class=\"form-control superselect\" id=\"componente_filename\" name=\"componente_filename\" onchange=\"$.post('".base_path()."/modules/impianti/actions.php', {op: 'load_componente', idarticolo: '".$id_record."', filename: $(this).find('option:selected').val() }, function(response){ $('#info_componente').html( response ); start_superselect();    $('.datepicker').datetimepicker({  locale: globals.locale, format: 'L' } ); } );\">\n";
     echo '
                             <option value="0">'.tr('Nessuno').'</option>';
 
-    $cmp = \Util\Ini::getList($docroot.'/files/my_impianti/');
+    $cmp = Ini::getList(base_dir().'/files/impianti/');
 
     if (count($cmp) > 0) {
         for ($c = 0; $c < count($cmp); ++$c) {
@@ -247,7 +268,7 @@ echo '
     echo '
             <div id="info_componente">';
 
-    genera_form_componente($record['contenuto']);
+    crea_form_componente($record['contenuto']);
 
     echo '
             </div>';
@@ -312,15 +333,17 @@ $("#categoria").change(function() {
 	$("#subcategoria").val(null).trigger("change");
 });
 
-function scorpora_iva() {
-	if ($("#idiva_vendita").val()!=''){
-		var percentuale = parseFloat($("#idiva_vendita").selectData().percentuale);
+function scorporaIva() {
+    let iva_vendita = $("#idiva_vendita");
+
+	if (iva_vendita.val()) {
+		let percentuale = parseFloat(iva_vendita.selectData().percentuale);
 		if(!percentuale) return;
 
-		var input = $("#prezzo_vendita");
-		var prezzo = input.val().toEnglish();
+		let input = $("#prezzo_vendita");
+        let prezzo = input.val().toEnglish();
 
-		var scorporato = prezzo * 100 / (100 + percentuale);
+        let scorporato = prezzo * 100 / (100 + percentuale);
 
 		input.val(scorporato);
 	}else{
@@ -328,8 +351,8 @@ function scorpora_iva() {
 	}
 }
 
-$("#scorpora_iva").click( function() {
-	scorpora_iva();
+$("#scorporaIva").click( function() {
+	scorporaIva();
 });
 
 </script>

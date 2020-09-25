@@ -74,7 +74,7 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
         $settings = [];
         foreach ($values['settings'] as $setting => $required) {
             if (empty(setting($setting))) {
-                $settings[] = \Models\Setting::get($setting)->input($required);
+                $settings[] = \Models\Setting::pool($setting)->input($required);
             }
         }
 
@@ -143,11 +143,11 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
 
         if (!$has_settings) {
             foreach ($settings as $setting => $required) {
-                $setting = \Models\Setting::get($setting);
+                $setting = \Models\Setting::pool($setting);
 
                 $value = post('setting')[$setting['id']];
                 if (!empty($value)) {
-                    \Models\Setting::get($setting['nome'])->setValue($value);
+                    \Models\Setting::pool($setting['nome'])->setValue($value);
                 }
             }
         }
@@ -171,7 +171,7 @@ WHERE `an_tipianagrafiche`.`descrizione` = 'Azienda' AND `an_anagrafiche`.`delet
                 'id_record' => $id_record,
             ]);
 
-            \Models\Setting::get('Logo stampe')->setValue($file);
+            \Models\Setting::pool('Logo stampe')->setValue($file);
         }
     }
 

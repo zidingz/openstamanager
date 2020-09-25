@@ -1,4 +1,24 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+use Mpdf\Mpdf;
+use Util\Query;
 
 /**
  * Classe per la gestione delle informazioni relative alle stampe installate.
@@ -34,7 +54,7 @@ class Prints
             }
 
             foreach ($results as $result) {
-                $result['full_directory'] = DOCROOT.'/templates/'.$result['directory'];
+                $result['full_directory'] = base_dir().'/templates/'.$result['directory'];
 
                 $prints[$result['id']] = $result;
                 $prints[$result['name']] = $result['id'];
@@ -134,11 +154,11 @@ class Prints
             if (!empty($infos['is_record'])) {
                 $module = Modules::get($infos['id_module']);
 
-                Util\Query::setSegments(false);
-                $query = Util\Query::getQuery($module, [
+                Query::setSegments(false);
+                $query = Query::getQuery($module, [
                     'id' => $id_record,
                 ]);
-                Util\Query::setSegments(true);
+                Query::setSegments(true);
 
                 $has_access = !empty($query) ? $dbo->fetchNum($query) !== 0 : true;
             }
@@ -188,7 +208,7 @@ class Prints
             return false;
         }
 
-        $link = ROOTDIR.'/pdfgen.php?';
+        $link = base_path().'/pdfgen.php?';
 
         if (self::isOldStandard($infos['id'])) {
             $link .= 'ptype='.$infos['directory'];
@@ -249,7 +269,7 @@ class Prints
      */
     public static function getPDFLink($path)
     {
-        return ROOTDIR.'/assets/pdfjs/web/viewer.html?file='.BASEURL.'/'.ltrim(str_replace(DOCROOT, '', $path), '/');
+        return base_path().'/assets/pdfjs/web/viewer.html?file='.base_url().'/'.ltrim(str_replace(base_dir(), '', $path), '/');
     }
 
     /**
@@ -323,9 +343,13 @@ class Prints
     {
         $format = 'A4';
 
+        $body = '';
+        $report = '';
+        $footer = '';
+
         $infos = self::get($id_print);
         $options = self::readOptions($infos['options']);
-        $docroot = DOCROOT;
+        $docroot = base_dir();
 
         $dbo = $database = database();
 
@@ -361,7 +385,7 @@ class Prints
         }
 
         // Operazioni di sostituzione
-        include DOCROOT.'/templates/replace.php';
+        include base_dir().'/templates/replace.php';
 
         $mode = !empty($directory) ? 'F' : 'I';
         $mode = !empty($return_string) ? 'S' : $mode;
@@ -440,17 +464,22 @@ class Prints
         include self::filepath($id_print, 'init.php');
 
         // Individuazione delle variabili per la sostituzione
-        include DOCROOT.'/templates/info.php';
+        include base_dir().'/templates/info.php';
 
         // Instanziamento dell'oggetto mPDF
-        $mpdf = new \Mpdf\Mpdf([
+        $mpdf = new Mpdf([
             'format' => $settings['format'],
             'orientation' => strtoupper($settings['orientation']) == 'L' ? 'L' : 'P',
             'font-size' => $settings['font-size'],
             'margin_left' => $settings['margins']['left'],
             'margin_right' => $settings['margins']['right'],
-            'setAutoBottomMargin' => 'stretch',
-            'setAutoTopMargin' => 'stretch',
+
+            'setAutoTopMargin' => $settings['margins']['top'] === 'auto' ? 'stretch' : false,
+            'margin_top' => $settings['margins']['top'] === 'auto' ? 0 : $settings['margins']['top'], // Disabilitato se setAutoTopMargin impostato
+
+            'setAutoBottomMargin' => $settings['margins']['bottom'] === 'auto' ? 'stretch' : false,
+            'margin_bottom' => $settings['margins']['bottom'] === 'auto' ? 0 : $settings['margins']['bottom'], // Disabilitato se setAutoBottomMargin impostato
+
             'default_font' => 'dejavusanscondensed',
 
             // Abilitazione per lo standard PDF/A
@@ -460,7 +489,7 @@ class Prints
 
         if (setting('Filigrana stampe')) {
             $mpdf->SetWatermarkImage(
-                DOCROOT.'/files/anagrafiche/'.setting('Filigrana stampe'),
+                base_dir().'/files/anagrafiche/'.setting('Filigrana stampe'),
                 0.5,
                 'F',
                 'F'
@@ -481,7 +510,7 @@ class Prints
         ];
 
         foreach ($styles as $value) {
-            $mpdf->WriteHTML(file_get_contents(DOCROOT.'/'.$value), 1);
+            $mpdf->WriteHTML(file_get_contents(base_dir().'/'.$value), 1);
         }
 
         // Impostazione del font-size
@@ -517,7 +546,7 @@ class Prints
         $foot = !empty($foot) ? $foot : '$default_footer$';
 
         // Operazioni di sostituzione
-        include DOCROOT.'/templates/replace.php';
+        include base_dir().'/templates/replace.php';
 
         // Impostazione di header e footer
         $mpdf->SetHTMLHeader($head);
@@ -564,7 +593,7 @@ class Prints
         }
 
         // Operazioni di sostituzione
-        include DOCROOT.'/templates/replace.php';
+        include base_dir().'/templates/replace.php';
 
         $mode = !empty($directory) ? 'F' : 'I';
         $mode = !empty($return_string) ? 'S' : $mode;

@@ -37,9 +37,9 @@ UPDATE `em_templates` SET `predefined` = '1' WHERE `em_templates`.`name` = 'Noti
 UPDATE `em_templates` SET `predefined` = '1' WHERE `em_templates`.`name` = 'Reset password';
 UPDATE `em_templates` SET `predefined` = '1' WHERE `em_templates`.`name` = 'Rapportino intervento';
 
-INSERT INTO `zz_settings` (`id`, `nome`, `valore`, `tipo`, `editable`, `sezione`, `order`, `help`) VALUES (NULL, 'Notifica al tecnico l\'assegnazione all\'attività', '0', 'boolean', '1', 'Interventi', NULL, 'Notifica via email al tecnico le nuove sessioni di lavoro che gli sono state assegnate (l\'indirizzo email deve essere specificato nella sua anagrafica)');
+INSERT INTO `zz_settings` (`id`, `nome`, `valore`, `tipo`, `editable`, `sezione`, `order`, `help`) VALUES (NULL, 'Notifica al tecnico l''assegnazione all''attività', '0', 'boolean', '1', 'Interventi', NULL, 'Notifica via email al tecnico le nuove sessioni di lavoro che gli sono state assegnate (l''indirizzo email deve essere specificato nella sua anagrafica)');
 
-INSERT INTO `zz_settings` (`id`, `nome`, `valore`, `tipo`, `editable`, `sezione`, `order`, `help`) VALUES (NULL, 'Notifica al tecnico la rimozione dall\'attività', '0', 'boolean', '1', 'Interventi', NULL, 'Notifica via email al tecnico la rimozione dalle sessioni di lavoro che gli erano state assegnate (l\'indirizzo email deve essere specificato nella sua anagrafica)');
+INSERT INTO `zz_settings` (`id`, `nome`, `valore`, `tipo`, `editable`, `sezione`, `order`, `help`) VALUES (NULL, 'Notifica al tecnico la rimozione dall''attività', '0', 'boolean', '1', 'Interventi', NULL, 'Notifica via email al tecnico la rimozione dalle sessioni di lavoro che gli erano state assegnate (l''indirizzo email deve essere specificato nella sua anagrafica)');
 
 UPDATE `zz_settings` SET `sezione` = 'Fatturazione Elettronica' WHERE `zz_settings`.`nome` = 'Riferimento dei documenti in Fattura Elettronica';
 
@@ -133,7 +133,7 @@ ALTER TABLE `co_righe_documenti` ADD INDEX(`iddocumento`);
 INSERT INTO `zz_views` (`id_module`, `name`, `query`, `order`, `search`, `format`, `default`, `visible`) VALUES
 ((SELECT `id` FROM `zz_modules` WHERE `name` = 'Ordini fornitore'), 'Data', 'or_ordini.data', 3, 1, 0, 0, 1);
 
--- Plugin storico attività scheda Aanagrafiche
+-- Plugin storico attività scheda Anagrafiche
 INSERT INTO `zz_plugins` (`id`, `name`, `title`, `idmodule_from`, `idmodule_to`, `position`, `script`, `enabled`, `default`, `order`, `compatibility`, `version`, `options2`, `options`, `directory`, `help`) VALUES (NULL, 'Storico attività', 'Storico attività', (SELECT id FROM zz_modules WHERE name = 'Interventi'), (SELECT id FROM zz_modules WHERE name='Anagrafiche'), 'tab', '', '1', '1', '0', '2.*', '0.1', NULL, '{ "main_query": [	{	"type": "table", "fields": "Numero, Data inizio, Data fine, Tipo", "query": "SELECT in_interventi.id, in_interventi.codice AS Numero,  DATE_FORMAT(MAX(orario_inizio),''%d/%m/%Y'') AS ''Data inizio'', DATE_FORMAT(MAX(orario_fine),''%d/%m/%Y'') AS ''Data fine'', (SELECT descrizione FROM in_tipiintervento WHERE idtipointervento=in_interventi.idtipointervento) AS ''Tipo'', (SELECT `id` FROM `zz_modules` WHERE `name` = ''Interventi'') AS _link_module_, in_interventi.id AS _link_record_ FROM in_interventi LEFT JOIN `in_interventi_tecnici` ON `in_interventi_tecnici`.`idintervento` = `in_interventi`.`id` LEFT JOIN `in_statiintervento` ON `in_interventi`.`idstatointervento`=`in_statiintervento`.`idstatointervento`  WHERE 1=1 AND in_interventi.deleted_at IS NULL AND idanagrafica = |id_parent| HAVING 2=2 ORDER BY in_interventi.id DESC"}	]}', '', '');
 
 -- Fix prezzo_unitario_ivato e sconto_iva_unitario per i documenti

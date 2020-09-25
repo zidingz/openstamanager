@@ -1,4 +1,23 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+use Carbon\Carbon;
 
 include_once __DIR__.'/../../core.php';
 
@@ -9,7 +28,7 @@ $(document).ready(function() {
 });
 </script>';
 
-$skip_link = $has_next ? ROOTDIR.'/editor.php?id_module='.$id_module.'&id_plugin='.$id_plugin.'&id_record='.($id_record + 1).'&sequence='.get('sequence') : ROOTDIR.'/editor.php?id_module='.$id_module;
+$skip_link = $has_next ? base_path().'/editor.php?id_module='.$id_module.'&id_plugin='.$id_plugin.'&id_record='.($id_record + 1).'&sequence='.get('sequence') : base_path().'/editor.php?id_module='.$id_module;
 
 if (empty($fattura_pa)) {
     if (!empty($error)) {
@@ -190,7 +209,7 @@ echo '
 
 // Data di registrazione
 $data_registrazione = get('data_registrazione');
-$data_registrazione = new \Carbon\Carbon($data_registrazione);
+$data_registrazione = new Carbon($data_registrazione);
 echo '
         <div class="col-md-3">
             {[ "type": "date", "label": "'.tr('Data di registrazione').'", "name": "data_registrazione", "required": 1, "value": "'.($data_registrazione ?: $dati_generali['Data']).'", "max-date": "-now-", "min-date": "'.$dati_generali['Data'].'" ]}
@@ -235,7 +254,7 @@ echo '
 		        <i class="fa fa-refresh"></i> '.tr('Visualizza tutte le modalità').'
             </button>
 
-            {[ "type": "select", "label": "'.tr('Pagamento').'", "name": "pagamento", "required": 1, "ajax-source": "pagamenti", "select-options": {'.(!empty($codice_modalita_pagamento) ? '"codice_modalita_pagamento_fe": '.$codice_modalita_pagamento : '').'} ]}
+            {[ "type": "select", "label": "'.tr('Pagamento').'", "name": "pagamento", "required": 1, "ajax-source": "pagamenti", "select-options": '.json_encode(['codice_modalita_pagamento_fe' => $codice_modalita_pagamento]).' ]}
         </div>';
 
 // Movimentazioni
@@ -251,7 +270,6 @@ echo '
 
 // Righe
 $righe = $fattura_pa->getRighe();
-
 if (!empty($righe)) {
     echo '
     <h4>
@@ -261,15 +279,20 @@ if (!empty($righe)) {
     </h4>
 
     <div class="table-responsive">
-        <table class="table table-hover table-striped table-condensed">
-            <tr>
-                <th>'.tr('Descrizione').'</th>
-                <th width="25%">'.tr('Dati contabili').'*</th>
-                <th width="25%">'.tr('Articolo').'</th>
-            </tr>';
+        <table class="table table-striped table-hover table-condensed table-bordered">
+            <thead>
+                <tr>
+                    <th>'.tr('Descrizione').'</th>
+                    <th class="text-center" width="10%">'.tr('Quantità').'</th>
+                    <th class="text-center" width="10%">'.tr('Prezzo unitario').'</th>
+                    <th class="text-center" width="10%">'.tr('Aliquota').'</th>
+                </tr>
+            </thead>
+
+            <tbody>';
 
     foreach ($righe as $key => $riga) {
-        $query = 'SELECT id, IF(codice IS NULL, descrizione, CONCAT(codice, " - ", descrizione)) AS descrizione FROM co_iva WHERE percentuale = '.prepare($riga['AliquotaIVA']);
+        $query = "SELECT id, IF(codice IS NULL, descrizione, CONCAT(codice, ' - ', descrizione)) AS descrizione FROM co_iva WHERE percentuale = ".prepare($riga['AliquotaIVA']);
 
         if (!empty($riga['Natura'])) {
             $query .= ' AND codice_natura_fe = '.prepare($riga['Natura']);
@@ -290,87 +313,121 @@ if (!empty($righe)) {
         $id_articolo = null;
         $codice_principale = $codici[0]['CodiceValore'];
         if (!empty($codice_principale)) {
-            $id_articolo = $database->fetchOne('SELECT id FROM mg_articoli WHERE codice = '.prepare($codice_principale))['id'];
+            if (!empty($anagrafica) && empty($id_articolo)) {
+                $id_articolo = $database->fetchOne('SELECT id_articolo AS id FROM mg_fornitore_articolo WHERE codice_fornitore = '.prepare($codice_principale).' AND id_fornitore = '.prepare($anagrafica->id))['id'];
+            }
+
+            if (empty($id_articolo)) {
+                $id_articolo = $database->fetchOne('SELECT id FROM mg_articoli WHERE codice = '.prepare($codice_principale))['id'];
+            }
         }
 
+        $qta = $riga['Quantita'];
+        $um = $riga['UnitaMisura'];
+        $prezzo_unitario = $riga['PrezzoUnitario'];
+
         echo '
-        <tr>
+        <tr data-id="'.$key.'" data-qta="'.$qta.'" data-prezzo_unitario="'.$prezzo_unitario.'" data-iva_percentuale="'.$riga['AliquotaIVA'].'">
             <td>
+                <small class="pull-right text-muted" id="riferimento_'.$key.'"></small>
+
                 '.$riga['Descrizione'].'<br>
 
 				'.(!empty($codici_articoli) ? '<small>'.implode(', ', $codici_articoli).'</small><br>' : '').'
 
-                <small>'.tr('Q.tà: _QTA_ _UM_', [
-                    '_QTA_' => Translator::numberToLocale($riga['Quantita']),
-                    '_UM_' => $riga['UnitaMisura'],
-                ]).'</small><br>
+                <b id="riferimento_'.$key.'_descrizione"></b>
+            </td>
 
-                <small>'.tr('Aliquota IVA: _VALUE_ _DESC_', [
-                    '_VALUE_' => empty($riga['Natura']) ? numberFormat($riga['AliquotaIVA']).'%' : $riga['Natura'],
+            <td class="text-center">
+                '.numberFormat($qta, 'qta').' '.$um.'
+                <span id="riferimento_'.$key.'_qta"></span>
+            </td>
+
+            <td class="text-right">
+                '.moneyFormat($prezzo_unitario).'
+                <span id="riferimento_'.$key.'_prezzo"></span>
+            </td>
+
+            <td class="text-right">
+                '.replace('_VALUE_ _DESC_', [
+                    '_VALUE_' => empty($riga['Natura']) ? numberFormat($riga['AliquotaIVA'], 0).'%' : $riga['Natura'],
                     '_DESC_' => $riga['RiferimentoNormativo'] ? ' - '.$riga['RiferimentoNormativo'] : '',
-                ]).'</small>
+                ]).'
+                <span id="riferimento_'.$key.'_iva"></span>
+            </td>
+        </tr>
 
+        <tr id="dati_'.$key.'">
+            <td colspan="4" class="row">
                 <span class="hide" id="aliquota['.$key.']">'.$riga['AliquotaIVA'].'</span>
-            </td>
-            <td>
-                {[ "type": "select", "name": "iva['.$key.']", "values": "query='.str_replace('"', '\"', $query).'", "required": 1, "placeholder": "Aliquota iva" ]}
-                <br>
-                {[ "type": "select", "name": "conto['.$key.']", "ajax-source": "conti-acquisti", "required": 1, "placeholder": "Conto acquisti" ]}
-            </td>
-            <td>
-                {[ "type": "select", "name": "articoli['.$key.']", "ajax-source": "articoli", "select-options": {"permetti_movimento_a_zero": 1, "dir": "entrata", "idanagrafica": '.($anagrafica ? $anagrafica->id : '""').'}, "icon-after": "add|'.Modules::get('Articoli')['id'].'|codice='.htmlentities($codice_principale).'&descrizione='.htmlentities($riga['Descrizione']).'", "value": "'.$id_articolo.'" ]}
-
-                <br>
-                <span id="riferimento_'.$key.'"></span>
-                <button type="button" class="btn btn-info pull-right btn-xs" onclick="selezionaRiferimento('.$key.')">
-                    <i class="fa fa-chevron-right"></i> '.tr('Riferimenti').'
-                </button>
-
                 <input type="hidden" name="qta_riferimento['.$key.']" id="qta_riferimento_'.$key.'" value="'.$riga['Quantita'].'">
 
                 <input type="hidden" name="tipo_riferimento['.$key.']" id="tipo_riferimento_'.$key.'" value="">
                 <input type="hidden" name="id_riferimento['.$key.']" id="id_riferimento_'.$key.'" value="">
                 <input type="hidden" name="id_riga_riferimento['.$key.']" id="id_riga_riferimento_'.$key.'" value="">
                 <input type="hidden" name="tipo_riga_riferimento['.$key.']" id="tipo_riga_riferimento_'.$key.'" value="">
+
+                <div class="col-md-3">
+                    {[ "type": "select", "name": "articoli['.$key.']", "ajax-source": "articoli", "select-options": '.json_encode(['permetti_movimento_a_zero' => 1, 'dir' => 'entrata', 'idanagrafica' => $anagrafica ? $anagrafica->id : '']).', "icon-after": "add|'.Modules::get('Articoli')['id'].'|codice='.htmlentities($codice_principale).'&descrizione='.htmlentities($riga['Descrizione']).'", "value": "'.$id_articolo.'", "label": "'.tr('Articolo').'" ]}
+                </div>
+
+                <div class="col-md-3">
+                    {[ "type": "select", "name": "conto['.$key.']", "ajax-source": "conti-acquisti", "required": 1, "label": "'.tr('Conto acquisti').'" ]}
+                </div>
+
+                <div class="col-md-3">
+                    {[ "type": "select", "name": "iva['.$key.']", "values": '.json_encode('query='.$query).', "required": 1, "label": "'.tr('Aliquota IVA').'" ]}
+                </div>
+
+                <div class="col-md-3">
+                    {[ "type": "select", "name": "selezione_riferimento['.$key.']", "ajax-source": "riferimenti-fe", "select-options": '.json_encode(['id_anagrafica' => $anagrafica ? $anagrafica->id : '']).', "required": 0, "label": "'.tr('Riferimento').'", "icon-after": '.json_encode('<button type="button" onclick="rimuoviRiferimento(this)" class="btn btn-primary disabled" id="rimuovi_riferimento_'.$key.'"><i class="fa fa-close"></i></button>').' ]}
+                </div>
             </td>
         </tr>';
     }
 
     echo '
+            </tbody>
         </table>
     </div>';
 
     echo '
     <script>
-    function copy(){
-        var first_iva = null;
-        var first_conto = null;
+    function copy() {
+        let aliquote = $("select[name^=iva");
+        let conti = $("select[name^=conto");
 
-        $("select[name^=iva").each( function(){
-            if( $(this).val() != "" && first_iva == null ){
-                first_iva = $(this);
+        // Individuazione della prima IVA selezionata
+        let iva_selezionata = null;
+        for (const aliquota of aliquote) {
+            const data = $(aliquota).selectData();
+            if (data && data.id) {
+                iva_selezionata = data;
+                break;
             }
-        });
+        }
 
-        $("select[name^=conto").each( function(){
-            if( $(this).val() != "" && first_conto == null ){
-                first_conto = $(this);
+        // Individuazione del primo conto selezionato
+        let conto_selezionato = null;
+        for (const conto of conti) {
+            const data = $(conto).selectData();
+            if (data && data.id) {
+                conto_selezionato = data;
+                break;
             }
-        });
+        }
 
-        if(first_iva) {
-            $iva = first_iva.selectData();
-
-            $("select[name^=iva").each(function(){
-                $(this).selectSet($iva.id);
+        // Selezione generale per l\'IVA
+        if (iva_selezionata) {
+            aliquote.each(function() {
+                $(this).selectSet(iva_selezionata.id);
             });
         }
 
-        if(first_conto) {
-            $conto = first_conto.selectData();
-
-            $("select[name^=conto").each(function(){
-                $(this).selectSetNew($conto.id, $conto.text);
+        // Selezione generale per il conto
+        if (conto_selezionato) {
+            conti.each(function() {
+                $(this).selectSetNew(conto_selezionato.id, conto_selezionato.text, conto_selezionato);
             });
         }
     }
@@ -395,25 +452,134 @@ echo '
 </form>
 
 <script>
-function selezionaRiferimento(id_riga, qta) {
-    var qta = $("#qta_riferimento_" + id_riga).val();
+ $("select[name^=selezione_riferimento").change(function() {
+    let $this = $(this);
+    let data = $this.selectData();
 
-    var tipo = $("#tipo_riferimento_" + id_riga).val();
-    var id_documento = $("#id_riferimento_" + id_riga).val();
-    var id_riga_riferimento = $("#id_riga_riferimento_" + id_riga).val();
+    if (data) {
+        let riga = $this.closest("tr").prev();
+        selezionaRiferimento(riga, data.tipo, data.id);
+    }
+});
 
-    openModal("'.tr('Selezione riferimento').'", "'.$structure->fileurl('riferimento.php').'?id_module='.$id_module.'&id_plugin='.$id_plugin.'&id_record='.$id_record.'&id_riga=" + id_riga + "&qta=" + qta + "&tipo_riferimento=" + tipo + "&id_documento=" + id_documento + "&id_riga_riferimento=" + id_riga_riferimento);
-    impostaRiferimento(id_riga, "", "", null);
-    $("#riferimento_" + id_riga).html("");
+function rimuoviRiferimento(button) {
+    let riga = $(button).closest("tr").prev();
+    let id_riga = riga.data("id");
+
+    impostaRiferimento(id_riga, {}, {});
+
+    input("selezione_riferimento[" + id_riga + "]").enable()
+        .getElement().selectReset();
+    $(button).addClass("disabled");
+    riga.removeClass("success").removeClass("warning");
 }
 
-function impostaRiferimento(id_riga, tipo, id_documento, tipo_riga_riferimento, id_riga_riferimento, testo) {
-    $("#tipo_riferimento_" + id_riga).val(tipo);
-    $("#id_riferimento_" + id_riga).val(id_documento);
+function selezionaRiferimento(riga, tipo_documento, id_documento) {
+    let id_riga = riga.data("id");
+    let qta = riga.data("qta");
 
-    $("#tipo_riga_riferimento_" + id_riga).val(tipo_riga_riferimento);
-    $("#id_riga_riferimento_" + id_riga).val(id_riga_riferimento);
+    let riferimenti = getRiferimenti();
+    let query = {
+        id_module: "'.$id_module.'",
+        id_record: "'.$id_record.'",
+        qta: qta,
+        id_riga: id_riga,
+        id_documento: id_documento,
+        tipo_documento: tipo_documento,
+        righe_ddt: riferimenti.ddt,
+        righe_ordini: riferimenti.ordini,
+    };
 
-    $("#riferimento_" + id_riga).html(testo);
+    let url = "'.$structure->fileurl('riferimento.php').'?" + $.param(query);
+
+    openModal("'.tr('Selezione riferimento').'", url);
+}
+
+function getRiferimenti() {
+    let righe_ordini = {};
+    let righe_ddt = {};
+
+    $("[id^=tipo_riferimento_]").each(function(index, item) {
+        let tipo = $(item).val();
+        let riga = $(item).closest("tr");
+
+        let qta = parseFloat(riga.find("[id^=qta_riferimento_]").val());
+        let id_riga = riga.find("[id^=id_riga_riferimento_]").val();
+        if (tipo === "ordine") {
+            righe_ordini[id_riga] = righe_ordini[id_riga] ? righe_ordini[id_riga] : 0;
+            righe_ordini[id_riga] += qta;
+        } else if (tipo === "ddt") {
+            righe_ddt[id_riga] = righe_ddt[id_riga] ? righe_ddt[id_riga] : 0;
+            righe_ddt[id_riga] += qta;
+        }
+    });
+
+    return {
+        ordini: righe_ordini,
+        ddt: righe_ddt,
+    };
+}
+
+/**
+*
+* @param id_riga
+* @param documento = {tipo, id, descrizione }
+* @param riga = {tipo, id, descrizione, qta, prezzo_unitario}
+*/
+function impostaRiferimento(id_riga, documento, riga) {
+    // Informazioni interne per il riferimento
+    $("#tipo_riferimento_" + id_riga).val(documento.tipo);
+    $("#id_riferimento_" + id_riga).val(documento.id);
+    $("#tipo_riga_riferimento_" + id_riga).val(riga.tipo);
+    $("#id_riga_riferimento_" + id_riga).val(riga.id);
+
+    // Gestione della selezione
+    input("selezione_riferimento[" + id_riga + "]").disable();
+    $("#rimuovi_riferimento_" + id_riga).removeClass("disabled");
+
+    let riga_fe = $("#id_riga_riferimento_" + id_riga).closest("tr").prev();
+
+    // Informazioni visibili sulla quantità
+    impostaContenuto(riga_fe.data("qta"), riga.qta, (riga.um ? " " + riga.um : ""), "#riferimento_" + id_riga + "_qta");
+
+    // Informazioni visibili sul prezzo unitario
+    impostaContenuto(riga_fe.data("prezzo_unitario"), riga.prezzo_unitario, " " + globals.currency, "#riferimento_" + id_riga + "_prezzo");
+
+    // Informazioni visibili sull\'aliquota IVA
+    impostaContenuto(riga_fe.data("iva_percentuale"), riga.iva_percentuale, "%", "#riferimento_" + id_riga + "_iva");
+
+    $("#riferimento_" + id_riga).html(documento.descrizione ? documento.descrizione : "");
+    $("#riferimento_" + id_riga + "_descrizione").html(riga.descrizione ? riga.descrizione : "");
+
+    // Colorazione dell\'intera riga
+    let warnings = riga_fe.find(".text-warning");
+    if (warnings.length === 0) {
+        riga_fe.addClass("success").removeClass("warning");
+    } else {
+        riga_fe.removeClass("success").addClass("warning");
+    }
+}
+
+// Informazioni visibili sull\'aliquota IVA
+function impostaContenuto(valore_riga, valore_riferimento, contenuto_successivo, id_elemento) {
+    let elemento = $(id_elemento);
+    if (valore_riferimento === undefined) {
+        elemento.html("");
+        return;
+    }
+
+    valore_riga = parseFloat(valore_riga);
+    valore_riferimento = parseFloat(valore_riferimento);
+
+    let contenuto = valore_riferimento.toLocale() + contenuto_successivo;
+    if (valore_riferimento === valore_riga) {
+        contenuto = `<i class="fa fa-check"></i> ` + contenuto;
+        elemento.addClass("text-success").removeClass("text-warning");
+    } else {
+        contenuto = `<i class="fa fa-warning"></i> ` + contenuto;
+        elemento.removeClass("text-success").addClass("text-warning");
+    }
+
+    elemento.html("<br>" + contenuto);
 }
 </script>';

@@ -1,19 +1,39 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace Modules\PrimaNota;
 
-use Common\Model;
+use Common\SimpleModelTrait;
+use Illuminate\Database\Eloquent\Model;
 use Modules\Fatture\Fattura;
-use Modules\Scadenzario\Scadenza;
-
-/**
+/*
  * Struttura ausiliaria dedicata alla raggruppamento e alla gestione di un insieme di Movimenti, unificati attraverso il numero di mastrino.
  *
  * Questa classe non è utilizzabile come normale modello Eloquent poichè non prevede operazioni di modifica a livello di database.
  * La creazione di un record può essere utilizzata per la gestione di un insieme di Movimenti, mentre l'eliminazione provoca la rimozione in cascata dei Movimenti associati al Mastrino.
  */
+use Modules\Scadenzario\Scadenza;
+
 class Mastrino extends Model
 {
+    use SimpleModelTrait;
+
     public $incrementing = false;
     protected $table = 'co_movimenti';
     protected $primaryKey = 'idmastrino';
@@ -27,7 +47,7 @@ class Mastrino extends Model
 
     public static function build($descrizione, $data, $is_insoluto = false, $contabile = false)
     {
-        $model = parent::build();
+        $model = new static();
 
         $model->idmastrino = self::getNextMastrino();
         $model->data = $data;

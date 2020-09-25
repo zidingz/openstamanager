@@ -1,4 +1,23 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+use Carbon\Carbon;
 
 include_once __DIR__.'/../../core.php';
 
@@ -18,32 +37,32 @@ echo '
         <td class="text-left" style="width:25%">'.tr('Contratto n.').': <b>'.(!empty($contratto) ? $contratto['numero'] : '').'</b></td>
     </tr>';
 
-    // Dati cliente
-    echo '
+// Dati cliente
+echo '
         <tr>
             <td colspan=2>
                 '.tr('Cliente').': <b>'.$c_ragionesociale.'</b>
             </td>';
 
-    // Codice fiscale o P.Iva
+// Codice fiscale o P.Iva
 
-    if (!empty($c_piva)) {
-        echo '
+if (!empty($c_piva)) {
+    echo '
 				<td colspan=2>
 					'.tr('P.Iva').': <b>'.strtoupper($c_piva).'</b>
 				</td>';
-    } else {
-        echo '
+} else {
+    echo '
     			<td colspan=2>
     				'.tr('C.F.').': <b>'.strtoupper($c_codicefiscale).'</b>
     			</td>';
-    }
+}
 
-    echo '</tr>';
+echo '</tr>';
 
-    //Indirizzo
-    if (!empty($s_indirizzo) or !empty($s_cap) or !empty($s_citta) or !empty($s_provincia)) {
-        echo '
+// Indirizzo
+if (!empty($s_indirizzo) or !empty($s_cap) or !empty($s_citta) or !empty($s_provincia)) {
+    echo '
 			<tr>
 				<td colspan="4">
 					'.((!empty($s_indirizzo)) ? tr('Via').': <b>'.$s_indirizzo.'</b>' : '').'
@@ -52,8 +71,8 @@ echo '
 					'.((!empty($s_provincia)) ? tr('Provincia').': <b>'.strtoupper($s_provincia).'</b>' : '').'
 				</td>
 			</tr>';
-    } elseif (!empty($c_indirizzo) or !empty($c_cap) or !empty($c_citta) or !empty($c_provincia)) {
-        echo '
+} elseif (!empty($c_indirizzo) or !empty($c_cap) or !empty($c_citta) or !empty($c_provincia)) {
+    echo '
 			<tr>
 				<td colspan="4">
 					'.((!empty($c_indirizzo)) ? tr('Via').': <b>'.$c_indirizzo.'</b>' : '').'
@@ -62,15 +81,15 @@ echo '
 					'.((!empty($c_provincia)) ? tr('Provincia').': <b>'.strtoupper($c_provincia).'</b>' : '').'
 				</td>
 			</tr>';
-    }
+}
 
 echo '
     <tr>
         <td colspan="4">
             '.tr('Telefono').': <b>'.$c_telefono.'</b>';
-    if (!empty($c_cellulare)) {
-        echo' - '.tr('Cellulare').': <b>'.$c_cellulare.'</b>';
-    }
+if (!empty($c_cellulare)) {
+    echo' - '.tr('Cellulare').': <b>'.$c_cellulare.'</b>';
+}
 echo '
         </td>
     </tr>';
@@ -239,20 +258,12 @@ echo '
             </th>
         </tr>
         <tr>
-            <th class="text-center" style="font-size:8pt;">
+            <th class="text-center" style="font-size:8pt;width:30%">
                 <b>'.tr('Tecnico').'</b>
             </th>
 
-            <th class="text-center" style="font-size:8pt;width:14%">
-                <b>'.tr('Data').'</b>
-            </th>
-
-            <th class="text-center" style="font-size:8pt;width:7%">
-                <b>'.tr('Dalle').'</b>
-            </th>
-
-            <th class="text-center" style="font-size:8pt;width:7%">
-                <b>'.tr('Alle').'</b>
+            <th class="text-center" colspan="3" style="font-size:8pt;width:35%">
+                <b>'.tr('Orario').'</b>
             </th>
 
             <td class="text-center" style="font-size:6pt;width:35%">
@@ -264,7 +275,6 @@ echo '
     <tbody>';
 
 // Sessioni di lavoro dei tecnici
-
 $sessioni = $documento->sessioni;
 foreach ($sessioni as $i => $sessione) {
     echo '
@@ -276,23 +286,19 @@ foreach ($sessioni as $i => $sessione) {
     	    '.$sessione->anagrafica->ragione_sociale.'
     	</td>';
 
-    // Data
-    echo '
-    	<td class="text-center">
-            '.Translator::dateToLocale($sessione['orario_inizio']).'
-    	</td>';
+    $inizio = new Carbon($sessione['orario_inizio']);
+    $fine = new Carbon($sessione['orario_fine']);
+    if ($inizio->isSameDay($fine)) {
+        $orario = timestampFormat($inizio).' - '.timeFormat($fine);
+    } else {
+        $orario = timestampFormat($inizio).' - '.timestampFormat($fine);
+    }
 
-    // Ora inizio
+    // Orario
     echo '
-    	<td class="text-center">
-            '.Translator::timeToLocale($sessione['orario_inizio']).'
+    	<td class="text-center" colspan="3">
+            '.$orario.'
     	</td>';
-
-    // Ora fine
-    echo '
-    	<td class="text-center">
-            '.Translator::timeToLocale($sessione['orario_fine']).'
-        </td>';
 
     // Spazio aggiuntivo
     if ($i == 0) {
@@ -328,7 +334,7 @@ if ($options['pricing']) {
 }
 
 // Timbro e firma
-$firma = !empty($documento['firma_file']) ? '<img src="'.DOCROOT.'/files/interventi/'.$documento['firma_file'].'" style="width:70mm;">' : '';
+$firma = !empty($documento['firma_file']) ? '<img src="'.base_dir().'/files/interventi/'.$documento['firma_file'].'" style="width:70mm;">' : '';
 
 echo '
         <td rowspan="2" class="text-center" style="font-size:8pt;height:30mm;vertical-align:bottom">

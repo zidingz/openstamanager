@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/core.php';
 
@@ -8,9 +25,9 @@ use Carbon\Carbon;
 $read_only = $structure->permission == 'r';
 
 if (empty($id_record) && !empty($id_module) && empty($id_plugin)) {
-    redirect(ROOTDIR.'/controller.php?id_module='.$id_module);
+    redirect(base_path().'/controller.php?id_module='.$id_module);
 } elseif (empty($id_record) && empty($id_module) && empty($id_plugin)) {
-    redirect(ROOTDIR.'/index.php');
+    redirect(base_path().'/index.php');
 }
 
 include_once App::filepath('include|custom|', 'top.php');
@@ -22,13 +39,16 @@ if (!empty($id_record)) {
     ]);
     Util\Query::setSegments(true);
 }
-$query = str_replace(['AND `deleted_at` IS NULL', '`deleted_at` IS NULL AND', '`deleted_at` IS NULL', 'AND deleted_at IS NULL', 'deleted_at IS NULL AND', 'deleted_at IS NULL'], '', $query);
+// Replace automatico del campo deleted_at se non specifico a una tabella
+if (!str_contains($query, '.`deleted_at`') && !str_contains($query, '.deleted_at')) {
+    $query = str_replace(['AND `deleted_at` IS NULL', '`deleted_at` IS NULL AND', '`deleted_at` IS NULL', 'AND deleted_at IS NULL', 'deleted_at IS NULL AND', 'deleted_at IS NULL'], '', $query);
+}
 
 $has_access = !empty($query) ? $dbo->fetchNum($query) !== 0 : true;
 
 if ($has_access) {
     // Inclusione gli elementi fondamentali
-    include_once DOCROOT.'/actions.php';
+    include_once base_dir().'/actions.php';
 }
 
 if (empty($record) || !$has_access) {
@@ -41,7 +61,7 @@ if (empty($record) || !$has_access) {
             </h3>
             <br>
 
-            <a class="btn btn-default" href="'.ROOTDIR.'/controller.php?id_module='.$id_module.'">
+            <a class="btn btn-default" href="'.base_path().'/controller.php?id_module='.$id_module.'">
                 <i class="fa fa-chevron-left"></i> '.tr('Indietro').'
             </a>
         </div>';
@@ -69,64 +89,7 @@ if (empty($record) || !$has_access) {
 		</div>';
     }
 
-    // Menu laterale per la visualizzazione dei plugin
     echo '
-        <aside class="control-sidebar control-sidebar-light">
-            <h4 class="text-center">'.tr('Plugin disponibili').'</h4>
-            <ul class="nav nav-tabs nav-pills nav-stacked">
-                <li data-toggle="control-sidebar" class="active">
-                    <a data-toggle="tab" href="#tab_0">
-                        <i class="'.$structure['icon'].'"></i> '.$structure['title'].'
-                    </a>
-                </li>';
-
-    // Tab dei plugin
-    $plugins = $module->plugins;
-    foreach ($plugins as $plugin) {
-        echo '
-                <li data-toggle="control-sidebar">
-                    <a data-toggle="tab" href="#tab_'.$plugin['id'].'" id="link-tab_'.$plugin['id'].'">
-                        '.$plugin['title'].'
-                    </a>
-                </li>';
-    }
-
-    // Tab per le note interne
-    if ($structure->permission != '-' && $structure->use_notes) {
-        $notes = $structure->recordNotes($id_record);
-
-        echo '
-                <li data-toggle="control-sidebar" class="bg-info">
-                    <a data-toggle="tab" href="#tab_note" id="link-tab_note">
-                        '.tr('Note interne').'
-                        <span class="badge">'.($notes->count() ?: '').'</span>
-                    </a>
-                </li>';
-    }
-
-    // Tab per le checklist
-    if ($structure->permission != '-' && $structure->use_checklists) {
-        echo '
-                <li data-toggle="control-sidebar" class="bg-success">
-                    <a data-toggle="tab" href="#tab_checks" id="link-tab_checks">'.tr('Checklist').'</a>
-                </li>';
-    }
-
-    // Tab per le informazioni sulle operazioni
-    if (Auth::admin()) {
-        echo '
-                <li data-toggle="control-sidebar" class="bg-warning">
-                    <a data-toggle="tab" href="#tab_info" id="link-tab_info">
-                        '.tr('Info').'
-                    </a>
-                </li>';
-    }
-
-    echo '
-            </ul>
-        </aside>
-
-        <div class="control-sidebar-bg"></div>
 
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs pull-right" id="tabs" role="tablist">
@@ -144,7 +107,7 @@ if (empty($record) || !$has_access) {
 					</a>
 				</li>
 
-				<li>
+				<li class="control-sidebar-toggle">
                     <a data-toggle="control-sidebar" style="cursor: pointer">'.tr('Plugin').'</a>
                 </li>
 			</ul>
@@ -182,7 +145,7 @@ if (empty($record) || !$has_access) {
     // Pulsanti di default
     echo '
                     <div id="pulsanti">
-                        <a class="btn btn-warning" href="'.ROOTDIR.'/controller.php?id_module='.$id_module.'">
+                        <a class="btn btn-warning" href="'.base_path().'/controller.php?id_module='.$id_module.'">
                             <i class="fa fa-chevron-left"></i> '.tr("Torna all'elenco").'
                         </a>
 
@@ -302,11 +265,11 @@ if (empty($record) || !$has_access) {
                 });
                 </script>';
 
-    if ($structure->permission != '-' && $structure->use_notes) {
+    if ($structure->permission != '-' && $structure->use_notes && $user->gruppo != 'Clienti') {
         echo '
                 <div id="tab_note" class="tab-pane">';
 
-        include DOCROOT.'/plugins/notes.php';
+        include base_dir().'/plugins/notes.php';
 
         echo '
                 </div>';
@@ -316,7 +279,7 @@ if (empty($record) || !$has_access) {
         echo '
                 <div id="tab_checks" class="tab-pane">';
 
-        include DOCROOT.'/plugins/checks.php';
+        include base_dir().'/plugins/checks.php';
 
         echo '
                 </div>';
@@ -418,7 +381,7 @@ if (empty($record) || !$has_access) {
 
         $id_plugin = $plugin['id'];
 
-        include DOCROOT.'/include/manager.php';
+        include base_dir().'/include/manager.php';
 
         echo '
 				</div>';
@@ -439,7 +402,7 @@ echo '{( "name": "widgets", "id_module": "'.$id_module.'", "id_record": "'.$id_r
 if (!empty($record)) {
     echo '
     		<hr>
-            <a class="btn btn-default" href="'.ROOTDIR.'/controller.php?id_module='.$id_module.'">
+            <a class="btn btn-default" href="'.base_path().'/controller.php?id_module='.$id_module.'">
                 <i class="fa fa-chevron-left"></i> '.tr('Indietro').'
             </a>';
 }
@@ -457,6 +420,12 @@ if ($read_only || !empty($block_edit)) {
                 $("select, input[type=checkbox]", "section.content")'.$not.'.prop("disabled", true);
                 $(".checkbox-buttons label", "section.content")'.$not.'.addClass("disabled");
                 ';
+
+    // Nascondo il plugin Note interne ai clienti
+    if ($user->gruppo == 'Clienti') {
+        echo '
+                $("#link-tab_note").hide();';
+    }
 
     if ($read_only) {
         echo '
@@ -511,7 +480,7 @@ if (!empty($advanced_sessions)) {
     ?>
 
             function getActiveUsers(){
-                $.getJSON('<?php echo ROOTDIR; ?>/ajax.php?op=active_users', {
+                $.getJSON('<?php echo base_path(); ?>/ajax.php?op=active_users', {
                     id_module: <?php echo $id_module; ?>,
                     id_record: <?php echo $id_record; ?>
                 },

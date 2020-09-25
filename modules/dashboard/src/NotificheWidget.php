@@ -38,7 +38,7 @@ class NotificheWidget extends ModalWidget
         $html = '';
         $moduli = $notes->groupBy('id_module')->sortBy('notification_date');
         foreach ($moduli as $module_id => $note) {
-            $modulo = Module::get($module_id);
+            $modulo = Module::pool($module_id);
 
             $html .= '
 <h4>'.$modulo->title.'</h4>

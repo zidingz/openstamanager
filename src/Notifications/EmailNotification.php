@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace Notifications;
 
@@ -212,7 +229,7 @@ class EmailNotification extends PHPMailer implements NotificationInterface
     {
         $attachment = database()->fetchOne('SELECT * FROM zz_files WHERE id = '.prepare($file_id));
 
-        $this->addAttachment(DOCROOT.'/'.Uploads::getDirectory($attachment['id_module'], $attachment['id_plugin']).'/'.$attachment['filename']);
+        $this->addAttachment(base_dir().'/'.Uploads::getDirectory($attachment['id_module'], $attachment['id_plugin']).'/'.$attachment['filename']);
     }
 
     /**
@@ -265,7 +282,7 @@ class EmailNotification extends PHPMailer implements NotificationInterface
     protected function getTempDirectory()
     {
         if (!isset($this->directory)) {
-            $this->directory = DOCROOT.'/files/notifications/'.rand(0, 999);
+            $this->directory = base_dir().'/files/notifications/'.rand(0, 999);
 
             directory($this->directory);
         }

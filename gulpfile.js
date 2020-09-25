@@ -1,3 +1,21 @@
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 // Librerie NPM richieste per l'esecuzione
 const gulp = require('gulp');
 const merge = require('merge-stream');
@@ -76,6 +94,7 @@ const JS = gulp.parallel(() => {
         'datatables.net-scroller/js/dataTables.scroller.js',
         'datatables.net-select/js/dataTables.select.js',
         'dropzone/dist/dropzone.js',
+        'autonumeric/dist/autoNumeric.min.js',
         'eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
         'fullcalendar/dist/fullcalendar.js',
         'geocomplete/jquery.geocomplete.js',
@@ -370,6 +389,7 @@ function release(done) {
     glob([
         '**/*',
         '!checksum.json',
+        '!database.json',
         '!.idea/**',
         '!.git/**',
         '!node_modules/**',
@@ -416,6 +436,20 @@ function release(done) {
         checksumFile.write(JSON.stringify(checksum));
         checksumFile.close();
         archive.file('checksum.json', {});
+
+        // Aggiunta del file per il controllo di integrità del database
+        archive.append(shell.exec(`php -r '
+        error_reporting(0);
+        $skip_permissions = true;
+        include_once __DIR__."/core.php";
+        $info = Update::getDatabaseStructure();
+        $response = json_encode($info);
+        echo $response;
+        '`, {
+            silent: true
+        }).stdout, {
+            name: 'database.json'
+        });
 
         // Aggiunta del commit corrente nel file REVISION
         archive.append(shell.exec('git rev-parse --short HEAD', {

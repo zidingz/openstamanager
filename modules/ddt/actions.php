@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -286,7 +303,7 @@ switch (post('op')) {
         }
         $documento = $class::find($id_documento);
 
-    // Individuazione sede
+        // Individuazione sede
         $id_sede = ($documento->direzione == 'entrata') ? $documento->idsede_destinazione : $documento->idsede_partenza;
         $id_sede = $id_sede ?: $documento->idsede;
         $id_sede = $id_sede ?: 0;
@@ -303,6 +320,8 @@ switch (post('op')) {
             $ddt->codice_cig = $documento->codice_cig;
             $ddt->num_item = $documento->num_item;
             $ddt->idsede_destinazione = $id_sede;
+
+            $ddt->idcausalet = post('id_causale_trasporto');
 
             $ddt->save();
 
@@ -325,6 +344,12 @@ switch (post('op')) {
 
                 $copia->save();
             }
+        }
+
+        // Modifica finale dello stato
+        if (post('create_document') == 'on') {
+            $ddt->idstatoddt = post('id_stato');
+            $ddt->save();
         }
 
         ricalcola_costiagg_ddt($id_record);

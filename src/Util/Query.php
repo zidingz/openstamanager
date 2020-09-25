@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace Util;
 
@@ -68,23 +85,26 @@ class Query
 
         // Sostituzione periodi temporali
         preg_match('|date_period\((.+?)\)|', $query, $matches);
-        $dates = explode(',', $matches[1]);
-        $date_filter = $matches[0];
+        $date_query = $date_filter = null;
+        if (!empty($matches)) {
+            $dates = explode(',', $matches[1]);
+            $date_filter = $matches[0];
 
-        $filters = [];
-        if ($dates[0] != 'custom') {
-            foreach ($dates as $date) {
-                $filters[] = $date." BETWEEN '|period_start|' AND '|period_end|'";
-            }
-        } else {
-            foreach ($dates as $k => $v) {
-                if ($k < 1) {
-                    continue;
+            $filters = [];
+            if ($dates[0] != 'custom') {
+                foreach ($dates as $date) {
+                    $filters[] = $date." BETWEEN '|period_start|' AND '|period_end|'";
                 }
-                $filters[] = $v;
+            } else {
+                foreach ($dates as $k => $v) {
+                    if ($k < 1) {
+                        continue;
+                    }
+                    $filters[] = $v;
+                }
             }
+            $date_query = !empty($filters) && !empty(self::$segments) ? ' AND ('.implode(' OR ', $filters).')' : '';
         }
-        $date_query = !empty($filters) && !empty(self::$segments) ? ' AND ('.implode(' OR ', $filters).')' : '';
 
         // Sostituzione periodi temporali
         preg_match('|segment\((.+?)\)|', $query, $matches);
@@ -107,6 +127,9 @@ class Query
 
             // Segmenti
             '|'.$segment_filter.'|' => !empty($segment) ? ' AND '.$segment_name.' = '.prepare($segment) : '',
+
+            // Filtro dinamico per il modulo Giacenze sedi
+            '|giacenze_sedi_idsede|' => prepare(isset($_SESSION['giacenze_sedi']) ? $_SESSION['giacenze_sedi']['idsede'] : null),
         ];
 
         // Sostituzione dei formati
@@ -334,7 +357,7 @@ class Query
 
         // Aggiunta eventuali filtri dai segmenti per eseguire la query filtrata
         $module_name = $element['attributes']['name'];
-        $module = Modules\Module::get($module_name);
+        $module = Modules\Module::pool($module_name);
         if (!empty($module)) {
             $query = str_replace('1=1', '1=1 '.$module->getAdditionalsQuery(null, self::$segments), $query);
         }

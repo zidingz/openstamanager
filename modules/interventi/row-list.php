@@ -1,14 +1,27 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-use Modules\Interventi\Intervento;
-
-include_once __DIR__.'/../../core.php';
+include_once __DIR__.'/init.php';
 
 $show_prezzi = Auth::user()['gruppo'] != 'Tecnici' || (Auth::user()['gruppo'] == 'Tecnici' && setting('Mostra i prezzi al tecnico'));
 
-$intervento = $intervento ?: Intervento::find($id_record);
 $righe = $intervento->getRighe();
-
 if (!$righe->isEmpty()) {
     echo '
 <div class="table-responsive">
@@ -151,9 +164,9 @@ if (!$righe->isEmpty()) {
 echo '
 <script type="text/javascript">
 async function modificaRiga(button) {
-    var riga = $(button).closest("tr");
-    var id = riga.data("id");
-    var type = riga.data("type");
+    let riga = $(button).closest("tr");
+    let id = riga.data("id");
+    let type = riga.data("type");
 
     // Salvataggio via AJAX
     let valid = await salvaForm(button, $("#edit-form"));
@@ -176,9 +189,9 @@ function rimuoviRiga(button) {
         showCancelButton: true,
         confirmButtonText: "'.tr('Sì').'"
     }).then(function () {
-        var riga = $(button).closest("tr");
-        var id = riga.data("id");
-        var type = riga.data("type");
+        let riga = $(button).closest("tr");
+        let id = riga.data("id");
+        let type = riga.data("type");
 
         $.ajax({
             url: globals.rootdir + "/actions.php",
@@ -202,9 +215,9 @@ function rimuoviRiga(button) {
 }
 
 function modificaSeriali(button) {
-    var riga = $(button).closest("tr");
-    var id = riga.data("id");
-    var type = riga.data("type");
+    let riga = $(button).closest("tr");
+    let id = riga.data("id");
+    let type = riga.data("type");
 
     openModal("'.tr('Aggiorna SN').'", globals.rootdir + "/modules/fatture/add_serial.php?id_module=" + globals.id_module + "&id_record=" + globals.id_record + "&riga_id=" + id + "&riga_type=" + type);
 }

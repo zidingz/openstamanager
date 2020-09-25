@@ -1,7 +1,25 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 use Modules\Articoli\Articolo;
 use Modules\Articoli\Categoria;
+use Util\Ini;
 
 include_once __DIR__.'/../../core.php';
 
@@ -112,8 +130,21 @@ switch (post('op')) {
 
         // Salvataggio info componente (campo `contenuto`)
         if (!empty($componente)) {
-            $contenuto = \Util\Ini::write(file_get_contents(DOCROOT.'/files/my_impianti/'.$componente), $post);
+            $contenuto_precedente_esistente = !empty($articolo->contenuto);
+            $contenuto = file_get_contents(base_dir().'/files/impianti/'.$componente);
+            $contenuto_componente = Ini::read($contenuto);
 
+            // Lettura dei campi esistenti per preservarne il valore
+            // Se non è presente un componente, copia i valori dal file di origine
+            $campi_componente = [];
+            foreach ($contenuto_componente as $key => $value) {
+                $valore = $contenuto_precedente_esistente ? filter($key) : $value['valore'];
+
+                $campi_componente[$key] = $valore;
+            }
+            $contenuto = Ini::write($contenuto, $campi_componente);
+
+            // Salvataggio dei dati
             $dbo->query('UPDATE mg_articoli SET contenuto='.prepare($contenuto).' WHERE id='.prepare($id_record));
         } else {
             $dbo->query('UPDATE mg_articoli SET contenuto = \'\' WHERE id='.prepare($id_record));

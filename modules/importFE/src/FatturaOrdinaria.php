@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace Plugins\ImportFE;
 
@@ -135,17 +152,17 @@ class FatturaOrdinaria extends FatturaElettronica
                 $obj = Riga::build($fattura);
             }
 
+            $obj->descrizione = $riga['Descrizione'];
+
             // Collegamento al documento di riferimento
             if (!empty($tipi_riferimenti[$key])) {
-                $obj->original_id = $id_riferimenti[$key];
-                $obj->original_type = $tipi_riferimenti[$key];
+                list($riferimento_precedente, $nuovo_riferimento) = $obj->impostaOrigine($tipi_riferimenti[$key], $id_riferimenti[$key]);
 
-                // Riferimenti deprecati
-                //$id_rif = strpos($tipi_riferimenti[$key], 'Ordini') === false ? 'idddt' : 'idordine';
-                //$obj->{$id_rif} = $obj->original_id;
+                // Correzione della descrizione
+                $obj->descrizione = str_replace($riferimento_precedente, '', $obj->descrizione);
+                $obj->descrizione .= $nuovo_riferimento;
             }
 
-            $obj->descrizione = $riga['Descrizione'];
             $obj->id_iva = $iva[$key];
             $obj->idconto = $conto[$key];
 

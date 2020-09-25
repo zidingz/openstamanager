@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -65,7 +82,7 @@ foreach ($results as $result) {
                             '_NUMBER_' => $cont,
                         ]).'</h3>
 						<a class="btn btn-danger pull-right" onclick="';
-    echo "if(confirm('".tr('Eliminare questo elemento?')."')){ location.href='".$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'&op=delete_rata&id='.$result['id']."'; }";
+    echo "if(confirm('".tr('Eliminare questo elemento?')."')){ location.href='".base_path().'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'&op=delete_rata&id='.$result['id']."'; }";
     echo '"><i class="fa fa-trash"></i> '.tr('Elimina').'</a>
 					</div>
 					<div class="box-body">
@@ -73,7 +90,7 @@ foreach ($results as $result) {
 
 						<div class="row">
 							<div class="col-md-6">
-								{[ "type": "number", "label": "'.tr('Percentuale').'", "name": "percentuale[]", "value": "'.$result['prc'].'", "icon-after": "<i class=\"fa fa-percent\"></i>" ]}
+								{[ "type": "number", "label": "'.tr('Percentuale').'", "name": "percentuale[]", "decimals": "2", "min-value": "0", "value": "'.$result['prc'].'", "icon-after": "<i class=\"fa fa-percent\"></i>" ]}
 							</div>
 
 							<div class="col-md-6">
@@ -107,7 +124,7 @@ foreach ($results as $result) {
 							</div>
 
 							<div class="col-md-6">
-								{[ "type": "number", "label": "'.tr('Distanza in giorni').'", "name": "distanza[]", "decimals": "0", "value": "'.$result['num_giorni'].'" ]}
+								{[ "type": "number", "label": "'.tr('Distanza in giorni').'", "name": "distanza[]", "decimals": "0", "min-value": "0", "value": "'.$result['num_giorni'].'" ]}
 							</div>
 						</div>
 					</div>

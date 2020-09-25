@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace Plugins\ReceiptFE;
 
@@ -78,7 +95,7 @@ class Ricevuta
         if (!isset(self::$directory)) {
             $plugin = Plugins::get('Ricevute FE');
 
-            self::$directory = DOCROOT.'/'.$plugin->upload_directory;
+            self::$directory = base_dir().'/'.$plugin->upload_directory;
         }
 
         return self::$directory;
@@ -109,7 +126,7 @@ class Ricevuta
 
         // Modifica lo stato solo se la fattura non è già stata consegnata (per evitare problemi da doppi invii)
         // In realtà per le PA potrebbe esserci lo stato NE (che può contenere un esito positivo EC01 o negativo EC02) successivo alla RC,
-        // quindi aggiungo eccezzione nel caso il nuovo codice della ricevuta sia NE.
+        // quindi aggiungo eccezione nel caso il nuovo codice della ricevuta sia NE.
         if ($fattura->codice_stato_fe == 'RC' && ($codice != 'EC01' || $codice != 'EC02')) {
             return;
         }
@@ -118,7 +135,7 @@ class Ricevuta
         $descrizione = $this->xml['Destinatario']['Descrizione'];
         $data = $this->xml['DataOraRicezione'];
 
-        $fattura->data_stato_fe = date('Y-m-d H:i:s', strtotime($data));
+        $fattura->data_stato_fe = $data ? date('Y-m-d H:i:s', strtotime($data)) : '';
         $fattura->codice_stato_fe = $codice;
         $fattura->descrizione_ricevuta_fe = $descrizione;
 

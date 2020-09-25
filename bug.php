@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 use Modules\Emails\Account;
 use Notifications\EmailNotification;
@@ -21,13 +38,13 @@ if (filter('op') == 'send') {
     $mail->Subject = 'Segnalazione bug OSM '.$version;
 
     // Aggiunta dei file di log (facoltativo)
-    if (!empty(post('log')) && file_exists($docroot.'/logs/error.log')) {
-        $mail->AddAttachment($docroot.'/logs/error.log');
+    if (!empty(post('log')) && file_exists(base_dir().'/logs/error.log')) {
+        $mail->AddAttachment(base_dir().'/logs/error.log');
     }
 
     // Aggiunta della copia del database (facoltativo)
     if (!empty(post('sql'))) {
-        $backup_file = $docroot.'/Backup OSM '.date('Y-m-d').' '.date('H_i_s').'.sql';
+        $backup_file = base_dir().'/Backup OSM '.date('Y-m-d').' '.date('H_i_s').'.sql';
         Backup::database($backup_file);
 
         $mail->AddAttachment($backup_file);
@@ -70,7 +87,7 @@ if (filter('op') == 'send') {
         delete($backup_file);
     }
 
-    redirect($rootdir.'/bug.php');
+    redirect(base_path().'/bug.php');
     exit();
 }
 

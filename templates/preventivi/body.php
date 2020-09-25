@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 use Carbon\CarbonInterval;
 
@@ -125,17 +142,18 @@ echo '
 
     <tbody>';
 
+$num = 0;
 foreach ($righe as $riga) {
+    ++$num;
     $r = $riga->toArray();
 
     $autofill->count($r['descrizione']);
 
     echo '
-        <tr>';
-
-    echo'
-        <td class="text-center" style="vertical-align: middle" >
-            '.($r['order'] + 1).'</td>';
+        <tr>
+            <td class="text-center" style="vertical-align: middle" width="25">
+                '.$num.'
+            </td>';
 
     if ($has_images) {
         echo '<td class=\"text-center\" style=\"vertical-align: middle\" >';
@@ -240,7 +258,7 @@ if (($options['pricing'] && !isset($options['hide_total'])) || $options['show_on
             <b>'.tr('Imponibile', [], ['upper' => true]).':</b>
         </td>
 
-        <th colspan="'.($options['show_only_total'] ? 1 : 3).'" class="text-right">
+        <th colspan="'.($options['show_only_total'] ? (($has_images) ? 2 : 1) : (($has_images) ? 3 : 2)).'" class="text-right">
             <b>'.moneyFormat($show_sconto ? $imponibile : $totale_imponibile, 2).'</b>
         </th>
     </tr>';
@@ -253,7 +271,7 @@ if (($options['pricing'] && !isset($options['hide_total'])) || $options['show_on
             <b>'.tr('Sconto', [], ['upper' => true]).':</b>
         </td>
 
-        <th colspan="'.($options['show_only_total'] ? 1 : 3).'" class="text-right">
+        <th colspan="'.($options['show_only_total'] ? (($has_images) ? 2 : 1) : (($has_images) ? 3 : 2)).'" class="text-right">
             <b>'.moneyFormat($sconto, 2).'</b>
         </th>
     </tr>';
@@ -265,7 +283,7 @@ if (($options['pricing'] && !isset($options['hide_total'])) || $options['show_on
             <b>'.tr('Totale imponibile', [], ['upper' => true]).':</b>
         </td>
 
-        <th colspan="'.($options['show_only_total'] ? 1 : 3).'" class="text-right">
+        <th colspan="'.($options['show_only_total'] ? (($has_images) ? 2 : 1) : (($has_images) ? 3 : 2)).'" class="text-right">
             <b>'.moneyFormat($totale_imponibile, 2).'</b>
         </th>
     </tr>';
@@ -278,7 +296,7 @@ if (($options['pricing'] && !isset($options['hide_total'])) || $options['show_on
             <b>'.tr('Totale IVA', [], ['upper' => true]).':</b>
         </td>
 
-        <th colspan="'.($options['show_only_total'] ? 1 : 3).'" class="text-right">
+        <th colspan="'.($options['show_only_total'] ? (($has_images) ? 2 : 1) : (($has_images) ? 3 : 2)).'" class="text-right">
             <b>'.moneyFormat($totale_iva, 2).'</b>
         </th>
     </tr>';
@@ -289,7 +307,7 @@ if (($options['pricing'] && !isset($options['hide_total'])) || $options['show_on
     	<td colspan="'.($options['show_only_total'] ? 2 : 4).'" class="text-right border-top">
             <b>'.tr('Totale documento', [], ['upper' => true]).':</b>
     	</td>
-    	<th colspan="'.($options['show_only_total'] ? 1 : 3).'" class="text-right">
+    	<th colspan="'.($options['show_only_total'] ? (($has_images) ? 2 : 1) : (($has_images) ? 3 : 2)).'" class="text-right">
     		<b>'.moneyFormat($totale, 2).'</b>
     	</th>
     </tr>';

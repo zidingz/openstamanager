@@ -1,8 +1,25 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Articoli\Articolo;
-use Plugins\FornitoriArticolo\Dettaglio;
+use Plugins\DettagliArticolo\DettaglioFornitore;
 
 include_once __DIR__.'/../../core.php';
 
@@ -15,7 +32,7 @@ $anagrafica = Anagrafica::find($id_anagrafica);
 $id_riga = get('id_riga');
 $fornitore = [];
 if (!empty($id_riga)) {
-    $fornitore = Dettaglio::find($id_riga);
+    $fornitore = DettaglioFornitore::find($id_riga);
 } else {
     $fornitore = $articolo->dettaglioFornitore($id_anagrafica);
 }
@@ -47,15 +64,11 @@ echo '
     </div>
 
     <div class="row">
-        <div class="col-md-4">
-            {[ "type": "number", "label": "'.tr('Prezzo acquisto').'", "name": "prezzo_acquisto", "required": 1, "value": "'.$fornitore['prezzo_acquisto'].'", "icon-after": "&euro;" ]}
-        </div>
-
-        <div class="col-md-4">
+        <div class="col-md-6">
             {[ "type": "number", "label": "'.tr('Qta minima ordinabile').'", "name": "qta_minima", "required": 0, "value": "'.$fornitore['qta_minima'].'", "icon-after": "'.$articolo->um.'" ]}
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-6">
             {[ "type": "text", "label": "'.tr('Tempi di consegna').'", "name": "giorni_consegna", "class": "text-right", "required": 0, "value": "'.$fornitore['giorni_consegna'].'", "icon-after": "'.tr('gg').'" ]}
         </div>
     </div>

@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../../core.php';
 
@@ -10,20 +27,20 @@ echo '
         <div class="pull-right">';
 if (empty($_GET['movimentazione_completa'])) {
     echo '
-        <a class="btn btn-info btn-xs" href="'.$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'&movimentazione_completa=1#tab_'.$id_plugin.'">
+        <a class="btn btn-info btn-xs" href="'.base_path().'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'&movimentazione_completa=1#tab_'.$id_plugin.'">
             <i class="fa fa-eye"></i>
             '.tr('Mostra tutti i movimenti').'
         </a>';
 } else {
     echo '
-        <a class="btn btn-info btn-xs" href="'.$rootdir.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'&movimentazione_completa=0#tab_'.$id_plugin.'">
+        <a class="btn btn-info btn-xs" href="'.base_path().'/editor.php?id_module='.$id_module.'&id_record='.$id_record.'&movimentazione_completa=0#tab_'.$id_plugin.'">
             <i class="fa fa-eye-slash"></i>
             '.tr('Mostra gli ultimi 20 movimenti').'
         </a>';
 }
 
 echo '
-        <a class="btn btn-warning btn-xs" href="'.$rootdir.'/controller.php?id_module='.Modules::get('Movimenti')->id.'&search_Articolo='.($articolo->codice.' - '.$articolo->descrizione).'">
+        <a class="btn btn-warning btn-xs" href="'.base_path().'/controller.php?id_module='.Modules::get('Movimenti')->id.'&search_Articolo='.($articolo->codice.' - '.$articolo->descrizione).'">
             <i class="fa fa-external-link"></i>
             '.tr('Visualizza dettagli').'
         </a>';

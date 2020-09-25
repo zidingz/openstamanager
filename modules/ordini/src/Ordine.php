@@ -1,8 +1,25 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace Modules\Ordini;
 
-use Common\Components\Description;
+use Common\Components\Component;
 use Common\Document;
 use Modules\Anagrafiche\Anagrafica;
 use Modules\DDT\DDT;
@@ -14,6 +31,11 @@ class Ordine extends Document
 {
     use ReferenceTrait;
     use RecordTrait;
+
+    /**
+     * @var bool Disabilita movimentazione automatica
+     */
+    public static $movimenta_magazzino = false;
 
     protected $table = 'or_ordini';
 
@@ -30,7 +52,7 @@ class Ordine extends Document
      */
     public static function build(Anagrafica $anagrafica, Tipo $tipo_documento, $data)
     {
-        $model = parent::build();
+        $model = new static();
 
         $stato_documento = Stato::where('descrizione', 'Bozza')->first();
 
@@ -130,7 +152,7 @@ class Ordine extends Document
      * Effettua un controllo sui campi del documento.
      * Viene richiamato dalle modifiche alle righe del documento.
      */
-    public function triggerEvasione(Description $trigger)
+    public function triggerEvasione(Component $trigger)
     {
         parent::triggerEvasione($trigger);
 
@@ -146,7 +168,7 @@ class Ordine extends Document
             // Impostazione del nuovo stato
             if ($qta_evasa == 0) {
                 $descrizione = 'Bozza';
-            } elseif (!in_array($stato_attuale->descrizione, ['Parzialmente fatturato', 'Fatturato']) && $trigger->parent instanceof DDT) {
+            } elseif (!in_array($stato_attuale->descrizione, ['Parzialmente fatturato', 'Fatturato']) && $trigger->getDocument() instanceof DDT) {
                 $descrizione = $parziale ? 'Parzialmente evaso' : 'Evaso';
             } else {
                 $descrizione = $parziale ? 'Parzialmente fatturato' : 'Fatturato';

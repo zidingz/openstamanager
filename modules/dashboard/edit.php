@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -14,10 +31,11 @@ echo '
 		<ul class="dropdown-menu" role="menu">';
 
 // Stati intervento
+$stati_sessione = session_get('dashboard.idstatiintervento', []);
 $stati_intervento = $dbo->fetchArray('SELECT idstatointervento AS id, descrizione, colore FROM in_statiintervento WHERE deleted_at IS NULL ORDER BY descrizione ASC');
 foreach ($stati_intervento as $stato) {
     $attr = '';
-    if (in_array("'".$stato['id']."'", $_SESSION['dashboard']['idstatiintervento'])) {
+    if (in_array("'".$stato['id']."'", $stati_sessione)) {
         $attr = 'checked="checked"';
     }
 
@@ -51,10 +69,11 @@ echo '
 		<ul class="dropdown-menu" role="menu">';
 
 // Tipi intervento
+$tipi_sessione = session_get('dashboard.idtipiintervento', []);
 $tipi_intervento = $dbo->fetchArray('SELECT idtipointervento AS id, descrizione FROM in_tipiintervento ORDER BY descrizione ASC');
 foreach ($tipi_intervento as $tipo) {
     $attr = '';
-    if (in_array("'".$tipo['id']."'", $_SESSION['dashboard']['idtipiintervento'])) {
+    if (in_array("'".$tipo['id']."'", $tipi_sessione)) {
         $attr = 'checked="checked"';
     }
 
@@ -87,12 +106,13 @@ echo '
         </button>
 		<ul class="dropdown-menu" role="menu">';
 
+$tecnici_sessione = session_get('dashboard.idtecnici', []);
 $tecnici_disponibili = $dbo->fetchArray("SELECT an_anagrafiche.idanagrafica AS id, ragione_sociale, colore FROM an_anagrafiche INNER JOIN (an_tipianagrafiche_anagrafiche INNER JOIN an_tipianagrafiche ON an_tipianagrafiche_anagrafiche.idtipoanagrafica=an_tipianagrafiche.idtipoanagrafica) ON an_anagrafiche.idanagrafica=an_tipianagrafiche_anagrafiche.idanagrafica
 LEFT OUTER JOIN in_interventi_tecnici ON  in_interventi_tecnici.idtecnico = an_anagrafiche.idanagrafica  INNER JOIN in_interventi ON in_interventi_tecnici.idintervento=in_interventi.id
 WHERE an_anagrafiche.deleted_at IS NULL AND an_tipianagrafiche.descrizione='Tecnico' ".Modules::getAdditionalsQuery('Interventi').' GROUP BY an_anagrafiche.idanagrafica ORDER BY ragione_sociale ASC');
 foreach ($tecnici_disponibili as $tecnico) {
     $attr = '';
-    if (in_array("'".$tecnico['id']."'", $_SESSION['dashboard']['idtecnici'])) {
+    if (in_array("'".$tecnico['id']."'", $tecnici_sessione)) {
         $attr = 'checked="checked"';
     }
 
@@ -126,10 +146,11 @@ echo '
 		<ul class="dropdown-menu" role="menu">';
 
 // Zone
+$zone_sessione = session_get('dashboard.idzone', []);
 $zone = $dbo->fetchArray('(SELECT 0 AS ordine, \'0\' AS id, \'Nessuna zona\' AS descrizione) UNION (SELECT 1 AS ordine, id, descrizione FROM an_zone) ORDER BY ordine, descrizione ASC');
 foreach ($zone as $zona) {
     $attr = '';
-    if (in_array("'".$zona['id']."'", $_SESSION['dashboard']['idzone'])) {
+    if (in_array("'".$zona['id']."'", $zone_sessione)) {
         $attr = 'checked="checked"';
     }
 
@@ -430,6 +451,7 @@ echo '
             /* plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin], */
             /* locales: allLocales, */
             locale: globals.locale,
+            slotEventOverlap: false,
             hiddenDays: globals.dashboard.show_sunday ? [] : [0],
             header: {
                 left: "prev,next today",
@@ -471,7 +493,7 @@ echo '
                     name = "id_intervento";
                 }
 
-                openModal(globals.dashboard.drop.title, globals.dashboard.drop.url + "&data=" + data + "&orario_inizio=" + ora_dal + "&orario_fine=" + ora_al + "&ref=dashboard&idcontratto=" + $(this).data("idcontratto") + "&" + name + "=" + $(this).data("id"));
+                openModal(globals.dashboard.drop.title, globals.dashboard.drop.url + "&data=" + data + "&orario_inizio=" + ora_dal + "&orario_fine=" + ora_al + "&ref=dashboard&idcontratto=" + $(this).data("idcontratto") + "&" + name + "=" + $(this).data("id") + "&id_tecnico=" + $(this).data("id_tecnico"));
 
                 // Ricaricamento dei dati alla chiusura del modal
                 $(this).remove();
@@ -492,6 +514,11 @@ echo '
                 let data_fine = moment(end).format("YYYY-MM-DD");
                 let orario_inizio = moment(start).format("HH:mm");
                 let orario_fine = moment(end).format("HH:mm");
+
+                // Fix selezione di un giorno avanti per vista mensile
+                if (globals.dashboard.calendar.fullCalendar("getView").name == "month") {
+                    data_fine = moment(end).subtract(1, "days").format("YYYY-MM-DD");
+                }
 
                 openModal(globals.dashboard.select.title, globals.dashboard.select.url + "&ref=dashboard&data=" + data + "&data_fine=" + data_fine + "&orario_inizio=" + orario_inizio + "&orario_fine=" + orario_fine);
             },

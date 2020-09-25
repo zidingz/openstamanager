@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -31,7 +48,9 @@ echo "
 
 // Righe documento
 $righe = $documento->getRighe();
+$num = 0;
 foreach ($righe as $riga) {
+    ++$num;
     $r = $riga->toArray();
 
     $autofill->count($r['descrizione']);
@@ -42,9 +61,10 @@ foreach ($righe as $riga) {
     echo '
         <tr>';
 
-    echo'
-        <td class=\'text-center\' >
-            '.($r['order'] + 1).'</td>';
+    echo '
+        <td class="text-center" style="vertical-align: middle">
+            '.$num.'
+        </td>';
 
     echo '
             <td>
@@ -87,13 +107,14 @@ foreach ($righe as $riga) {
     }
 
     // Aggiunta dei riferimenti ai documenti
+    /*
     if (setting('Riferimento dei documenti nelle stampe') && $riga->hasOriginal()) {
-        $ref = $riga->getOriginal()->parent->getReference();
-        if (!empty($riga->getOriginal()->parent->numero_cliente)) {
+        $ref = $riga->getOriginal()->getDcocument()->getReference();
+        if (!empty($riga->getOriginal()->getDcocument()->numero_cliente)) {
             $ref .= '<br>'.tr('_DOC_ num. _NUM_ del _DATE_', [
                 '_DOC_' => 'Rif. Vs. ordine cliente',
-                '_NUM_' => $riga->getOriginal()->parent->numero_cliente,
-                '_DATE_' => dateFormat($riga->getOriginal()->parent->data_cliente),
+                '_NUM_' => $riga->getOriginalComponent()->getDocument()->numero_cliente,
+                '_DATE_' => dateFormat($riga->getOriginalComponent()->getDocument()->data_cliente),
             ]);
         }
         if (!empty($ref)) {
@@ -102,11 +123,11 @@ foreach ($righe as $riga) {
 
             $autofill->count($ref, true);
         }
-    }
+    }*/
 
     // Informazioni su CIG, CUP, ...
-    if ($riga->hasOriginal()) {
-        $documento_originale = $riga->getOriginal()->parent;
+    if ($riga->hasOriginalComponent()) {
+        $documento_originale = $riga->getOriginalComponent()->getDocument();
 
         $num_item = $documento_originale['num_item'];
         $codice_cig = $documento_originale['codice_cig'];

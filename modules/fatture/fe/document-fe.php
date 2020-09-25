@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../../core.php';
 
@@ -142,7 +159,7 @@ echo '
 
 foreach ($documenti as $nome => $info) {
     echo '
-<table class="hide" id="'.$nome.'-templace">';
+<table class="hide" id="'.$nome.'-template">';
     $dato = [];
     $key = '-id-';
 
@@ -152,7 +169,7 @@ foreach ($documenti as $nome => $info) {
 </table>
 
 <table class="hide">
-    <tbody id="riferimento_'.$nome.'-templace">
+    <tbody id="riferimento_'.$nome.'-template">
         <tr class="fifth-level" title="RiferimentoNumeroLinea-'.$nome.'--id-">
             <td style="vertical-align: middle;">
                 '.str_repeat($space, 4).$info['code'].'.1 RiferimentoNumeroLinea - '.tr('Riga _NUM_', [
@@ -184,27 +201,27 @@ echo '
 <script>
 function add_blocco(btn, nome){
     cleanup_inputs();
-    
+
     var last = $(btn).closest("table").find("tr[id^=last-" + nome + "]").parent().last();
 
     keys[nome]++;
-    var text = replaceAll($("#" + nome + "-templace").html(), "-id-", "" + keys[nome]);
-    
+    var text = replaceAll($("#" + nome + "-template").html(), "-id-", "" + keys[nome]);
+
     ref_keys[nome + keys[nome]] = 1;
-    
+
     last.after(text);
     restart_inputs();
 }
 
 function add_riferimento(btn, nome, key) {
     cleanup_inputs();
-    
+
     var last = $(btn).closest("table").find("tr[title=RiferimentoNumeroLinea-" + nome + "-" + key + "]").last();
 
     ref_keys[nome + key]++;
-    var text = replaceAll($("#riferimento_" + nome + "-templace").html(), "-id-", "" + key);
+    var text = replaceAll($("#riferimento_" + nome + "-template").html(), "-id-", "" + key);
     text = replaceAll(text, "-num-", "" + ref_keys[nome + key]);
-    
+
     last.after(text);
     restart_inputs();
 }

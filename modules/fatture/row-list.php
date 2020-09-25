@@ -1,6 +1,23 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-include_once __DIR__.'/../../core.php';
+include_once __DIR__.'/init.php';
 
 echo '
 <div class="table-responsive">
@@ -20,7 +37,10 @@ echo '
 
 // Righe documento
 $righe = $fattura->getRighe();
+$num = 0;
 foreach ($righe as $riga) {
+    ++$num;
+
     $extra = '';
     $mancanti = 0;
     $delete = 'delete_riga';
@@ -45,8 +65,8 @@ foreach ($righe as $riga) {
     $extra_riga = '';
     if (!$riga->isDescrizione()) {
         // Informazioni su CIG, CUP, ...
-        if ($riga->hasOriginal()) {
-            $documento_originale = $riga->getOriginal()->parent;
+        if ($riga->hasOriginalComponent()) {
+            $documento_originale = $riga->getOriginalComponent()->getDocument();
 
             $num_item = $documento_originale['num_item'];
             $codice_cig = $documento_originale['codice_cig'];
@@ -71,19 +91,30 @@ foreach ($righe as $riga) {
     echo '
         <tr data-id="'.$riga->id.'" data-type="'.get_class($riga).'" '.$extra.'>
             <td class="text-center">
-                '.($riga->order + 1).'
+                '.$num.'
             </td>
 
             <td>';
+
+    // Informazioni aggiuntive sulla destra
+    echo '
+                <small class="pull-right text-right text-muted">
+                    '.$extra_riga;
+
+    // Aggiunta dei riferimenti ai documenti
+    if ($riga->hasOriginalComponent()) {
+        echo '
+                    <br>'.reference($riga->getOriginalComponent()->getDocument(), tr('Origine'));
+    }
+
+    echo '
+                </small>';
 
     if ($riga->isArticolo()) {
         echo Modules::link('Articoli', $riga->idarticolo, $riga->codice.' - '.$riga->descrizione);
     } else {
         echo nl2br($riga->descrizione);
     }
-
-    echo '
-                <small class="pull-right text-right text-muted">'.$extra_riga.'</small>';
 
     if ($riga->isArticolo() && !empty($riga->abilita_serial)) {
         if (!empty($mancanti)) {
@@ -96,12 +127,6 @@ foreach ($righe as $riga) {
             echo '
                 <br>'.tr('SN').': '.implode(', ', $serials);
         }
-    }
-
-    // Aggiunta dei riferimenti ai documenti
-    if ($riga->hasOriginal()) {
-        echo '
-                <br>'.reference($riga->getOriginal()->parent);
     }
 
     echo '
@@ -363,9 +388,9 @@ echo '
 echo '
 <script>
 async function modificaRiga(button) {
-    var riga = $(button).closest("tr");
-    var id = riga.data("id");
-    var type = riga.data("type");
+    let riga = $(button).closest("tr");
+    let id = riga.data("id");
+    let type = riga.data("type");
 
     // Salvataggio via AJAX
     let valid = await salvaForm(button, $("#edit-form"));
@@ -388,9 +413,9 @@ function rimuoviRiga(button) {
         showCancelButton: true,
         confirmButtonText: "'.tr('Sì').'"
     }).then(function () {
-        var riga = $(button).closest("tr");
-        var id = riga.data("id");
-        var type = riga.data("type");
+        let riga = $(button).closest("tr");
+        let id = riga.data("id");
+        let type = riga.data("type");
 
         $.ajax({
             url: globals.rootdir + "/actions.php",
@@ -414,17 +439,17 @@ function rimuoviRiga(button) {
 }
 
 function modificaSeriali(button) {
-    var riga = $(button).closest("tr");
-    var id = riga.data("id");
-    var type = riga.data("type");
+    let riga = $(button).closest("tr");
+    let id = riga.data("id");
+    let type = riga.data("type");
 
     openModal("'.tr('Aggiorna SN').'", globals.rootdir + "/modules/fatture/add_serial.php?id_module=" + globals.id_module + "&id_record=" + globals.id_record + "&riga_id=" + id + "&riga_type=" + type);
 }
 
 function apriInformazioniFE(button) {
-    var riga = $(button).closest("tr");
-    var id = riga.data("id");
-    var type = riga.data("type");
+    let riga = $(button).closest("tr");
+    let id = riga.data("id");
+    let type = riga.data("type");
 
     openModal("'.tr('Dati Fattura Elettronica').'", "'.$module->fileurl('fe/row-fe.php').'?id_module=" + globals.id_module + "&id_record=" + globals.id_record + "&riga_id=" + id + "&riga_type=" + type)
 }

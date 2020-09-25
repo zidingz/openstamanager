@@ -69,6 +69,10 @@ define('DOCROOT', realpath(__DIR__.'/..'));
 define('ROOTDIR', $app->getBasePath());
 define('BASEURL', (isHTTPS(true) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].ROOTDIR);
 
+App::$docroot = DOCROOT;
+App::$rootdir = ROOTDIR;
+App::$baseurl = BASEURL;
+
 // Creazione della sessione
 ini_set('session.use_trans_sid', '0');
 ini_set('session.use_only_cookies', '1');

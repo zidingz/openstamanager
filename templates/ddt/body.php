@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -34,17 +51,18 @@ if ($options['pricing']) {
 
 // Righe documento
 $righe = $documento->getRighe();
+$num = 0;
 foreach ($righe as $riga) {
+    ++$num;
     $r = $riga->toArray();
 
     $autofill->count($r['descrizione']);
 
     echo '
-    <tr>';
-
-    echo'
-        <td class=\'text-center\' >
-            '.($r['order'] + 1).'</td>';
+    <tr>
+        <td class="text-center" style="vertical-align: middle">
+            '.$num.'
+        </td>';
 
     echo'
         <td>
@@ -72,8 +90,9 @@ foreach ($righe as $riga) {
     }
 
     // Aggiunta dei riferimenti ai documenti
+    /*
     if (setting('Riferimento dei documenti nelle stampe') && $riga->hasOriginal()) {
-        $ref = $riga->getOriginal()->parent->getReference();
+        $ref = $riga->getOriginal()->getDocument()->getReference();
 
         if (!empty($ref)) {
             echo '
@@ -82,6 +101,7 @@ foreach ($righe as $riga) {
             $autofill->count($ref, true);
         }
     }
+    */
 
     echo '
         </td>';

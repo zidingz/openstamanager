@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 use Models\Cache;
 
@@ -230,7 +247,7 @@ class Update
             self::normalizeDatabase($database->getDatabaseName());
 
             if (class_exists('\Models\Cache')) {
-                Cache::get('Ultima versione di OpenSTAManager disponibile')->set(null);
+                \Models\Cache::pool('Ultima versione di OpenSTAManager disponibile')->set(null);
             }
 
             return true;
@@ -255,7 +272,7 @@ class Update
         if (!self::isUpdateCompleted()) {
             $update = self::getCurrentUpdate();
 
-            $file = DOCROOT.'/'.$update['directory'].$update['filename'];
+            $file = base_dir().'/'.$update['directory'].$update['filename'];
 
             $database = database();
 
@@ -320,7 +337,7 @@ class Update
                 self::normalizeDatabase($database->getDatabaseName());
 
                 // Normalizzazione dei campi per l'API
-                self::executeScript(DOCROOT.'/update/api.php');
+                self::executeScript(base_dir().'/update/api.php');
 
                 // Esecuzione dello script
                 if (!empty($update['script']) && file_exists($file.'.php')) {
@@ -344,6 +361,71 @@ class Update
 
             return false;
         }
+
+        return true;
+    }
+
+    /**
+     * Restituisce un riepilogo sulla struttura delle tabelle del gestionale.
+     *
+     * @throws Exception
+     *
+     * @return array
+     */
+    public static function getDatabaseStructure()
+    {
+        // Tabelle registrate per il gestionale
+        $tables = include base_dir().'/update/tables.php';
+
+        $database = database();
+        $database_name = $database->getDatabaseName();
+
+        $info = [];
+        foreach ($tables as $table) {
+            if ($database->tableExists($table)) {
+                // Individuazione delle colonne per la tabella
+                $query = 'SHOW COLUMNS FROM `'.$table.'` IN `'.$database_name.'`';
+                $columns_found = $database->fetchArray($query);
+
+                // Organizzazione delle colonne per nome
+                $columns = [];
+                foreach ($columns_found as $column) {
+                    $column = array_change_key_case($column);
+                    $name = $column['field'];
+                    unset($column['field']);
+
+                    $columns[$name] = $column;
+                }
+
+                // Individuazione delle chiavi esterne della tabella
+                $fk_query = 'SELECT
+                    CONSTRAINT_NAME AS `name`,
+                    COLUMN_NAME AS `column`,
+                    REFERENCED_TABLE_NAME AS `referenced_table`,
+                    REFERENCED_COLUMN_NAME AS `referenced_column`
+                FROM information_schema.KEY_COLUMN_USAGE
+                WHERE TABLE_NAME = '.prepare($table).'
+                    AND TABLE_SCHEMA = '.prepare($database_name).'
+                    AND REFERENCED_TABLE_SCHEMA = '.prepare($database_name);
+                $fks_found = $database->fetchArray($fk_query);
+
+                // Organizzazione delle chiavi esterne per nome
+                $fks = [];
+                foreach ($fks_found as $fk) {
+                    $fk = array_change_key_case($fk);
+                    $name = $fk['name'];
+                    unset($fk['name']);
+
+                    $fks[$name] = $fk;
+                }
+
+                $info[$table] = array_merge($columns, [
+                    'foreign_keys' => $fks,
+                ]);
+            }
+        }
+
+        return $info;
     }
 
     /**
@@ -415,7 +497,7 @@ class Update
         // Memorizzazione degli aggiornamenti
         if ($reset && $database->isConnected()) {
             // Reimpostazione della tabella degli aggiornamenti
-            $create = DOCROOT.'/update/create_updates.sql';
+            $create = base_dir().'/update/create_updates.sql';
             if (file_exists($create)) {
                 $database->query('DROP TABLE IF EXISTS `updates`');
                 $database->multiQuery($create);
@@ -464,7 +546,7 @@ class Update
      */
     protected static function getCoreUpdates()
     {
-        return self::getUpdates(DOCROOT.'/update');
+        return self::getUpdates(base_dir().'/update');
     }
 
     /**

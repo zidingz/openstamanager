@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace Modules\Fatture\Components;
 
@@ -9,26 +26,26 @@ use Modules\Rivalse\RivalsaINPS;
 
 trait RelationTrait
 {
-    public function getParentID()
+    public function getDocumentID()
     {
         return 'iddocumento';
     }
 
-    public function parent()
+    public function document()
     {
-        return $this->belongsTo(Fattura::class, $this->getParentID());
+        return $this->belongsTo(Fattura::class, $this->getDocumentID());
     }
 
     public function fattura()
     {
-        return $this->parent();
+        return $this->document();
     }
 
     public function getNettoAttribute()
     {
         $result = $this->totale - $this->ritenuta_acconto - $this->ritenuta_contributi;
 
-        if ($this->parent->split_payment) {
+        if ($this->getDocument()->split_payment) {
             $result = $result - $this->iva;
         }
 
@@ -96,7 +113,7 @@ trait RelationTrait
     {
         if ($this->attributes['ritenuta_contributi']) {
             $result = $this->totale_imponibile;
-            $ritenuta = $this->parent->ritenutaContributi;
+            $ritenuta = $this->getDocument()->ritenutaContributi;
 
             $result = $result * $ritenuta->percentuale_imponibile / 100;
 

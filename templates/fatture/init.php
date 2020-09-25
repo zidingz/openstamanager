@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -18,7 +35,7 @@ $record = $dbo->fetchOne('SELECT *,
     (SELECT descrizione FROM dt_aspettobeni WHERE id=idaspettobeni) AS aspettobeni,
     (SELECT descrizione FROM dt_spedizione WHERE id=idspedizione) AS spedizione,
     (SELECT ragione_sociale FROM an_anagrafiche WHERE idanagrafica=idvettore) AS vettore,
-    (SELECT id FROM co_banche WHERE id=idbanca) AS id_banca,
+    (SELECT id FROM co_banche WHERE id = id_banca_azienda) AS id_banca,
     (SELECT is_fiscale FROM zz_segments WHERE id = id_segment) AS is_fiscale
 FROM co_documenti WHERE id='.prepare($id_record));
 
@@ -26,9 +43,9 @@ $record['rivalsainps'] = floatval($record['rivalsainps']);
 $record['ritenutaacconto'] = floatval($record['ritenutaacconto']);
 $record['bollo'] = floatval($record['bollo']);
 
-$nome_banca = $banca['appoggiobancario'];
-$iban_banca = $banca['codiceiban'];
-$bic_banca = $banca['bic'];
+$nome_banca = $banca->nome;
+$iban_banca = $banca->iban;
+$bic_banca = $banca->bic;
 
 $module_name = ($record['dir'] == 'entrata') ? 'Fatture di vendita' : 'Fatture di acquisto';
 

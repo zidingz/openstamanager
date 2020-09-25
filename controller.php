@@ -1,17 +1,34 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/core.php';
 
 if (!empty($id_record) && !empty($id_module)) {
-    redirect(ROOTDIR.'/editor.php?id_module='.$id_module.'&id_record='.$id_record);
+    redirect(base_path().'/editor.php?id_module='.$id_module.'&id_record='.$id_record);
 } elseif (empty($id_module)) {
-    redirect(ROOTDIR.'/index.php');
+    redirect(base_path().'/index.php');
 }
 
 include_once App::filepath('include|custom|', 'top.php');
 
 // Inclusione gli elementi fondamentali
-include_once $docroot.'/actions.php';
+include_once base_dir().'/actions.php';
 
 // Widget in alto
 echo '{( "name": "widgets", "id_module": "'.$id_module.'", "position": "top", "place": "controller" )}';
@@ -49,7 +66,7 @@ echo '
 			<div class="tab-content">
 				<div id="tab_0" class="tab-pane active">';
 
-include $docroot.'/include/manager.php';
+include base_dir().'/include/manager.php';
 
 echo '
 				</div>';
@@ -64,7 +81,7 @@ foreach ($plugins as $plugin) {
 
     $id_plugin = $plugin['id'];
 
-    include $docroot.'/include/manager.php';
+    include base_dir().'/include/manager.php';
 
     echo '
 				</div>';

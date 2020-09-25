@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 $r = $dbo->fetchOne('SELECT co_documenti.*,
 	an_anagrafiche.email,
@@ -14,9 +31,9 @@ FROM co_documenti
 WHERE co_documenti.id='.prepare($id_record));
 
 if (!empty(setting('Logo stampe'))) {
-    $logo_azienda = BASEURL.'/'.Models\Upload::where('filename', setting('Logo stampe'))->first()->fileurl;
+    $logo_azienda = base_url().'/'.Models\Upload::where('filename', setting('Logo stampe'))->first()->fileurl;
 } else {
-    $logo_azienda = str_replace(DOCROOT, BASEURL, App::filepath('templates/base|custom|/logo_azienda.jpg'));
+    $logo_azienda = str_replace(base_dir(), base_url(), App::filepath('templates/base|custom|/logo_azienda.jpg'));
     $logo_azienda = str_replace('\\', '/', $logo_azienda);
 }
 

@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 /**
  * Classe per la gestione degli upload del progetto.
@@ -172,7 +189,7 @@ class Uploads
         $extension = strtolower(self::fileInfo($source)['extension']);
         $ok = self::isSupportedType($extension);
 
-        $directory = DOCROOT.'/'.self::getDirectory($data['id_module'], $data['id_plugin']);
+        $directory = base_dir().'/'.self::getDirectory($data['id_module'], $data['id_plugin']);
 
         do {
             $filename = random_string().'.'.$extension;
@@ -195,7 +212,7 @@ class Uploads
         $original = isset($source['name']) ? $source['name'] : basename($source);
 
         $filename = self::getName($original, $data);
-        $directory = DOCROOT.'/'.self::getDirectory($data['id_module'], $data['id_plugin']);
+        $directory = base_dir().'/'.self::getDirectory($data['id_module'], $data['id_plugin']);
 
         // Creazione file fisico
         if (
@@ -261,7 +278,7 @@ class Uploads
             ])['name'];
 
             $fileinfo = self::fileInfo($filename);
-            $directory = DOCROOT.'/'.self::getDirectory($data['id_module'], $data['id_plugin']);
+            $directory = base_dir().'/'.self::getDirectory($data['id_module'], $data['id_plugin']);
 
             $files = [
                 $directory.'/'.$fileinfo['basename'],
@@ -351,8 +368,8 @@ class Uploads
     {
         $attachments = self::get($from);
 
-        $directory = DOCROOT.'/'.self::getDirectory($to['id_module'], $to['id_plugin']);
-        $directory_from = DOCROOT.'/'.self::getDirectory($from['id_module'], $from['id_plugin']);
+        $directory = base_dir().'/'.self::getDirectory($to['id_module'], $to['id_plugin']);
+        $directory_from = base_dir().'/'.self::getDirectory($from['id_module'], $from['id_plugin']);
 
         foreach ($attachments as $attachment) {
             $data = array_merge($attachment, $to);
@@ -378,7 +395,7 @@ class Uploads
 
     protected static function processOptions($data, $options)
     {
-        $directory = DOCROOT.'/'.self::getDirectory($data['id_module'], $data['id_plugin']);
+        $directory = base_dir().'/'.self::getDirectory($data['id_module'], $data['id_plugin']);
 
         if (!empty($options['thumbnails'])) {
             self::thumbnails($directory.'/'.$data['filename'], $directory);

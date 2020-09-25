@@ -16,13 +16,13 @@ use Prints\Template;
 use Traits\Components\NoteTrait;
 use Traits\Components\UploadTrait;
 use Traits\HierarchyTrait;
-use Traits\StoreTrait;
+use Traits\LocalPoolTrait;
 use Util\Query;
 
 class Module extends Model implements BootableInterface
 {
     use UploadTrait;
-    use StoreTrait;
+    use LocalPoolTrait;
     use NoteTrait;
     use ChecklistTrait;
     use BootrableTrait;

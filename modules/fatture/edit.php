@@ -1,8 +1,28 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
+use Modules\Anagrafiche\Anagrafica;
 use Modules\Iva\Aliquota;
 
 include_once __DIR__.'/../../core.php';
+
+$anagrafica_azienda = Anagrafica::find(setting('Azienda predefinita'));
 
 $block_edit = !empty($note_accredito) || $record['stato'] == 'Emessa' || $record['stato'] == 'Pagato' || $record['stato'] == 'Parzialmente pagato';
 
@@ -166,8 +186,6 @@ elseif ($record['stato'] == 'Bozza') {
                     {[ "type": "date", "class":"<?php echo (dateFormat($fattura->data_competenza) < dateFormat($fattura->data)) ? 'unblockable' : ''; ?>", "label": "<?php echo tr('Data competenza'); ?>", "name": "data_competenza", "required": 1, "value": "$data_competenza$", "min-date": "$data_registrazione$", "help": "<?php echo tr('Data nella quale considerare il movimento contabile, che può essere posticipato rispetto la data della fattura'); ?>" ]}
                 </div>
 
-
-
 					<?php
                     if ($dir == 'entrata') {
                         ?>
@@ -248,25 +266,30 @@ elseif ($record['stato'] == 'Bozza') {
 				</div>
 
 				<div class="col-md-3">
-					{[ "type": "select", "label": "<?php echo tr('Pagamento'); ?>", "name": "idpagamento", "required": 1, "ajax-source": "pagamenti", "value": "$idpagamento$", "extra": "onchange=\"$('#idbanca').val($(this).selectData().id_banca_<?php echo $conto; ?>).change(); \" " ]}
+					{[ "type": "select", "label": "<?php echo tr('Pagamento'); ?>", "name": "idpagamento", "required": 1, "ajax-source": "pagamenti", "value": "$idpagamento$", "extra": "onchange=\"$('#id_banca_azienda').val($(this).selectData().id_banca_<?php echo $conto; ?>).change(); \" " ]}
 				</div>
 
 				<div class="col-md-3">
-					{[ "type": "select", "label": "<?php echo tr('Banca'); ?>", "name": "idbanca", "values": "query=SELECT id, CONCAT (nome, ' - ' , iban) AS descrizione FROM co_banche WHERE deleted_at IS NULL ORDER BY nome ASC", "value": "$idbanca$", "icon-after": "add|<?php echo Modules::get('Banche')['id']; ?>||", "extra": " <?php echo (intval($block_edit)) ? 'disabled' : ''; ?> " ]}
+					{[ "type": "select", "label": "<?php echo tr('Banca azienda'); ?>", "name": "id_banca_azienda", "ajax-source": "banche", "select-options": <?php echo json_encode(['id_anagrafica' => $anagrafica_azienda->id]); ?>, "value": "$id_banca_azienda$", "icon-after": "add|<?php echo Modules::get('Banche')['id']; ?>||", "extra": " <?php echo (intval($block_edit)) ? 'disabled' : ''; ?> " ]}
 				</div>
 
                 <?php
                 if ($record['stato'] != 'Bozza' && $record['stato'] != 'Annullata') {
-                    $ricalcola = true;
+                    $scadenze = $fattura->scadenze;
 
-                    $scadenze = $dbo->fetchArray('SELECT * FROM co_scadenziario WHERE iddocumento = '.prepare($id_record));
+                    $ricalcola = true;
+                    foreach ($scadenze as $scadenza) {
+                        $ricalcola = empty(floatval($scadenza->pagato)) && $ricalcola;
+                    }
+
                     echo '
                 <div class="col-md-3">
                     <p class="pull-left"><strong>'.tr('Scadenze').'</strong></p>
 
                     <div class="btn-group pull-right">
                         '.Modules::link('Scadenzario', $scadenze[0]['id'], tr('<i class="fa fa-edit tip" title="'.tr('Modifica scadenze').'"></i>'), '', 'class="btn btn-xs btn-primary"');
-                    //Ricalcola scadenze disponibile solo per fatture di acquisto
+
+                    // Ricalcola scadenze disponibile solo per fatture di acquisto
                     if ($fattura->isFE() && $ricalcola && $module['name'] == 'Fatture di acquisto') {
                         echo '
                     <button type="button" class="btn btn-info btn-xs pull-right tip" title="'.tr('Ricalcola le scadenze').'. '.tr('Per ricalcolare correttamente le scadenze, imposta la fattura di acquisto nello stato \'\'Bozza\'\' e correggi il documento come desiderato, poi re-imposta lo stato \'\'Emessa\'\' e utilizza questa funzione').'." id="ricalcola_scadenze">
@@ -278,25 +301,29 @@ elseif ($record['stato'] == 'Bozza') {
                     <div class="clearfix"></div>';
 
                     foreach ($scadenze as $scadenza) {
-                        echo '
-                    <p>'.Translator::dateToLocale($scadenza['scadenza']).': ';
+                        $pagamento_iniziato = !empty(floatval($scadenza->pagato));
 
-                        if ($scadenza['pagato'] == $scadenza['da_pagare']) {
+                        echo '
+                    <p>'.dateFormat($scadenza['scadenza']).': ';
+
+                        if ($pagamento_iniziato) {
                             echo '
                         <strike>';
                         }
 
-                        echo(empty($scadenza['da_pagare']) ? '<i class="fa fa-exclamation-triangle"></i> ' : '').moneyFormat($scadenza['da_pagare']);
+                        echo(empty($scadenza->da_pagare) ? '<i class="fa fa-exclamation-triangle"></i>' : '').moneyFormat($scadenza->da_pagare);
 
-                        if ($scadenza['pagato'] == $scadenza['da_pagare']) {
+                        if ($pagamento_iniziato) {
                             echo '
                         </strike>';
                         }
 
+                        if ($pagamento_iniziato && $scadenza->pagato != $scadenza->da_pagare) {
+                            echo ' ('.moneyFormat($scadenza->da_pagare - $scadenza->pagato).')';
+                        }
+
                         echo '
                     </p>';
-
-                        $ricalcola = empty(floatval($scadenza['pagato'])) && $ricalcola;
                     }
 
                     echo '
@@ -311,7 +338,7 @@ elseif ($record['stato'] == 'Bozza') {
 				</div>
 
 				<?php
-                //TODO: Fattura per conto del fornitore (es. cooperative agricole che emettono la fattura per conto dei propri soci produttori agricoli conferenti)
+                // TODO: Fattura per conto del fornitore (es. cooperative agricole che emettono la fattura per conto dei propri soci produttori agricoli conferenti)
                 if ($dir == 'entrata') {
                     ?>
 					<div class="col-md-3">
@@ -573,7 +600,7 @@ if (!$block_edit) {
 
             echo '
                     <div class="tip" data-toggle="tooltip" title="'.tr('Attività completate non collegate a preventivi o contratti e che non siano già state fatturate.').'">
-                        <a class="btn btn-sm btn-primary '.(!empty($interventi) ? '' : ' disabled').'" data-href="'.$rootdir.'/modules/fatture/add_intervento.php?id_module='.$id_module.'&id_record='.$id_record.'" data-title="Aggiungi attività">
+                        <a class="btn btn-sm btn-primary '.(!empty($interventi) ? '' : ' disabled').'" data-href="'.base_path().'/modules/fatture/add_intervento.php?id_module='.$id_module.'&id_record='.$id_record.'" data-title="Aggiungi attività">
                             <i class="fa fa-plus"></i> Attività
                         </a>
                     </div>';
@@ -583,7 +610,7 @@ if (!$block_edit) {
             $preventivi = $dbo->fetchArray($prev_query)[0]['tot'];
             echo '
                     <div class="tip">
-                        <a class="btn btn-sm btn-primary '.(!empty($preventivi) ? '' : ' disabled').'" data-href="'.$rootdir.'/modules/fatture/add_preventivo.php?id_module='.$id_module.'&id_record='.$id_record.'" data-title="Aggiungi preventivo" data-toggle="tooltip">
+                        <a class="btn btn-sm btn-primary '.(!empty($preventivi) ? '' : ' disabled').'" data-href="'.base_path().'/modules/fatture/add_preventivo.php?id_module='.$id_module.'&id_record='.$id_record.'" data-title="Aggiungi preventivo" data-toggle="tooltip">
                             <i class="fa fa-plus"></i> Preventivo
                         </a>
                     </div>';
@@ -593,7 +620,7 @@ if (!$block_edit) {
             $contratti = $dbo->fetchArray($contr_query)[0]['tot'];
             echo '
                     <div class="tip">
-                        <a class="btn btn-sm btn-primary '.(!empty($contratti) ? '' : ' disabled').'"  data-href="'.$rootdir.'/modules/fatture/add_contratto.php?id_module='.$id_module.'&id_record='.$id_record.'" data-title="Aggiungi contratto" data-toggle="tooltip">
+                        <a class="btn btn-sm btn-primary '.(!empty($contratti) ? '' : ' disabled').'"  data-href="'.base_path().'/modules/fatture/add_contratto.php?id_module='.$id_module.'&id_record='.$id_record.'" data-title="Aggiungi contratto" data-toggle="tooltip">
                             <i class="fa fa-plus"></i> Contratto
                         </a>
                     </div>';
@@ -611,7 +638,7 @@ if (!$block_edit) {
                 AND dt_ddt.id IN (SELECT idddt FROM dt_righe_ddt WHERE dt_righe_ddt.idddt = dt_ddt.id AND (qta - qta_evasa) > 0)';
         $ddt = $dbo->fetchArray($ddt_query)[0]['tot'];
         echo '
-					<a class="btn btn-sm btn-primary'.(!empty($ddt) ? '' : ' disabled').'" data-href="'.$rootdir.'/modules/fatture/add_ddt.php?id_module='.$id_module.'&id_record='.$id_record.'" data-toggle="tooltip" data-title="Aggiungi ddt">
+					<a class="btn btn-sm btn-primary'.(!empty($ddt) ? '' : ' disabled').'" data-href="'.base_path().'/modules/fatture/add_ddt.php?id_module='.$id_module.'&id_record='.$id_record.'" data-toggle="tooltip" data-title="Aggiungi ddt">
 						<i class="fa fa-plus"></i> Ddt
 					</a>';
 
@@ -619,7 +646,7 @@ if (!$block_edit) {
         $ordini_query = 'SELECT COUNT(*) AS tot FROM or_ordini WHERE idanagrafica='.prepare($record['idanagrafica']).' AND idstatoordine IN (SELECT id FROM or_statiordine WHERE descrizione IN(\'Accettato\', \'Evaso\', \'Parzialmente evaso\', \'Parzialmente fatturato\')) AND idtipoordine=(SELECT id FROM or_tipiordine WHERE dir='.prepare($dir).') AND or_ordini.id IN (SELECT idordine FROM or_righe_ordini WHERE or_righe_ordini.idordine = or_ordini.id AND (qta - qta_evasa) > 0)';
         $ordini = $dbo->fetchArray($ordini_query)[0]['tot'];
         echo '
-						<a class="btn btn-sm btn-primary'.(!empty($ordini) ? '' : ' disabled').'" data-href="'.$rootdir.'/modules/fatture/add_ordine.php?id_module='.$id_module.'&id_record='.$id_record.'" data-toggle="tooltip" data-title="Aggiungi ordine">
+						<a class="btn btn-sm btn-primary'.(!empty($ordini) ? '' : ' disabled').'" data-href="'.base_path().'/modules/fatture/add_ordine.php?id_module='.$id_module.'&id_record='.$id_record.'" data-toggle="tooltip" data-title="Aggiungi ordine">
 							<i class="fa fa-plus"></i> Ordine
                         </a>';
     }
@@ -640,22 +667,22 @@ if (!$block_edit) {
                     </button>';
 
     echo '
-                    <button class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi articoli tramite barcode').'" onclick="gestioneBarcode(this)">
+                    <button type="button" class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi articoli tramite barcode').'" onclick="gestioneBarcode(this)">
                         <i class="fa fa-plus"></i> '.tr('Barcode').'
                     </button>';
 
     echo '
-                    <button class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi riga').'" onclick="gestioneRiga(this)">
+                    <button type="button" class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi riga').'" onclick="gestioneRiga(this)">
                         <i class="fa fa-plus"></i> '.tr('Riga').'
                     </button>';
 
     echo '
-                    <button class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi descrizione').'" onclick="gestioneDescrizione(this)">
+                    <button type="button" class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi descrizione').'" onclick="gestioneDescrizione(this)">
                         <i class="fa fa-plus"></i> '.tr('Descrizione').'
                     </button>';
 
     echo '
-                    <button class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi sconto/maggiorazione').'" onclick="gestioneSconto(this)">
+                    <button type="button" class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi sconto/maggiorazione').'" onclick="gestioneSconto(this)">
                         <i class="fa fa-plus"></i> '.tr('Sconto/maggiorazione').'
                     </button>';
 }
@@ -680,14 +707,8 @@ if ($dir == 'entrata') {
 		<div class="clearfix"></div>
 		<br>
 
-		<div class="row">
-			<div class="col-md-12">
-<?php
-
-include $structure->filepath('row-list.php');
-
-?>
-			</div>
+        <div class="row">
+			<div class="col-md-12" id="righe"></div>
 		</div>
 	</div>
 </div>
@@ -839,18 +860,33 @@ async function gestioneRiga(button, options) {
     }
 }
 
-$(document).ready(function () {
-    $("#data_registrazione").on("dp.change", function (e) {
-        var data = $("#data_competenza");
-        data.data("DateTimePicker").minDate(e.date);
+/**
+ * Funzione dedicata al caricamento dinamico via AJAX delle righe del documento.
+ */
+function caricaRighe() {
+    let container = $("#righe");
 
-        if(data.data("DateTimePicker").date() < e.date){
-            data.data("DateTimePicker").date(e.date);
+    localLoading(container, true);
+    return $.get("'.$structure->fileurl('row-list.php').'?id_module='.$id_module.'&id_record='.$id_record.'", function(data) {
+        container.html(data);
+        localLoading(container, false);
+    });
+}
+
+$(document).ready(function () {
+    caricaRighe();
+
+    $("#data_registrazione").on("dp.change", function (e) {
+        let data_competenza = $("#data_competenza");
+        data_competenza.data("DateTimePicker").minDate(e.date);
+
+        if(data_competenza.data("DateTimePicker").date() < e.date){
+            data_competenza.data("DateTimePicker").date(e.date);
         }
     });
 
     $("#data").on("dp.change", function (e) {
-        var data_competenza = $("#data_competenza");
+        let data_competenza = $("#data_competenza");
         data_competenza.data("DateTimePicker").minDate(e.date);
 
         if(data_competenza.data("DateTimePicker").date() < e.date){

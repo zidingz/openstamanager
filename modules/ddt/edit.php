@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -132,7 +149,7 @@ if ($module['name'] == 'Ddt di vendita') {
 				</div>
 
 				<div class="col-md-3">
-					{[ "type": "select", "label": "<?php echo tr('Causale trasporto'); ?>", "name": "idcausalet", "value": "$idcausalet$", "ajax-source": "causali", "icon-after": "add|<?php echo Modules::get('Causali')['id']; ?>|||<?php echo $block_edit ? 'disabled' : ''; ?>", "help": "<?php echo tr('Definisce la causale del trasporto.'); ?>" ]}
+					{[ "type": "select", "label": "<?php echo tr('Causale trasporto'); ?>", "name": "idcausalet", "required": 1, "value": "$idcausalet$", "ajax-source": "causali", "icon-after": "add|<?php echo Modules::get('Causali')['id']; ?>|||<?php echo $block_edit ? 'disabled' : ''; ?>", "help": "<?php echo tr('Definisce la causale del trasporto'); ?>" ]}
 				</div>
 
 				<div class="col-md-3">
@@ -307,48 +324,43 @@ if (!$block_edit) {
     $ordini = $dbo->fetchArray($ordini_query)[0]['tot'];
 
     echo '
-            <a class="btn btn-sm btn-primary'.(!empty($ordini) ? '' : ' disabled').'" data-href="'.$rootdir.'/modules/ddt/add_ordine.php?id_module='.$id_module.'&id_record='.$id_record.'" data-toggle="modal" data-title="Aggiungi ordine">
+            <a class="btn btn-sm btn-primary'.(!empty($ordini) ? '' : ' disabled').'" data-href="'.base_path().'/modules/ddt/add_ordine.php?id_module='.$id_module.'&id_record='.$id_record.'" data-toggle="modal" data-title="Aggiungi ordine">
                 <i class="fa fa-plus"></i> '.tr('Ordine').'
             </a>';
 
     echo '
-            <button class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi articolo').'" onclick="gestioneArticolo(this)">
+            <button type="button" class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi articolo').'" onclick="gestioneArticolo(this)">
                 <i class="fa fa-plus"></i> '.tr('Articolo').'
             </button>';
 
     echo '
-            <button class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi articoli tramite barcode').'" onclick="gestioneBarcode(this)">
+            <button type="button" class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi articoli tramite barcode').'" onclick="gestioneBarcode(this)">
                 <i class="fa fa-plus"></i> '.tr('Barcode').'
             </button>';
 
     echo '
-            <button class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi riga').'" onclick="gestioneRiga(this)">
+            <button type="button" class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi riga').'" onclick="gestioneRiga(this)">
                 <i class="fa fa-plus"></i> '.tr('Riga').'
             </button>';
 
     echo '
-            <button class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi descrizione').'" onclick="gestioneDescrizione(this)">
+            <button type="button" class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi descrizione').'" onclick="gestioneDescrizione(this)">
                 <i class="fa fa-plus"></i> '.tr('Descrizione').'
             </button>';
 
     echo '
-            <button class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi sconto/maggiorazione').'" onclick="gestioneSconto(this)">
+            <button type="button" class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi sconto/maggiorazione').'" onclick="gestioneSconto(this)">
                 <i class="fa fa-plus"></i> '.tr('Sconto/maggiorazione').'
             </button>';
 }
-?>
+
+echo '
 		</div>
 		<div class="clearfix"></div>
 		<br>
 
 		<div class="row">
-			<div class="col-md-12">
-
-<?php
-include $structure->filepath('row-list.php');
-
-echo '
-			</div>
+			<div class="col-md-12" id="righe"></div>
 		</div>
 	</div>
 </div>
@@ -389,6 +401,23 @@ async function gestioneRiga(button, options) {
         openModal(title, "'.$structure->fileurl('row-add.php').'?id_module='.$id_module.'&id_record='.$id_record.'&" + options);
     }
 }
+
+/**
+ * Funzione dedicata al caricamento dinamico via AJAX delle righe del documento.
+ */
+function caricaRighe() {
+    let container = $("#righe");
+
+    localLoading(container, true);
+    return $.get("'.$structure->fileurl('row-list.php').'?id_module='.$id_module.'&id_record='.$id_record.'", function(data) {
+        container.html(data);
+        localLoading(container, false);
+    });
+}
+
+$(document).ready(function() {
+    caricaRighe();
+});
 
 $("#idanagrafica").change(function() {
     updateSelectOption("idanagrafica", $(this).val());

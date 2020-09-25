@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace API;
 
@@ -6,6 +23,7 @@ use API\Exceptions\InternalError;
 use API\Exceptions\ResourceNotFound;
 use Auth;
 use Models\ApiResource as Resource;
+use PDOException;
 
 /**
  * Classe per la gestione delle API del progetto.
@@ -18,7 +36,7 @@ class Manager
     protected $type;
 
     /**
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function __construct($resource, $type, $version)
     {
@@ -28,7 +46,7 @@ class Manager
             ->first();
 
         if (empty($object)) {
-            throw  new ResourceNotFound();
+            throw new ResourceNotFound();
         }
 
         $this->resource = $object;

@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Anagrafiche\Sede;
@@ -13,7 +30,6 @@ echo '
 	<input type="hidden" name="op" value="update">
 	<input type="hidden" name="backto" value="record-edit">
 	<input type="hidden" name="id_record" value="'.$id_record.'">
-
 
     <div class="row">
         <div class="col-md-8">
@@ -32,7 +48,7 @@ echo '
                         </div>
 
                         <div class="col-md-6">
-                            {[ "type": "select", "label": "'.tr('Sede destinazione').'", "name": "idsede_destinazione","value": "$idsede_destinazione$", "ajax-source": "sedi", "select-options": {"idanagrafica": '.$record['idanagrafica'].'}, "placeholder": "'.tr('Sede legale').'", "readonly": "'.$record['flag_completato'].'" ]}
+                            {[ "type": "select", "label": "'.tr('Sede destinazione').'", "name": "idsede_destinazione","value": "$idsede_destinazione$", "ajax-source": "sedi", "select-options": '.json_encode(['idanagrafica' => $record['idanagrafica']]).', "placeholder": "'.tr('Sede legale').'", "readonly": "'.$record['flag_completato'].'" ]}
                         </div>
 
                         <div class="col-md-6">
@@ -41,7 +57,7 @@ echo '
                         </div>
 
                         <div class="col-md-6">
-                            {[ "type": "select", "label": "'.tr('Referente').'", "name": "idreferente", "value": "$idreferente$", "ajax-source": "referenti", "select-options": {"idanagrafica": '.$record['idanagrafica'].'}, "readonly": "'.intval($record['flag_completato']).'" ]}
+                            {[ "type": "select", "label": "'.tr('Referente').'", "name": "idreferente", "value": "$idreferente$", "ajax-source": "referenti", "select-options": '.json_encode(['idanagrafica' => $record['idanagrafica']]).', "readonly": "'.intval($record['flag_completato']).'" ]}
                         </div>
                     </div>
 
@@ -53,7 +69,7 @@ if (!empty($record['idpreventivo'])) {
                             '.Modules::link('Preventivi', $record['idpreventivo'], null, null, 'class="pull-right"');
 }
 echo '
-                            {[ "type": "select", "label": "'.tr('Preventivo').'", "name": "idpreventivo", "value": "$idpreventivo$", "ajax-source": "preventivi", "readonly": "'.$record['flag_completato'].'" ]}
+                            {[ "type": "select", "label": "'.tr('Preventivo').'", "name": "idpreventivo", "value": "'.$record['id_preventivo'].'", "ajax-source": "preventivi", "select-options": '.json_encode(['idanagrafica' => $record['idanagrafica']]).', "readonly": "'.$record['flag_completato'].'" ]}
                         </div>
 
                         <div class="col-md-6">';
@@ -66,7 +82,7 @@ if (!empty($record['idcontratto'])) {
 }
 echo '
 
-                            {[ "type": "select", "label": "'.tr('Contratto').'", "name": "idcontratto", "value": "'.$record['id_contratto'].'", "ajax-source": "contratti", "readonly": "'.$record['flag_completato'].'" ]}
+                            {[ "type": "select", "label": "'.tr('Contratto').'", "name": "idcontratto", "value": "'.$record['id_contratto'].'", "ajax-source": "contratti", "select-options": '.json_encode(['idanagrafica' => $record['idanagrafica']]).', "readonly": "'.$record['flag_completato'].'" ]}
 
                             <input type="hidden" name="idcontratto_riga" value="'.$idcontratto_riga.'">
                         </div>
@@ -85,10 +101,6 @@ $anagrafica_azienda = Anagrafica::find(setting('Azienda predefinita'));
 $sede_azienda = $anagrafica_azienda->sedeLegale;
 
 $google = setting('Google Maps API key');
-if (!empty($google)) {
-    echo '
-<script src="//maps.googleapis.com/maps/api/js?libraries=places&key='.$google.'"></script>';
-}
 
 echo '
             <div class="col-md-4">
@@ -98,6 +110,7 @@ echo '
                     </div>
                     <div class="panel-body">';
 
+$map_load_message = '<p>'.tr('Clicca per visualizzare').'</p>';
 if (empty($google)) {
     echo '
                         <div class="alert alert-info">
@@ -105,7 +118,9 @@ if (empty($google)) {
                         </div>';
 } elseif (!empty($sede_cliente->gaddress) || (!empty($sede_cliente->lat) && !empty($sede_cliente->lng))) {
     echo '
-                        <div id="map-edit" style="height:200px; width:100%"></div>
+                        <div id="map-edit" style="height: 200px;width: 100%;display: flex;align-items: center;justify-content: center;" onclick="caricaMappa()">
+                            '.$map_load_message.'
+                        </div>
 
                         <div class="clearfix"></div>
                         <br>';
@@ -177,32 +192,39 @@ echo '
                 return lat + "," + lng;
             }
 
-            $(document).ready(function() {
-                const map_element = $("#map-edit")[0];
-                const lat = parseFloat("'.$sede_cliente->lat.'");
-                const lng = parseFloat("'.$sede_cliente->lng.'");
+            function caricaMappa() {
+                const map_div = $("#map-edit");
+                if (map_div.html().trim() !== "'.$map_load_message.'"){
+                    return;
+                }
 
-                if (!lat || !lng) return;
-                const position = new google.maps.LatLng(lat, lng);
+                $.getScript("//maps.googleapis.com/maps/api/js?libraries=places&key='.$google.'", function() {
+                    const map_element = map_div[0];
+                    const lat = parseFloat("'.$sede_cliente->lat.'");
+                    const lng = parseFloat("'.$sede_cliente->lng.'");
 
-                // Create a Google Maps native view under the map_canvas div.
-                const map = new google.maps.Map(map_element, {
-                    zoom: 14,
-                    scrollwheel: false,
-                    mapTypeControl: true,
-                    mapTypeId: "roadmap",
-                    mapTypeControlOptions: {
-                        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-                        mapTypeIds: ["roadmap", "terrain"],
-                    }
-                });
+                    if (!lat || !lng) return;
+                    const position = new google.maps.LatLng(lat, lng);
 
-                map.setCenter(position);
-                const marker = new google.maps.Marker({
-                    position: position,
-                    map: map,
-                });
-            });
+                    // Create a Google Maps native view under the map_canvas div.
+                    const map = new google.maps.Map(map_element, {
+                        zoom: 14,
+                        scrollwheel: false,
+                        mapTypeControl: true,
+                        mapTypeId: "roadmap",
+                        mapTypeControlOptions: {
+                            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+                            mapTypeIds: ["roadmap", "terrain"],
+                        }
+                    });
+
+                    map.setCenter(position);
+                    const marker = new google.maps.Marker({
+                        position: position,
+                        map: map,
+                    });
+               });
+            }
         </script>';
 
 ?>
@@ -263,10 +285,15 @@ echo '
                 <div class="col-md-12">
                     {[ "type": "ckeditor", "label": "<?php echo tr('Descrizione'); ?>", "name": "descrizione", "class": "autosize", "value": "$descrizione$", "extra": "rows='10'", "readonly": "<?php echo $record['flag_completato']; ?>" ]}
                 </div>
-
-                <div class="col-md-12">
-                    {[ "type": "textarea", "label": "<?php echo tr('Note interne'); ?>", "name": "informazioniaggiuntive", "class": "autosize", "value": "$informazioniaggiuntive$", "extra": "rows='5'" ]}
-                </div>
+<?php
+                // Nascondo le note interne ai clienti
+                if ($user->gruppo != 'Clienti') {
+                    echo '
+                    <div class="col-md-12">
+                        {[ "type": "textarea", "label": "'.tr('Note interne').'", "name": "informazioniaggiuntive", "class": "autosize", "value": "$informazioniaggiuntive$", "extra": "rows=\'5\'" ]}
+                    </div>';
+                }
+?>
             </div>
         </div>
     </div>
@@ -333,19 +360,7 @@ echo '
 			<br>
 
 			<div class="row">
-				<div class="col-md-12" id="tecnici">
-					<?php
-                        if (file_exists($docroot.'/modules/interventi/custom/ajax_tecnici.php')) {
-                            ?>
-						<script>$('#tecnici').load('<?php echo $rootdir; ?>/modules/interventi/custom/ajax_tecnici.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');</script>
-					<?php
-                        } else {
-                            ?>
-						<script>$('#tecnici').load('<?php echo $rootdir; ?>/modules/interventi/ajax_tecnici.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');</script>
-					<?php
-                        }
-                    ?>
-				</div>
+				<div class="col-md-12" id="tecnici"></div>
 			</div>
 		</div>
 	</div>
@@ -364,28 +379,28 @@ echo '
 
 if (!$block_edit) {
     echo '
-            <button class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi articolo').'" onclick="gestioneArticolo(this)">
+            <button type="button" class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi articolo').'" onclick="gestioneArticolo(this)">
                 <i class="fa fa-plus"></i> '.tr('Articolo').'
             </button>';
 
     echo '
-            <button class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi articoli tramite barcode').'" onclick="gestioneBarcode(this)">
+            <button type="button" class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi articoli tramite barcode').'" onclick="gestioneBarcode(this)">
                 <i class="fa fa-plus"></i> '.tr('Barcode').'
             </button>';
 
     echo '
-            <button class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi riga').'" onclick="gestioneRiga(this)">
+            <button type="button" class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi riga').'" onclick="gestioneRiga(this)">
                 <i class="fa fa-plus"></i> '.tr('Riga').'
             </button>';
 
     /*
     echo '
-            <button class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi descrizione').'" onclick="gestioneDescrizione(this)">
+            <button type="button" class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi descrizione').'" onclick="gestioneDescrizione(this)">
                 <i class="fa fa-plus"></i> '.tr('Descrizione').'
             </button>';*/
 
     echo '
-            <button class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi sconto/maggiorazione').'" onclick="gestioneSconto(this)">
+            <button type="button" class="btn btn-sm btn-primary tip" title="'.tr('Aggiungi sconto/maggiorazione').'" onclick="gestioneSconto(this)">
                 <i class="fa fa-plus"></i> '.tr('Sconto/maggiorazione').'
             </button>';
 }
@@ -401,10 +416,8 @@ $articoli = $intervento->articoli;
                 </div>
             </div>
 
-            <div id="righe">
-<?php
-include $structure->filepath('row-list.php');
-?>
+            <div class="row">
+                <div class="col-md-12" id="righe"></div>
             </div>
         </div>
     </div>
@@ -417,19 +430,7 @@ include $structure->filepath('row-list.php');
 
 		<div class="panel-body">
 			<div class="row">
-				<div class="col-md-12" id="costi">
-					<?php
-                        if (file_exists($docroot.'/modules/interventi/custom/ajax_costi.php')) {
-                            ?>
-						<script>$('#costi').load('<?php echo $rootdir; ?>/modules/interventi/custom/ajax_costi.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');</script>
-					<?php
-                        } else {
-                            ?>
-						<script>$('#costi').load('<?php echo $rootdir; ?>/modules/interventi/ajax_costi.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>');</script>
-					<?php
-                        }
-                    ?>
-				</div>
+				<div class="col-md-12" id="costi"></div>
 			</div>
 		</div>
 	</div>
@@ -446,7 +447,7 @@ include $structure->filepath('row-list.php');
 	    <div class="alert alert-warning"><i class="fa fa-warning"></i> '.tr('Questo intervento non è ancora stato firmato dal cliente').'.</div>';
         } else {
             echo '
-	    <img src="'.$rootdir.'/files/interventi/'.$record['firma_file'].'" class="img-thumbnail"><div>&nbsp;</div>
+	    <img src="'.base_path().'/files/interventi/'.$record['firma_file'].'" class="img-thumbnail"><div>&nbsp;</div>
 	   	<div class="col-md-6 col-md-offset-3 alert alert-success"><i class="fa fa-check"></i> '.tr('Firmato il _DATE_ alle _TIME_ da _PERSON_', [
             '_DATE_' => Translator::dateToLocale($record['firma_data']),
             '_TIME_' => Translator::timeToLocale($record['firma_data']),
@@ -492,6 +493,51 @@ async function gestioneRiga(button, options) {
         openModal(title, "'.$structure->fileurl('row-add.php').'?id_module='.$id_module.'&id_record='.$id_record.'&" + options);
     }
 }
+
+/**
+ * Funzione dedicata al caricamento dinamico via AJAX delle righe del documento.
+ */
+function caricaRighe() {
+    let container = $("#righe");
+
+    localLoading(container, true);
+    return $.get("'.$structure->fileurl('row-list.php').'?id_module='.$id_module.'&id_record='.$id_record.'", function(data) {
+        container.html(data);
+        localLoading(container, false);
+    });
+}
+
+/**
+ * Funzione dedicata al caricamento dinamico via AJAX delle sessioni dei tecnici per l\'Attività.
+ */
+function caricaTecnici() {
+    let container = $("#tecnici");
+
+    localLoading(container, true);
+    return $.get("'.$structure->fileurl('ajax_tecnici.php').'?id_module='.$id_module.'&id_record='.$id_record.'", function(data) {
+        container.html(data);
+        localLoading(container, false);
+    });
+}
+
+/**
+ * Funzione dedicata al caricamento dinamico via AJAX delle sessioni dei tecnici per l\'Attività.
+ */
+function caricaCosti() {
+    let container = $("#costi");
+
+    localLoading(container, true);
+    return $.get("'.$structure->fileurl('ajax_costi.php').'?id_module='.$id_module.'&id_record='.$id_record.'", function(data) {
+        container.html(data);
+        localLoading(container, false);
+    });
+}
+
+$(document).ready(function() {
+    caricaRighe();
+    caricaTecnici();
+    caricaCosti();
+});
 
 $("#idanagrafica").change(function () {
     updateSelectOption("idanagrafica", $(this).val());

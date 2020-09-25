@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 /**
  * Classe per la gestione delle utenze.
@@ -7,6 +24,9 @@
  */
 class App
 {
+    public static $docroot;
+    public static $rootdir;
+    public static $baseurl;
     /** @var \DI\Container */
     protected static $container = null;
 
@@ -145,7 +165,7 @@ class App
      */
     public static function filepath($path, $file = null)
     {
-        $path = str_contains($path, DOCROOT) ? $path : DOCROOT.'/'.ltrim($path, '/');
+        $path = str_contains($path, base_dir()) ? $path : base_dir().'/'.ltrim($path, '/');
         $path = empty($file) ? $path : rtrim($path, '/').'/'.$file;
 
         $original_file = str_replace('|custom|', '', $path);
@@ -168,7 +188,7 @@ class App
      */
     public static function getPaths()
     {
-        $assets = ROOTDIR.'/assets';
+        $assets = base_path().'/assets';
 
         return [
             'assets' => $assets,

@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 use Plugins\PianificazioneFatturazione\Pianificazione;
 
@@ -54,6 +71,7 @@ foreach ($raggruppamenti as $mese => $raggruppamento) {
     foreach ($pianificazioni as $pianificazione) {
         $contratto = $pianificazione->contratto;
         $anagrafica = $contratto->anagrafica;
+        $numero_pianificazioni = $contratto->pianificazioni()->count();
 
         if (strtolower($pianificazione->data_scadenza->formatLocalized('%B %Y')) == strtolower($mese)) {
             echo '
@@ -69,10 +87,11 @@ foreach ($raggruppamenti as $mese => $raggruppamento) {
 
                 <td>
                     '.moneyFormat($pianificazione->totale).'<br>
-                    <small>'.tr('_TOT_ / _NUM_ rate', [
-                        '_TOT_' => moneyFormat($contratto->totale),
-                        '_NUM_' => numberFormat($contratto->pianificazioni()->count(), 0),
-                    ]).'</small>
+                    <small>'.tr('Rata _IND_/_NUM_ (totale: _TOT_)', [
+                        '_IND_' => numberFormat($pianificazione->getNumeroPianificazione(), 0),
+                        '_NUM_' => numberFormat($numero_pianificazioni, 0),
+                    '_TOT_' => moneyFormat($contratto->totale),
+                ]).'</small>
                 </td>';
 
             // Pulsanti

@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace Plugins\ReceiptFE;
 
@@ -15,7 +32,7 @@ class ReceiptHook extends Manager
     public function needsExecution()
     {
         // Lettura cache
-        $todo_cache = Cache::get('Ricevute Elettroniche');
+        $todo_cache = Cache::pool('Ricevute Elettroniche');
 
         return !$todo_cache->isValid() || !empty($todo_cache->content);
     }
@@ -23,8 +40,8 @@ class ReceiptHook extends Manager
     public function execute()
     {
         // Lettura cache
-        $todo_cache = Cache::get('Ricevute Elettroniche');
-        $completed_cache = Cache::get('Ricevute Elettroniche importate');
+        $todo_cache = Cache::pool('Ricevute Elettroniche');
+        $completed_cache = Cache::pool('Ricevute Elettroniche importate');
 
         // Refresh cache
         if (!$todo_cache->isValid()) {
@@ -75,8 +92,8 @@ class ReceiptHook extends Manager
     public function response()
     {
         // Lettura cache
-        $todo_cache = Cache::get('Ricevute Elettroniche');
-        $completed_cache = Cache::get('Ricevute Elettroniche importate');
+        $todo_cache = Cache::pool('Ricevute Elettroniche');
+        $completed_cache = Cache::pool('Ricevute Elettroniche importate');
 
         $completed_number = count($completed_cache->content);
         $total_number = $completed_number + count($todo_cache->content);

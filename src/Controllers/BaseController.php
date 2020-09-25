@@ -110,7 +110,7 @@ class BaseController extends Controller
     protected function redirectFirstModule($request, $response)
     {
         $module_id = $this->auth->getFirstModule();
-        $module = Module::get($module_id);
+        $module = Module::pool($module_id);
 
         if (!empty($module)) {
             //$module->url('module')

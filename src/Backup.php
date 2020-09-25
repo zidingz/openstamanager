@@ -1,6 +1,24 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 use Ifsnop\Mysqldump\Mysqldump;
+use Util\Generator;
 use Util\Zip;
 
 /**
@@ -79,7 +97,7 @@ class Backup
      */
     public static function readName($string)
     {
-        return Util\Generator::read(self::PATTERN, basename($string));
+        return Generator::read(self::PATTERN, basename($string));
     }
 
     /**
@@ -151,14 +169,14 @@ class Backup
             ],
         ];
 
-        if (starts_with($backup_dir, slashes(DOCROOT))) {
+        if (starts_with($backup_dir, slashes(base_dir()))) {
             $ignores['dirs'][] = basename($backup_dir);
         }
 
         // Creazione backup in formato ZIP
         if (extension_loaded('zip')) {
             $result = Zip::create([
-                DOCROOT,
+                base_dir(),
                 self::getDatabaseDirectory(),
             ], $backup_dir.'/'.$backup_name.'.zip', $ignores);
         }
@@ -166,7 +184,7 @@ class Backup
         // Creazione backup attraverso la copia dei file
         else {
             $result = copyr([
-                DOCROOT,
+                base_dir(),
                 self::getDatabaseDirectory(),
             ], $backup_dir.'/'.$backup_name.'.zip', $ignores);
         }
@@ -226,7 +244,7 @@ class Backup
         // fino a ripristino ultimato
 
         // Rimozione del database
-        $tables = include DOCROOT.'/update/tables.php';
+        $tables = include base_dir().'/update/tables.php';
 
         // Ripristino del database
         $database_file = $extraction_dir.'/database.sql';
@@ -243,19 +261,19 @@ class Backup
         }
 
         // Salva il file di configurazione
-        $config = file_get_contents(DOCROOT.'/config.inc.php');
+        $config = file_get_contents(base_dir().'/config.inc.php');
 
         // Copia i file dalla cartella temporanea alla root
-        copyr($extraction_dir, DOCROOT);
+        copyr($extraction_dir, base_dir());
 
         // Ripristina il file di configurazione dell'installazione
-        file_put_contents(DOCROOT.'/config.inc.php', $config);
+        file_put_contents(base_dir().'/config.inc.php', $config);
 
         // Pulizia
         if (!empty($cleanup)) {
             delete($extraction_dir);
         }
-        delete(DOCROOT.'/database.sql');
+        delete(base_dir().'/database.sql');
     }
 
     /**
@@ -279,7 +297,7 @@ class Backup
      */
     protected static function getReplaces()
     {
-        return Util\Generator::getReplaces();
+        return Generator::getReplaces();
     }
 
     /**
@@ -289,6 +307,6 @@ class Backup
      */
     protected static function getNextName()
     {
-        return Util\Generator::generate(self::PATTERN);
+        return Generator::generate(self::PATTERN);
     }
 }

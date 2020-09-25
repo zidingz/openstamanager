@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -87,7 +104,7 @@ if (filter('action') == 'do_update') {
         }
 
         echo '
-        <a class="btn btn-success btn-block" href="'.ROOTDIR.'">
+        <a class="btn btn-success btn-block" href="'.base_path().'">
             <i class="fa fa-check"></i> '.tr('Continua').'
         </a>';
     }
@@ -108,7 +125,7 @@ if (filter('action') == 'do_update') {
             <div class="box-body">
                 <p>'.tr("E' attualmente in corso la procedura di aggiornamento del software, e pertanto siete pregati di attendere fino alla sua conclusione").'.</p>
                 <p>'.tr("Nel caso il problema persista, rivolgersi all'amministratore o all'assistenza ufficiale").'.</p>
-                <a class="btn btn-info" href="'.$rootdir.'/index.php"><i class="fa fa-repeat"></i> '.tr('Riprova').'</a>
+                <a class="btn btn-info" href="'.base_path().'/index.php"><i class="fa fa-repeat"></i> '.tr('Riprova').'</a>
             </div>
         </div>';
 
@@ -185,7 +202,7 @@ if (filter('action') == 'do_update') {
 
     foreach ($updates as $update) {
         if ($update['sql'] && (!empty($update['done']) || is_null($update['done']))) {
-            $queries = readSQLFile(DOCROOT.$update['directory'].$update['filename'].'.sql', ';');
+            $queries = readSQLFile(base_dir().$update['directory'].$update['filename'].'.sql', ';');
             $total += count($queries);
 
             if (intval($update['done']) > 1) {
@@ -219,7 +236,7 @@ if (filter('action') == 'do_update') {
 
                         setPercent(percent);
                     }
-                    
+
                     function setPercent(percent){
                         $("#progress .progress-bar").width(percent + "%");
                         $("#progress .progress-bar span").text(percent + "%");

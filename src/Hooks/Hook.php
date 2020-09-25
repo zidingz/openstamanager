@@ -7,11 +7,11 @@ use Carbon\CarbonInterval;
 use Common\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Module;
-use Traits\StoreTrait;
+use Traits\LocalPoolTrait;
 
 class Hook extends Model
 {
-    use StoreTrait;
+    use LocalPoolTrait;
 
     protected $table = 'zz_hooks';
 

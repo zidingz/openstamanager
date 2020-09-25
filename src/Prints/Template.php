@@ -8,11 +8,11 @@ use Components\BootableInterface;
 use Components\BootrableTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Module;
-use Traits\StoreTrait;
+use Traits\LocalPoolTrait;
 
 class Template extends Model implements BootableInterface
 {
-    use StoreTrait;
+    use LocalPoolTrait;
     use BootrableTrait;
 
     protected $table = 'zz_prints';

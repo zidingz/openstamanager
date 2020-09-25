@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../../core.php';
 
@@ -26,7 +43,7 @@ switch ($resource) {
                     ($documenti[$i]['n2_documento'] != '') ? $n_documento = $documenti[$i]['n2_documento'] : $n_documento = $documenti[$i]['n_documento'];
 
                     $link_id = Modules::get($documenti[$i]['modulo'])['id'];
-                    echo "<tr><td class='first_cell text-left'><a href='".ROOTDIR.'/editor.php?id_module='.$link_id.'&id_record='.$documenti[$i]['id']."'  target=\"_blank\" title=\"Apri il documento su una nuova finestra\">".$documenti[$i]['tipo'].'. n. '.$n_documento.' del '.Translator::dateToLocale($documenti[$i]['data_documento'])." </a></td>\n";
+                    echo "<tr><td class='first_cell text-left'><a href='".base_path().'/editor.php?id_module='.$link_id.'&id_record='.$documenti[$i]['id']."'  target=\"_blank\" title=\"Apri il documento su una nuova finestra\">".$documenti[$i]['tipo'].'. n. '.$n_documento.' del '.Translator::dateToLocale($documenti[$i]['data_documento'])." </a></td>\n";
                     echo "<td class='table_cell text-right'>".moneyFormat($documenti[$i]['costo_unitario'])."</td></tr>\n";
                     array_push($ids, '"'.$documenti[$i]['id'].'"');
                 }
@@ -55,7 +72,7 @@ switch ($resource) {
                 ($documenti[$i]['n2_documento'] != '') ? $n_documento = $documenti[$i]['n2_documento'] : $n_documento = $documenti[$i]['n_documento'];
 
                 $link_id = Modules::get($documenti[$i]['modulo'])['id'];
-                echo "<tr><td class='first_cell text-left'><a href='".ROOTDIR.'/editor.php?id_module='.$link_id.'&id_record='.$documenti[$i]['id']."'  target=\"_blank\" title=\"Apri il documento su una nuova finestra\">".$documenti[$i]['tipo'].'. n. '.$n_documento.' del '.Translator::dateToLocale($documenti[$i]['data_documento'])." </a></td>\n";
+                echo "<tr><td class='first_cell text-left'><a href='".base_path().'/editor.php?id_module='.$link_id.'&id_record='.$documenti[$i]['id']."'  target=\"_blank\" title=\"Apri il documento su una nuova finestra\">".$documenti[$i]['tipo'].'. n. '.$n_documento.' del '.Translator::dateToLocale($documenti[$i]['data_documento'])." </a></td>\n";
                 echo "<td class='table_cell text-right'>".moneyFormat($documenti[$i]['costo_unitario'])."</td></tr>\n";
                 array_push($ids, '"'.$documenti[$i]['id'].'"');
             }
@@ -83,7 +100,7 @@ switch ($resource) {
                 ($documenti[$i]['n2_documento'] != '') ? $n_documento = $documenti[$i]['n2_documento'] : $n_documento = $documenti[$i]['n_documento'];
 
                 $link_id = Modules::get($documenti[$i]['modulo'])['id'];
-                echo "<tr><td class='first_cell text-left'><a href='".ROOTDIR.'/editor.php?id_module='.$link_id.'&id_record='.$documenti[$i]['id']."'  target=\"_blank\" title=\"Apri il documento su una nuova finestra\">".$documenti[$i]['tipo'].'. n. '.$n_documento.' del '.Translator::dateToLocale($documenti[$i]['data_documento'])." </a></td>\n";
+                echo "<tr><td class='first_cell text-left'><a href='".base_path().'/editor.php?id_module='.$link_id.'&id_record='.$documenti[$i]['id']."'  target=\"_blank\" title=\"Apri il documento su una nuova finestra\">".$documenti[$i]['tipo'].'. n. '.$n_documento.' del '.Translator::dateToLocale($documenti[$i]['data_documento'])." </a></td>\n";
                 echo "<td class='table_cell text-right'>".moneyFormat($documenti[$i]['costo_unitario'])."</td></tr>\n";
                 array_push($ids, '"'.$documenti[$i]['id'].'"');
             }
@@ -91,6 +108,59 @@ switch ($resource) {
         } else {
             echo '<br/>'.tr('Nessun acquisto trovato di questo articolo')."...<br/>\n";
         }
+
+        break;
+
+    /*
+     * Opzioni utilizzate:
+     * - id_articolo
+     * - id_anagrafica
+     */
+    case 'prezzi_articolo':
+        $id_articolo = get('id_articolo');
+        $id_anagrafica = get('id_anagrafica');
+        $direzione = get('dir') == 'uscita' ? 'uscita' : 'entrata';
+
+        if (empty($id_articolo) || empty($id_anagrafica)) {
+            return;
+        }
+
+        $prezzi_ivati = setting('Utilizza prezzi di vendita comprensivi di IVA');
+
+        $query = 'SELECT minimo, massimo,
+            '.($prezzi_ivati ? 'prezzo_unitario_ivato' : 'prezzo_unitario').' AS prezzo_unitario
+        FROM mg_prezzi_articoli
+        WHERE id_articolo = '.prepare($id_articolo).' AND dir = '.prepare($direzione).' |where|
+        ORDER BY minimo ASC, massimo DESC';
+
+        // Lettura dei prezzi relativi all'anagrafica
+        $query_anagrafica = replace($query, [
+            '|where|' => ' AND id_anagrafica = '.prepare($id_anagrafica),
+        ]);
+        $results = $database->fetchArray($query_anagrafica);
+
+        // Lettura dei prezzi relativi all'articolo, senza anagrafica collegata
+        if (empty($results)) {
+            $query_predefinito = replace($query, [
+                '|where|' => '',
+            ]);
+            $results = $database->fetchArray($query_predefinito);
+        }
+
+        // Lettura dei prezzi registrati direttamente sull'articolo, per compatibilità con il formato standard
+        if (empty($results)) {
+            $result = $database->fetchOne('SELECT prezzo_acquisto, '.($prezzi_ivati ? 'prezzo_vendita_ivato' : 'prezzo_vendita').' AS prezzo_vendita FROM mg_articoli WHERE id = '.prepare($id_articolo));
+
+            $results = [
+                [
+                    'minimo' => null,
+                    'massino' => null,
+                    'prezzo_unitario' => $direzione == 'uscita' ? $result['prezzo_acquisto'] : $result['prezzo_vendita'],
+                ],
+            ];
+        }
+
+        echo json_encode($results);
 
         break;
 }

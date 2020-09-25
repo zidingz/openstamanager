@@ -1,16 +1,46 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace Common;
 
-use Common\Components\Description;
+use Common\Components\Component;
+use Illuminate\Database\Eloquent\Model as Model;
 
-abstract class Document extends Model implements ReferenceInterface
+abstract class Document extends Model implements ReferenceInterface, DocumentInterface
 {
     /**
-     * Restituisce la collezione di righe e articoli con valori rilevanti per i conti.
+     * Abilita la movimentazione automatica degli Articoli, finalizzata alla gestione interna del magazzino.
      *
-     * @return iterable
+     * @var bool
      */
+    public static $movimenta_magazzino = true;
+
+    /**
+     * Restituisce il valore della variabile statica $movimenta_magazzino per il documento.
+     *
+     * @return bool
+     */
+    public function getMovimentaMagazzinoAttribute()
+    {
+        return static::$movimenta_magazzino;
+    }
+
     public function getRighe()
     {
         $results = $this->mergeCollections($this->descrizioni, $this->righe, $this->articoli, $this->sconti);
@@ -20,14 +50,6 @@ abstract class Document extends Model implements ReferenceInterface
         });
     }
 
-    /**
-     * Restituisce la riga identificata dall'ID indicato.
-     *
-     * @param $type
-     * @param $id
-     *
-     * @return mixed
-     */
     public function getRiga($type, $id)
     {
         $righe = $this->getRighe();
@@ -37,22 +59,16 @@ abstract class Document extends Model implements ReferenceInterface
         });
     }
 
-    /**
-     * Restituisce la collezione di righe e articoli con valori rilevanti per i conti, raggruppate sulla base dei documenti di provenienza.
-     * La chiave è la serializzazione del documento di origine, oppure null in caso non esista.
-     *
-     * @return iterable
-     */
     public function getRigheRaggruppate()
     {
         $righe = $this->getRighe();
 
         $groups = $righe->groupBy(function ($item, $key) {
-            if (!$item->hasOriginal()) {
+            if (!$item->hasOriginalComponent()) {
                 return null;
             }
 
-            $parent = $item->getOriginal()->parent;
+            $parent = $item->getOriginalComponent()->getDocument();
 
             return serialize($parent);
         });
@@ -69,6 +85,16 @@ abstract class Document extends Model implements ReferenceInterface
     abstract public function sconti();
 
     abstract public function getDirezioneAttribute();
+
+    public function triggerEvasione(Component $trigger)
+    {
+        $this->setRelations([]);
+    }
+
+    public function triggerComponent(Component $trigger)
+    {
+        $this->setRelations([]);
+    }
 
     /**
      * Calcola l'imponibile del documento.
@@ -147,7 +173,7 @@ abstract class Document extends Model implements ReferenceInterface
      */
     public function getMarginePercentualeAttribute()
     {
-        return (1 - ($this->spesa / ($this->totale_imponibile))) * 100;
+        return $this->imponibile ? (1 - ($this->spesa / $this->totale_imponibile)) * 100 : 100;
     }
 
     public function delete()
@@ -168,24 +194,6 @@ abstract class Document extends Model implements ReferenceInterface
         }
 
         return parent::delete();
-    }
-
-    /**
-     * Metodo richiamato a seguito di modifiche sull'evasione generale delle righe del documento.
-     * Utilizzabile per l'impostazione automatica degli stati.
-     */
-    public function triggerEvasione(Description $trigger)
-    {
-        $this->setRelations([]);
-    }
-
-    /**
-     * Metodo richiamato a seguito della modifica o creazione di una riga del documento.
-     * Utilizzabile per limpostazione automatica di campi statici del documento.
-     */
-    public function triggerComponent(Description $trigger)
-    {
-        $this->setRelations([]);
     }
 
     public function toArray()

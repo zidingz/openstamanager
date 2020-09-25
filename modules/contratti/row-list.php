@@ -1,6 +1,23 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-include_once __DIR__.'/../../core.php';
+include_once __DIR__.'/init.php';
 
 echo '
 <div class="table-responsive">
@@ -21,12 +38,23 @@ echo '
 
 // Righe documento
 $righe = $contratto->getRighe();
+$num = 0;
 foreach ($righe as $riga) {
+    ++$num;
+
     echo '
             <tr data-id="'.$riga->id.'" data-type="'.get_class($riga).'">
                 <td class="text-center">
-                    '.($riga->order + 1).'
-                </td>';
+                    '.$num.'
+                </td>
+
+                <td>';
+
+    // Aggiunta dei riferimenti ai documenti
+    if ($riga->hasOriginalComponent()) {
+        echo '
+                    <small class="pull-right text-right text-muted">'.reference($riga->getOriginalComponent()->getDocument(), tr('Origine')).'</small>';
+    }
 
     // Descrizione
     $descrizione = nl2br($riga->descrizione);
@@ -35,7 +63,6 @@ foreach ($righe as $riga) {
     }
 
     echo '
-                <td>
                     '.$descrizione.'
                 </td>';
 
@@ -193,9 +220,9 @@ echo '
 echo '
 <script>
 async function modificaRiga(button) {
-    var riga = $(button).closest("tr");
-    var id = riga.data("id");
-    var type = riga.data("type");
+    let riga = $(button).closest("tr");
+    let id = riga.data("id");
+    let type = riga.data("type");
 
     // Salvataggio via AJAX
     let valid = await salvaForm(button, $("#edit-form"));
@@ -218,9 +245,9 @@ function rimuoviRiga(button) {
         showCancelButton: true,
         confirmButtonText: "'.tr('Sì').'"
     }).then(function () {
-        var riga = $(button).closest("tr");
-        var id = riga.data("id");
-        var type = riga.data("type");
+        let riga = $(button).closest("tr");
+        let id = riga.data("id");
+        let type = riga.data("type");
 
         $.ajax({
             url: globals.rootdir + "/actions.php",

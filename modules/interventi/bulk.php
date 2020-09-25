@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -19,7 +36,7 @@ $id_segment = $_SESSION['module_'.$id_fatture]['id_segment'];
 
 switch (post('op')) {
     case 'export-bulk':
-        $dir = DOCROOT.'/files/export_interventi/';
+        $dir = base_dir().'/files/export_interventi/';
         directory($dir.'tmp/');
 
         // Rimozione dei contenuti precedenti
@@ -144,8 +161,7 @@ switch (post('op')) {
         break;
 
     case 'copy-bulk':
-
-        $idstatointervento = post('idstatointervento');
+        $id_stato = post('idstatointervento');
         $data_richiesta = post('data_richiesta');
         $copia_sessioni = post('sessioni');
         $copia_righe = post('righe');
@@ -154,45 +170,38 @@ switch (post('op')) {
             $intervento = Intervento::find($idintervento);
 
             $new = $intervento->replicate();
-            $new->idstatointervento = $idstatointervento;
+            $new->idstatointervento = $id_stato;
 
-            //calcolo il nuovo codice
+            // Calcolo del nuovo codice sulla base della data di richiesta
             $new->codice = Intervento::getNextCodice($data_richiesta);
 
             $new->save();
 
             $id_record = $new->id;
 
-            $righe = $intervento->getRighe();
-            foreach ($righe as $riga) {
-                $new_riga = $riga->replicate();
-                $new_riga->setParent($new);
+            // Copio le righe
+            if (!empty($copia_righe)) {
+                $righe = $intervento->getRighe();
+                foreach ($righe as $riga) {
+                    $new_riga = $riga->replicate();
+                    $new_riga->setDocument($new);
 
-                //Copio le righe
-                if ($copia_righe == 1) {
-                    $righe = $intervento->getRighe();
-                    foreach ($righe as $riga) {
-                        $new_riga = $riga->replicate();
-                        $new_riga->setParent($new);
-
-                        $new_riga->qta_evasa = 0;
-                        $new_riga->save();
-                    }
+                    $new_riga->qta_evasa = 0;
+                    $new_riga->save();
                 }
             }
 
-            $i = 0;
-
-            //Copio le sessioni
-            if ($copia_sessioni == 1) {
+            // Copia delle sessioni
+            $numero_sessione = 0;
+            if (!empty($copia_sessioni)) {
                 $sessioni = $intervento->sessioni;
                 foreach ($sessioni as $sessione) {
-                    //Se è la prima sessione che copio importo la data con quella della richiesta
-                    if ($i == 0) {
+                    // Se è la prima sessione che copio importo la data con quella della richiesta
+                    if ($numero_sessione == 0) {
                         $orario_inizio = date('Y-m-d', strtotime($data_richiesta)).' '.date('H:i:s', strtotime($sessione->orario_inizio));
                     } else {
                         $diff = strtotime($sessione->orario_inizio) - strtotime($inizio_old);
-                        $orario_inizio = date('Y-m-d H:i:s', (strtotime($orario_inizio) + $diff));
+                        $orario_inizio = date('Y-m-d H:i:s', (strtotime($sessione->orario_inizio) + $diff));
                     }
 
                     $diff_fine = strtotime($sessione->orario_fine) - strtotime($sessione->orario_inizio);
@@ -205,7 +214,7 @@ switch (post('op')) {
                     $new_sessione->orario_fine = $orario_fine;
                     $new_sessione->save();
 
-                    ++$i;
+                    ++$numero_sessione;
                     $inizio_old = $sessione->orario_inizio;
                 }
             }

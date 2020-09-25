@@ -1,10 +1,27 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace Modules\Contratti;
 
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
-use Common\Components\Description;
+use Common\Components\Component;
 use Common\Document;
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Interventi\Intervento;
@@ -19,6 +36,11 @@ class Contratto extends Document
 {
     use ReferenceTrait;
     use RecordTrait;
+
+    /**
+     * @var bool Disabilita movimentazione automatica
+     */
+    public static $movimenta_magazzino = false;
 
     protected $table = 'co_contratti';
 
@@ -41,7 +63,7 @@ class Contratto extends Document
      */
     public static function build(Anagrafica $anagrafica, $nome)
     {
-        $model = parent::build();
+        $model = new static();
 
         $stato_documento = Stato::where('descrizione', 'Bozza')->first();
 
@@ -203,7 +225,7 @@ class Contratto extends Document
      * Effettua un controllo sui campi del documento.
      * Viene richiamato dalle modifiche alle righe del documento.
      */
-    public function triggerEvasione(Description $trigger)
+    public function triggerEvasione(Component $trigger)
     {
         parent::triggerEvasione($trigger);
 

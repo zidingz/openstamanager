@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/core.php';
 
@@ -13,7 +30,7 @@ if (empty($structure) || empty($structure['enabled'])) {
     die(tr('Accesso negato'));
 }
 
-$upload_dir = DOCROOT.'/'.Uploads::getDirectory($id_module, $id_plugin);
+$upload_dir = base_dir().'/'.Uploads::getDirectory($id_module, $id_plugin);
 
 $database->beginTransaction();
 
@@ -70,7 +87,7 @@ if (filter('op') == 'link_file' || filter('op') == 'unlink_file') {
             }
         }
 
-        redirect(ROOTDIR.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.((!empty($options['id_plugin'])) ? '#tab_'.$options['id_plugin'] : ''));
+        redirect(base_path().'/editor.php?id_module='.$id_module.'&id_record='.$id_record.((!empty($options['id_plugin'])) ? '#tab_'.$options['id_plugin'] : ''));
     }
 }
 
@@ -256,13 +273,13 @@ elseif (post('op') == 'send-email') {
         flash()->error(tr('Errore durante l\'invio email! Verifica i parametri dell\'account SMTP utilizzato.'));
     }
 } elseif (filter('op') == 'aggiorna_colonne') {
-    include_once DOCROOT.'/include/colonne.php';
+    include_once base_dir().'/include/colonne.php';
 } elseif (filter('op') == 'visualizza_riferimenti') {
-    include_once DOCROOT.'/include/riferimenti/riferimenti.php';
+    include_once base_dir().'/include/riferimenti/riferimenti.php';
 } elseif (filter('op') == 'visualizza_righe_riferimenti') {
-    include_once DOCROOT.'/include/riferimenti/righe_riferimenti.php';
+    include_once base_dir().'/include/riferimenti/righe_riferimenti.php';
 } elseif (filter('op') == 'visualizza_righe_documento') {
-    include_once DOCROOT.'/include/riferimenti/righe_documento.php';
+    include_once base_dir().'/include/riferimenti/righe_documento.php';
 } elseif (filter('op') == 'salva_riferimento_riga') {
     $database->insert('co_riferimenti_righe', [
         'source_type' => filter('source_type'),
@@ -319,7 +336,7 @@ if ($structure->permission == 'rw') {
     $bulk = empty($bulk) ? [] : $bulk;
 
     if (in_array(post('op'), array_keys($bulk))) {
-        redirect(ROOTDIR.'/controller.php?id_module='.$id_module, 'js');
+        redirect(base_path().'/controller.php?id_module='.$id_module, 'js');
     } else {
         // Esecuzione delle operazioni del modulo
         include $structure->filepath('actions.php');

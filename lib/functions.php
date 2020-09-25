@@ -1,10 +1,29 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-/**
+/*
  * Funzioni fondamentali per il corretto funzionamento del nucleo del progetto.
  *
  * @since 2.3
  */
+
+use HTMLBuilder\HTMLBuilder;
 use Models\OperationLog;
 
 /**
@@ -45,7 +64,7 @@ function sanitizeFilename($filename)
 /**
  * Elimina i file indicati.
  *
- * @param array $files
+ * @param array|string $files
  *
  * @return bool
  */
@@ -196,8 +215,10 @@ function translateTemplate()
     $id_record = filter('id_record');
     $id_parent = filter('id_parent');
 
-    $id_module = Modules::getCurrent()['id'];
-    $id_plugin = Plugins::getCurrent()['id'];
+    $module = Modules::getCurrent();
+    $plugin = Plugins::getCurrent();
+    $id_module = $module ? $module['id'] : null;
+    $id_plugin = $plugin ? $plugin['id'] : null;
 
     $template = ob_get_clean();
 
@@ -208,7 +229,7 @@ function translateTemplate()
     ];
 
     $template = replace($template, $replaces);
-    $template = \HTMLBuilder\HTMLBuilder::replace($template);
+    $template = HTMLBuilder::replace($template);
     $template = replace($template, $replaces);
 
     // Informazioni estese sulle azioni dell'utente
@@ -291,9 +312,9 @@ function redirectOperation($id_module, $id_record)
         $hash = $hash == '#tab_0' ? '' : $hash;
 
         if ($backto == 'record-edit') {
-            redirect(ROOTDIR.'/editor.php?id_module='.$id_module.'&id_record='.$id_record.$hash);
+            redirect(base_path().'/editor.php?id_module='.$id_module.'&id_record='.$id_record.$hash);
         } elseif ($backto == 'record-list') {
-            redirect(ROOTDIR.'/controller.php?id_module='.$id_module.$hash);
+            redirect(base_path().'/controller.php?id_module='.$id_module.$hash);
         }
 
         exit();
@@ -341,7 +362,7 @@ function getURLPath()
     if (substr($path, 0, strlen($prefix)) == $prefix) {
         $path = substr($path, strlen($prefix));
     } else {
-        $path = str_replace(DOCROOT, ROOTDIR, $path);
+        $path = str_replace(base_dir(), base_path(), $path);
     }
 
     return slashes($path);
@@ -421,4 +442,87 @@ function getSessionSearch($module_id)
     }
 
     return $search;
+}
+
+/**
+ * Restituisce il valore corrente di un parametro della sessione.
+ *
+ * @param string     $name    Nome del parametro in dot-notation
+ * @param mixed|null $default
+ *
+ * @return array|mixed|null
+ */
+function session_get($name, $default = null)
+{
+    $session = &$_SESSION;
+    if (empty($name)) {
+        return $default;
+    }
+
+    $pieces = explode('.', $name);
+    foreach ($pieces as $piece) {
+        if (!isset($session[$piece])) {
+            return $default;
+        }
+
+        $session = &$session[$piece];
+    }
+
+    return isset($session) ? $session : $default;
+}
+
+/**
+ * Imposta un parametro nella sessione secondo un nome indicato.
+ *
+ * @param string $name  Nome del parametro in dot-notation
+ * @param mixed  $value Valore da impostare
+ *
+ * @return void
+ */
+function session_set($name, $value)
+{
+    $session = &$_SESSION;
+
+    if (!empty($name)) {
+        $pieces = explode('.', $name);
+        foreach ($pieces as $piece) {
+            if (!isset($session[$piece])) {
+                $session[$piece] = [];
+            }
+
+            $session = &$session[$piece];
+        }
+    }
+
+    $session = $value;
+}
+
+/**
+ * Restituisce l'URL completo per il gestionale.
+ *
+ * @return string
+ */
+function base_url()
+{
+    return App::$baseurl;
+}
+
+/**
+ * Restituisce l'URL parziale per il gestionale.
+ *
+ * @return string
+ */
+function base_path()
+{
+    return App::$rootdir;
+}
+
+/**
+ * Restituisce il percorso per la cartella principale del gestionale.
+ *
+ * @return string
+ */
+function base_dir()
+{
+    return App::$docroot;
 }

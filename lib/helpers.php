@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 /**
  * Funzioni di aiuto per la semplificazione del codice.
@@ -90,7 +107,7 @@ function get($param, $parse = true)
  */
 function setting($name, $again = false)
 {
-    return \Models\Setting::get($name)->valore;
+    return \Models\Setting::pool($name)->valore;
 }
 
 /**
@@ -284,7 +301,7 @@ function input(array $json)
  */
 function module($identifier)
 {
-    return \Modules\Module::get($identifier);
+    return \Modules\Module::pool($identifier);
 }
 
 function asset(string $name)

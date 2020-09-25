@@ -22,7 +22,7 @@ abstract class StatsWidget extends Manager
         // Individuazione della query relativa
         $query = $this->getQuery();
 
-        $module = Module::get($widget['id_module']);
+        $module = Module::pool($widget['id_module']);
         $additionals = $module->getAdditionalsQuery();
         if (!empty($additionals)) {
             $query = str_replace('1=1', '1=1 '.$additionals, $query);

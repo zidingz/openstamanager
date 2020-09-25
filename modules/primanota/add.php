@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -110,8 +127,12 @@ foreach ($id_documenti as $id_documento) {
     $conto_field = 'idconto_'.($dir == 'entrata' ? 'cliente' : 'fornitore');
     $id_conto_controparte = $fattura->anagrafica[$conto_field];
 
-    // Lettura delle scadenza della fattura
-    $scadenze = $dbo->fetchArray('SELECT id, ABS(da_pagare - pagato) AS rata, iddocumento FROM co_scadenziario WHERE iddocumento='.prepare($id_documento).' AND ABS(da_pagare) > ABS(pagato) ORDER BY YEAR(scadenza) ASC, MONTH(scadenza) ASC');
+    // Se sto registrando un insoluto, leggo l'ultima scadenza pagata altrimenti leggo la scadenza della fattura
+    if ($is_insoluto) {
+        $scadenze = $dbo->fetchArray('SELECT id, ABS(da_pagare) AS rata, iddocumento FROM co_scadenziario WHERE iddocumento='.prepare($id_documento).' AND ABS(da_pagare) = ABS(pagato) ORDER BY updated_at DESC LIMIT 0, 1');
+    } else {
+        $scadenze = $dbo->fetchArray('SELECT id, ABS(da_pagare - pagato) AS rata, iddocumento FROM co_scadenziario WHERE iddocumento='.prepare($id_documento).' AND ABS(da_pagare) > ABS(pagato) ORDER BY YEAR(scadenza) ASC, MONTH(scadenza) ASC');
+    }
 
     // Selezione prima scadenza
     if ($singola_scadenza && !empty($scadenze)) {
@@ -134,21 +155,13 @@ foreach ($id_documenti as $id_documento) {
     // Riga aziendale
     $totale = sum(array_column($scadenze, 'rata'));
 
-    if ($totale != 0) {
-        if ($nota_credito) {
-            $totale_rata = -$totale;
-        } else {
-            $totale_rata = $totale;
-        }
-
-        $righe_documento[] = [
-            'iddocumento' => $scadenze[0]['iddocumento'],
-            'id_scadenza' => $scadenze[0]['id'],
-            'id_conto' => $id_conto_aziendale,
-            'dare' => ($dir == 'entrata') ? $totale_rata : 0,
-            'avere' => ($dir == 'entrata') ? 0 : $totale_rata,
-        ];
-    }
+    $righe_documento[] = [
+        'iddocumento' => $scadenze[0]['iddocumento'],
+        'id_scadenza' => $scadenze[0]['id'],
+        'id_conto' => $id_conto_aziendale,
+        'dare' => (($dir == 'entrata' && !$nota_credito && !$is_insoluto) || ($dir == 'uscita' && ($nota_credito || $is_insoluto))) ? $totale : 0,
+        'avere' => (($dir == 'entrata' && !$nota_credito && !$is_insoluto) || ($dir == 'uscita' && ($nota_credito || $is_insoluto))) ? 0 : $totale,
+    ];
 
     $movimenti = array_merge($movimenti, $righe_documento);
 }
@@ -231,7 +244,7 @@ if (!empty($id_records) && get('origine') == 'fatture' && !empty($counter)) {
 }
 
 echo '
-<form action="'.ROOTDIR.'/controller.php?id_module='.$module->id.'" method="post" id="add-form">
+<form action="'.base_path().'/controller.php?id_module='.$module->id.'" method="post" id="add-form">
 	<input type="hidden" name="op" value="add">
 	<input type="hidden" name="backto" value="record-edit">
 	<input type="hidden" name="crea_modello" id="crea_modello" value="0">

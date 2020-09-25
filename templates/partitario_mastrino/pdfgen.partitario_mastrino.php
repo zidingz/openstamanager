@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -9,9 +26,9 @@ $date_start = $_SESSION['period_start'];
 $date_end = $_SESSION['period_end'];
 
 // carica report html
-$report = file_get_contents($docroot.'/templates/partitario_mastrino/partitario.html');
-$body = file_get_contents($docroot.'/templates/partitario_mastrino/partitario_body.html');
-include_once $docroot.'/templates/pdfgen_variables.php';
+$report = file_get_contents(base_dir().'/templates/partitario_mastrino/partitario.html');
+$body = file_get_contents(base_dir().'/templates/partitario_mastrino/partitario_body.html');
+include_once base_dir().'/templates/pdfgen_variables.php';
 
 // Calcolo il percorso piano dei conti
 if ($_GET['lev'] == '3') {

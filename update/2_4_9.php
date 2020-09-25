@@ -1,6 +1,6 @@
 <?php
 
-include_once DOCROOT.'/modules/fatture/modutil.php';
+include_once base_dir().'/modules/fatture/modutil.php';
 
 function get_costi_intervento_fix($id_intervento)
 {
@@ -200,21 +200,21 @@ $dbo->query('ALTER TABLE `in_interventi` DROP `sconto_globale`, DROP `tipo_scont
 
 // File e cartelle deprecate
 $files = [
-    'plugins\xml\AT_v1.0.xml',
-    'plugins\xml\DT_v1.0.xml',
-    'plugins\xml\EC_v1.0.xml',
-    'plugins\xml\MC_v1.0.xml',
-    'plugins\xml\MT_v1.0.xml',
-    'plugins\xml\NE_v1.0.xml',
-    'plugins\xml\NS_v1.0.xml',
-    'plugins\xml\RC_v1.0.xml',
-    'plugins\xml\SE_v1.0.xml',
-    'plugins\exportFE\view.php',
-    'plugins\exportFE\src\stylesheet-1.2.1.xsl',
+    'plugins/xml/AT_v1.0.xml',
+    'plugins/xml/DT_v1.0.xml',
+    'plugins/xml/EC_v1.0.xml',
+    'plugins/xml/MC_v1.0.xml',
+    'plugins/xml/MT_v1.0.xml',
+    'plugins/xml/NE_v1.0.xml',
+    'plugins/xml/NS_v1.0.xml',
+    'plugins/xml/RC_v1.0.xml',
+    'plugins/xml/SE_v1.0.xml',
+    'plugins/exportFE/view.php',
+    'plugins/exportFE/src/stylesheet-1.2.1.xsl',
 ];
 
 foreach ($files as $key => $value) {
-    $files[$key] = realpath(DOCROOT.'/'.$value);
+    $files[$key] = realpath(base_dir().'/'.$value);
 }
 
 delete($files);

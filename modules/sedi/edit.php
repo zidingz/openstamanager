@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 include_once __DIR__.'/../../core.php';
 
@@ -151,9 +168,9 @@ echo '
 	<!-- PULSANTI -->
 	<div class="row">
 		<div class="col-md-12">
-            <a class="btn btn-danger ask '.$disabled.'" data-backto="record-edit" data-op="deletesede" data-id="'.$record['id'].'" data-id_plugin="'.$id_plugin.'" data-id_module="'.$id_module.'" data-id_parent="'.$id_parent.'" '.$disabled.'>
+            <button type="button" class="btn btn-danger '.$disabled.'" onclick="rimuoviSede(this)">
                 <i class="fa fa-trash"></i> '.tr('Elimina').'
-            </a>
+            </button>
 
 			<button type="submit" class="btn btn-primary pull-right"><i class="fa fa-edit"></i> '.tr('Modifica').'</button>
 		</div>
@@ -162,6 +179,22 @@ echo '
 
 echo '
 <script>
+function rimuoviSede(button) {
+    let href = window.location.href.split("#")[0];
+
+    confirmDelete(button).then(function () {
+        redirect(globals.rootdir + "/editor.php", {
+            backto: "record-edit",
+            href: href,
+            op: "deletesede",
+            id: "'.$record['id'].'",
+            id_plugin: "'.$id_plugin.'",
+            id_module: "'.$id_module.'",
+            id_parent: "'.$id_parent.'",
+        });
+    }).catch(swal.noop);
+}
+
 $(document).ready( function(){
     $("#form_sedi #geocomplete input").geocomplete({
         map: $("#form_sedi #map").length ? "#form_sedi #map" : false,

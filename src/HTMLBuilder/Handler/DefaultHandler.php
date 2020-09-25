@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace HTMLBuilder\Handler;
 
@@ -110,7 +127,7 @@ class DefaultHandler implements HandlerInterface
             $result .= '
     <div id="'.$values['id'].'_viewport_progress"></div>
 
-    <script src="'.ROOTDIR.'/assets/password-strength/password.min.js"></script>
+    <script src="'.base_path().'/assets/password-strength/password.min.js"></script>
        <script>
         $(document).ready(function(){
             $("#'.$values['id'].'").pwstrength({
@@ -218,7 +235,7 @@ class DefaultHandler implements HandlerInterface
      */
     protected function number(&$values, &$extras)
     {
-        $values['class'][] = 'inputmask-decimal';
+        $values['class'][] = 'decimal-number';
 
         $values['value'] = !empty($values['value']) ? $values['value'] : 0;
 
@@ -228,20 +245,17 @@ class DefaultHandler implements HandlerInterface
             if (is_numeric($values['decimals'])) {
                 $decimals = $values['decimals'];
             } elseif (starts_with($values['decimals'], 'qta')) {
-                // Se non è previsto un valore minimo, lo imposta a 1
-                $values['min-value'] = isset($values['min-value']) ? $values['min-value'] : 0;
-
                 $decimals = setting('Cifre decimali per quantità');
                 $values['decimals'] = $decimals;
+
+                // Se non è previsto un valore minimo, lo imposta a 1
+                $values['min-value'] = isset($values['min-value']) ? $values['min-value'] : '0.'.str_repeat('0', $decimals - 1).'1';
             }
         }
 
-        // Controllo sulla correttezza sintattica del valore impostato
-        $values['value'] = (formatter()->isStandardNumber($values['value'])) ? \Translator::numberToLocale($values['value'], $decimals) : $values['value'];
-
+        // Delega al metodo "text", per la generazione del codice HTML
         $values['type'] = 'text';
 
-        // Delega al metodo "text", per la generazione del codice HTML
         return $this->text($values, $extras);
     }
 
