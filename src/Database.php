@@ -271,7 +271,7 @@ class Database
      */
     public function fetchOne($query, $parameters = [])
     {
-        if (!str_contains($query, 'LIMIT')) {
+        if (!string_contains($query, 'LIMIT')) {
             $query .= ' LIMIT 1';
         }
 

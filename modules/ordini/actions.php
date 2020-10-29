@@ -175,6 +175,7 @@ switch (post('op')) {
 
         $articolo->costo_unitario = post('costo_unitario') ?: 0;
         $articolo->data_evasione = post('data_evasione') ?: null;
+        $articolo->confermato = post('confermato') ?: 0;
         $articolo->setPrezzoUnitario(post('prezzo_unitario'), post('idiva'));
         $articolo->setSconto(post('sconto'), post('tipo_sconto'));
 
@@ -185,6 +186,25 @@ switch (post('op')) {
         }
 
         $articolo->save();
+
+        // Impostare data evasione su tutte le righe
+        if (post('data_evasione_all') == 1) {
+            $righe = $ordine->getRighe();
+
+            foreach ($righe as $riga) {
+                $riga->data_evasione = post('data_evasione') ?: null;
+                $riga->save();
+            }
+        }
+        // Impostare confermato su tutte le righe
+        if (post('confermato_all') == 1) {
+            $righe = $ordine->getRighe();
+
+            foreach ($righe as $riga) {
+                $riga->confermato = post('confermato') ?: 0;
+                $riga->save();
+            }
+        }
 
         if (post('idriga') != null) {
             flash()->info(tr('Articolo modificato!'));
@@ -205,10 +225,7 @@ switch (post('op')) {
         }
 
         $sconto->descrizione = post('descrizione');
-        $sconto->id_iva = post('idiva');
-
-        $sconto->sconto_unitario = post('sconto_unitario');
-        $sconto->tipo_sconto = 'UNT';
+        $sconto->setScontoUnitario(post('sconto_unitario'), post('idiva'));
 
         $sconto->save();
 

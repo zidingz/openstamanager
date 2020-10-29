@@ -26,7 +26,8 @@ INSERT INTO `zz_cache` (`id`, `name`, `content`, `valid_time`, `expire_at`) VALU
 (NULL, 'Disabilita cron', '', '1 month', NULL);
 
 INSERT INTO `zz_tasks` (`id`, `name`, `class`, `expression`, `last_executed_at`) VALUES
-(NULL, 'Backup automatico', 'Modules\\Backups\\BackupTask', '0 1 * * *', NULL);
+(NULL, 'Backup automatico', 'Modules\\Backups\\BackupTask', '0 1 * * *', NULL),
+(NULL, 'Importazione automatica Ricevute FE', 'Plugins\\ReceiptFE\\ReceiptTask', '0 */24 * * *', NULL);
 
 DELETE FROM `zz_hooks` WHERE `class` = 'Modules\\Backups\\BackupHook';
 
@@ -65,16 +66,15 @@ WHERE 1=1 AND `mg_articoli`.`deleted_at` IS NULL HAVING 2=2 AND `Q.tà` > 0 ORDE
 INSERT INTO `zz_views` (`id`, `id_module`, `name`, `query`, `order`, `search`, `slow`, `format`, `search_inside`, `order_by`, `visible`, `summable`, `default`) VALUES
 (NULL, (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Giacenze sedi'), '_link_module_', (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Articoli'), '1', '1', '0', '0', NULL, NULL, '0', '0', '1'),
 (NULL, (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Giacenze sedi'), 'id', 'mg_articoli.id', '1', '1', '0', '0', NULL, NULL, '0', '0', '1'),
-(NULL, (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Giacenze sedi'), 'id', 'mg_articoli.id', '1', '1', '0', '0', NULL, NULL, '0', '0', '1'),
  (NULL, (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Giacenze sedi'), 'Codice', 'mg_articoli.codice', '2', '1', '0', '0', NULL, NULL, '1', '0', '1'),
  (NULL, (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Giacenze sedi'), 'Categoria', '(SELECT `nome` FROM `mg_categorie` WHERE `id` = `id_categoria`)', '4', '1', '0', '0', NULL, NULL, '1', '0', '1'),
  (NULL, (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Giacenze sedi'), 'Sottocategoria', '(SELECT `nome` FROM `mg_categorie` WHERE `id` = `id_sottocategoria`)', '5', '1', '0', '0', NULL, NULL, '1', '0', '1'),
- (NULL, (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Giacenze sedi'), 'Q.tà', '(SELECT SUM(IF(mg_movimenti.idsede_azienda = |giacenze_sedi_idsede|, mg_movimenti.qta, IF(mg_movimenti.idsede_controparte = |giacenze_sedi_idsede|, -mg_movimenti.qta, 0))) FROM mg_movimenti LEFT JOIN an_sedi ON an_sedi.id = mg_movimenti.idsede_azienda WHERE mg_movimenti.idarticolo=mg_articoli.id)', '9', '1', '0', '0', NULL, NULL, '1', '0', '1'),
+ (NULL, (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Giacenze sedi'), 'Q.tà', '(SELECT SUM(IF(mg_movimenti.idsede_azienda = |giacenze_sedi_idsede|, mg_movimenti.qta, IF(mg_movimenti.idsede_controparte = |giacenze_sedi_idsede|, -mg_movimenti.qta, 0))) FROM mg_movimenti LEFT JOIN an_sedi ON an_sedi.id = mg_movimenti.idsede_azienda WHERE mg_movimenti.idarticolo=mg_articoli.id AND idsede_azienda=|giacenze_sedi_idsede| GROUP BY idsede_azienda)', '9', '1', '0', '0', NULL, NULL, '1', '0', '1'),
  (NULL, (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Giacenze sedi'), 'Descrizione', 'mg_articoli.descrizione', '1', '1', '0', '0', '', '', '1', '0', '1'),
  (NULL, (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Giacenze sedi'), 'Fornitore', '(SELECT `ragione_sociale` FROM `an_anagrafiche` WHERE `idanagrafica` = `id_fornitore`)', '6', '1', '0', '0', NULL, NULL, '1', '0', '1'),
  (NULL, (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Giacenze sedi'), 'Prezzo di acquisto', 'prezzo_acquisto', '6', '1', '0', '1', NULL, NULL, '1', '1', '1'),
  (NULL, (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Giacenze sedi'), 'Prezzo di vendita', 'prezzo_vendita', '6', '1', '0', '1', NULL, NULL, '1', '1', '1'),
- (NULL, (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Giacenze sedi'), 'Prezzo vendita ivato', 'IF( co_iva.percentuale IS NOT NULL, (mg_articoli.prezzo_vendita + mg_articoli.prezzo_vendita * co_iva.percentuale / 100), mg_articoli.prezzo_vendita + mg_articoli.prezzo_vendita*(SELECT co_iva.percentuale FROM co_iva INNER JOIN zz_settings ON co_iva.id=zz_settings.valore AND nome=\'Iva predefinita\')/100 )', '8', '1', '0', '1', '', '', '0', '0', '1'),
+ (NULL, (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Giacenze sedi'), 'Prezzo vendita ivato', 'IF( co_iva.percentuale IS NOT NULL, (mg_articoli.prezzo_vendita + mg_articoli.prezzo_vendita * co_iva.percentuale / 100), mg_articoli.prezzo_vendita + mg_articoli.prezzo_vendita*(SELECT co_iva.percentuale FROM co_iva INNER JOIN zz_settings ON co_iva.id=zz_settings.valore AND nome=''Iva predefinita'')/100 )', '8', '1', '0', '1', '', '', '0', '0', '1'),
  (NULL, (SELECT  `id` FROM `zz_modules` WHERE `name` = 'Giacenze sedi'), 'Barcode', 'mg_articoli.barcode', '2', '1', '0', '0', '', '', '1', '0', '1');
 
 -- Aggiunta risorse API dedicate alle task in cron
@@ -90,6 +90,16 @@ UPDATE `zz_settings` SET `valore` = 'v3' WHERE `nome` = 'OSMCloud Services API V
 
 -- Aggiornamento margini stampa barbcode
 UPDATE `zz_prints` SET `options` = '{"width": 54, "height": 20, "format": [64, 55], "margins": {"top": 5,"bottom": 0,"left": 0,"right": 0}}' WHERE `zz_prints`.`name` = 'Barcode';
+-- Aggiunto collegamento con allegato per impostare la ricevuta principale
+ALTER TABLE `co_documenti` ADD `id_ricevuta_principale` INT(11);
+UPDATE `co_documenti` SET `co_documenti`.`id_ricevuta_principale` = (
+    SELECT `zz_files`.`id` FROM `zz_files` WHERE `zz_files`.`id_module` = (
+        SELECT `zz_modules`.`id` FROM `zz_modules` WHERE `zz_modules`.`name` = 'Fatture di vendita'
+    ) AND `zz_files`.`id_record` = `co_documenti`.`id`
+    AND `zz_files`.`name` LIKE 'Ricevuta%'
+    ORDER BY `zz_files`.`created_at`
+    LIMIT 1
+);
 
 -- Aggiunta riferimenti testuali su descrizione righe per Fatture
 UPDATE `co_righe_documenti`
@@ -179,7 +189,7 @@ UPDATE `zz_plugins` SET `options` = ' { "main_query": [ { "type": "table", "fiel
 UPDATE `zz_plugins` SET `options` = '{"main_query": [{"type": "table", "fields": "Numero, Data inizio, Data fine, Tipo", "query": "SELECT in_interventi.id, in_interventi.codice AS Numero, DATE_FORMAT(MAX(orario_inizio),''%d/%m/%Y'') AS ''Data inizio'', DATE_FORMAT(MAX(orario_fine),''%d/%m/%Y'') AS ''Data fine'', (SELECT descrizione FROM in_tipiintervento WHERE idtipointervento=in_interventi.idtipointervento) AS ''Tipo'', (SELECT `id` FROM `zz_modules` WHERE `name` = ''Interventi'') AS _link_module_, in_interventi.id AS _link_record_ FROM in_interventi LEFT JOIN `in_interventi_tecnici` ON `in_interventi_tecnici`.`idintervento` = `in_interventi`.`id` LEFT JOIN `in_statiintervento` ON `in_interventi`.`idstatointervento`=`in_statiintervento`.`idstatointervento` WHERE 1=1 AND in_interventi.deleted_at IS NULL AND idanagrafica = |id_parent| GROUP BY `in_interventi`.`id` HAVING 2=2 ORDER BY in_interventi.id DESC"}]}'  WHERE `name` = 'Storico attività';
 
 -- Aggiornamento del modulo Banche per il supporto completo alle Anagrafiche
-ALTER TABLE `co_banche` ADD `id_anagrafica` INT(11) NOT NULL, CHANGE `note` `note` TEXT, CHANGE `filiale` `filiale` varchar(255), ADD `predefined` BOOLEAN NOT NULL DEFAULT FALSE, ADD `creditor_id` varchar(255);
+ALTER TABLE `co_banche` ADD `id_anagrafica` INT(11) NOT NULL, CHANGE `note` `note` TEXT, CHANGE `filiale` `filiale` varchar(255), ADD `predefined` BOOLEAN NOT NULL DEFAULT FALSE, ADD `creditor_id` varchar(255), ADD `codice_sia` varchar(5);
 UPDATE `co_banche` SET  `id_anagrafica` = (SELECT `valore` FROM `zz_settings` WHERE `nome` = 'Azienda predefinita');
 ALTER TABLE `co_banche` ADD FOREIGN KEY (`id_anagrafica`) REFERENCES `an_anagrafiche`(`idanagrafica`) ON DELETE CASCADE;
 
@@ -217,3 +227,107 @@ ALTER TABLE `dt_ddt` ADD `id_banca_azienda` INT(11) AFTER `idpagamento`;
 ALTER TABLE `or_ordini` ADD `id_banca_azienda` INT(11) AFTER `idpagamento`;
 
 UPDATE `co_documenti` SET `id_banca_azienda` = NULL WHERE `id_banca_azienda` = 0;
+
+-- Aggiunta unità di misura secondaria per le stampe documenti di vendita
+ALTER TABLE `mg_articoli` ADD `um_secondaria` varchar(255), ADD `fattore_um_secondaria` DECIMAL(15, 6);
+
+-- Aggiunta impostazione per impegnare o meno automaticamente le quantità negli ordini clienti
+INSERT INTO `zz_settings` (`id`, `nome`, `valore`, `tipo`, `editable`, `sezione`, `order`, `help`) VALUES (NULL, 'Conferma automaticamente le quantità negli ordini cliente', '1', 'boolean', '1', 'Ordini', NULL, NULL);
+
+ALTER TABLE `or_righe_ordini` ADD `confermato` BOOLEAN NOT NULL AFTER `id_dettaglio_fornitore`;
+UPDATE `or_righe_ordini` SET `confermato` = 1;
+
+UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM `mg_articoli` LEFT JOIN an_anagrafiche ON mg_articoli.id_fornitore=an_anagrafiche.idanagrafica LEFT JOIN co_iva ON mg_articoli.idiva_vendita=co_iva.id LEFT JOIN (SELECT SUM(qta-qta_evasa) AS qta_impegnata, idarticolo FROM or_righe_ordini INNER JOIN or_ordini ON or_righe_ordini.idordine=or_ordini.id INNER JOIN or_tipiordine ON or_ordini.idtipoordine=or_tipiordine.id WHERE idstatoordine IN(SELECT id FROM or_statiordine WHERE completato=0) AND or_tipiordine.dir=''entrata'' AND or_righe_ordini.confermato = 1 GROUP BY idarticolo) a ON a.idarticolo=mg_articoli.id LEFT JOIN mg_categorie ON mg_articoli.id_categoria=mg_categorie.id LEFT JOIN mg_categorie AS sottocategorie ON mg_articoli.id_sottocategoria=sottocategorie.id WHERE 1=1 AND (`mg_articoli`.`deleted_at`) IS NULL HAVING 2=2 ORDER BY `mg_articoli`.`descrizione`' WHERE `zz_modules`.`name` = 'Articoli';
+
+-- Aggiunta impostazione per impegnare o meno automaticamente le quantità negli ordini fornitori
+INSERT INTO `zz_settings` (`id`, `nome`, `valore`, `tipo`, `editable`, `sezione`, `order`, `help`) VALUES (NULL, 'Conferma automaticamente le quantità negli ordini fornitore', '1', 'boolean', '1', 'Ordini', NULL, NULL);
+
+-- Aggiunte note prima nota
+ALTER TABLE `co_movimenti` ADD `note` TEXT AFTER `descrizione`;
+
+-- Aggiunta risorse API dedicate alle Stampe in binary formato
+INSERT INTO `zz_api_resources` (`id`, `version`, `type`, `resource`, `class`, `enabled`) VALUES
+(NULL, 'v1', 'retrieve', 'stampa-binary', 'API\\Common\\Stampa', '1');
+
+-- Fix <CausalePagamento> tracciato 1.2.1 FE (che potrà essere utilizzata a partire dal 01/10/2020 e sarà obbligatoria dal 01/01/2021)
+INSERT INTO `fe_causali_pagamento_ritenuta` (`codice`, `descrizione`) VALUES ('M2', 'Prestazioni di lavoro autonomo non esercitate abitualmente per le quali sussiste l’obbligo di iscrizione alla Gestione Separata ENPAPI');
+
+INSERT INTO `fe_causali_pagamento_ritenuta` (`codice`, `descrizione`) VALUES ('M1', 'Redditi derivanti dall’assunzione di obblighi di fare, di non fare o permettere');
+
+INSERT INTO `fe_causali_pagamento_ritenuta` (`codice`, `descrizione`) VALUES ('L1', 'Redditi derivanti dall’utilizzazione economica di opere dell’ingegno, di brevetti industriali e di processi, che sono percepiti da soggetti che abbiano acquistato a titolo oneroso i diritti alla loro utilizzazione');
+
+INSERT INTO `fe_causali_pagamento_ritenuta` (`codice`, `descrizione`) VALUES ('O1', 'Redditi derivanti dall’assunzione di obblighi di fare, di non fare o permettere, per le quali non sussiste l’obbligo di iscrizione alla gestione separata (Circ. INPS n. 104/2001)');
+
+INSERT INTO `fe_causali_pagamento_ritenuta` (`codice`, `descrizione`) VALUES ('V1', 'Redditi derivanti da attività commerciali non esercitate abitualmente (ad esempio, provvigioni corrisposte per prestazioni occasionali ad agente o rappresentante di commercio, mediatore, procacciatore d’affari)');
+
+INSERT INTO `fe_causali_pagamento_ritenuta` (`codice`, `descrizione`) VALUES ('V2', 'Redditi derivanti dalle prestazioni non esercitate abitualmente rese dagli incaricati alla vendita diretta a domicilio');
+
+UPDATE `fe_causali_pagamento_ritenuta` SET `codice` = 'ZO' WHERE `fe_causali_pagamento_ritenuta`.`codice` = 'Z';
+
+UPDATE `zz_settings` SET `valore` = 'ZO' WHERE `zz_settings`.`nome` = 'Causale ritenuta d''acconto' AND `zz_settings`.`valore` = 'Z';
+
+-- Disattivazione aliquote IVA con NATURA non più supportata dal tracciato 1.2.1 FE
+-- andrà doverosamente specificato il sotto codice (esempio N3.1, N3.2 etc)
+UPDATE `co_iva` SET `deleted_at` = now() WHERE `co_iva`.`codice_natura_fe` IN ('N2','N3','N6');
+
+-- Introduzione tabella di supporto per nodo <TipoRitenuta> tracciato 1.2.1 FE
+CREATE TABLE IF NOT EXISTS `fe_tipi_ritenuta` (
+    `codice` varchar(4) NOT NULL,
+    `descrizione` varchar(255) NOT NULL,
+    PRIMARY KEY (`codice`)
+) ENGINE=InnoDB;
+
+INSERT INTO `fe_tipi_ritenuta` (`codice`, `descrizione`) VALUES
+('RT01', 'Ritenuta persone fisiche'),
+('RT02', 'Ritenuta persone giuridiche'),
+('RT03', 'Contributo INPS'),
+('RT04', 'Contributo ENASARCO'),
+('RT05', 'Contributo ENPAM'),
+('RT06', 'Altro contributo previdenziale');
+
+
+-- Disattivazione aliquote IVA con NATURA non più supportata dal tracciato 1.2.1 FE
+-- andrà doverosamente specificato il sotto codice (esempio N3.1, N3.2 etc)
+UPDATE `co_iva` SET `deleted_at` = now() WHERE `co_iva`.`codice_natura_fe` IN ('N2','N3','N6');
+
+-- Impostazione percentuale deducibile di default al 100%
+ALTER TABLE `co_pianodeiconti3` CHANGE `percentuale_deducibile` `percentuale_deducibile` DECIMAL(5,2) NOT NULL DEFAULT '100';
+
+ALTER TABLE `fe_stati_documento` ADD `is_generabile` BOOLEAN DEFAULT FALSE,
+    ADD `is_inviabile` BOOLEAN DEFAULT FALSE,
+    ADD `tipo` varchar(255) NOT NULL;
+
+UPDATE `fe_stati_documento` SET `is_generabile` = '1', `is_inviabile` = '1' WHERE `codice` = 'ERVAL';
+UPDATE `fe_stati_documento` SET `is_generabile` = '1', `is_inviabile` = '1' WHERE `codice` = 'ERR';
+UPDATE `fe_stati_documento` SET `is_generabile` = '1', `is_inviabile` = '1' WHERE `codice` = 'GEN';
+UPDATE `fe_stati_documento` SET `is_generabile` = '1' WHERE `codice` = 'NS';
+UPDATE `fe_stati_documento` SET `is_generabile` = '1' WHERE `codice` = 'EC02';
+
+UPDATE `fe_stati_documento` SET `tipo` = 'danger';
+UPDATE `fe_stati_documento` SET `tipo` = 'warning' WHERE `codice` IN ('ERVAL', 'WAIT', 'NE');
+UPDATE `fe_stati_documento` SET `tipo` = 'success' WHERE `codice` IN ('EC01', 'RC');
+UPDATE `fe_stati_documento` SET `tipo` = 'info' WHERE `codice` IN ('GEN', 'MC');
+
+-- Aggiunta stampa liquidazione IVA
+INSERT INTO `zz_prints` (`id`, `id_module`, `is_record`, `name`, `title`, `filename`, `directory`, `previous`, `options`, `icon`, `version`, `compatibility`, `order`, `predefined`, `default`, `enabled`) VALUES (NULL,(SELECT id FROM zz_modules WHERE name='Stampe contabili'), '1', 'Liquidazione IVA', 'Liquidazione IVA', 'Liquidazione IVA', 'liquidazione_iva', '', '', 'fa fa-print', '', '', '0', '0', '1', '1');
+
+-- Aggiunta impostazione per Liquidazione IVA
+INSERT INTO `zz_settings` (`id`, `nome`, `valore`, `tipo`, `editable`, `sezione`, `order`, `help`) VALUES (NULL, 'Liquidazione iva', 'Mensile', 'list[Mensile,Trimestrale]', '1', 'Fatturazione', '16', NULL);
+
+-- Aggiornamento causali DDT in caso di assenza
+UPDATE `dt_ddt` SET `idcausalet` = (SELECT `id` FROM `dt_causalet` WHERE `predefined` = 1 LIMIT 1) WHERE EXISTS(SELECT `id` FROM `dt_causalet` WHERE `predefined` = 1) AND (idcausalet = 0 OR idcausalet IS NULL);
+UPDATE `dt_ddt` SET `idcausalet` = (SELECT `id` FROM `dt_causalet` WHERE `descrizione` = 'Vendita' LIMIT 1) WHERE EXISTS(SELECT `id` FROM `dt_causalet` WHERE `descrizione` = 'Vendita') AND (idcausalet = 0 OR idcausalet IS NULL);
+UPDATE `dt_ddt` SET `idcausalet` = (SELECT `id` FROM `dt_causalet`) WHERE EXISTS(SELECT `id` FROM `dt_causalet`) AND (idcausalet = 0 OR idcausalet IS NULL);
+
+-- Aggiornamento del modulo Impostazioni
+UPDATE `zz_modules` SET `options` = 'custom' WHERE `name` = 'Impostazioni';
+
+-- Fix logica query Scadenzario
+UPDATE `zz_modules` SET `options` = 'SELECT |select| FROM `co_scadenziario`\r\n   LEFT JOIN `co_documenti`  ON `co_scadenziario`.`iddocumento` = `co_documenti`.`id`\r\n   LEFT JOIN `an_anagrafiche` ON `co_documenti`.`idanagrafica` = `an_anagrafiche`.`idanagrafica`\r\n   LEFT JOIN `co_pagamenti` ON `co_documenti`.`idpagamento` = `co_pagamenti`.`id`\r\n   LEFT JOIN `co_tipidocumento` ON `co_documenti`.`idtipodocumento` = `co_tipidocumento`.`id`\r\n   LEFT JOIN `co_statidocumento` ON `co_documenti`.`idstatodocumento` = `co_statidocumento`.`id`\r\nWHERE 1=1 AND\r\n    (`co_scadenziario`.`scadenza` BETWEEN \'|period_start|\' AND \'|period_end|\' OR ABS(`co_scadenziario`.`pagato`) < ABS(`co_scadenziario`.`da_pagare`)) AND\r\n    (`co_statidocumento`.`descrizione` IS NULL OR `co_statidocumento`.`descrizione` IN(\'Emessa\',\'Parzialmente pagato\',\'Pagato\'))\r\nHAVING 2=2\r\nORDER BY `scadenza` ASC' WHERE `zz_modules`.`name` = 'Scadenzario';
+
+-- Elimino token disabilitati
+DELETE FROM `zz_tokens` WHERE `zz_tokens`.`enabled` = 0;
+
+
+-- Aggiunta impostazione per mostrare o nascondere barra plugin
+INSERT INTO `zz_settings` (`id`, `nome`, `valore`, `tipo`, `editable`, `sezione`, `order`, `help`) VALUES (NULL, 'Nascondere la barra dei plugin di default', '0', 'boolean', '1', 'Generali',  '2', NULL);

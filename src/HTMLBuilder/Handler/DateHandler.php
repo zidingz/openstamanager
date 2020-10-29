@@ -28,6 +28,8 @@ class DateHandler implements HandlerInterface
 {
     public function handle(&$values, &$extras)
     {
+        $values['class'][] = 'openstamanager-input';
+
         // Impostazione alla data corrente se il contenuto corrisponde a "now"
         $detect = [
             'value',
@@ -112,7 +114,6 @@ class DateHandler implements HandlerInterface
     {
         $values['class'][] = 'text-center';
         $values['class'][] = 'timestamp-picker';
-        $values['class'][] = 'timestamp-mask';
     }
 
     /**
@@ -128,7 +129,6 @@ class DateHandler implements HandlerInterface
     {
         $values['class'][] = 'text-center';
         $values['class'][] = 'datepicker';
-        $values['class'][] = 'date-mask';
     }
 
     /**

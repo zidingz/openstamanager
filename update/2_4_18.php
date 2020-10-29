@@ -3,6 +3,9 @@
 // File e cartelle deprecate
 $files = [
     'plugins/fornitori_articolo',
+    'templates/partitario_mastrino/partitario.html',
+    'templates/partitario_mastrino/partitario_body.html',
+    'templates/partitario_mastrino/pdfgen.partitario_mastrino.php',
 ];
 
 foreach ($files as $key => $value) {

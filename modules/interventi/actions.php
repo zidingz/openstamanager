@@ -135,12 +135,13 @@ switch (post('op')) {
             // Sincronizzazione con il promemoria indicato
             if (!empty($id_promemoria)) {
                 $promemoria = Promemoria::find($id_promemoria);
-                $promemoria->pianifica($intervento);
+                $promemoria->pianifica($intervento, false);
             }
 
             // Collegamenti intervento/impianti
             $impianti = (array) post('idimpianti');
             if (!empty($impianti)) {
+                $impianti = array_unique($impianti);
                 foreach ($impianti as $impianto) {
                     $dbo->insert('my_impianti_interventi', [
                         'idintervento' => $id_record,
@@ -166,8 +167,8 @@ switch (post('op')) {
         }
 
         // Collegamenti tecnici/interventi
-        $idtecnici = post('idtecnico');
         if (!empty(post('orario_inizio')) && !empty(post('orario_fine'))) {
+            $idtecnici = post('idtecnico');
             foreach ($idtecnici as $idtecnico) {
                 add_tecnico($id_record, $idtecnico, post('orario_inizio'), post('orario_fine'), $idcontratto);
             }
@@ -192,10 +193,10 @@ switch (post('op')) {
     // Eliminazione intervento
     case 'delete':
         try {
-            $intervento->delete();
-
             // Eliminazione associazioni tra interventi e contratti
             $dbo->query('UPDATE co_promemoria SET idintervento = NULL WHERE idintervento='.prepare($id_record));
+
+            $intervento->delete();
 
             // Elimino il collegamento al componente
             $dbo->query('DELETE FROM my_impianto_componenti WHERE idintervento='.prepare($id_record));
@@ -315,10 +316,7 @@ switch (post('op')) {
         }
 
         $sconto->descrizione = post('descrizione');
-        $sconto->id_iva = post('idiva');
-
-        $sconto->sconto_unitario = post('sconto_unitario');
-        $sconto->tipo_sconto = 'UNT';
+        $sconto->setScontoUnitario(post('sconto_unitario'), post('idiva'));
 
         $sconto->save();
 
@@ -410,6 +408,13 @@ switch (post('op')) {
                 $copia->save();
             }
         }
+
+        // Modifica finale dello stato
+    /*
+        if (post('create_document') == 'on') {
+            $intervento->idstatointervento = post('id_stato_intervento');
+            $intervento->save();
+        }*/
 
         // Messaggio informativo
         $message = tr('_DOC_ aggiunto!', [

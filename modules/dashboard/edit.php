@@ -253,7 +253,7 @@ WHERE (SELECT COUNT(*) FROM in_interventi_tecnici WHERE in_interventi_tecnici.id
         ->sortBy('data');
 
     echo '
-    <select class="superselect" id="mese-promemoria">';
+    <select class="superselect openstamanager-input select-input" id="mese-promemoria">';
 
     foreach ($mesi as $mese) {
         $data = new Carbon\Carbon($mese['data']);
@@ -288,8 +288,8 @@ echo '
         load_url: globals.rootdir + "/actions.php?id_module='.$id_module.'",
         style: "'.$def.'",
         show_sunday: "'.setting('Visualizzare la domenica sul calendario').'",
-        start_time: "'.setting('Inizio orario lavorativo').'",
-        end_time: "'.((setting('Fine orario lavorativo') == '00:00') ?: '23:59:59').'",
+        start_time: "'.setting('Ora inizio sul calendario').'",
+        end_time: "'.((setting('Ora fine sul calendario') != '00:00:00' && !empty(setting('Ora fine sul calendario'))) ? setting('Ora fine sul calendario') : '23:59:59').'",
         write_permission: "'.intval($modulo_interventi->permission == 'rw').'",
         tooltip: "'.setting('Utilizzare i tooltip sul calendario').'",
         calendar: null,
@@ -452,6 +452,7 @@ echo '
             /* locales: allLocales, */
             locale: globals.locale,
             slotEventOverlap: false,
+            schedulerLicenseKey: "GPL-My-Project-Is-Open-Source",
             hiddenDays: globals.dashboard.show_sunday ? [] : [0],
             header: {
                 left: "prev,next today",

@@ -28,6 +28,8 @@ class DefaultHandler implements HandlerInterface
 {
     public function handle(&$values, &$extras)
     {
+        $values['class'][] = 'openstamanager-input';
+
         // Delega della gestione al metodo specifico per il tipo di input richiesto
         if (in_array($values['type'], get_class_methods($this))) {
             $result = $this->{$values['type']}($values, $extras);
@@ -235,7 +237,7 @@ class DefaultHandler implements HandlerInterface
      */
     protected function number(&$values, &$extras)
     {
-        $values['class'][] = 'decimal-number';
+        $values['class'][] = 'number-input';
 
         $values['value'] = !empty($values['value']) ? $values['value'] : 0;
 
@@ -244,7 +246,7 @@ class DefaultHandler implements HandlerInterface
         if (isset($values['decimals'])) {
             if (is_numeric($values['decimals'])) {
                 $decimals = $values['decimals'];
-            } elseif (starts_with($values['decimals'], 'qta')) {
+            } elseif (string_starts_with($values['decimals'], 'qta')) {
                 $decimals = setting('Cifre decimali per quantità');
                 $values['decimals'] = $decimals;
 

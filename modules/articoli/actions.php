@@ -55,6 +55,11 @@ switch (post('op')) {
         $articolo->setPrezzoVendita(post('prezzo_vendita'), post('idiva_vendita'));
         $articolo->save();
 
+        if (!empty(post('qta'))) {
+            $data_movimento = new Carbon();
+            $articolo->movimenta(post('qta'), tr('Carico manuale'), $data_movimento->format('Y-m-d'), true);
+        }
+
         $id_record = $articolo->id;
 
         if (isAjaxRequest()) {
@@ -108,6 +113,9 @@ switch (post('op')) {
         $articolo->volume = post('volume');
         $articolo->peso_lordo = post('peso_lordo');
 
+        $articolo->um_secondaria = post('um_secondaria');
+        $articolo->fattore_um_secondaria = post('fattore_um_secondaria');
+
         $articolo->setPrezzoVendita(post('prezzo_vendita'), post('idiva_vendita'));
 
         $componente = post('componente_filename');
@@ -138,6 +146,9 @@ switch (post('op')) {
             // Se non è presente un componente, copia i valori dal file di origine
             $campi_componente = [];
             foreach ($contenuto_componente as $key => $value) {
+                //Fix per nomi con spazi che vengono tradotti con "_" (es. Data_di_installazione)
+                $key = preg_replace('/\s+/', '_', $key);
+                
                 $valore = $contenuto_precedente_esistente ? filter($key) : $value['valore'];
 
                 $campi_componente[$key] = $valore;

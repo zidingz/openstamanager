@@ -52,7 +52,7 @@ class FatturaElettronica
     {
         $this->file = static::getImportDirectory().'/'.$name;
 
-        if (ends_with($name, '.p7m')) {
+        if (string_ends_with($name, '.p7m')) {
             $file = XML::decodeP7M($this->file);
 
             if (!empty($file)) {
@@ -313,7 +313,7 @@ class FatturaElettronica
     public function saveFattura($id_pagamento, $id_sezionale, $id_tipo, $data_registrazione, $ref_fattura)
     {
         $dati_generali = $this->getBody()['DatiGenerali']['DatiGeneraliDocumento'];
-        $data = $dati_generali['Data'];
+        $data = self::parseDate($dati_generali['Data']);
 
         $fattura = $this->prepareFattura($id_tipo, $data, $id_sezionale, $ref_fattura);
         $this->fattura = $fattura;
@@ -374,6 +374,11 @@ class FatturaElettronica
         $this->saveAllegati();
 
         return $this->getFattura()->id;
+    }
+
+    public static function parseDate($data)
+    {
+        return date('Y-m-d', strtotime($data));
     }
 
     protected function prepareFattura($id_tipo, $data, $id_sezionale, $ref_fattura)

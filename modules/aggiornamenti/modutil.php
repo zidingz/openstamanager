@@ -30,6 +30,7 @@ function customStructure()
         'modules',
         'templates',
         'plugins',
+        'include',
     ];
 
     // Controlli di personalizzazione fisica
@@ -135,7 +136,7 @@ function customDatabase()
     return $results;
 }
 
-function custom()
+function customComponents()
 {
     $database_check = customDatabase();
     $structure_check = customStructure();

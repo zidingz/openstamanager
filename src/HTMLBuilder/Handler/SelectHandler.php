@@ -30,6 +30,9 @@ class SelectHandler implements HandlerInterface
 {
     public function handle(&$values, &$extras)
     {
+        $values['class'][] = 'openstamanager-input';
+        $values['class'][] = 'select-input';
+
         $source = isset($values['ajax-source']) ? $values['ajax-source'] : (isset($values['select-source']) ? $values['select-source'] : null);
 
         // Individuazione della classe per la corretta gestione JavaScript
@@ -81,14 +84,14 @@ class SelectHandler implements HandlerInterface
             }
 
             // Gestione del select da query specifica (se il campo "values" è impostato a "query=SQL")
-            elseif (starts_with($values['values'], 'query=')) {
+            elseif (string_starts_with($values['values'], 'query=')) {
                 $query = substr($values['values'], strlen('query='));
 
                 $result .= $this->selectQuery($query, $values['value']);
             }
 
             // Gestione del select dal formato JSON parziale (valori singoli)
-            elseif (starts_with($values['values'], 'list=')) {
+            elseif (string_starts_with($values['values'], 'list=')) {
                 $list = substr($values['values'], strlen('list='));
 
                 $result .= $this->selectList(json_decode('{'.$list.'}', true), $values);
@@ -180,8 +183,8 @@ class SelectHandler implements HandlerInterface
      * Gestione dell'input di tipo "select" basato su un array associativo.
      * Esempio: {[ "type": "select", "name": "tipo", "values": [{"id":"M","text":"Maschio"},{"id":"F","text":"Femmina"},{"id":"U","text":"Unisex"}], "value": "U", "placeholder": "Non specificato" ]}.
      *
+     * @param array $array
      * @param array $values
-     * @param array $extras
      *
      * @return string
      */
@@ -210,15 +213,9 @@ class SelectHandler implements HandlerInterface
                 $attributes[] = 'style="background:'.$element['_bgcolor_'].'; color:'.color_inverse($element['_bgcolor_']).';"';
             }
 
-            $exclude = [
-                'optgroup',
-            ];
             // Leggo ulteriori campi oltre a id e descrizione per inserirli nell'option nella forma "data-nomecampo1", "data-nomecampo2", ecc
-            foreach ($element as $key => $value) {
-                if (!in_array($key, $exclude)) {
-                    $attributes[] = 'data-'.$key.'="'.prepareToField($value).'"';
-                }
-            }
+            unset($element['optgroup']);
+            $attributes[] = "data-select-attributes='".replace(json_encode($element), ["'" => "\'"])."'";
 
             $result .= '
         <option value="'.prepareToField($element['id']).'" '.implode(' ', $attributes).'>'.$element['text'].'</option>';
@@ -231,8 +228,10 @@ class SelectHandler implements HandlerInterface
      * Gestione dell'input di tipo "select" basato su una query specifica.
      * Esempio: {[ "type": "select", "label": "Select di test", "name": "select", "values": "query=SELECT id, name as text FROM table" ]}.
      *
-     * @param array $values
-     * @param array $extras
+     * @param string $query
+     * @param array  $values
+     *
+     * @throws \Exception
      *
      * @return string
      */

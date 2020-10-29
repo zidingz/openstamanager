@@ -67,6 +67,9 @@ class Interventi extends Request implements RetrieveInterface, CreateInterface, 
             LEFT JOIN `an_sedi` ON `in_interventi`.`idsede_destinazione` = `an_sedi`.`id`
         WHERE EXISTS(SELECT `orario_fine` FROM `in_interventi_tecnici` WHERE `in_interventi_tecnici`.`idintervento` = `in_interventi`.`id` AND `orario_fine` BETWEEN :period_start AND :period_end AND idtecnico LIKE :idtecnico)";
 
+        // Se sono l'admin posso vedere tutte le attività
+        $id_anagrafica = $user->is_admin ? '%' : $user->idanagrafica;
+
         $query .= '
         HAVING 2=2
         ORDER BY `in_interventi`.`data_richiesta` DESC';
@@ -74,7 +77,7 @@ class Interventi extends Request implements RetrieveInterface, CreateInterface, 
         $parameters = [
             ':period_end' => $period_end,
             ':period_start' => $period_start,
-            ':idtecnico' => $user->idanagrafica,
+            ':idtecnico' => $id_anagrafica,
         ];
 
         $module = Modules::get('Interventi');

@@ -144,7 +144,7 @@ class Formatter
         }
 
         if (is_object($this->numberFormatter)) {
-            $result = $this->numberFormatter->format($value);
+            $result = $this->numberFormatter->format(floatval($value));
         } else {
             $number = number_format($value, $this->getPrecision(), self::getStandardFormats()['number']['decimals'], self::getStandardFormats()['number']['thousands']);
 
@@ -301,7 +301,7 @@ class Formatter
                 $values = str_split(strrev($integer), 4);
 
                 foreach ($values as $key => $value) {
-                    if (strlen($value) == 4 && ends_with($value, $current['thousands'])) {
+                    if (strlen($value) == 4 && string_ends_with($value, $current['thousands'])) {
                         $values[$key] = substr($value, 0, -1);
                     }
                 }

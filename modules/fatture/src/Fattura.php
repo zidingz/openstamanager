@@ -24,6 +24,7 @@ use Carbon\Carbon;
 use Common\Components\Component;
 use Common\Document;
 use Illuminate\Database\Eloquent\Builder;
+use Models\Upload;
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Banche\Banca;
 use Modules\Fatture\Gestori\Bollo as GestoreBollo;
@@ -475,6 +476,23 @@ class Fattura extends Document
     }
 
     /**
+     * Restituisce la ricevuta principale, impostata attraverso il campo aggiuntivo id_ricevuta_principale.
+     *
+     * @return Upload|null
+     */
+    public function getRicevutaPrincipale()
+    {
+        if (empty($this->id_ricevuta_principale)) {
+            return null;
+        }
+
+        return $this->getModule()
+            ->uploads($this->id)
+            ->where('id', $this->id_ricevuta_principale)
+            ->first();
+    }
+
+    /**
      * Controlla se la fattura di acquisto è elettronica.
      *
      * @return bool
@@ -764,5 +782,10 @@ class Fattura extends Document
     public function getReferenceDate()
     {
         return $this->data;
+    }
+
+    public function getReferenceRagioneSociale()
+    {
+        return $this->anagrafica->ragione_sociale;
     }
 }

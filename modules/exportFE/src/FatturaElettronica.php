@@ -301,6 +301,7 @@ class FatturaElettronica
         database()->update('co_documenti', [
             'progressivo_invio' => $this->getDocumento()['progressivo_invio'],
             'codice_stato_fe' => 'GEN',
+            'id_ricevuta_principale' => null,
             'data_stato_fe' => date('Y-m-d H:i:s'),
         ], ['id' => $this->getDocumento()['id']]);
 
@@ -309,6 +310,8 @@ class FatturaElettronica
 
     /**
      * Restituisce il nome del file XML per la fattura elettronica.
+     *
+     * @param bool $new
      *
      * @return string
      */
@@ -362,6 +365,9 @@ class FatturaElettronica
                 'xmlns:ds' => 'http://www.w3.org/2000/09/xmldsig#',
                 'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
                 'xsi:schemaLocation' => 'http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2.1 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2.1/Schema_del_file_xml_FatturaPA_versione_1.2.1.xsd',
+
+                // Attributo SistemaEmittente
+                'SistemaEmittente' => 'OSM', // Max 10 caratteri
             ];
             foreach ($attributes as $key => $value) {
                 $rootNode->setAttribute($key, $value);
@@ -825,7 +831,7 @@ class FatturaElettronica
 
         if (!empty($id_ritenuta)) {
             $percentuale = database()->fetchOne('SELECT percentuale FROM co_ritenutaacconto WHERE id = '.prepare($id_ritenuta))['percentuale'];
-
+            // Con la nuova versione in vigore dal 01/01/2021, questo nodo diventa ripetibile.
             $result['DatiRitenuta'] = [
                 'TipoRitenuta' => (Validate::isValidTaxCode($azienda['codice_fiscale']) and $cliente['tipo'] == 'Privato') ? 'RT01' : 'RT02',
                 'ImportoRitenuta' => $totale_ritenutaacconto,
@@ -835,11 +841,13 @@ class FatturaElettronica
         }
 
         // Bollo (2.1.1.6)
+        // ImportoBollo --> con la nuova versione in vigore dal 01/01/2021, la compilazione di questo nodo è diventata facoltativa.
+        // considerato che l'importo è noto e può essere solo di 2,00 Euro.
         $riga_bollo = $documento->rigaBollo;
         if (!empty($riga_bollo)) {
             $result['DatiBollo'] = [
                 'BolloVirtuale' => 'SI',
-                'ImportoBollo' => $riga_bollo->totale,
+                //'ImportoBollo' => $riga_bollo->totale,
             ];
         }
 
