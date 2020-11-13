@@ -98,7 +98,7 @@ class Module extends Model implements BootableInterface
         $alternativo = is_bool($alternativo) && $alternativo ? $testo : $alternativo;
 
         // Aggiunta automatica dell'icona di riferimento
-        if (!str_contains($testo, '<i ')) {
+        if (!string_contains($testo, '<i ')) {
             $testo = $testo.' <i class="fa fa-external-link"></i>';
         }
 

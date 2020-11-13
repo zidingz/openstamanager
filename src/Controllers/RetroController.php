@@ -19,7 +19,7 @@ class RetroController extends Controller
             exit();
         }
 
-        if (!starts_with($require_path, DOCROOT) || !file_exists($require_path) || !is_file($require_path)) {
+        if (!string_starts_with($require_path, DOCROOT) || !file_exists($require_path) || !is_file($require_path)) {
             throw new HttpNotFoundException($request);
         }
 

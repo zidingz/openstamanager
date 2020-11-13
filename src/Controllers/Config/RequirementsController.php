@@ -85,9 +85,9 @@ class RequirementsController extends Controller
                 $ini = FileSystem::convertBytes($value);
                 $real = FileSystem::convertBytes($suggested);
 
-                if (starts_with($values['suggested'], '>')) {
+                if (string_starts_with($values['suggested'], '>')) {
                     $status = $ini >= substr($real, 1);
-                } elseif (starts_with($values['suggested'], '<')) {
+                } elseif (string_starts_with($values['suggested'], '<')) {
                     $status = $ini <= substr($real, 1);
                 } else {
                     $status = ($real == $ini);

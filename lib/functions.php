@@ -433,7 +433,7 @@ function getSessionSearch($module_id)
     $array = $_SESSION['module_'.$module_id];
     if (!empty($array)) {
         foreach ($array as $field => $value) {
-            if (!empty($value) && starts_with($field, 'search_')) {
+            if (!empty($value) && string_starts_with($field, 'search_')) {
                 $field_name = str_replace('search_', '', $field);
 
                 $search[$field_name] = $value;

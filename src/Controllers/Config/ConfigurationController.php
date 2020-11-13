@@ -160,8 +160,8 @@ class ConfigurationController extends Controller
                 $privileges = current($result);
 
                 if (
-                    str_contains($privileges, ' ON `'.$database_name.'`.*') ||
-                    str_contains($privileges, ' ON *.*')
+                    string_contains($privileges, ' ON `'.$database_name.'`.*') ||
+                    string_contains($privileges, ' ON *.*')
                 ) {
                     $pieces = explode(', ', explode(' ON ', str_replace('GRANT ', '', $privileges))[0]);
 
