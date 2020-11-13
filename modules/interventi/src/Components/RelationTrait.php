@@ -44,20 +44,7 @@ trait RelationTrait
     {
     }
 
-    public function getQtaEvasaAttribute()
-    {
-        return 0;
-    }
-
-    public function setQtaEvasaAttribute($value)
-    {
-    }
-
-    /**
-     * Effettua i conti per il subtotale della riga.
-     */
     protected function fixSubtotale()
     {
-        $this->fixIva();
     }
 }

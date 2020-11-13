@@ -20,6 +20,7 @@
 include_once __DIR__.'/../../core.php';
 
 use Modules\Anagrafiche\Anagrafica;
+use Modules\Articoli\Articolo as ArticoloOriginale;
 use Modules\Emails\Mail;
 use Modules\Emails\Template;
 use Modules\Fatture\Components\Descrizione;
@@ -139,6 +140,10 @@ function aggiungi_intervento_in_fattura($id_intervento, $id_fattura, $descrizion
     $fattura = Fattura::find($id_fattura);
     $intervento = Intervento::find($id_intervento);
 
+    if (!empty($fattura->anagrafica->idiva_vendite)) {
+        $id_iva = $fattura->anagrafica->idiva_vendite;
+    }
+
     $data = $intervento->inizio;
     $codice = $intervento->codice;
 
@@ -251,6 +256,7 @@ function aggiungi_intervento_in_fattura($id_intervento, $id_fattura, $descrizion
         $qta = $riga->qta;
 
         $copia = $riga->copiaIn($fattura, $qta);
+
         $copia->id_conto = $id_conto;
 
         $copia->calcolo_ritenuta_acconto = $calcolo_ritenuta_acconto;
@@ -260,6 +266,8 @@ function aggiungi_intervento_in_fattura($id_intervento, $id_fattura, $descrizion
         // Aggiornamento seriali dalla riga dell'ordine
         if ($copia->isArticolo()) {
             $copia->serials = $riga->serials;
+            $articolo = ArticoloOriginale::find($copia->idarticolo);
+            $copia->id_conto = ($articolo->idconto_vendita ? $articolo->idconto_vendita : $id_conto);
         }
 
         $copia->save();

@@ -531,6 +531,34 @@ class FatturaElettronica
             ];
         }
 
+        // Campi obbligatori per l'anagrafica di tipo Vettore
+        $id_vettore = $fattura['idvettore'];
+        if (!empty($id_vettore)) {
+            $data = Anagrafica::find($id_vettore);
+            $fields = [
+                'piva' => 'Partita IVA',
+                'nazione' => 'Nazione',
+            ];
+
+            $missing = [];
+            if (!empty($data)) {
+                foreach ($fields as $key => $name) {
+                    if (empty($data[$key]) && !empty($name)) {
+                        $missing[] = $name;
+                    }
+                }
+            }
+
+            if (!empty($missing)) {
+                $link = Modules::link('Anagrafiche', $data['id']);
+                $errors[] = [
+                    'link' => $link,
+                    'name' => tr('Anagrafica Vettore'),
+                    'errors' => $missing,
+                ];
+            }
+        }
+
         return $errors;
     }
 
@@ -561,7 +589,8 @@ class FatturaElettronica
         // Se sto fatturando ad un ente pubblico il codice destinatario di default è 99999 (sei nove), in alternativa uso 0000000 (sette zeri)
         $default_code = ($cliente['tipo'] == 'Ente pubblico') ? '999999' : '0000000';
         // Se il mio cliente non ha sede in Italia il codice destinatario di default diventa (XXXXXXX) (sette X)
-        $default_code = ($cliente->nazione->iso2 != 'IT') ? 'XXXXXXX' : $default_code;
+        // Se il mio cliente non ha sede in Italia ma è un privato il codice destinatario diventa (0000000) (sette 0)
+        $default_code = (($cliente->nazione->iso2 != 'IT') && ($cliente['tipo'] == 'Azienda')) ? 'XXXXXXX' : $default_code;
 
         // Generazione dell'header
         // Se all'Anagrafe Tributaria il trasmittente è censito con il codice fiscale, es. ditte individuali
@@ -926,7 +955,7 @@ class FatturaElettronica
 
         $result = [];
 
-        //Se imposto il vettore deve essere indicata anche la p.iva nella sua anagrafica
+        // Se imposto il vettore deve essere indicata anche la p.iva nella sua anagrafica
         if ($documento['idvettore']) {
             $vettore = Anagrafica::find($documento['idvettore']);
             $result['DatiAnagraficiVettore'] = static::getDatiAnagrafici($vettore);
@@ -1425,11 +1454,14 @@ class FatturaElettronica
             if (!empty($banca->nome)) {
                 $pagamento['IstitutoFinanziario'] = $banca->nome;
             }
+
             if (!empty($banca->iban)) {
                 $pagamento['IBAN'] = clean($banca->iban);
             }
+
+            // BIC senza parte per filiale (causa errori di validazione)
             if (!empty($banca->bic)) {
-                $pagamento['BIC'] = $banca->bic;
+                $pagamento['BIC'] = substr($banca->bic, 0, 8);
             }
 
             $result[]['DettaglioPagamento'] = $pagamento;

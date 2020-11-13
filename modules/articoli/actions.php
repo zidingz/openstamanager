@@ -17,6 +17,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Carbon\Carbon;
 use Modules\Articoli\Articolo;
 use Modules\Articoli\Categoria;
 use Util\Ini;
@@ -115,6 +116,7 @@ switch (post('op')) {
 
         $articolo->um_secondaria = post('um_secondaria');
         $articolo->fattore_um_secondaria = post('fattore_um_secondaria');
+        $articolo->qta_multipla = post('qta_multipla');
 
         $articolo->setPrezzoVendita(post('prezzo_vendita'), post('idiva_vendita'));
 
@@ -148,7 +150,7 @@ switch (post('op')) {
             foreach ($contenuto_componente as $key => $value) {
                 //Fix per nomi con spazi che vengono tradotti con "_" (es. Data_di_installazione)
                 $key = preg_replace('/\s+/', '_', $key);
-                
+
                 $valore = $contenuto_precedente_esistente ? filter($key) : $value['valore'];
 
                 $campi_componente[$key] = $valore;

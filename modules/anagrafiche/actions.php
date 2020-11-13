@@ -154,7 +154,7 @@ switch (post('op')) {
                 ->get();
             if (!$anagrafiche_partita_iva->isEmpty()) {
                 $message = tr('Attenzione: la partita IVA _IVA_ è già stata censita', [
-                    '__IVA__' => $partita_iva,
+                    '_IVA_' => $partita_iva,
                 ]);
 
                 $links = [];
@@ -270,7 +270,7 @@ switch (post('op')) {
                 ->get();
             if (!$anagrafiche_partita_iva->isEmpty()) {
                 $message = tr('Attenzione: la partita IVA _IVA_ è già stata censita', [
-                    '__IVA__' => $partita_iva,
+                    '_IVA_' => $partita_iva,
                 ]);
 
                 $links = [];
@@ -329,14 +329,32 @@ switch (post('op')) {
         break;
 }
 
-// Operazioni aggiuntive per il logo
+// Operazioni aggiuntive per il logo e filigrana stampe
 if (filter('op') == 'link_file') {
     $nome = filter('nome_allegato');
 
-    if ($nome == 'Logo stampe' or $nome = 'Filigrana stampe') {
-        if (setting('Azienda predefinita') == $id_record && filter('nome_allegato') == $nome) {
-            Settings::setValue($nome, $upload);
+    $logo_stampe = ['logo stampe', 'logo_stampe', 'logo stampe.jpg', 'logo stampe.png'];
+    if (in_array(strtolower($nome), $logo_stampe)) {
+        $nome = 'Logo stampe';
+        $uploads = $structure->uploads($id_record)->where('filename', $upload);
+        foreach ($uploads as $logo) {
+            $logo->name = $nome;
+            $logo->save();
         }
+    }
+
+    $filigrana_stampe = ['filigrana stampe', 'filigrana_stampe', 'filigrana stampe.jpg', 'filigrana stampe.png'];
+    if (in_array(strtolower($nome), $filigrana_stampe)) {
+        $nome = 'Filigrana stampe';
+        $uploads = $structure->uploads($id_record)->where('filename', $upload);
+        foreach ($uploads as $filigrana) {
+            $filigrana->name = $nome;
+            $filigrana->save();
+        }
+    }
+
+    if (($nome == 'Logo stampe' || $nome = 'Filigrana stampe') && (setting('Azienda predefinita') == $id_record)) {
+        Settings::setValue($nome, $upload);
     }
 }
 

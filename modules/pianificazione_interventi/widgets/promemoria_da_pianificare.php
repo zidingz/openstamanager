@@ -58,13 +58,12 @@ foreach ($raggruppamenti as $mese => $raggruppamento) {
     <table class="table table-hover table-striped">
         <thead>
             <tr>
-                <th width="120">'.tr('Cliente').'</th>
-                <th width="250">'.tr('Contratto').'</th>
-                <th width="90">'.tr('Entro').'</th>
-                <th width="150">'.tr('Tipo attività').'</th>
-                <th width="300">'.tr('Descrizione').'</th>
-                <th width="100">'.tr('Sede').'</th>
-                <th width="18"></th>
+                <th width="200">'.tr('Cliente').'</th>
+                <th width="300">'.tr('Contratto').'</th>
+                <th width="70">'.tr('Entro').'</th>
+                <th width="200">'.tr('Tipo attività').'</th>
+                <th>'.tr('Descrizione').'</th>
+                <th width="20"></th>
             </tr>
         </thead>
 
@@ -78,20 +77,9 @@ foreach ($raggruppamenti as $mese => $raggruppamento) {
         echo '
             <tr>
                 <td>
-                    '.Modules::link('Anagrafiche', $anagrafica->id, nl2br($anagrafica->ragione_sociale)).'
-                </td>
+                    '.Modules::link('Anagrafiche', $anagrafica->id, nl2br($anagrafica->ragione_sociale)).'<br><small>Presso: ';
 
-                <td>
-                    '.reference($contratto).'
-                </td>
-
-                <td>'.dateFormat($promemoria->data_richiesta).'</td>
-                <td>'.$promemoria->tipo->descrizione.'</td>
-                <td>'.nl2br($promemoria->richiesta).'</td>
-
-                <td>';
-
-        // Sede
+        // Sede promemoria
         if ($promemoria->idsede == '-1') {
             echo '- '.('Nessuna').' -';
         } elseif (empty($promemoria->idsede)) {
@@ -102,7 +90,19 @@ foreach ($raggruppamenti as $mese => $raggruppamento) {
             echo $rsp2[0]['descrizione'];
         }
 
-        echo '
+        echo '  </small>
+                </td>
+
+                <td>
+                    '.reference($contratto).'
+                </td>
+
+                <td>'.dateFormat($promemoria->data_richiesta).'</td>
+                <td>'.$promemoria->tipo->descrizione.'</td>
+                <td>'.nl2br($promemoria->richiesta).'</td>
+
+                <td>
+
                 </td>';
 
         // Pulsanti

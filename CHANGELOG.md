@@ -4,7 +4,8 @@ Tutti i maggiori cambiamenti di questo progetto saranno documentati in questo fi
 
 Il formato utilizzato è basato sulle linee guida di [Keep a Changelog](http://keepachangelog.com/), e il progetto segue il [Semantic Versioning](http://semver.org/) per definire le versioni delle release.
 
-- [2.4.18 ()](#2418-)
+- [2.4.19 (2020-11-10)](#2419-2020-11-10)
+- [2.4.18 (2020-10-30)](#2418-2020-10-30)
 - [2.4.17.1 (2020-09-18)](#24171-2020-09-18)
 - [2.4.17 (2020-08-24)](#2417-2020-08-24)
 - [2.4.16 (2020-07-28)](#2416-2020-07-28)
@@ -29,7 +30,26 @@ Il formato utilizzato è basato sulle linee guida di [Keep a Changelog](http://k
 - [2.2 (2016-11-10)](#22-2016-11-10)
 - [2.1 (2015-04-02)](#21-2015-04-02)
 
-## 2.4.18 ()
+## 2.4.19 (2020-11-10)
+
+### Aggiunto (Added)
+ - Aggiunta gestione conto anticipi cliente e fornitore tramite **Prima nota**
+ - Aggiunta colonna della sede nel modulo **Movimenti**
+ 
+### Modificato (Changed)
+ - Spostati i conti transitori (iva, ecc) su stato patrimoniale
+
+### Fixed
+ - Selezione banca **Preventivi**
+ - Riferimenti attività **Fatture di vendita**
+ - Permesso cambio stato fatture in Bozza
+ - Correzione aggiornamento 2.4.11 per MariaDB
+ - Correzione calcolo giacenze su plugin **Giacenze**
+ - Esclusione fatture pro-forma dal calcolo fatturato sul modulo **Statistiche**
+ - Gestito il conto articolo in fase di fatturazione attività se specificato nella scheda articolo
+
+ 
+## 2.4.18 (2020-10-30)
 
 ### Aggiunto (Added)
  - Sidebar per la gestione grafica dei Plugin all'interno dei record per i Moduli

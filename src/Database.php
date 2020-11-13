@@ -442,7 +442,7 @@ class Database
                 if ($order == 'ASC') {
                     $statement = $statement->orderBy($field);
                 } else {
-                    $statement = $statement->orderByDesc($field);
+                    $statement = $statement->orderBy($field, 'DESC');
                 }
             }
         }
@@ -625,6 +625,30 @@ class Database
     public function rollbackTransaction()
     {
         Capsule::rollBack();
+    }
+
+    /**
+     * Get a new raw query expression.
+     *
+     * @param mixed $value
+     *
+     * @return \Illuminate\Database\Query\Expression
+     */
+    public function raw($value)
+    {
+        return$this->getCapsule()->getConnection()->raw($value);
+    }
+
+    /**
+     * Begin a fluent query against a database table.
+     *
+     * @param string $table
+     *
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function table($table)
+    {
+        return $this->getCapsule()->getConnection()->table($table);
     }
 
     /**
