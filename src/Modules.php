@@ -17,8 +17,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Util\Query;
 use Modules\Module;
+use Util\Query;
 
 /**
  * Classe per la gestione delle informazioni relative ai moduli installati.

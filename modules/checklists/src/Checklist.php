@@ -19,9 +19,9 @@
 
 namespace Modules\Checklists;
 
-use Illuminate\Database\Eloquent\Model;
-use Common\SimpleModelTrait;
 use Auth\User;
+use Common\SimpleModelTrait;
+use Illuminate\Database\Eloquent\Model;
 use Models\Module;
 use Models\Plugin;
 use Modules\Module;

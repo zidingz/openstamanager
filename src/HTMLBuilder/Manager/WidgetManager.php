@@ -22,8 +22,6 @@ namespace HTMLBuilder\Manager;
 use Modules\Module;
 use Widgets\Widget;
 
-use Util\Query;
-
 /**
  * @since 2.4
  */

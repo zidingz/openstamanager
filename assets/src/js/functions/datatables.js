@@ -326,7 +326,7 @@ function reset(type) {
 /**
  * Sostituisce i caratteri speciali per la ricerca attraverso le tabelle Datatables.
  *
- * @param string field
+ * @param {string} field
  *
  * @return string
  */
@@ -337,9 +337,9 @@ function searchFieldName(field) {
 /**
  * Salva nella sessione la ricerca per le tabelle Datatables.
  *
- * @param int module_id
- * @param string field
- * @param mixed value
+ * @param {int} module_id
+ * @param {string} field
+ * @param {mixed} value
  */
 function searchTable(module_id, field, value) {
     session_set('module_' + module_id + ',' + 'search_' + searchFieldName(field), value, 0);
@@ -361,7 +361,7 @@ function getTableSearch() {
 /**
  * Restituisce un oggetto che permette di gestire le tabelle DataTables.
  *
- * @param selector
+ * @param {string} selector
  */
 function getTable(selector) {
     var table = $(selector);

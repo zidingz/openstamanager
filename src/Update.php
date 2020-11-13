@@ -17,8 +17,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Models\Cache;
-
 /**
  * Classe dedicata alla gestione delle procedure di aggiornamento del database del progetto.
  *

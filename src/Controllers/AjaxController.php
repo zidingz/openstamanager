@@ -1,4 +1,21 @@
 <?php
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.n.c.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace Controllers;
 
@@ -19,7 +36,7 @@ class AjaxController extends Controller
 
         // Opzioni di selezione sugli elementi
         $options = filter('options') ?: [];
-        $options_compatibility = $_SESSION['superselect'] ?: [];
+        $options_compatibility = session_get('superselect', []);
         $options = array_merge($options_compatibility, $options);
 
         $results = AJAX::select($op, null, $search, $page, $length, $options);
@@ -153,11 +170,13 @@ class AjaxController extends Controller
         extract($args);
 
         // Informazioni fondamentali
-        $columns = filter('columns');
-        $order = filter('order')[0];
+        $columns = (array) filter('columns');
+        $order = filter('order') ? filter('order')[0] : [];
         $draw_numer = intval(filter('draw'));
 
-        $order['column'] = $order['column'] - 1;
+        if (!empty(filter('order'))) {
+            $order['column'] = $order['column'] - 1;
+        }
         array_shift($columns);
 
         $total = Query::readQuery($module);
@@ -165,7 +184,7 @@ class AjaxController extends Controller
         // Ricerca
         $search = [];
         for ($i = 0; $i < count($columns); ++$i) {
-            if (!empty($columns[$i]['search']['value'])) {
+            if (!empty($columns[$i]['search']['value']) || $columns[$i]['search']['value'] == '0') {
                 $search[$total['fields'][$i]] = $columns[$i]['search']['value'];
             }
         }
@@ -205,7 +224,7 @@ class AjaxController extends Controller
 
             // Allineamento delle righe
             $align = [];
-            $row = $rows[0] ?: [];
+            $row = isset($rows[0]) ? $rows[0] : [];
             foreach ($row as $field => $value) {
                 $value = trim($value);
 
@@ -284,8 +303,8 @@ class AjaxController extends Controller
                     if ($field != '_print_') {
                         $id_record = $r['id'];
                         $hash = '';
+                        $id_module = !empty($r['_link_module_']) ? $r['_link_module_'] : $id_module;
                         if (!empty($r['_link_record_'])) {
-                            $id_module = $r['_link_module_'];
                             $id_record = $r['_link_record_'];
                             $hash = !empty($r['_link_hash_']) ? '#'.$r['_link_hash_'] : '';
                             unset($id_plugin);
@@ -302,7 +321,7 @@ class AjaxController extends Controller
                             $column['data-type'] = 'modal';
                         }
 
-                        $column['data-link'] = urlFor('module-record', $info);
+                        $column['data-link'] = urlFor('module-record', $info).$hash;
                     }
 
                     $attributes = [];
@@ -312,7 +331,7 @@ class AjaxController extends Controller
                     }
 
                     // Replace rootdir per le query
-                    $value = str_replace('ROOTDIR', ROOTDIR, $value);
+                    $value = str_replace('ROOTDIR', base_path(), $value);
                     $result[] = str_replace('|attr|', implode(' ', $attributes), '<div |attr|>'.$value.'</div>');
                 }
 

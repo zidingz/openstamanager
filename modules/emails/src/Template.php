@@ -22,8 +22,8 @@ namespace Modules\Emails;
 use Common\SimpleModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Prints\Template as PrintTemplate;
 use Modules\Module;
+use Prints\Template as PrintTemplate;
 use Traits\LocalPoolTrait;
 
 class Template extends Model

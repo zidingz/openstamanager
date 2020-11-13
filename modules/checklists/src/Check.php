@@ -21,8 +21,8 @@ namespace Modules\Checklists;
 
 use Auth\Group;
 use Auth\User;
-use Illuminate\Database\Eloquent\Model;
 use Common\SimpleModelTrait;
+use Illuminate\Database\Eloquent\Model;
 use Models\Plugin;
 use Modules\Checklists\Traits\ChecklistTrait;
 use Modules\Module;

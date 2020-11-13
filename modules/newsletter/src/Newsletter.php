@@ -19,9 +19,9 @@
 
 namespace Modules\Newsletter;
 
+use Auth\User;
 use Common\SimpleModelTrait;
 use Illuminate\Database\Eloquent\Model;
-use Auth\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Anagrafiche\Anagrafica;
 use Modules\Emails\Account;

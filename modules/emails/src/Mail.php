@@ -19,9 +19,9 @@
 
 namespace Modules\Emails;
 
+use Auth\User;
 use Common\SimpleModelTrait;
 use Illuminate\Database\Eloquent\Model;
-use Auth\User;
 use Models\Upload;
 use Modules\Newsletter\Newsletter;
 use Prints\Template;
