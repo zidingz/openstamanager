@@ -21,9 +21,9 @@ include_once __DIR__.'/core.php';
 
 $pageTitle = tr('Informazioni');
 
-$paths = App::getPaths();
+$paths = AppLegacy::getPaths();
 
-include_once App::filepath('include|custom|', 'top.php');
+include_once AppLegacy::filepath('include|custom|', 'top.php');
 
 echo '
 <div class="box">
@@ -181,4 +181,4 @@ echo '
 	</div>
 </div>';
 
-include_once App::filepath('include|custom|', 'bottom.php');
+include_once AppLegacy::filepath('include|custom|', 'bottom.php');
