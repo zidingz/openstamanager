@@ -126,7 +126,7 @@ switch (filter('op')) {
         if (!empty($rs)) {
             $tecnici = [];
             foreach ($rs as $sessione) {
-                $tecnici[] = $sessione['nome_tecnico'].' ('.Translator::timestampToLocale($sessione['orario_inizio']).' - '.Translator::timeToLocale($sessione['orario_fine']).')';
+                $tecnici[] = $sessione['nome_tecnico'].' ('.timestampFormat($sessione['orario_inizio']).' - '.timeFormat($sessione['orario_fine']).')';
             }
 
             // Lettura dati intervento
@@ -163,7 +163,7 @@ switch (filter('op')) {
                 $tooltip .= '<b>'.tr('Note').'</b>: '.nl2br($rs[0]['note']).'<br/>';
             }
 
-            $tooltip .= '<b>'.tr('Data richiesta').'</b>: '.Translator::timestampToLocale($rs[0]['data_richiesta']).'<br/>';
+            $tooltip .= '<b>'.tr('Data richiesta').'</b>: '.timestampFormat($rs[0]['data_richiesta']).'<br/>';
 
             $tooltip .= '<b>'.tr('Tipo intervento').'</b>: '.nl2br($desc_tipointervento).'<br/>';
 
