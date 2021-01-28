@@ -17,13 +17,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-$r = $dbo->fetchOne('SELECT *,
-    (SELECT email FROM an_anagrafiche WHERE an_anagrafiche.idanagrafica=dt_ddt.idanagrafica) AS email
-FROM dt_ddt WHERE id='.prepare($id_record));
+$r = $dbo->fetchOne('SELECT dt_ddt.*,
+    an_anagrafiche.email,
+    an_anagrafiche.pec
+FROM dt_ddt
+    INNER JOIN an_anagrafiche ON dt_ddt.idanagrafica = an_anagrafiche.idanagrafica
+WHERE id='.prepare($id_record));
 
 // Variabili da sostituire
 return [
-    'email' => $r['email'],
+    'email' => $options['is_pec'] ? $r['pec'] : $r['email'],
     'numero' => empty($r['numero_esterno']) ? $r['numero'] : $r['numero_esterno'],
     'note' => $r['note'],
     'data' => Translator::dateToLocale($r['data']),
