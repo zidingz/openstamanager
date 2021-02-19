@@ -19,11 +19,13 @@
 
 namespace Plugins\ImportFE;
 
+use Modules\Anagrafiche\Anagrafica;
 use Modules\Articoli\Articolo as ArticoloOriginale;
 use Modules\Articoli\Categoria;
 use Modules\Fatture\Components\Articolo;
 use Modules\Fatture\Components\Riga;
 use Modules\Fatture\Fattura;
+use Plugins\DettagliArticolo\DettaglioPrezzo;
 use UnexpectedValueException;
 use Util\XML;
 
@@ -107,7 +109,7 @@ class FatturaOrdinaria extends FatturaElettronica
         return $this->forceArray($result);
     }
 
-    public function saveRighe($articoli, $iva, $conto, $movimentazione = true, $crea_articoli = false, $tipi_riferimenti = [], $id_riferimenti = [])
+    public function saveRighe($articoli, $iva, $conto, $movimentazione = true, $crea_articoli = false, $tipi_riferimenti = [], $id_riferimenti = [], $tipi_riferimenti_vendita = [], $id_riferimenti_vendita = [])
     {
         $info = $this->getRitenutaRivalsa();
 
@@ -144,6 +146,13 @@ class FatturaOrdinaria extends FatturaElettronica
                     $articolo->prezzo_acquisto = $riga['PrezzoUnitario'];
                     $articolo->id_fornitore = $fattura->idanagrafica;
                     $articolo->save();
+
+                    $direzione = 'uscita';
+                    $anagrafica = Anagrafica::find($fattura->idanagrafica);
+                    $dettaglio_prezzo = DettaglioPrezzo::build($articolo, $anagrafica, $direzione);
+
+                    $dettaglio_prezzo->setPrezzoUnitario($riga['PrezzoUnitario']);
+                    $dettaglio_prezzo->save();
                 }
             }
 
@@ -151,8 +160,12 @@ class FatturaOrdinaria extends FatturaElettronica
                 $obj = Articolo::build($fattura, $articolo);
 
                 $obj->movimentazione($movimentazione);
+
+                $target_type = 'Modules\Fatture\Components\Articolo';
             } else {
                 $obj = Riga::build($fattura);
+
+                $target_type = 'Modules\Fatture\Components\Riga';
             }
 
             $obj->descrizione = $riga['Descrizione'];
@@ -164,6 +177,17 @@ class FatturaOrdinaria extends FatturaElettronica
                 // Correzione della descrizione
                 $obj->descrizione = str_replace($riferimento_precedente, '', $obj->descrizione);
                 $obj->descrizione .= $nuovo_riferimento;
+            }
+
+            $obj->save();
+
+            if (!empty($tipi_riferimenti_vendita[$key])) {
+                database()->insert('co_riferimenti_righe', [
+                    'source_type' => $tipi_riferimenti_vendita[$key],
+                    'source_id' => $id_riferimenti_vendita[$key],
+                    'target_type' => $target_type,
+                    'target_id' => $obj->id,
+                ]);
             }
 
             $obj->id_iva = $iva[$key];

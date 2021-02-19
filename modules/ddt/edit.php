@@ -114,8 +114,16 @@ if ($module['name'] == 'Ddt di vendita') {
                     <?php echo Modules::link('Anagrafiche', $record['idanagrafica'], null, null, 'class="pull-right"'); ?>
                     {[ "type": "select", "label": "<?php echo ($dir == 'uscita') ? tr('Mittente') : tr('Destinatario'); ?>", "name": "idanagrafica", "required": 1, "value": "$idanagrafica$", "ajax-source": "clienti_fornitori" ]}
                 </div>
+<?php
+                echo '
+                <div class="col-md-3">';
+                    if (!empty($record['idreferente'])) {
+                        echo Plugins::link('Referenti', $record['idanagrafica'], null, null, 'class="pull-right"');
+                    }
+                    echo '
+                    {[ "type": "select", "label": "'.tr('Referente').'", "name": "idreferente", "value": "$idreferente$", "ajax-source": "referenti", "select-options": {"idanagrafica": '.$record['idanagrafica'].'} ]}
+                </div>';
 
-                <?php
                 // Conteggio numero articoli ddt in uscita
                 $articolo = $dbo->fetchArray('SELECT mg_articoli.id FROM ((mg_articoli INNER JOIN dt_righe_ddt ON mg_articoli.id=dt_righe_ddt.idarticolo) INNER JOIN dt_ddt ON dt_ddt.id=dt_righe_ddt.idddt) WHERE dt_ddt.id='.prepare($id_record));
                 $id_modulo_anagrafiche = Modules::get('Anagrafiche')['id'];
@@ -314,7 +322,7 @@ if (!$block_edit) {
     $ordini_query = 'SELECT COUNT(*) AS tot FROM or_ordini WHERE idanagrafica='.prepare($record['idanagrafica']).' AND idstatoordine IN (SELECT id FROM or_statiordine WHERE descrizione IN(\'Accettato\', \'Evaso\', \'Parzialmente evaso\', \'Parzialmente fatturato\')) AND idtipoordine=(SELECT id FROM or_tipiordine WHERE dir='.prepare($dir).') AND or_ordini.id IN (SELECT idordine FROM or_righe_ordini WHERE or_righe_ordini.idordine = or_ordini.id AND (qta - qta_evasa) > 0)';
     $ordini = $dbo->fetchArray($ordini_query)[0]['tot'];
 
-    if($dir == 'entrata'){
+    if ($dir == 'entrata') {
         $ddt_query = 'SELECT COUNT(*) AS tot FROM dt_ddt WHERE idstatoddt IN (SELECT id FROM dt_statiddt WHERE descrizione IN(\'Evaso\', \'Parzialmente evaso\', \'Parzialmente fatturato\')) AND idtipoddt=(SELECT id FROM or_tipiordine WHERE dir="uscita") AND dt_ddt.id IN (SELECT idddt FROM dt_righe_ddt WHERE dt_righe_ddt.idddt = dt_ddt.id AND (qta - qta_evasa) > 0)';
         $ddt = $dbo->fetchArray($ddt_query)[0]['tot'];
         echo '
@@ -322,7 +330,7 @@ if (!$block_edit) {
                 <i class="fa fa-plus"></i> '.tr('Ddt').'
             </a>';
     }
-            
+
     echo '
             <a class="btn btn-sm btn-primary'.(!empty($ordini) ? '' : ' disabled').'" data-href="'.base_path().'/modules/ddt/add_ordine.php?id_module='.$id_module.'&id_record='.$id_record.'" data-toggle="modal" data-title="Aggiungi ordine">
                 <i class="fa fa-plus"></i> '.tr('Ordine').'

@@ -88,6 +88,7 @@ switch (post('op')) {
 
         $fattura->idanagrafica = post('idanagrafica');
         $fattura->idagente = post('idagente');
+        $fattura->idreferente = post('idreferente');
         $fattura->idpagamento = post('idpagamento');
         $fattura->id_banca_azienda = post('id_banca_azienda');
         $fattura->id_banca_controparte = post('id_banca_controparte');
@@ -125,17 +126,22 @@ switch (post('op')) {
         }
 
         // Operazioni sul bollo
-        $fattura->addebita_bollo = post('addebita_bollo');
-        $bollo_automatico = post('bollo_automatico');
-        if (empty($bollo_automatico)) {
-            $fattura->bollo = post('bollo');
-        } else {
-            $fattura->bollo = null;
+        if ($dir == 'entrata') {
+            $fattura->addebita_bollo = post('addebita_bollo');
+            $bollo_automatico = post('bollo_automatico');
+            if (empty($bollo_automatico)) {
+                $fattura->bollo = post('bollo');
+            } else {
+                $fattura->bollo = null;
+            }
         }
 
         // Operazioni sulla dichiarazione d'intento
         $dichiarazione_precedente = $fattura->dichiarazione;
         $fattura->id_dichiarazione_intento = post('id_dichiarazione_intento') ?: null;
+
+        // Flag pagamento ritenuta
+        $fattura->is_ritenuta_pagata = post('is_ritenuta_pagata') ?: 0;
 
         $fattura->save();
 
@@ -304,9 +310,13 @@ switch (post('op')) {
 
         $new = $fattura->replicate();
         $new->numero = Fattura::getNextNumero($new->data, $new->direzione, $new->id_segment);
-        if (!empty($fattura->numero_esterno)) {
-            $new->numero_esterno = Fattura::getNextNumeroSecondario($new->data, $new->direzione, $new->id_segment);
-        }
+        //if (!empty($fattura->numero_esterno)) {
+            //$new->numero_esterno = Fattura::getNextNumeroSecondario($new->data, $new->direzione, $new->id_segment);
+        //}
+
+        // In fase di duplicazione di una fattura non deve essere calcolato il numero progressivo ma questo deve
+        // essere generato in fase di emissione della stessa.
+        $new->numero_esterno = '';
 
         $new->codice_stato_fe = null;
         $new->progressivo_invio = null;
@@ -692,8 +702,8 @@ switch (post('op')) {
         // Creazione della fattura al volo
         if (post('create_document') == 'on') {
             $descrizione = ($documento->direzione == 'entrata') ? 'Fattura immediata di vendita' : 'Fattura immediata di acquisto';
-            
-            if($reversed){
+
+            if ($reversed) {
                 $tipo = Tipo::where('descrizione', 'Nota di credito')->where('dir', '!=', $documento->direzione)->first();
             } else {
                 $tipo = Tipo::where('descrizione', $descrizione)->first();
@@ -720,7 +730,7 @@ switch (post('op')) {
         foreach ($righe as $riga) {
             if (post('evadere')[$riga->id] == 'on') {
                 $qta = post('qta_da_evadere')[$riga->id];
-                if($reversed){
+                if ($reversed) {
                     $qta = -$qta;
                 }
 
@@ -794,7 +804,6 @@ switch (post('op')) {
                     $serials = is_array(post('serial')[$riga->id]) ? post('serial')[$riga->id] : [];
 
                     $copia->serials = $serials;
-                    $riga->removeSerials($serials);
                 }
 
                 $copia->save();

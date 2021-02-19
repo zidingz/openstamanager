@@ -288,11 +288,10 @@ class CSV extends CSVImporter
             $id_sede = $sede->id;
         }
 
-        $qta_movimento = $qta_registrata - $giacenze[$id_sede];
+        $qta_movimento = $qta_registrata - $giacenze[$id_sede][0];
 
         $articolo->movimenta($qta_movimento, tr('Movimento da importazione'), new Carbon(), false, [
-            'idsede_azienda' => $id_sede,
-            'idsede_controparte' => 0,
+            'idsede' => $id_sede,
         ]);
     }
 

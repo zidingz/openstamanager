@@ -28,6 +28,8 @@ switch (post('op')) {
             'is_completato' => post('is_completato'),
             'is_fatturabile' => post('is_fatturabile'),
             'notifica' => post('notifica'),
+            'notifica_cliente' => post('notifica_cliente'),
+            'notifica_tecnici' => post('notifica_tecnici'),
             'id_email' => post('email') ?: null,
             'destinatari' => post('destinatari'),
         ], ['idstatointervento' => $id_record]);
@@ -56,7 +58,6 @@ switch (post('op')) {
         break;
 
     case 'delete':
-
         //scelgo se settare come eliminato o cancellare direttamente la riga se non è stato utilizzato negli interventi
         if (count($dbo->fetchArray('SELECT id FROM in_interventi WHERE idstatointervento='.prepare($id_record))) > 0) {
             $query = 'UPDATE in_statiintervento SET deleted_at = NOW() WHERE idstatointervento='.prepare($id_record).' AND `can_delete`=1';

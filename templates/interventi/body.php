@@ -94,7 +94,7 @@ echo '
         <td colspan="4">
             '.tr('Telefono').': <b>'.$c_telefono.'</b>';
 if (!empty($c_cellulare)) {
-    echo' - '.tr('Cellulare').': <b>'.$c_cellulare.'</b>';
+    echo ' - '.tr('Cellulare').': <b>'.$c_cellulare.'</b>';
 }
 echo '
         </td>
@@ -123,11 +123,12 @@ echo '
     </tr>';
 
 // Richiesta
+// Rimosso nl2br, non necessario con ckeditor
 echo '
     <tr>
         <td colspan="4" style="height:20mm;">
             <b>'.tr('Richiesta').':</b>
-            <p>'.nl2br($documento['richiesta']).'</p>
+            <p>'.($documento['richiesta']).'</p>
         </td>
     </tr>';
 
@@ -352,7 +353,7 @@ if (empty($documento['firma_file'])) {
     echo '      <i>'.$documento['firma_nome'].'</i>';
 }
 
-echo  '
+echo '
         </td>
     </tr>';
 
