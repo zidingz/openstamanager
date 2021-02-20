@@ -201,7 +201,7 @@ if (auth()->check()) {
 					["Undo","Redo","-","Cut","Copy","Paste","PasteText","PasteFromWord","-","Scayt", "-","Link","Unlink","-","Bold","Italic","Underline","Superscript","SpecialChar","HorizontalRule","-","JustifyLeft","JustifyCenter","JustifyRight","JustifyBlock","-","NumberedList","BulletedList","Outdent","Indent","Blockquote","-","Styles","Format","Image","Table", "TextColor", "BGColor" ],
 				],
 
-                order_manager_id: "'.($dbo->isInstalled() ? Modules::get('Stato dei servizi')['id'] : '').'",
+                order_manager_id: "'.($dbo->isInstalled() ? module('Stato dei servizi')['id'] : '').'",
                 dataload_page_buffer: '.setting('Lunghezza in pagine del buffer Datatables').',
                 tempo_attesa_ricerche: '.setting('Tempo di attesa ricerche in secondi').',
                 restrict_summables_to_selected: '.setting('Totali delle tabelle ristretti alla selezione').',
@@ -374,7 +374,7 @@ if (auth()->check()) {
                                 <i class="fa fa-book"></i>
                             </a></li>
 
-                            <li><a href="'.base_url().'/info.php" class="tip nav-button" title="'.tr('Informazioni').'">
+                            <li><a href="'.route('info').'" class="tip nav-button" title="'.tr('Informazioni').'">
                                 <i class="fa fa-info"></i>
                             </a></li>
 

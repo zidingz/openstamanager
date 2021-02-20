@@ -19,7 +19,7 @@
 
 include_once __DIR__.'/../../core.php';
 
-$modulo_interventi = Modules::get('Interventi');
+$modulo_interventi = module('Interventi');
 
 if (!isset($user['idanagrafica'])) {
     $user['idanagrafica'] = '';
