@@ -20,7 +20,6 @@
 namespace Plugins\ImportFE;
 
 use Hooks\CachedManager;
-use Modules;
 
 class InvoiceHook extends CachedManager
 {
