@@ -32,7 +32,7 @@ class NotificheRicevuteHook extends Manager
         // Messaggio informativo su fatture con stato di errore
         $con_errore = Fattura::vendita()
             ->whereIn('codice_stato_fe', ['NS', 'ERR', 'EC02'])
-            ->where('data_stato_fe', '>=', $_SESSION['period_start'])
+            ->where('data_stato_fe', '>=', session('period_start'))
             ->orderBy('data_stato_fe')
             ->count();
 
@@ -40,7 +40,7 @@ class NotificheRicevuteHook extends Manager
         $data_limite = (new Carbon())->subDays(7);
         $in_attesa = Fattura::vendita()
             ->where('codice_stato_fe', 'WAIT')
-            ->where('data_stato_fe', '>=', $_SESSION['period_start'])
+            ->where('data_stato_fe', '>=', session('period_start'))
             ->where('data_stato_fe', '<', $data_limite)
             ->orderBy('data_stato_fe')
             ->count();
